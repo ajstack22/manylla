@@ -1,6 +1,28 @@
-# Getting Started with Create React App
+# Manyla - Special Needs Information Management POC
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A clean, minimal web application for special needs parents to retain and share sensitive development information about their children.
+
+## Features Implemented
+
+### Data Structure
+- **Child Profile**: Core profile with name, DOB, pronouns, and quick info
+- **Categories**: Current Goals, Recent Successes, Strengths, Challenges
+- **Entries**: Each entry has title, description, date, tags, and visibility settings
+- **Tags**: Flexible tagging system for filtering and organization
+- **Visibility Levels**: Private, Family, Medical Team, Education Team, All
+
+### UI Components
+- **Material Design**: Clean, modern interface using Material-UI
+- **Light/Dark Mode**: Toggle between themes
+- **Profile Overview**: Visual summary with avatar and quick info cards
+- **Category Sections**: Color-coded sections with icons
+- **Entry Management**: Add, edit, and delete entries
+- **Tag System**: Add custom tags to entries for organization
+
+### Manila Envelope Branding
+- Manila-inspired color palette (#F4E4C1)
+- Clean typography and spacing
+- Minimalist design approach
 
 ## Available Scripts
 
