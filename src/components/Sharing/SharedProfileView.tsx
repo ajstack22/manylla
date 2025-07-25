@@ -129,11 +129,11 @@ export const SharedProfileView: React.FC<SharedProfileViewProps> = ({
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <img
               src="/manila.png"
-              alt="Manyla"
+              alt="Manylla"
               style={{ height: 32 }}
             />
             <Typography variant="h6" sx={{ flexGrow: 1 }}>
-              Manyla - Shared Profile
+              Manylla - Shared Profile
             </Typography>
             <Chip
               icon={<AccessTimeIcon />}
@@ -241,7 +241,7 @@ export const SharedProfileView: React.FC<SharedProfileViewProps> = ({
         <Box sx={{ mt: 6, mb: 4, textAlign: 'center' }}>
           <Divider sx={{ mb: 3 }} />
           <Typography variant="body2" color="text.secondary">
-            This information is confidential and shared via Manyla's secure platform.
+            This information is confidential and shared via Manylla's secure platform.
           </Typography>
           <Typography variant="body2" color="text.secondary">
             Please do not share the access code or take screenshots.

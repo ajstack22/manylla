@@ -1,12 +1,12 @@
-# Manyla Database Schema Documentation
+# Manylla Database Schema Documentation
 
 ## Overview
 
-Manyla uses MySQL to store encrypted sync data and temporary share links. The database follows a zero-trust model where all sensitive data is encrypted client-side before storage.
+Manylla uses MySQL to store encrypted sync data and temporary share links. The database follows a zero-trust model where all sensitive data is encrypted client-side before storage.
 
 ## Database Structure
 
-### Database Name: `manyla_db`
+### Database Name: `manylla_db`
 
 ## Tables
 
@@ -193,13 +193,13 @@ DELETE FROM rate_limits WHERE window_start < DATE_SUB(NOW(), INTERVAL 1 HOUR);
 
 ### Initial Setup
 ```sql
-CREATE DATABASE IF NOT EXISTS manyla_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE manyla_db;
+CREATE DATABASE IF NOT EXISTS manylla_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE manylla_db;
 ```
 
 ### Development to Production
-1. Export development data: `mysqldump -u dev_user -p manyla_db > manyla_dev.sql`
-2. Import to production: `mysql -u prod_user -p manyla_db < manyla_dev.sql`
+1. Export development data: `mysqldump -u dev_user -p manylla_db > manylla_dev.sql`
+2. Import to production: `mysql -u prod_user -p manylla_db < manylla_dev.sql`
 3. Update `config.php` with production credentials
 4. Verify indexes: `SHOW INDEXES FROM table_name;`
 
@@ -209,15 +209,15 @@ USE manyla_db;
 ```bash
 #!/bin/bash
 DATE=$(date +%Y%m%d_%H%M%S)
-BACKUP_DIR="/backups/manyla"
-mysqldump -u backup_user -p'password' manyla_db | gzip > $BACKUP_DIR/manyla_db_$DATE.sql.gz
+BACKUP_DIR="/backups/manylla"
+mysqldump -u backup_user -p'password' manylla_db | gzip > $BACKUP_DIR/manylla_db_$DATE.sql.gz
 # Keep only last 7 days
-find $BACKUP_DIR -name "manyla_db_*.sql.gz" -mtime +7 -delete
+find $BACKUP_DIR -name "manylla_db_*.sql.gz" -mtime +7 -delete
 ```
 
 ### Restore from Backup
 ```bash
-gunzip < manyla_db_20240724_120000.sql.gz | mysql -u root -p manyla_db
+gunzip < manylla_db_20240724_120000.sql.gz | mysql -u root -p manylla_db
 ```
 
 ## Performance Optimization
@@ -264,6 +264,6 @@ SELECT
     table_name,
     ROUND(((data_length + index_length) / 1024 / 1024), 2) AS size_mb
 FROM information_schema.tables
-WHERE table_schema = 'manyla_db'
+WHERE table_schema = 'manylla_db'
 ORDER BY (data_length + index_length) DESC;
 ```

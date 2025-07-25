@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container } from '@mui/material';
-import { ManylaThemeProvider } from './context/ThemeContext';
+import { ManyllaThemeProvider } from './context/ThemeContext';
 import { SyncProvider } from './context/SyncContext';
 import { Header } from './components/Layout/Header';
 import { ProfileOverview } from './components/Profile/ProfileOverview';
@@ -118,7 +118,7 @@ function App() {
       setShowOnboarding(false);
     } else {
       // Check if user has existing profile in localStorage
-      const storedProfile = localStorage.getItem('manyla_profile');
+      const storedProfile = localStorage.getItem('manylla_profile');
       if (storedProfile) {
         try {
           const parsed = JSON.parse(storedProfile);
@@ -177,7 +177,7 @@ function App() {
     }
     
     // Save to localStorage
-    localStorage.setItem('manyla_profile', JSON.stringify({
+    localStorage.setItem('manylla_profile', JSON.stringify({
       ...profile,
       entries: editingEntry 
         ? profile.entries.map(e => e.id === editingEntry.id ? { ...entryData, id: editingEntry.id } : e)
@@ -205,7 +205,7 @@ function App() {
     setProfileCreateOpen(false);
     
     // Save to localStorage
-    localStorage.setItem('manyla_profile', JSON.stringify(newProfile));
+    localStorage.setItem('manylla_profile', JSON.stringify(newProfile));
   };
 
   const handleJoinWithCode = (code: string) => {
@@ -224,7 +224,7 @@ function App() {
 
   const handleCloseProfile = () => {
     // Clear the current profile and go back to onboarding
-    localStorage.removeItem('manyla_profile');
+    localStorage.removeItem('manylla_profile');
     setProfile(null);
     setShowOnboarding(true);
     setIsDemo(false);
@@ -242,7 +242,7 @@ function App() {
     setProfile(updatedProfile);
     
     // Save to localStorage
-    localStorage.setItem('manyla_profile', JSON.stringify(updatedProfile));
+    localStorage.setItem('manylla_profile', JSON.stringify(updatedProfile));
   };
 
   const handleUpdateCategories = (categories: CategoryConfig[]) => {
@@ -257,7 +257,7 @@ function App() {
     setProfile(updatedProfile);
     
     // Save to localStorage
-    localStorage.setItem('manyla_profile', JSON.stringify(updatedProfile));
+    localStorage.setItem('manylla_profile', JSON.stringify(updatedProfile));
   };
 
   const handleUpdateProfile = (updates: Partial<ChildProfile>) => {
@@ -272,7 +272,7 @@ function App() {
     setProfile(updatedProfile);
     
     // Save to localStorage
-    localStorage.setItem('manyla_profile', JSON.stringify(updatedProfile));
+    localStorage.setItem('manylla_profile', JSON.stringify(updatedProfile));
   };
 
   const handleThemeChange = (mode: 'light' | 'dark') => {
@@ -287,23 +287,23 @@ function App() {
     setProfile(updatedProfile);
     
     // Save to localStorage
-    localStorage.setItem('manyla_profile', JSON.stringify(updatedProfile));
+    localStorage.setItem('manylla_profile', JSON.stringify(updatedProfile));
   };
 
 
   // Show shared view if accessing via share link
   if (isSharedView && shareCode) {
     return (
-      <ManylaThemeProvider>
+      <ManyllaThemeProvider>
         <SharedView shareCode={shareCode} />
-      </ManylaThemeProvider>
+      </ManyllaThemeProvider>
     );
   }
 
   // Show onboarding if no profile exists
   if (showOnboarding) {
     return (
-      <ManylaThemeProvider>
+      <ManyllaThemeProvider>
         <OnboardingWizard
           onStartFresh={handleStartFresh}
           onJoinWithCode={handleJoinWithCode}
@@ -314,7 +314,7 @@ function App() {
           onClose={() => setProfileCreateOpen(false)}
           onCreate={handleCreateProfile}
         />
-      </ManylaThemeProvider>
+      </ManyllaThemeProvider>
     );
   }
 
@@ -323,7 +323,7 @@ function App() {
 
   return (
     <SyncProvider>
-      <ManylaThemeProvider 
+      <ManyllaThemeProvider 
         initialThemeMode={profile?.themeMode || 'light'}
         onThemeChange={handleThemeChange}
       >
@@ -360,7 +360,7 @@ function App() {
           open={syncDialogOpen}
           onClose={() => setSyncDialogOpen(false)}
         />
-      </ManylaThemeProvider>
+      </ManyllaThemeProvider>
     </SyncProvider>
   );
 }

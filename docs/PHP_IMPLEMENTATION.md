@@ -1,8 +1,8 @@
-# Manyla PHP Implementation Guide
+# Manylla PHP Implementation Guide
 
 ## Overview
 
-The Manyla PHP backend implements a zero-trust API with client-side encryption, token-based sharing, and multi-device sync. This guide covers the complete PHP implementation.
+The Manylla PHP backend implements a zero-trust API with client-side encryption, token-based sharing, and multi-device sync. This guide covers the complete PHP implementation.
 
 ## Directory Structure
 
@@ -34,7 +34,7 @@ The Manyla PHP backend implements a zero-trust API with client-side encryption, 
 <?php
 // Database configuration
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'manyla_db');
+define('DB_NAME', 'manylla_db');
 define('DB_USER', 'your_db_user');
 define('DB_PASS', 'your_db_password');
 
@@ -412,7 +412,7 @@ try {
     }
     
     // Generate share URL
-    $shareUrl = 'https://stackmap.app/manyla?share=' . $accessToken;
+    $shareUrl = 'https://stackmap.app/manylla?share=' . $accessToken;
     
     echo json_encode([
         'success' => true,
@@ -738,7 +738,7 @@ try {
 
 ### Test Share Creation
 ```bash
-curl -X POST https://stackmap.app/manyla/api/share/create.php \
+curl -X POST https://stackmap.app/manylla/api/share/create.php \
   -H "Content-Type: application/json" \
   -d '{
     "profile_data": {
@@ -752,7 +752,7 @@ curl -X POST https://stackmap.app/manyla/api/share/create.php \
 
 ### Test Share Access
 ```bash
-curl https://stackmap.app/manyla/api/share/access.php?token=ABC12345
+curl https://stackmap.app/manylla/api/share/access.php?token=ABC12345
 ```
 
 ## Monitoring

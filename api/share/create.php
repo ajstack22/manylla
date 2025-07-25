@@ -106,7 +106,7 @@ try {
         'share_id' => $shareId,
         'access_code' => $accessCode,
         'expires_at' => $expiresAt,
-        'share_url' => 'https://' . $_SERVER['HTTP_HOST'] . '/manyla?share=' . $accessCode
+        'share_url' => 'https://' . $_SERVER['HTTP_HOST'] . '/manylla?share=' . $accessCode
     ], SHARE_MESSAGES['SHARE_CREATED']);
     
 } catch (Exception $e) {

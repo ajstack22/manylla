@@ -1,7 +1,7 @@
-# Manyla API Deployment Guide
+# Manylla API Deployment Guide
 
 ## Overview
-This guide walks through deploying the Manyla PHP API, which combines StackMap's zero-knowledge sync with Manyla's sharing features.
+This guide walks through deploying the Manylla PHP API, which combines StackMap's zero-knowledge sync with Manylla's sharing features.
 
 ## Prerequisites
 - PHP 7.4+ with PDO MySQL extension
@@ -13,14 +13,14 @@ This guide walks through deploying the Manyla PHP API, which combines StackMap's
 
 1. **Create Database in cPanel**
    - Go to MySQL Databases
-   - Create database: `yourusername_manyla`
-   - Create user: `yourusername_manylauser`
+   - Create database: `yourusername_manylla`
+   - Create user: `yourusername_manyllauser`
    - Add user to database with ALL PRIVILEGES
 
 2. **Import Schema**
    - Open phpMyAdmin
    - Select your database
-   - Import `/database/manyla_sync_schema.sql`
+   - Import `/database/manylla_sync_schema.sql`
 
 3. **Verify Tables**
    ```sql
@@ -37,8 +37,8 @@ This guide walks through deploying the Manyla PHP API, which combines StackMap's
 
 2. **Edit config.php**
    ```php
-   define('DB_NAME', 'yourusername_manyla');
-   define('DB_USER', 'yourusername_manylauser');
+   define('DB_NAME', 'yourusername_manylla');
+   define('DB_USER', 'yourusername_manyllauser');
    define('DB_PASS', 'your_secure_password');
    ```
 
@@ -55,11 +55,11 @@ This guide walks through deploying the Manyla PHP API, which combines StackMap's
 ### Directory Structure:
 ```
 public_html/
-├── manyla/          (or many.la/ if using separate domain)
+├── manylla/          (or many.la/ if using separate domain)
 │   ├── index.html   (React build)
 │   └── static/
 └── api/
-    └── manyla/
+    └── manylla/
         ├── config/
         │   ├── config.php (DO NOT commit!)
         │   └── database.php
@@ -72,21 +72,21 @@ public_html/
         │   ├── push.php
         │   ├── pull.php
         │   └── delete.php
-        └── share/       (Manyla-specific)
+        └── share/       (Manylla-specific)
             ├── create.php
             ├── access.php
             └── delete.php
 ```
 
 ### Upload via FTP/cPanel:
-1. Create `/api/manyla/` directory
+1. Create `/api/manylla/` directory
 2. Upload all PHP files maintaining structure
 3. Set permissions: 644 for files, 755 for directories
 4. Ensure config.php is NOT publicly accessible
 
 ## Step 4: Copy StackMap Sync Endpoints
 
-Copy these files from `stackmap_php_api_info/api/` to `api/manyla/sync/`:
+Copy these files from `stackmap_php_api_info/api/` to `api/manylla/sync/`:
 - create.php
 - push.php
 - pull.php
@@ -140,7 +140,7 @@ class RateLimiter {
 
 ### Test Share Creation:
 ```bash
-curl -X POST https://stackmap.app/api/manyla/share/create.php \
+curl -X POST https://stackmap.app/api/manylla/share/create.php \
   -H "Content-Type: application/json" \
   -d '{
     "encrypted_data": "base64_encrypted_data_here",
@@ -151,7 +151,7 @@ curl -X POST https://stackmap.app/api/manyla/share/create.php \
 
 ### Test Share Access:
 ```bash
-curl -X POST https://stackmap.app/api/manyla/share/access.php \
+curl -X POST https://stackmap.app/api/manylla/share/access.php \
   -H "Content-Type: application/json" \
   -d '{
     "access_code": "ABC123"
@@ -164,8 +164,8 @@ In your React app, update API endpoints:
 ```javascript
 // config.js
 const API_BASE = process.env.NODE_ENV === 'production' 
-  ? 'https://stackmap.app/api/manyla'  // or https://many.la/api
-  : 'http://localhost:3000/api/manyla';
+  ? 'https://stackmap.app/api/manylla'  // or https://many.la/api
+  : 'http://localhost:3000/api/manylla';
 
 // Share service
 const createShare = async (encryptedData, options) => {
@@ -205,7 +205,7 @@ const createShare = async (encryptedData, options) => {
 
 3. **Set Up Cron Job** (optional)
    ```bash
-   0 2 * * * /usr/bin/php /home/username/public_html/api/manyla/cleanup.php
+   0 2 * * * /usr/bin/php /home/username/public_html/api/manylla/cleanup.php
    ```
 
 ## Troubleshooting

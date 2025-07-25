@@ -1,17 +1,17 @@
-# Manyla API Documentation
+# Manylla API Documentation
 
 ## Overview
 
-Manyla uses a zero-trust architecture with client-side encryption and token-based sharing. The API provides endpoints for secure synchronization and temporary share links.
+Manylla uses a zero-trust architecture with client-side encryption and token-based sharing. The API provides endpoints for secure synchronization and temporary share links.
 
 ## Base URL
 
-Production: `https://stackmap.app/manyla/api`
-Development: `http://localhost/manyla/api`
+Production: `https://stackmap.app/manylla/api`
+Development: `http://localhost/manylla/api`
 
 ## Authentication
 
-Manyla uses a zero-trust model with no traditional user accounts:
+Manylla uses a zero-trust model with no traditional user accounts:
 - **Sync**: Uses recovery phrases that generate deterministic sync IDs
 - **Sharing**: Uses temporary access tokens passed via URL parameters
 
@@ -53,7 +53,7 @@ Creates a temporary share link with an access token.
   "share_id": "uuid",
   "access_token": "string",
   "expires_at": "ISO 8601 datetime",
-  "share_url": "https://stackmap.app/manyla?share=ACCESS_TOKEN"
+  "share_url": "https://stackmap.app/manylla?share=ACCESS_TOKEN"
 }
 ```
 

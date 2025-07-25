@@ -62,7 +62,7 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, onSyncClick, onClos
         <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
           <img
             src="/manila.png"
-            alt="Manyla Logo"
+            alt="Manylla Logo"
             style={{
               height: 40,
               width: 'auto',
@@ -83,7 +83,7 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, onSyncClick, onClos
               paddingBottom: '4px',
             }}
           >
-            Manyla
+            Manylla
           </Typography>
         </Box>
 

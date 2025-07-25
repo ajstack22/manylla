@@ -31,11 +31,11 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
         <Box sx={{ textAlign: 'center', mb: 3 }}>
           <img
             src="/manila.png"
-            alt="Manyla Logo"
+            alt="Manylla Logo"
             style={{ height: 60, marginBottom: 12 }}
           />
           <Typography variant="h4" gutterBottom sx={{ fontWeight: 700 }}>
-            Welcome to Manyla
+            Welcome to Manylla
           </Typography>
           <Typography variant="body1" color="text.secondary">
             Your secure companion for managing your child's special needs journey
@@ -44,7 +44,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
 
         <Box sx={{ backgroundColor: 'action.hover', p: 2, borderRadius: 2, mb: 3 }}>
           <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
-            Manyla helps you:
+            Manylla helps you:
           </Typography>
           <Typography variant="body2" color="text.secondary">
             • Track developmental milestones<br />

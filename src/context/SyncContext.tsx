@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import encryptionService from '../services/sync/manylaEncryptionService';
+import encryptionService from '../services/sync/manyllaEncryptionService';
 
 interface SyncContextType {
   syncEnabled: boolean;
@@ -60,7 +60,7 @@ export const SyncProvider: React.FC<SyncProviderProps> = ({ children }) => {
       const { syncId } = await encryptionService.initialize(phrase);
       
       // TODO: Call API to create sync group
-      const apiUrl = process.env.REACT_APP_API_URL || '/api/manyla';
+      const apiUrl = process.env.REACT_APP_API_URL || '/api/manylla';
       const response = await fetch(`${apiUrl}/sync/create.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -71,7 +71,7 @@ export const SyncProvider: React.FC<SyncProviderProps> = ({ children }) => {
             settings: {},
             version: 1
           }),
-          recovery_salt: await localStorage.getItem('secure_manyla_salt'),
+          recovery_salt: await localStorage.getItem('secure_manylla_salt'),
           device_id: await generateDeviceId()
         })
       });
@@ -101,7 +101,7 @@ export const SyncProvider: React.FC<SyncProviderProps> = ({ children }) => {
       const { syncId } = await encryptionService.initialize(phrase);
       
       // TODO: Pull data from server
-      const apiUrl = process.env.REACT_APP_API_URL || '/api/manyla';
+      const apiUrl = process.env.REACT_APP_API_URL || '/api/manylla';
       const response = await fetch(`${apiUrl}/sync/pull.php?sync_id=${syncId}`, {
         headers: { 'Content-Type': 'application/json' }
       });
@@ -185,13 +185,13 @@ export const SyncProvider: React.FC<SyncProviderProps> = ({ children }) => {
 
 // Utility function to generate device ID
 async function generateDeviceId(): Promise<string> {
-  let deviceId = localStorage.getItem('manyla_device_id');
+  let deviceId = localStorage.getItem('manylla_device_id');
   
   if (!deviceId) {
     deviceId = Array.from(crypto.getRandomValues(new Uint8Array(16)))
       .map(b => b.toString(16).padStart(2, '0'))
       .join('');
-    localStorage.setItem('manyla_device_id', deviceId);
+    localStorage.setItem('manylla_device_id', deviceId);
   }
   
   return deviceId;

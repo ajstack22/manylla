@@ -1,8 +1,8 @@
-# Manyla Share Token Implementation Guide
+# Manylla Share Token Implementation Guide
 
 ## Overview
 
-Manyla implements token-based sharing through URL parameters (`?share=TOKEN`) to enable temporary, secure access to filtered profile information. This guide details the complete implementation from frontend to backend.
+Manylla implements token-based sharing through URL parameters (`?share=TOKEN`) to enable temporary, secure access to filtered profile information. This guide details the complete implementation from frontend to backend.
 
 ## Architecture
 
@@ -10,7 +10,7 @@ Manyla implements token-based sharing through URL parameters (`?share=TOKEN`) to
 1. User selects what to share and generates a token
 2. Frontend sends profile data to backend API
 3. Backend stores encrypted data with token
-4. Share URL generated: `https://stackmap.app/manyla?share=TOKEN`
+4. Share URL generated: `https://stackmap.app/manylla?share=TOKEN`
 5. Recipient opens URL, token auto-authenticates
 6. Backend validates token and returns filtered data
 7. Frontend displays read-only shared view
@@ -28,7 +28,7 @@ const handleGenerateLink = () => {
   setAccessCode(code);
   
   // Store in localStorage for local testing
-  const existingShares = localStorage.getItem('manyla_shares');
+  const existingShares = localStorage.getItem('manylla_shares');
   const shares = existingShares ? JSON.parse(existingShares) : {};
   
   // Filter profile based on selections
@@ -50,7 +50,7 @@ const handleGenerateLink = () => {
     note: shareNote
   };
   
-  localStorage.setItem('manyla_shares', JSON.stringify(shares));
+  localStorage.setItem('manylla_shares', JSON.stringify(shares));
   
   // With backend: POST to API
   if (process.env.REACT_APP_API_URL) {
@@ -65,7 +65,7 @@ const handleGenerateLink = () => {
     });
   }
   
-  const shareDomain = process.env.REACT_APP_SHARE_DOMAIN || 'https://stackmap.app/manyla';
+  const shareDomain = process.env.REACT_APP_SHARE_DOMAIN || 'https://stackmap.app/manylla';
   setGeneratedLink(`${shareDomain}?share=${code}`);
 };
 ```
@@ -93,9 +93,9 @@ useEffect(() => {
 // Render shared view for share links
 if (isSharedView && shareCode) {
   return (
-    <ManylaThemeProvider>
+    <ManyllaThemeProvider>
       <SharedView shareCode={shareCode} />
-    </ManylaThemeProvider>
+    </ManyllaThemeProvider>
   );
 }
 ```
@@ -113,7 +113,7 @@ export const SharedView: React.FC<{ shareCode: string }> = ({ shareCode }) => {
     const loadSharedData = async () => {
       try {
         // Try localStorage first (for demo/dev)
-        const storedShares = localStorage.getItem('manyla_shares');
+        const storedShares = localStorage.getItem('manylla_shares');
         if (storedShares) {
           const shares = JSON.parse(storedShares);
           const shareData = shares[shareCode];
@@ -225,7 +225,7 @@ $stmt->execute([
 // Return share URL
 echo json_encode([
     'success' => true,
-    'share_url' => 'https://stackmap.app/manyla?share=' . $accessToken
+    'share_url' => 'https://stackmap.app/manylla?share=' . $accessToken
 ]);
 ```
 
@@ -320,7 +320,7 @@ public static function validateToken($token) {
 6. Receives shareable URL with token
 
 ### 2. Share Access Flow
-1. Recipient receives URL: `https://stackmap.app/manyla?share=ABC123`
+1. Recipient receives URL: `https://stackmap.app/manylla?share=ABC123`
 2. Opens link in browser
 3. App detects token in URL
 4. Auto-authenticates (no manual entry needed)
@@ -337,7 +337,7 @@ public static function validateToken($token) {
 ### 1. Create Test Share
 ```bash
 # Create share with backend
-curl -X POST https://stackmap.app/manyla/api/share/create.php \
+curl -X POST https://stackmap.app/manylla/api/share/create.php \
   -H "Content-Type: application/json" \
   -d '{
     "profile_data": {
@@ -354,10 +354,10 @@ curl -X POST https://stackmap.app/manyla/api/share/create.php \
 ### 2. Access Test Share
 ```bash
 # Access via token
-curl https://stackmap.app/manyla/api/share/access.php?token=TEST123
+curl https://stackmap.app/manylla/api/share/access.php?token=TEST123
 
 # Or open in browser
-https://stackmap.app/manyla?share=TEST123
+https://stackmap.app/manylla?share=TEST123
 ```
 
 ### 3. Local Testing
@@ -402,17 +402,17 @@ DELETE FROM share_links WHERE expires_at < NOW();
 ### 1. Enable Token Sharing
 ```bash
 # 1. Deploy database schema
-mysql -u user -p manyla_db < share_schema.sql
+mysql -u user -p manylla_db < share_schema.sql
 
 # 2. Deploy PHP files
-scp -r api/share/ server:/var/www/manyla/api/
+scp -r api/share/ server:/var/www/manylla/api/
 
 # 3. Update frontend environment
-echo "REACT_APP_API_URL=https://stackmap.app/manyla/api" >> .env.production
+echo "REACT_APP_API_URL=https://stackmap.app/manylla/api" >> .env.production
 
 # 4. Build and deploy frontend
 npm run build
-scp -r build/* server:/var/www/manyla/
+scp -r build/* server:/var/www/manylla/
 ```
 
 ### 2. Verify Implementation

@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 
-const manylaColors = {
+const manyllaColors = {
   manila: '#F4E4C1',
   manilaLight: '#FAF3E3',
   manilaDark: '#E8D4A2',
@@ -16,25 +16,25 @@ export const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: manylaColors.brown,
-      light: manylaColors.manila,
-      dark: manylaColors.darkBrown,
+      main: manyllaColors.brown,
+      light: manyllaColors.manila,
+      dark: manyllaColors.darkBrown,
     },
     secondary: {
-      main: manylaColors.accent,
+      main: manyllaColors.accent,
     },
     background: {
       default: '#FAFAFA',
       paper: '#FFFFFF',
     },
     success: {
-      main: manylaColors.success,
+      main: manyllaColors.success,
     },
     warning: {
-      main: manylaColors.warning,
+      main: manyllaColors.warning,
     },
     error: {
-      main: manylaColors.error,
+      main: manyllaColors.error,
     },
   },
   typography: {
@@ -99,25 +99,25 @@ export const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: manylaColors.manila,
-      light: manylaColors.manilaLight,
-      dark: manylaColors.manilaDark,
+      main: manyllaColors.manila,
+      light: manyllaColors.manilaLight,
+      dark: manyllaColors.manilaDark,
     },
     secondary: {
-      main: manylaColors.accent,
+      main: manyllaColors.accent,
     },
     background: {
       default: '#121212',
       paper: '#1E1E1E',
     },
     success: {
-      main: manylaColors.success,
+      main: manyllaColors.success,
     },
     warning: {
-      main: manylaColors.warning,
+      main: manyllaColors.warning,
     },
     error: {
-      main: manylaColors.error,
+      main: manyllaColors.error,
     },
   },
   typography: lightTheme.typography,

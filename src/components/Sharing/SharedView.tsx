@@ -29,7 +29,7 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
     const loadSharedData = async () => {
       try {
         // Check if there's a stored share that matches this code
-        const storedShares = localStorage.getItem('manyla_shares');
+        const storedShares = localStorage.getItem('manylla_shares');
         if (storedShares) {
           const shares = JSON.parse(storedShares);
           const shareData = shares[shareCode];

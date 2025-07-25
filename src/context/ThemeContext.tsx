@@ -25,7 +25,7 @@ interface ThemeProviderProps {
   onThemeChange?: (mode: 'light' | 'dark') => void;
 }
 
-export const ManylaThemeProvider: React.FC<ThemeProviderProps> = ({ 
+export const ManyllaThemeProvider: React.FC<ThemeProviderProps> = ({ 
   children, 
   initialThemeMode = 'light',
   onThemeChange 

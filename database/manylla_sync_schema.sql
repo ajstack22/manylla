@@ -1,8 +1,8 @@
--- Manyla Sync Database Setup
+-- Manylla Sync Database Setup
 -- Zero-knowledge sync for special needs information management
 -- 
 -- IMPORTANT: Before running this:
--- 1. Create database 'manyla_app' in cPanel
+-- 1. Create database 'manylla_app' in cPanel
 -- 2. Create a database user in cPanel
 -- 3. Grant the following permissions to the user:
 --    - SELECT, INSERT, UPDATE, DELETE (for normal operations)

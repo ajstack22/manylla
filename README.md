@@ -1,4 +1,4 @@
-# Manyla - Special Needs Information Management POC
+# Manylla - Special Needs Information Management POC
 
 A clean, minimal web application for special needs parents to retain and share sensitive development information about their children.
 

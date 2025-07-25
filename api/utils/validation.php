@@ -78,7 +78,7 @@ function validateSyncType($type) {
 }
 
 /**
- * Validate access code (Manyla-specific)
+ * Validate access code (Manylla-specific)
  */
 function validateAccessCode($code) {
     if (empty($code)) {
@@ -148,7 +148,7 @@ function getClientIp() {
  * Hash IP address for privacy
  */
 function hashIp($ip) {
-    return hash('sha256', $ip . (defined('IP_SALT') ? IP_SALT : 'manyla-default-salt'));
+    return hash('sha256', $ip . (defined('IP_SALT') ? IP_SALT : 'manylla-default-salt'));
 }
 
 /**

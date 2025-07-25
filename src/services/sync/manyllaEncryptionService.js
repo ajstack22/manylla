@@ -39,7 +39,7 @@ const SecureStorage = {
   }
 };
 
-class ManylaEncryptionService {
+class ManyllaEncryptionService {
   constructor() {
     this.masterKey = null;
     this.syncId = null;
@@ -113,19 +113,19 @@ class ManylaEncryptionService {
     this.syncId = syncId;
     
     // Store salt and encrypted recovery phrase
-    await SecureStorage.setItem('manyla_salt', salt);
-    await SecureStorage.setItem('manyla_sync_id', syncId);
+    await SecureStorage.setItem('manylla_salt', salt);
+    await SecureStorage.setItem('manylla_sync_id', syncId);
     
     // Store encrypted recovery phrase (encrypted with device-specific key)
     const deviceKey = await this.getDeviceKey();
     const encryptedPhrase = await this.encryptWithKey(recoveryPhrase, deviceKey);
-    await SecureStorage.setItem('manyla_recovery', encryptedPhrase);
+    await SecureStorage.setItem('manylla_recovery', encryptedPhrase);
     
     return { syncId, salt };
   }
 
   /**
-   * Encrypt Manyla profile data
+   * Encrypt Manylla profile data
    */
   encryptData(data) {
     if (!this.masterKey) {
@@ -170,7 +170,7 @@ class ManylaEncryptionService {
   }
 
   /**
-   * Decrypt Manyla profile data
+   * Decrypt Manylla profile data
    */
   decryptData(encryptedData) {
     if (!this.masterKey) {
@@ -213,12 +213,12 @@ class ManylaEncryptionService {
    * Get or generate device-specific key
    */
   async getDeviceKey() {
-    let deviceKey = await SecureStorage.getItem('manyla_device_key');
+    let deviceKey = await SecureStorage.getItem('manylla_device_key');
     
     if (!deviceKey) {
       const keyBytes = nacl.randomBytes(KEY_LENGTH);
       deviceKey = util.encodeBase64(keyBytes);
-      await SecureStorage.setItem('manyla_device_key', deviceKey);
+      await SecureStorage.setItem('manylla_device_key', deviceKey);
     }
     
     return util.decodeBase64(deviceKey);
@@ -243,7 +243,7 @@ class ManylaEncryptionService {
    * Check if sync is enabled
    */
   async isEnabled() {
-    const syncId = await SecureStorage.getItem('manyla_sync_id');
+    const syncId = await SecureStorage.getItem('manylla_sync_id');
     return !!syncId;
   }
 
@@ -251,7 +251,7 @@ class ManylaEncryptionService {
    * Get stored sync ID
    */
   async getSyncId() {
-    return SecureStorage.getItem('manyla_sync_id');
+    return SecureStorage.getItem('manylla_sync_id');
   }
 
   /**
@@ -261,17 +261,17 @@ class ManylaEncryptionService {
     this.masterKey = null;
     this.syncId = null;
     
-    await SecureStorage.removeItem('manyla_salt');
-    await SecureStorage.removeItem('manyla_sync_id');
-    await SecureStorage.removeItem('manyla_recovery');
+    await SecureStorage.removeItem('manylla_salt');
+    await SecureStorage.removeItem('manylla_sync_id');
+    await SecureStorage.removeItem('manylla_recovery');
   }
 
   /**
    * Restore from stored recovery phrase
    */
   async restore() {
-    const encryptedPhrase = await SecureStorage.getItem('manyla_recovery');
-    const salt = await SecureStorage.getItem('manyla_salt');
+    const encryptedPhrase = await SecureStorage.getItem('manylla_recovery');
+    const salt = await SecureStorage.getItem('manylla_salt');
     
     if (!encryptedPhrase || !salt) {
       return false;
@@ -300,4 +300,4 @@ class ManylaEncryptionService {
   }
 }
 
-export default new ManylaEncryptionService();
+export default new ManyllaEncryptionService();

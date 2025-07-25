@@ -76,7 +76,7 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
     setAccessCode(code);
     
     // Store the shared data in localStorage
-    const existingShares = localStorage.getItem('manyla_shares');
+    const existingShares = localStorage.getItem('manylla_shares');
     const shares = existingShares ? JSON.parse(existingShares) : {};
     
     // Filter the profile data based on selected options
@@ -99,9 +99,9 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
       note: shareNote
     };
     
-    localStorage.setItem('manyla_shares', JSON.stringify(shares));
+    localStorage.setItem('manylla_shares', JSON.stringify(shares));
     
-    const shareDomain = process.env.REACT_APP_SHARE_DOMAIN || 'https://stackmap.app/manyla';
+    const shareDomain = process.env.REACT_APP_SHARE_DOMAIN || 'https://stackmap.app/manylla';
     setGeneratedLink(`${shareDomain}?share=${code}`);
   };
 

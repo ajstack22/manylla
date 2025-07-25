@@ -1,8 +1,8 @@
-# Manyla Client-Side Implementation Guide
+# Manylla Client-Side Implementation Guide
 
 ## Overview
 
-Manyla's client-side implementation uses React with TypeScript, Material-UI for components, and implements zero-trust encryption for data security. This guide covers the complete frontend architecture.
+Manylla's client-side implementation uses React with TypeScript, Material-UI for components, and implements zero-trust encryption for data security. This guide covers the complete frontend architecture.
 
 ## Project Structure
 
@@ -24,7 +24,7 @@ Manyla's client-side implementation uses React with TypeScript, Material-UI for 
 │   └── useMobileDialog.tsx # Mobile-responsive dialog hook
 ├── services/
 │   └── sync/
-│       └── manylaEncryptionService.js # Encryption implementation
+│       └── manyllaEncryptionService.js # Encryption implementation
 ├── types/
 │   └── ChildProfile.ts    # TypeScript interfaces
 ├── utils/
@@ -58,7 +58,7 @@ function App() {
       setShowOnboarding(false);
     } else {
       // Load existing profile from localStorage
-      const storedProfile = localStorage.getItem('manyla_profile');
+      const storedProfile = localStorage.getItem('manylla_profile');
       if (storedProfile) {
         const parsed = JSON.parse(storedProfile);
         // Parse dates
@@ -141,7 +141,7 @@ export interface QuickInfoConfig {
 Provides theme management with persistence:
 
 ```typescript
-export const ManylaThemeProvider: React.FC<{
+export const ManyllaThemeProvider: React.FC<{
   children: ReactNode;
   initialThemeMode?: 'light' | 'dark';
   onThemeChange?: (mode: 'light' | 'dark') => void;
@@ -309,11 +309,11 @@ Profile data is persisted to localStorage:
 
 ```typescript
 const saveProfile = (profile: ChildProfile) => {
-  localStorage.setItem('manyla_profile', JSON.stringify(profile));
+  localStorage.setItem('manylla_profile', JSON.stringify(profile));
 };
 
 const loadProfile = (): ChildProfile | null => {
-  const stored = localStorage.getItem('manyla_profile');
+  const stored = localStorage.getItem('manylla_profile');
   if (!stored) return null;
   
   const parsed = JSON.parse(stored);
@@ -344,13 +344,13 @@ interface ShareData {
 }
 
 const saveShare = (token: string, data: ShareData) => {
-  const shares = JSON.parse(localStorage.getItem('manyla_shares') || '{}');
+  const shares = JSON.parse(localStorage.getItem('manylla_shares') || '{}');
   shares[token] = data;
-  localStorage.setItem('manyla_shares', JSON.stringify(shares));
+  localStorage.setItem('manylla_shares', JSON.stringify(shares));
 };
 
 const getShare = (token: string): ShareData | null => {
-  const shares = JSON.parse(localStorage.getItem('manyla_shares') || '{}');
+  const shares = JSON.parse(localStorage.getItem('manylla_shares') || '{}');
   const data = shares[token];
   
   if (!data) return null;
@@ -358,7 +358,7 @@ const getShare = (token: string): ShareData | null => {
   // Check expiration
   if (new Date(data.expiresAt) < new Date()) {
     delete shares[token];
-    localStorage.setItem('manyla_shares', JSON.stringify(shares));
+    localStorage.setItem('manylla_shares', JSON.stringify(shares));
     return null;
   }
   
@@ -368,14 +368,14 @@ const getShare = (token: string): ShareData | null => {
 
 ## Encryption Service
 
-### Zero-Knowledge Encryption (`services/sync/manylaEncryptionService.js`)
+### Zero-Knowledge Encryption (`services/sync/manyllaEncryptionService.js`)
 
 ```javascript
 import nacl from 'tweetnacl';
 import naclUtil from 'tweetnacl-util';
 import scrypt from 'scrypt-js';
 
-class ManylaEncryptionService {
+class ManyllaEncryptionService {
   constructor() {
     this.keyPair = null;
     this.recoveryPhrase = null;
@@ -403,7 +403,7 @@ class ManylaEncryptionService {
     this.recoveryPhrase = recoveryPhrase;
     
     // Derive key from phrase
-    const salt = new TextEncoder().encode('manyla-salt-v1');
+    const salt = new TextEncoder().encode('manylla-salt-v1');
     const password = new TextEncoder().encode(recoveryPhrase);
     
     const derivedKey = await scrypt.scrypt(
@@ -424,8 +424,8 @@ class ManylaEncryptionService {
     );
     
     // Store in secure storage
-    await this.secureStore('manyla_keypair', this.keyPair);
-    await this.secureStore('manyla_phrase', recoveryPhrase);
+    await this.secureStore('manylla_keypair', this.keyPair);
+    await this.secureStore('manylla_phrase', recoveryPhrase);
     
     return { syncId };
   }
@@ -492,7 +492,7 @@ class ManylaEncryptionService {
   }
 }
 
-export default new ManylaEncryptionService();
+export default new ManyllaEncryptionService();
 ```
 
 ## UI Components
@@ -726,9 +726,9 @@ const Header: React.FC = () => {
     return (
       <AppBar position="sticky">
         <Toolbar>
-          <ManilaIcon />
+          <ManyllaIcon />
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Manyla
+            Manylla
           </Typography>
           <IconButton onClick={(e) => setMobileMenuAnchor(e.currentTarget)}>
             <MoreVertIcon />
@@ -752,7 +752,7 @@ const Header: React.FC = () => {
     <AppBar position="sticky">
       <Toolbar>
         <ManilaIcon />
-        <Typography variant="h5">Manyla</Typography>
+        <Typography variant="h5">Manylla</Typography>
         <Box sx={{ flexGrow: 1 }} />
         <Button startIcon={<ShareIcon />} onClick={handleShare}>
           Share Profile
@@ -836,9 +836,9 @@ const SearchableList = ({ items, onSearch }) => {
 
 ```bash
 # .env.production
-REACT_APP_API_URL=https://stackmap.app/manyla/api
-REACT_APP_SHARE_DOMAIN=https://stackmap.app/manyla
-PUBLIC_URL=/manyla
+REACT_APP_API_URL=https://stackmap.app/manylla/api
+REACT_APP_SHARE_DOMAIN=https://stackmap.app/manylla
+PUBLIC_URL=/manylla
 ```
 
 ### 2. Build Process
@@ -846,11 +846,11 @@ PUBLIC_URL=/manyla
 ```json
 // package.json
 {
-  "homepage": "https://stackmap.app/manyla",
+  "homepage": "https://stackmap.app/manylla",
   "scripts": {
     "build": "react-scripts build",
     "build:analyze": "source-map-explorer 'build/static/js/*.js'",
-    "deploy": "npm run build && rsync -avz --delete build/ server:/var/www/manyla/"
+    "deploy": "npm run build && rsync -avz --delete build/ server:/var/www/manylla/"
   }
 }
 ```
@@ -860,7 +860,7 @@ PUBLIC_URL=/manyla
 ```typescript
 // Service worker for offline support
 if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
-  navigator.serviceWorker.register('/manyla/service-worker.js');
+  navigator.serviceWorker.register('/manylla/service-worker.js');
 }
 
 // Error boundary

@@ -1,6 +1,6 @@
 <?php
 /**
- * Manyla API Configuration
+ * Manylla API Configuration
  * 
  * Copy this file to config.php and update with your actual values
  * NEVER commit config.php to version control!
@@ -8,8 +8,8 @@
 
 // Database Configuration
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'your_database_name'); // e.g., username_manyla
-define('DB_USER', 'your_database_user'); // e.g., username_manylauser
+define('DB_NAME', 'your_database_name'); // e.g., username_manylla
+define('DB_USER', 'your_database_user'); // e.g., username_manyllauser
 define('DB_PASS', 'your_database_password');
 define('DB_CHARSET', 'utf8mb4');
 
@@ -27,7 +27,7 @@ define('MAX_DEVICE_NAME_LENGTH', 100);
 define('SYNC_ID_LENGTH', 32);
 define('DEVICE_ID_LENGTH', 32);
 
-// Share Configuration (Manyla-specific)
+// Share Configuration (Manylla-specific)
 define('SHARE_CODE_LENGTH', 6); // 6-character access codes
 define('DEFAULT_SHARE_EXPIRY_HOURS', 168); // 7 days default
 define('MAX_SHARE_EXPIRY_DAYS', 365); // 1 year maximum
@@ -49,9 +49,9 @@ define('SECURITY_HEADERS', [
 // CORS Configuration
 define('CORS_ALLOWED_ORIGINS', [
     'https://stackmap.app', // Main domain
-    'https://stackmap.app/manyla', // Subdirectory deployment
-    'https://manyla.com', // Future domain if purchased
-    'https://www.manyla.com' // Future domain with www
+    'https://stackmap.app/manylla', // Subdirectory deployment
+    'https://manylla.com', // Future domain if purchased
+    'https://www.manylla.com' // Future domain with www
 ]);
 
 // Development origins (remove in production)
@@ -76,7 +76,7 @@ define('ERROR_MESSAGES', [
     'PAYLOAD_TOO_LARGE' => 'Encrypted data exceeds size limit',
     'DATABASE_ERROR' => 'Database operation failed',
     'SERVER_ERROR' => 'Internal server error',
-    // Manyla-specific errors
+    // Manylla-specific errors
     'INVALID_ACCESS_CODE' => 'Invalid or expired access code',
     'SHARE_NOT_FOUND' => 'Shared profile not found',
     'SHARE_EXPIRED' => 'This share has expired',
