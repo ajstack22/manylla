@@ -31,6 +31,8 @@ import {
 import { QuickInfoConfig } from '../../types/ChildProfile';
 import { UnifiedAddDialog } from '../Dialogs/UnifiedAddDialog';
 import { useMobileDialog } from '../../hooks/useMobileDialog';
+import { MarkdownField } from '../Forms/MarkdownField';
+import { MarkdownRenderer } from '../Forms/MarkdownRenderer';
 
 interface QuickInfoManagerProps {
   open: boolean;
@@ -148,29 +150,38 @@ export const QuickInfoManager: React.FC<QuickInfoManagerProps> = ({
                     }
                     secondary={
                       editingPanel?.id === panel.id ? (
-                        <TextField
-                          value={panel.value}
-                          onChange={(e) => handleEditValue(panel.id, e.target.value)}
-                          size="small"
-                          fullWidth
-                          multiline
-                          placeholder="Enter value..."
-                          sx={{ mt: 1 }}
-                          onBlur={() => setEditingPanel(null)}
-                          autoFocus
-                        />
+                        <Box sx={{ mt: 1 }}>
+                          <MarkdownField
+                            label=""
+                            value={panel.value}
+                            onChange={(value) => handleEditValue(panel.id, value)}
+                            placeholder="Enter value..."
+                            height={100}
+                          />
+                          <Button 
+                            size="small" 
+                            onClick={() => setEditingPanel(null)}
+                            sx={{ mt: 1 }}
+                          >
+                            Done
+                          </Button>
+                        </Box>
                       ) : (
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
+                        <Box
                           sx={{ 
                             cursor: 'pointer',
-                            '&:hover': { textDecoration: 'underline' }
+                            '&:hover': { opacity: 0.8 }
                           }}
                           onClick={() => setEditingPanel(panel)}
                         >
-                          {panel.value || 'Click to add value...'}
-                        </Typography>
+                          {panel.value ? (
+                            <MarkdownRenderer content={panel.value} variant="body2" />
+                          ) : (
+                            <Typography variant="body2" color="text.secondary">
+                              Click to add value...
+                            </Typography>
+                          )}
+                        </Box>
                       )
                     }
                   />

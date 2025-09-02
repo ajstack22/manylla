@@ -24,6 +24,7 @@ import { Close as CloseIcon } from '@mui/icons-material';
 // Removed react-colorful import - using built-in color input instead
 import { QuickInfoConfig, CategoryConfig } from '../../types/ChildProfile';
 import { useMobileDialog } from '../../hooks/useMobileDialog';
+import { MarkdownField } from '../Forms/MarkdownField';
 
 interface UnifiedAddDialogProps {
   open: boolean;
@@ -176,14 +177,12 @@ export const UnifiedAddDialog: React.FC<UnifiedAddDialogProps> = ({
                 />
               )}
 
-              <TextField
+              <MarkdownField
                 label="Information"
                 value={value}
-                onChange={(e) => setValue(e.target.value)}
-                fullWidth
-                multiline
-                rows={3}
+                onChange={(newValue) => setValue(newValue)}
                 placeholder="Enter the information to display"
+                height={150}
               />
 
               <Box>

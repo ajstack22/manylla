@@ -17,13 +17,14 @@ export interface CategoryConfig {
   order: number;
   isVisible: boolean;
   isCustom: boolean;
+  isQuickInfo?: boolean; // Categories that were formerly Quick Info panels
 }
 
 export interface QuickInfoConfig {
   id: string;
   name: string;
   displayName: string;
-  value: string;
+  value: string; // Will be migrated to entries
   order: number;
   isVisible: boolean;
   isCustom: boolean;

@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField,
   Button,
   Stack,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
-  Chip,
   Box,
   IconButton,
   AppBar,
@@ -21,6 +19,9 @@ import {
 import { Close as CloseIcon } from '@mui/icons-material';
 import { Entry } from '../../types/ChildProfile';
 import { useMobileDialog } from '../../hooks/useMobileDialog';
+import { useMobileKeyboard } from '../../hooks/useMobileKeyboard';
+import { RichTextInput } from './RichTextInput';
+import { getPlaceholder, getRandomExample } from '../../utils/placeholders';
 
 interface EntryFormProps {
   open: boolean;
@@ -46,11 +47,30 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   entry,
 }) => {
   const { mobileDialogProps, isMobile } = useMobileDialog();
+  const { keyboardPadding, isKeyboardVisible } = useMobileKeyboard();
   const [formData, setFormData] = useState({
     title: entry?.title || '',
     description: entry?.description || '',
     visibility: entry?.visibility || 'private',
   });
+
+  // Reset form data when modal opens/closes or entry changes
+  useEffect(() => {
+    if (open) {
+      setFormData({
+        title: entry?.title || '',
+        description: entry?.description || '',
+        visibility: entry?.visibility || 'private',
+      });
+    } else {
+      // Clear form data when modal closes
+      setFormData({
+        title: '',
+        description: '',
+        visibility: 'private',
+      });
+    }
+  }, [open, entry]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,7 +95,15 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   return (
     <Dialog open={open} onClose={onClose} {...mobileDialogProps}>
       {isMobile ? (
-        <AppBar position="sticky" color="default" elevation={0}>
+        <AppBar 
+          position="sticky" 
+          color="default" 
+          elevation={0}
+          sx={{
+            // Keep header visible above keyboard
+            zIndex: isKeyboardVisible ? 1100 : 'auto',
+          }}
+        >
           <Toolbar>
             <Typography variant="h6" sx={{ flexGrow: 1 }}>
               {entry ? 'Edit' : 'Add'} {getCategoryTitle()}
@@ -97,25 +125,31 @@ export const EntryForm: React.FC<EntryFormProps> = ({
         </DialogTitle>
       )}
       <form onSubmit={handleSubmit}>
-        <DialogContent sx={{ pt: isMobile ? 2 : 3 }}>
+        <DialogContent 
+          sx={{ 
+            pt: isMobile ? 2 : 3,
+            pb: isMobile && isKeyboardVisible ? `${keyboardPadding + 80}px` : 3,
+          }}
+        >
           <Stack spacing={3}>
-            <TextField
+            <RichTextInput
               label="Title"
               value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              fullWidth
+              onChange={(value) => setFormData({ ...formData, title: value })}
               required
-              autoFocus
+              placeholder={getPlaceholder(category, 'title')}
+              multiline={false}
+              autoFocus={!entry}
             />
             
-            <TextField
+            <RichTextInput
               label="Description"
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              multiline
-              rows={4}
-              fullWidth
+              onChange={(value) => setFormData({ ...formData, description: value })}
               required
+              placeholder={getPlaceholder(category, 'description')}
+              helperText={`Example: ${getRandomExample(category) || 'Add details here'}`}
+              rows={4}
             />
             
             <FormControl fullWidth>
@@ -134,9 +168,26 @@ export const EntryForm: React.FC<EntryFormProps> = ({
             </FormControl>
           </Stack>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose}>Cancel</Button>
-          <Button type="submit" variant="contained">
+        <DialogActions sx={{ px: 2, py: 2 }}>
+          <Button 
+            onClick={onClose}
+            sx={{ 
+              minHeight: 44,
+              minWidth: 80,
+              fontSize: '16px'
+            }}
+          >
+            Cancel
+          </Button>
+          <Button 
+            type="submit" 
+            variant="contained"
+            sx={{ 
+              minHeight: 44,
+              minWidth: 100,
+              fontSize: '16px'
+            }}
+          >
             {entry ? 'Update' : 'Save'}
           </Button>
         </DialogActions>

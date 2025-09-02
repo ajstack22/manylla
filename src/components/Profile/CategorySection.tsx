@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   Typography,
-  Chip,
   IconButton,
   Stack,
   useTheme,
@@ -15,6 +14,7 @@ import {
   Delete as DeleteIcon,
 } from '@mui/icons-material';
 import { Entry } from '../../types/ChildProfile';
+import { HtmlRenderer } from '../Forms/HtmlRenderer';
 
 interface CategorySectionProps {
   title: string;
@@ -55,7 +55,18 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
           {title}
         </Typography>
         {onAddEntry && (
-          <IconButton onClick={onAddEntry} sx={{ color }}>
+          <IconButton 
+            onClick={onAddEntry} 
+            sx={{ 
+              color,
+              // Larger touch target for mobile
+              minWidth: 44,
+              minHeight: 44,
+              '&:hover': {
+                backgroundColor: `${color}15`,
+              }
+            }}
+          >
             <AddIcon />
           </IconButton>
         )}
@@ -80,26 +91,46 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
             }}>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 1 }}>
-                  <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                    {entry.title}
-                  </Typography>
-                  <Stack direction="row" spacing={1}>
+                  <Box sx={{ flexGrow: 1 }}>
+                    <HtmlRenderer content={entry.title} variant="h6" />
+                  </Box>
+                  <Stack direction="row" spacing={0.5}>
                     {onEditEntry && (
-                      <IconButton size="small" onClick={() => onEditEntry(entry)}>
+                      <IconButton 
+                        onClick={() => onEditEntry(entry)}
+                        sx={{
+                          // Larger touch targets
+                          minWidth: 40,
+                          minHeight: 40,
+                          '&:hover': {
+                            backgroundColor: 'action.hover',
+                          }
+                        }}
+                      >
                         <EditIcon fontSize="small" />
                       </IconButton>
                     )}
                     {onDeleteEntry && (
-                      <IconButton size="small" onClick={() => onDeleteEntry(entry.id)}>
+                      <IconButton 
+                        onClick={() => onDeleteEntry(entry.id)}
+                        sx={{
+                          minWidth: 40,
+                          minHeight: 40,
+                          '&:hover': {
+                            backgroundColor: 'error.light',
+                            color: 'error.contrastText',
+                          }
+                        }}
+                      >
                         <DeleteIcon fontSize="small" />
                       </IconButton>
                     )}
                   </Stack>
                 </Box>
                 
-                <Typography variant="body2" sx={{ mb: 2 }}>
-                  {entry.description}
-                </Typography>
+                <Box sx={{ mb: 2 }}>
+                  <HtmlRenderer content={entry.description} variant="body2" />
+                </Box>
                 
                 <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
                   {new Date(entry.date).toLocaleDateString()}

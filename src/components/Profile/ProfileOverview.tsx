@@ -15,14 +15,13 @@ import {
   Settings as SettingsIcon,
   Edit as EditIcon,
 } from '@mui/icons-material';
-import { ChildProfile, Entry, QuickInfoConfig } from '../../types/ChildProfile';
+import { ChildProfile, Entry } from '../../types/ChildProfile';
 import { CategorySection } from './CategorySection';
-import { getVisibleCategories } from '../../utils/defaultCategories';
-import { getVisibleQuickInfo } from '../../utils/defaultQuickInfo';
-import { QuickInfoManager } from '../Settings/QuickInfoManager';
-import { CategoryManager } from '../Settings/CategoryManager';
+import { getVisibleCategories } from '../../utils/unifiedCategories';
+import { UnifiedCategoryManager } from '../Settings/UnifiedCategoryManager';
 import { ProfileEditDialog } from './ProfileEditDialog';
 import { CategoryConfig } from '../../types/ChildProfile';
+import { HtmlRenderer } from '../Forms/HtmlRenderer';
 
 interface ProfileOverviewProps {
   profile: ChildProfile;
@@ -30,7 +29,6 @@ interface ProfileOverviewProps {
   onEditEntry?: (entry: Entry) => void;
   onDeleteEntry?: (entryId: string) => void;
   onShare?: () => void;
-  onUpdateQuickInfo?: (panels: QuickInfoConfig[]) => void;
   onUpdateCategories?: (categories: CategoryConfig[]) => void;
   onUpdateProfile?: (updates: Partial<ChildProfile>) => void;
 }
@@ -41,11 +39,9 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
   onEditEntry,
   onDeleteEntry,
   onShare,
-  onUpdateQuickInfo,
   onUpdateCategories,
   onUpdateProfile,
 }) => {
-  const [quickInfoOpen, setQuickInfoOpen] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [profileEditOpen, setProfileEditOpen] = useState(false);
   
@@ -53,7 +49,6 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
     profile.entries.filter(entry => entry.category === category);
     
   const visibleCategories = getVisibleCategories(profile.categories);
-  const visibleQuickInfo = getVisibleQuickInfo(profile.quickInfoPanels);
 
   const calculateAge = (dob: Date) => {
     const today = new Date();
@@ -111,38 +106,7 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
           </Grid>
           
           <Grid item xs={12} md={9}>
-            <Box sx={{ position: 'relative' }}>
-              {onUpdateQuickInfo && (
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
-                  <Button
-                    size="small"
-                    startIcon={<SettingsIcon />}
-                    onClick={() => setQuickInfoOpen(true)}
-                    sx={{ textTransform: 'none' }}
-                  >
-                    Manage Quick Info
-                  </Button>
-                </Box>
-              )}
-              <Grid container spacing={2}>
-                {visibleQuickInfo.map((panel) => 
-                  panel.value && (
-                    <Grid item xs={12} sm={6} key={panel.id}>
-                      <Card variant="outlined">
-                        <CardContent>
-                          <Typography variant="overline" color="text.secondary">
-                            {panel.displayName}
-                          </Typography>
-                          <Typography variant="body2">
-                            {panel.value}
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  )
-                )}
-              </Grid>
-            </Box>
+            {/* Priority categories (former Quick Info) will now appear in main grid */}
           </Grid>
         </Grid>
         
@@ -162,33 +126,60 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
           </Box>
         )}
         <Grid container spacing={{ xs: 2, sm: 3 }}>
-          {visibleCategories.map((category) => (
-            <Grid item xs={12} md={6} key={category.id}>
-              <CategorySection
-                title={category.displayName}
-                entries={getEntriesByCategory(category.name)}
-                color={category.color}
-                icon={null}
-                onAddEntry={onAddEntry ? () => onAddEntry(category.name) : undefined}
-                onEditEntry={onEditEntry}
-                onDeleteEntry={onDeleteEntry}
-              />
-            </Grid>
-          ))}
+          {visibleCategories.map((category) => {
+            const entries = getEntriesByCategory(category.name);
+            
+            // For priority categories (former Quick Info), show as compact if only one entry
+            if (category.isQuickInfo && entries.length <= 1) {
+              return (
+                <Grid item xs={12} sm={6} md={4} key={category.id}>
+                  <Card variant="outlined" sx={{ borderLeft: `4px solid ${category.color}` }}>
+                    <CardContent>
+                      <Typography variant="overline" color="text.secondary">
+                        {category.displayName}
+                      </Typography>
+                      {entries.length > 0 ? (
+                        <HtmlRenderer content={entries[0].description} variant="body2" />
+                      ) : (
+                        <Typography variant="body2" color="text.secondary">
+                          No information added yet
+                        </Typography>
+                      )}
+                      {onAddEntry && (
+                        <Button
+                          size="small"
+                          onClick={() => onAddEntry(category.name)}
+                          sx={{ mt: 1, textTransform: 'none' }}
+                        >
+                          {entries.length > 0 ? 'Edit' : 'Add'} {category.displayName}
+                        </Button>
+                      )}
+                    </CardContent>
+                  </Card>
+                </Grid>
+              );
+            }
+            
+            // Regular categories show as full sections
+            return (
+              <Grid item xs={12} md={6} key={category.id}>
+                <CategorySection
+                  title={category.displayName}
+                  entries={entries}
+                  color={category.color}
+                  icon={null}
+                  onAddEntry={onAddEntry ? () => onAddEntry(category.name) : undefined}
+                  onEditEntry={onEditEntry}
+                  onDeleteEntry={onDeleteEntry}
+                />
+              </Grid>
+            );
+          })}
         </Grid>
       </Box>
       
-      {onUpdateQuickInfo && (
-        <QuickInfoManager
-          open={quickInfoOpen}
-          onClose={() => setQuickInfoOpen(false)}
-          quickInfoPanels={profile.quickInfoPanels}
-          onUpdate={onUpdateQuickInfo}
-        />
-      )}
-      
       {onUpdateCategories && (
-        <CategoryManager
+        <UnifiedCategoryManager
           open={categoriesOpen}
           onClose={() => setCategoriesOpen(false)}
           categories={profile.categories}

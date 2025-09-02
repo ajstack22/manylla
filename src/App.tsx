@@ -10,9 +10,52 @@ import { SharedView } from './components/Sharing/SharedView';
 import { SyncDialog } from './components/Sync/SyncDialog';
 import { OnboardingWizard } from './components/Onboarding/OnboardingWizard';
 import { ProfileCreateDialog } from './components/Profile/ProfileCreateDialog';
-import { ChildProfile, Entry, QuickInfoConfig, CategoryConfig } from './types/ChildProfile';
-import { defaultCategories } from './utils/defaultCategories';
-import { defaultQuickInfoPanels } from './utils/defaultQuickInfo';
+import { ChildProfile, Entry, CategoryConfig } from './types/ChildProfile';
+import { unifiedCategories, migrateQuickInfoToCategories } from './utils/unifiedCategories';
+
+// Create initial entries from former Quick Info data
+const quickInfoEntries: Entry[] = [
+  {
+    id: 'qi-communication',
+    category: 'communication',
+    title: 'Communication',
+    description: 'Uses 2-3 word phrases. Understands more than she can express.',
+    date: new Date(),
+    visibility: 'private',
+  },
+  {
+    id: 'qi-sensory',
+    category: 'sensory',
+    title: 'Sensory',
+    description: 'Sensitive to loud noises and bright lights. Loves soft textures.',
+    date: new Date(),
+    visibility: 'private',
+  },
+  {
+    id: 'qi-medical',
+    category: 'medical',
+    title: 'Medical',
+    description: 'No allergies. Takes melatonin for sleep (prescribed).',
+    date: new Date(),
+    visibility: 'private',
+  },
+  {
+    id: 'qi-dietary',
+    category: 'dietary',
+    title: 'Dietary',
+    description: 'Gluten-free diet. Prefers crunchy foods. No nuts.',
+    date: new Date(),
+    visibility: 'private',
+  },
+  {
+    id: 'qi-emergency',
+    category: 'emergency',
+    title: 'Emergency',
+    description: 'Mom: 555-0123, Dad: 555-0124. Dr. Smith: 555-0199',
+    date: new Date(),
+    visibility: 'private',
+  },
+];
 
 const mockProfile: ChildProfile = {
   id: '1',
@@ -21,27 +64,11 @@ const mockProfile: ChildProfile = {
   preferredName: 'Ellie',
   pronouns: 'she/her',
   photo: '/ellie.png',
-  categories: defaultCategories,
+  categories: unifiedCategories,
   themeMode: 'light',
-  quickInfoPanels: [
-    ...defaultQuickInfoPanels.map(panel => {
-      switch(panel.id) {
-        case 'communication':
-          return { ...panel, value: 'Uses 2-3 word phrases. Understands more than she can express.' };
-        case 'sensory':
-          return { ...panel, value: 'Sensitive to loud noises and bright lights. Loves soft textures.' };
-        case 'medical':
-          return { ...panel, value: 'No allergies. Takes melatonin for sleep (prescribed).' };
-        case 'dietary':
-          return { ...panel, value: 'Gluten-free diet. Prefers crunchy foods. No nuts.' };
-        case 'emergency':
-          return { ...panel, value: 'Mom: 555-0123, Dad: 555-0124. Dr. Smith: 555-0199' };
-        default:
-          return panel;
-      }
-    })
-  ],
+  quickInfoPanels: [], // Will be removed in future
   entries: [
+    ...quickInfoEntries,
     {
       id: '1',
       category: 'goals',
@@ -98,10 +125,10 @@ const mockProfile: ChildProfile = {
 function App() {
   const [profile, setProfile] = useState<ChildProfile | null>(null);
   const [isDemo, setIsDemo] = useState(false);
-  const [showOnboarding, setShowOnboarding] = useState(true);
   const [entryFormOpen, setEntryFormOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Entry['category']>('goals');
   const [editingEntry, setEditingEntry] = useState<Entry | undefined>();
+  const [showOnboarding, setShowOnboarding] = useState(true);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [syncDialogOpen, setSyncDialogOpen] = useState(false);
   const [isSharedView, setIsSharedView] = useState(false);
@@ -138,6 +165,7 @@ function App() {
       }
     }
   }, []);
+
 
   const handleAddEntry = (category: Entry['category']) => {
     setSelectedCategory(category);
@@ -230,20 +258,6 @@ function App() {
     setIsDemo(false);
   };
 
-  const handleUpdateQuickInfo = (panels: QuickInfoConfig[]) => {
-    if (!profile) return;
-    
-    const updatedProfile = {
-      ...profile,
-      quickInfoPanels: panels,
-      updatedAt: new Date()
-    };
-    
-    setProfile(updatedProfile);
-    
-    // Save to localStorage
-    localStorage.setItem('manylla_profile', JSON.stringify(updatedProfile));
-  };
 
   const handleUpdateCategories = (categories: CategoryConfig[]) => {
     if (!profile) return;
@@ -339,7 +353,6 @@ function App() {
             onEditEntry={handleEditEntry}
             onDeleteEntry={handleDeleteEntry}
             onShare={() => setShareDialogOpen(true)}
-            onUpdateQuickInfo={handleUpdateQuickInfo}
             onUpdateCategories={handleUpdateCategories}
             onUpdateProfile={handleUpdateProfile}
           />

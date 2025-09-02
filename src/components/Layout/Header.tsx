@@ -59,14 +59,14 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, onSyncClick, onClos
           </IconButton>
         )}
         
-        <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1, overflow: 'visible' }}>
           <img
             src="/manila.png"
             alt="Manylla Logo"
             style={{
               height: 40,
               width: 'auto',
-              marginRight: theme.spacing(1),
+              marginRight: '2px',
             }}
           />
           <Typography 
@@ -77,13 +77,17 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, onSyncClick, onClos
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              letterSpacing: '-1px',
+              letterSpacing: '-2px',
               lineHeight: 1,
-              fontSize: { xs: '2rem', sm: '2.5rem' },
-              paddingBottom: '4px',
+              fontSize: '48px',
+              display: 'inline-block',
+              paddingBottom: '8px',
+              paddingTop: '4px',
+              overflow: 'visible',
+              height: 'auto',
             }}
           >
-            Manylla
+            manylla
           </Typography>
         </Box>
 
