@@ -120,32 +120,54 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
       </Paper>
 
       <Box sx={{ position: 'relative' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          {onAddEntry && (
+        {/* Centered Add Entry button */}
+        {onAddEntry && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
             <Button
               variant="contained"
               startIcon={<AddIcon />}
               onClick={() => onAddEntry('')}
+              size="large"
               sx={{ 
                 textTransform: 'none',
-                borderRadius: 2,
-                px: 3,
+                borderRadius: 3,
+                px: 4,
+                py: 1.5,
+                fontSize: '16px',
+                fontWeight: 500,
+                boxShadow: 2,
+                '&:hover': {
+                  boxShadow: 4,
+                },
               }}
             >
               Add Entry
             </Button>
-          )}
-          {onUpdateCategories && (
+          </Box>
+        )}
+        
+        {/* Manage Categories button aligned to the right */}
+        {onUpdateCategories && (
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
             <Button
-              size="small"
+              variant="outlined"
               startIcon={<SettingsIcon />}
               onClick={() => setCategoriesOpen(true)}
-              sx={{ textTransform: 'none' }}
+              sx={{ 
+                textTransform: 'none',
+                borderRadius: 2,
+                borderColor: 'divider',
+                color: 'text.secondary',
+                '&:hover': {
+                  borderColor: 'text.primary',
+                  backgroundColor: 'action.hover',
+                },
+              }}
             >
               Manage Categories
             </Button>
-          )}
-        </Box>
+          </Box>
+        )}
         <Grid container spacing={{ xs: 2, sm: 3 }}>
           {visibleCategories.map((category) => {
             const entries = getEntriesByCategory(category.name);
