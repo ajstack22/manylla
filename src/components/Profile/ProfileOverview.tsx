@@ -7,7 +7,7 @@ import {
   Card,
   CardContent,
   Chip,
-  GridLegacy as Grid,
+  Grid,
   Button,
   IconButton,
 } from '@mui/material';
@@ -73,50 +73,41 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
   return (
     <Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
       <Paper sx={{ p: { xs: 2, sm: 3 }, mb: { xs: 2, sm: 4 } }}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={3}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
-              <Avatar
-                src={profile.photo}
-                sx={{ width: 120, height: 120, mb: 2, cursor: 'pointer' }}
-                onClick={() => onUpdateProfile && setProfileEditOpen(true)}
-              >
-                {profile.name.charAt(0)}
-              </Avatar>
-              {onUpdateProfile && (
-                <IconButton
-                  size="small"
-                  onClick={() => setProfileEditOpen(true)}
-                  sx={{ 
-                    position: 'absolute', 
-                    top: 90, 
-                    right: 'calc(50% - 60px)',
-                    backgroundColor: 'background.paper',
-                    boxShadow: 1,
-                    '&:hover': { backgroundColor: 'action.hover' }
-                  }}
-                  title="Edit Profile"
-                >
-                  <EditIcon fontSize="small" />
-                </IconButton>
-              )}
-              <Typography variant="h4" gutterBottom>
-                {profile.preferredName || profile.name}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Age: {calculateAge(profile.dateOfBirth)} years
-              </Typography>
-              {profile.pronouns && (
-                <Chip label={profile.pronouns} size="small" sx={{ mt: 1 }} />
-              )}
-            </Box>
-          </Grid>
-          
-          <Grid item xs={12} md={9}>
-            {/* Priority categories (former Quick Info) will now appear in main grid */}
-          </Grid>
-        </Grid>
-        
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
+          <Avatar
+            src={profile.photo}
+            sx={{ width: 120, height: 120, mb: 2, cursor: 'pointer' }}
+            onClick={() => onUpdateProfile && setProfileEditOpen(true)}
+          >
+            {profile.name.charAt(0)}
+          </Avatar>
+          {onUpdateProfile && (
+            <IconButton
+              size="small"
+              onClick={() => setProfileEditOpen(true)}
+              sx={{ 
+                position: 'absolute', 
+                top: 90, 
+                right: 'calc(50% - 60px)',
+                backgroundColor: 'background.paper',
+                boxShadow: 1,
+                '&:hover': { backgroundColor: 'action.hover' }
+              }}
+              title="Edit Profile"
+            >
+              <EditIcon fontSize="small" />
+            </IconButton>
+          )}
+          <Typography variant="h4" gutterBottom align="center">
+            {profile.preferredName || profile.name}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" align="center">
+            Age: {calculateAge(profile.dateOfBirth)} years
+          </Typography>
+          {profile.pronouns && (
+            <Chip label={profile.pronouns} size="small" sx={{ mt: 1 }} />
+          )}
+        </Box>
       </Paper>
 
       <Box sx={{ position: 'relative' }}>
@@ -146,9 +137,9 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
           </Box>
         )}
         
-        {/* Manage Categories button aligned to the right */}
+        {/* Centered Manage Categories button */}
         {onUpdateCategories && (
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
             <Button
               variant="outlined"
               startIcon={<SettingsIcon />}
@@ -156,6 +147,8 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
               sx={{ 
                 textTransform: 'none',
                 borderRadius: 2,
+                px: 3,
+                py: 1,
                 borderColor: 'divider',
                 color: 'text.secondary',
                 '&:hover': {
