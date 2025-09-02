@@ -7,9 +7,9 @@ import {
   Card,
   CardContent,
   Chip,
-  Grid,
   Button,
   IconButton,
+  Grid as GridLegacy,
 } from '@mui/material';
 import {
   Settings as SettingsIcon,
@@ -161,14 +161,14 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
             </Button>
           </Box>
         )}
-        <Grid container spacing={{ xs: 2, sm: 3 }}>
+        <GridLegacy container spacing={{ xs: 2, sm: 3 }}>
           {visibleCategories.map((category) => {
             const entries = getEntriesByCategory(category.name);
             
             // For priority categories (former Quick Info), show as compact if only one entry
             if (category.isQuickInfo && entries.length <= 1) {
               return (
-                <Grid item xs={12} sm={6} md={4} key={category.id}>
+                <GridLegacy item xs={12} sm={6} md={4} key={category.id}>
                   <Card variant="outlined" sx={{ borderLeft: `4px solid ${category.color}` }}>
                     <CardContent>
                       <Typography variant="overline" color="text.secondary">
@@ -183,13 +183,13 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
                       )}
                     </CardContent>
                   </Card>
-                </Grid>
+                </GridLegacy>
               );
             }
             
             // Regular categories show as full sections
             return (
-              <Grid item xs={12} md={6} key={category.id}>
+              <GridLegacy item xs={12} md={6} key={category.id}>
                 <CategorySection
                   title={category.displayName}
                   entries={entries}
@@ -199,10 +199,10 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
                   onEditEntry={onEditEntry}
                   onDeleteEntry={onDeleteEntry}
                 />
-              </Grid>
+              </GridLegacy>
             );
           })}
-        </Grid>
+        </GridLegacy>
       </Box>
       
       {onUpdateCategories && (
