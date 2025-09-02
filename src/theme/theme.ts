@@ -10,6 +10,11 @@ const manyllaColors = {
   success: '#67B26F',
   warning: '#F4A261',
   error: '#E76F51',
+  // Dark manila/gold tones for dark mode
+  darkManila: '#2A2319',      // Very dark warm brown-gold (main background)
+  darkManilaPaper: '#3A3025',  // Slightly lighter for cards/papers
+  darkManilaAccent: '#4A3D2F', // Even lighter for hover states
+  darkManilaText: '#D4C4A0',   // Warm cream text color
 };
 
 export const lightTheme = createTheme({
@@ -99,28 +104,55 @@ export const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: manyllaColors.manila,
-      light: manyllaColors.manilaLight,
-      dark: manyllaColors.manilaDark,
+      main: manyllaColors.darkManilaText,
+      light: manyllaColors.manila,
+      dark: manyllaColors.brown,
     },
     secondary: {
-      main: manyllaColors.accent,
+      main: '#6BA3E5', // Slightly lighter blue for better contrast
     },
     background: {
-      default: '#121212',
-      paper: '#1E1E1E',
+      default: manyllaColors.darkManila,
+      paper: manyllaColors.darkManilaPaper,
     },
+    text: {
+      primary: manyllaColors.darkManilaText,
+      secondary: '#B8A888',
+    },
+    action: {
+      hover: manyllaColors.darkManilaAccent,
+      selected: manyllaColors.darkManilaAccent,
+    },
+    divider: 'rgba(212, 196, 160, 0.12)',
     success: {
-      main: manyllaColors.success,
+      main: '#7BC47F', // Slightly lighter for contrast
     },
     warning: {
-      main: manyllaColors.warning,
+      main: '#F5B478', // Slightly lighter for contrast
     },
     error: {
-      main: manyllaColors.error,
+      main: '#EA8368', // Slightly lighter for contrast
     },
   },
   typography: lightTheme.typography,
   shape: lightTheme.shape,
-  components: lightTheme.components,
+  components: {
+    ...lightTheme.components,
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundImage: 'none',
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+          borderRadius: 16,
+          backgroundImage: 'none',
+        },
+      },
+    },
+  },
 });
