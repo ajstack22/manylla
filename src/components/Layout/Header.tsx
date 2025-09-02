@@ -60,15 +60,6 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, onSyncClick, onClos
         )}
         
         <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1, overflow: 'visible' }}>
-          <img
-            src="/manylla.png"
-            alt="Manylla Logo"
-            style={{
-              height: 40,
-              width: 'auto',
-              marginRight: '12px',
-            }}
-          />
           <Typography 
             variant="h3" 
             sx={{ 
