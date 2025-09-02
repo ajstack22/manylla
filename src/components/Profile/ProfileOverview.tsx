@@ -9,7 +9,6 @@ import {
   Chip,
   Button,
   IconButton,
-  Grid as GridLegacy,
 } from '@mui/material';
 import {
   Settings as SettingsIcon,
@@ -161,14 +160,14 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
             </Button>
           </Box>
         )}
-        <GridLegacy container spacing={{ xs: 2, sm: 3 }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: { xs: 2, sm: 3 } }}>
           {visibleCategories.map((category) => {
             const entries = getEntriesByCategory(category.name);
             
             // For priority categories (former Quick Info), show as compact if only one entry
             if (category.isQuickInfo && entries.length <= 1) {
               return (
-                <GridLegacy item xs={12} sm={6} md={4} key={category.id}>
+                <Box key={category.id} sx={{ width: { xs: '100%', sm: 'calc(50% - 12px)', md: 'calc(33.333% - 16px)' } }}>
                   <Card variant="outlined" sx={{ borderLeft: `4px solid ${category.color}` }}>
                     <CardContent>
                       <Typography variant="overline" color="text.secondary">
@@ -183,13 +182,13 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
                       )}
                     </CardContent>
                   </Card>
-                </GridLegacy>
+                </Box>
               );
             }
             
             // Regular categories show as full sections
             return (
-              <GridLegacy item xs={12} md={6} key={category.id}>
+              <Box key={category.id} sx={{ width: { xs: '100%', md: 'calc(50% - 12px)' } }}>
                 <CategorySection
                   title={category.displayName}
                   entries={entries}
@@ -199,10 +198,10 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
                   onEditEntry={onEditEntry}
                   onDeleteEntry={onDeleteEntry}
                 />
-              </GridLegacy>
+              </Box>
             );
           })}
-        </GridLegacy>
+        </Box>
       </Box>
       
       {onUpdateCategories && (
