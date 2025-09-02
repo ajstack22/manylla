@@ -363,6 +363,7 @@ function App() {
           onSave={handleSaveEntry}
           category={selectedCategory}
           entry={editingEntry}
+          categories={profile.categories.filter(c => c.isVisible)}
         />
         <ShareDialog
           open={shareDialogOpen}

@@ -29,6 +29,7 @@ interface EntryFormProps {
   onSave: (entry: Omit<Entry, 'id'>) => void;
   category: string;
   entry?: Entry;
+  categories?: Array<{ id: string; name: string; displayName: string; color: string }>;
 }
 
 const visibilityOptions = [
@@ -45,9 +46,11 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   onSave,
   category,
   entry,
+  categories = [],
 }) => {
   const { mobileDialogProps, isMobile } = useMobileDialog();
   const { keyboardPadding, isKeyboardVisible } = useMobileKeyboard();
+  const [selectedCategory, setSelectedCategory] = useState(category || '');
   const [formData, setFormData] = useState({
     title: entry?.title || '',
     description: entry?.description || '',
@@ -57,6 +60,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   // Reset form data when modal opens/closes or entry changes
   useEffect(() => {
     if (open) {
+      setSelectedCategory(entry?.category || category || '');
       setFormData({
         title: entry?.title || '',
         description: entry?.description || '',
@@ -64,19 +68,24 @@ export const EntryForm: React.FC<EntryFormProps> = ({
       });
     } else {
       // Clear form data when modal closes
+      setSelectedCategory('');
       setFormData({
         title: '',
         description: '',
         visibility: 'private',
       });
     }
-  }, [open, entry]);
+  }, [open, entry, category]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedCategory) {
+      // Could show an error message here
+      return;
+    }
     onSave({
       ...formData,
-      category,
+      category: selectedCategory,
       date: new Date(),
       visibility: formData.visibility as Entry['visibility'],
     });
@@ -85,8 +94,10 @@ export const EntryForm: React.FC<EntryFormProps> = ({
 
 
   const getCategoryTitle = () => {
+    if (!selectedCategory && !category) return 'Add Entry';
+    const catName = selectedCategory || category;
     // Convert category name to title case
-    return category
+    return catName
       .split('-')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
@@ -132,6 +143,34 @@ export const EntryForm: React.FC<EntryFormProps> = ({
           }}
         >
           <Stack spacing={3}>
+            {/* Category selector - only show if we have categories list and not editing */}
+            {categories.length > 0 && !entry && (
+              <FormControl fullWidth required>
+                <InputLabel>Category</InputLabel>
+                <Select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  label="Category"
+                >
+                  {categories.map(cat => (
+                    <MenuItem key={cat.id} value={cat.name}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box
+                          sx={{
+                            width: 16,
+                            height: 16,
+                            borderRadius: '50%',
+                            backgroundColor: cat.color,
+                          }}
+                        />
+                        {cat.displayName}
+                      </Box>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+            
             <RichTextInput
               label="Title"
               value={formData.title}

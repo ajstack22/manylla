@@ -9,7 +9,6 @@ import {
   useTheme,
 } from '@mui/material';
 import {
-  Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
 } from '@mui/icons-material';
@@ -54,22 +53,6 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
         <Typography variant="h5" sx={{ flexGrow: 1, fontWeight: 600 }}>
           {title}
         </Typography>
-        {onAddEntry && (
-          <IconButton 
-            onClick={onAddEntry} 
-            sx={{ 
-              color,
-              // Larger touch target for mobile
-              minWidth: 44,
-              minHeight: 44,
-              '&:hover': {
-                backgroundColor: `${color}15`,
-              }
-            }}
-          >
-            <AddIcon />
-          </IconButton>
-        )}
       </Box>
 
       <Stack spacing={2}>
@@ -77,7 +60,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
           <Card sx={{ backgroundColor: theme.palette.action.hover }}>
             <CardContent>
               <Typography variant="body2" color="text.secondary" align="center">
-                No {title.toLowerCase()} added yet. Click the + button to add one.
+                No {title.toLowerCase()} added yet.
               </Typography>
             </CardContent>
           </Card>

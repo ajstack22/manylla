@@ -14,6 +14,7 @@ import {
 import {
   Settings as SettingsIcon,
   Edit as EditIcon,
+  Add as AddIcon,
 } from '@mui/icons-material';
 import { ChildProfile, Entry } from '../../types/ChildProfile';
 import { CategorySection } from './CategorySection';
@@ -48,7 +49,13 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
   const getEntriesByCategory = (category: string) => 
     profile.entries.filter(entry => entry.category === category);
     
-  const visibleCategories = getVisibleCategories(profile.categories);
+  const allCategories = getVisibleCategories(profile.categories);
+  
+  // Only show categories that have entries OR are priority categories (former Quick Info)
+  const visibleCategories = allCategories.filter(category => {
+    const entries = getEntriesByCategory(category.name);
+    return entries.length > 0 || category.isQuickInfo;
+  });
 
   const calculateAge = (dob: Date) => {
     const today = new Date();
@@ -113,8 +120,22 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
       </Paper>
 
       <Box sx={{ position: 'relative' }}>
-        {onUpdateCategories && (
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          {onAddEntry && (
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => onAddEntry('')}
+              sx={{ 
+                textTransform: 'none',
+                borderRadius: 2,
+                px: 3,
+              }}
+            >
+              Add Entry
+            </Button>
+          )}
+          {onUpdateCategories && (
             <Button
               size="small"
               startIcon={<SettingsIcon />}
@@ -123,8 +144,8 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
             >
               Manage Categories
             </Button>
-          </Box>
-        )}
+          )}
+        </Box>
         <Grid container spacing={{ xs: 2, sm: 3 }}>
           {visibleCategories.map((category) => {
             const entries = getEntriesByCategory(category.name);
@@ -145,15 +166,6 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
                           No information added yet
                         </Typography>
                       )}
-                      {onAddEntry && (
-                        <Button
-                          size="small"
-                          onClick={() => onAddEntry(category.name)}
-                          sx={{ mt: 1, textTransform: 'none' }}
-                        >
-                          {entries.length > 0 ? 'Edit' : 'Add'} {category.displayName}
-                        </Button>
-                      )}
                     </CardContent>
                   </Card>
                 </Grid>
@@ -168,7 +180,7 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
                   entries={entries}
                   color={category.color}
                   icon={null}
-                  onAddEntry={onAddEntry ? () => onAddEntry(category.name) : undefined}
+                  onAddEntry={undefined}
                   onEditEntry={onEditEntry}
                   onDeleteEntry={onDeleteEntry}
                 />
