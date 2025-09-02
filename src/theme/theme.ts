@@ -10,6 +10,10 @@ const manyllaColors = {
   success: '#67B26F',
   warning: '#F4A261',
   error: '#E76F51',
+  // Light manila tones for light mode
+  lightManilaBackground: '#FAF6ED',  // Very light warm manila (like fresh folder)
+  lightManilaPaper: '#FFFFFF',       // Clean white for cards
+  lightManilaAccent: '#F4E8D8',      // Subtle manila for hover states
   // Dark manila/gold tones for dark mode
   darkManila: '#2A2319',      // Very dark warm brown-gold (main background)
   darkManilaPaper: '#3A3025',  // Slightly lighter for cards/papers
@@ -29,8 +33,12 @@ export const lightTheme = createTheme({
       main: manyllaColors.accent,
     },
     background: {
-      default: '#FAFAFA',
-      paper: '#FFFFFF',
+      default: manyllaColors.lightManilaBackground,
+      paper: manyllaColors.lightManilaPaper,
+    },
+    action: {
+      hover: manyllaColors.lightManilaAccent,
+      selected: manyllaColors.lightManilaAccent,
     },
     success: {
       main: manyllaColors.success,

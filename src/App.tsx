@@ -65,7 +65,7 @@ const mockProfile: ChildProfile = {
   pronouns: 'she/her',
   photo: '/ellie.png',
   categories: unifiedCategories,
-  themeMode: 'light',
+  themeMode: 'dark',
   quickInfoPanels: [], // Will be removed in future
   entries: [
     ...quickInfoEntries,
