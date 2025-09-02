@@ -61,12 +61,12 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, onSyncClick, onClos
         
         <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1, overflow: 'visible' }}>
           <img
-            src="/manila.png"
+            src="/manylla.png"
             alt="Manylla Logo"
             style={{
               height: 40,
               width: 'auto',
-              marginRight: '2px',
+              marginRight: '12px',
             }}
           />
           <Typography 
