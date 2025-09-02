@@ -5,7 +5,7 @@ export interface Entry {
   description: string;
   date: Date;
   attachments?: string[];
-  visibility?: 'private' | 'family' | 'medical' | 'education' | 'all';
+  visibility?: string[]; // Array of visibility options: ['family', 'medical', 'education'] or ['all'] or ['private']
 }
 
 export interface CategoryConfig {

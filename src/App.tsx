@@ -21,7 +21,7 @@ const quickInfoEntries: Entry[] = [
     title: 'Communication',
     description: 'Uses 2-3 word phrases. Understands more than she can express.',
     date: new Date(),
-    visibility: 'private',
+    visibility: ['private'],
   },
   {
     id: 'qi-sensory',
@@ -29,7 +29,7 @@ const quickInfoEntries: Entry[] = [
     title: 'Sensory',
     description: 'Sensitive to loud noises and bright lights. Loves soft textures.',
     date: new Date(),
-    visibility: 'private',
+    visibility: ['private'],
   },
   {
     id: 'qi-medical',
@@ -37,7 +37,7 @@ const quickInfoEntries: Entry[] = [
     title: 'Medical',
     description: 'No allergies. Takes melatonin for sleep (prescribed).',
     date: new Date(),
-    visibility: 'private',
+    visibility: ['private'],
   },
   {
     id: 'qi-dietary',
@@ -45,7 +45,7 @@ const quickInfoEntries: Entry[] = [
     title: 'Dietary',
     description: 'Gluten-free diet. Prefers crunchy foods. No nuts.',
     date: new Date(),
-    visibility: 'private',
+    visibility: ['private'],
   },
   {
     id: 'qi-emergency',
@@ -53,7 +53,7 @@ const quickInfoEntries: Entry[] = [
     title: 'Emergency',
     description: 'Mom: 555-0123, Dad: 555-0124. Dr. Smith: 555-0199',
     date: new Date(),
-    visibility: 'private',
+    visibility: ['private'],
   },
 ];
 
@@ -75,7 +75,7 @@ const mockProfile: ChildProfile = {
       title: 'Improve Communication Skills',
       description: 'Working on using full sentences instead of single words. Practice asking for help with "Can you help me?" instead of just "help".',
       date: new Date('2024-01-15'),
-      visibility: 'all'
+      visibility: ['family', 'medical', 'education']
     },
     {
       id: '2',
@@ -91,7 +91,7 @@ const mockProfile: ChildProfile = {
       title: 'Visual Learning',
       description: 'Ellie learns best with visual aids. Picture cards, visual schedules, and demonstrations work much better than verbal instructions alone.',
       date: new Date('2024-01-08'),
-      visibility: 'education'
+      visibility: ['education']
     },
     {
       id: '4',
@@ -99,7 +99,7 @@ const mockProfile: ChildProfile = {
       title: 'Loud Noises',
       description: 'Sudden loud noises (fire alarms, hand dryers) cause significant distress. Always warn beforehand when possible. Noise-canceling headphones help.',
       date: new Date('2024-01-05'),
-      visibility: 'all'
+      visibility: ['family', 'medical', 'education']
     },
     {
       id: '5',
@@ -107,7 +107,7 @@ const mockProfile: ChildProfile = {
       title: 'Autism Diagnosis',
       description: 'Diagnosed with Autism Spectrum Disorder at age 3. Evaluation done by Dr. Smith at Children\'s Hospital.',
       date: new Date('2021-08-20'),
-      visibility: 'medical'
+      visibility: ['medical']
     },
     {
       id: '6',
@@ -115,7 +115,7 @@ const mockProfile: ChildProfile = {
       title: 'Transition Warnings',
       description: 'Give 5 and 2 minute warnings before transitions. Use visual timer. "In 5 minutes, we\'ll clean up and get ready for lunch."',
       date: new Date('2024-01-12'),
-      visibility: 'all'
+      visibility: ['family', 'medical', 'education']
     }
   ],
   createdAt: new Date('2024-01-01'),

@@ -15,6 +15,10 @@ import {
   AppBar,
   Toolbar,
   Typography,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  FormLabel,
 } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import { Entry } from '../../types/ChildProfile';
@@ -33,11 +37,9 @@ interface EntryFormProps {
 }
 
 const visibilityOptions = [
-  { value: 'private', label: 'Private' },
   { value: 'family', label: 'Family' },
   { value: 'medical', label: 'Medical Team' },
   { value: 'education', label: 'Education Team' },
-  { value: 'all', label: 'Everyone' },
 ];
 
 export const EntryForm: React.FC<EntryFormProps> = ({
@@ -51,28 +53,30 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   const { mobileDialogProps, isMobile } = useMobileDialog();
   const { keyboardPadding, isKeyboardVisible } = useMobileKeyboard();
   const [selectedCategory, setSelectedCategory] = useState(category || '');
+  const [selectedVisibility, setSelectedVisibility] = useState<string[]>(
+    entry?.visibility || ['private']
+  );
   const [formData, setFormData] = useState({
     title: entry?.title || '',
     description: entry?.description || '',
-    visibility: entry?.visibility || 'private',
   });
 
   // Reset form data when modal opens/closes or entry changes
   useEffect(() => {
     if (open) {
       setSelectedCategory(entry?.category || category || '');
+      setSelectedVisibility(entry?.visibility || ['private']);
       setFormData({
         title: entry?.title || '',
         description: entry?.description || '',
-        visibility: entry?.visibility || 'private',
       });
     } else {
       // Clear form data when modal closes
       setSelectedCategory('');
+      setSelectedVisibility(['private']);
       setFormData({
         title: '',
         description: '',
-        visibility: 'private',
       });
     }
   }, [open, entry, category]);
@@ -87,7 +91,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
       ...formData,
       category: selectedCategory,
       date: new Date(),
-      visibility: formData.visibility as Entry['visibility'],
+      visibility: selectedVisibility,
     });
     onClose();
   };
@@ -191,19 +195,47 @@ export const EntryForm: React.FC<EntryFormProps> = ({
               rows={4}
             />
             
-            <FormControl fullWidth>
-              <InputLabel>Visibility</InputLabel>
-              <Select
-                value={formData.visibility}
-                onChange={(e) => setFormData({ ...formData, visibility: e.target.value })}
-                label="Visibility"
-              >
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Who can see this?</FormLabel>
+              <FormGroup row>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={selectedVisibility.includes('private')}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedVisibility(['private']);
+                        } else {
+                          setSelectedVisibility([]);
+                        }
+                      }}
+                    />
+                  }
+                  label="Private (Only me)"
+                />
                 {visibilityOptions.map(option => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
+                  <FormControlLabel
+                    key={option.value}
+                    control={
+                      <Checkbox
+                        checked={selectedVisibility.includes(option.value)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedVisibility(
+                              selectedVisibility.filter(v => v !== 'private').concat(option.value)
+                            );
+                          } else {
+                            const newVis = selectedVisibility.filter(v => v !== option.value);
+                            setSelectedVisibility(newVis.length > 0 ? newVis : ['private']);
+                          }
+                        }}
+                        disabled={selectedVisibility.includes('private')}
+                      />
+                    }
+                    label={option.label}
+                  />
                 ))}
-              </Select>
+              </FormGroup>
             </FormControl>
           </Stack>
         </DialogContent>
