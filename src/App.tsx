@@ -83,7 +83,7 @@ const mockProfile: ChildProfile = {
       title: 'First Full Day at School',
       description: 'Ellie completed her first full day at school without needing to come home early! She participated in circle time and even raised her hand once.',
       date: new Date('2024-01-10'),
-      visibility: 'family'
+      visibility: ['family']
     },
     {
       id: '3',
