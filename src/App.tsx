@@ -11,7 +11,7 @@ import { EntryForm } from './components/Forms/EntryForm';
 import { ShareDialog } from './components/Sharing/ShareDialog';
 import { SharedView } from './components/Sharing/SharedView';
 import { SyncDialog } from './components/Sync/SyncDialog';
-import { OnboardingWizard } from './components/Onboarding/OnboardingWizard';
+import { ProgressiveOnboarding } from './components/Onboarding/ProgressiveOnboarding';
 import { ProfileCreateDialog } from './components/Profile/ProfileCreateDialog';
 import { ChildProfile, Entry, CategoryConfig } from './types/ChildProfile';
 import { unifiedCategories } from './utils/unifiedCategories';
@@ -344,15 +344,32 @@ function App() {
   if (showOnboarding) {
     return (
       <ManyllaThemeProvider>
-        <OnboardingWizard
-          onStartFresh={handleStartFresh}
-          onJoinWithCode={handleJoinWithCode}
-          onDemoMode={handleDemoMode}
-        />
-        <ProfileCreateDialog
-          open={profileCreateOpen}
-          onClose={() => setProfileCreateOpen(false)}
-          onCreate={handleCreateProfile}
+        <ProgressiveOnboarding
+          onComplete={(data) => {
+            if (data.mode === 'demo') {
+              handleDemoMode();
+            } else if (data.mode === 'join' && data.accessCode) {
+              handleJoinWithCode(data.accessCode);
+            } else {
+              // For fresh mode, create profile with the provided name
+              const newProfile: ChildProfile = {
+                id: Date.now().toString(),
+                name: data.childName,
+                preferredName: data.preferredName || data.childName,
+                dateOfBirth: new Date(),
+                pronouns: '',
+                photo: '',
+                categories: unifiedCategories,
+                themeMode: 'dark',
+                quickInfoPanels: [],
+                entries: [],
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                visibility: ['private'],
+              };
+              handleCreateProfile(newProfile);
+            }
+          }}
         />
       </ManyllaThemeProvider>
     );
