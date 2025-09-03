@@ -71,3 +71,6 @@ id_ed25519*
 # Package manager locks (debatable, but often excluded)
 # package-lock.json
 # yarn.lock
+api/config/config.qual.php
+api/config/config.prod.php
+api/config/config.local.php

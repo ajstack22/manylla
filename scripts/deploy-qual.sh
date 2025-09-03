@@ -145,10 +145,34 @@ rsync -avz --delete \
 # Deploy API if it exists
 if [ -d "api" ]; then
     echo -e "${YELLOW}📡 Deploying API...${NC}"
-    ssh stackmap-cpanel "mkdir -p ~/public_html/manylla/qual/api/sync"
+    
+    # Create API directories
+    ssh stackmap-cpanel "mkdir -p ~/public_html/manylla/qual/api/{config,sync,share,logs}"
+    
+    # Deploy API files (excluding sensitive configs)
     rsync -avz \
         --exclude='.git' \
+        --exclude='config/*.php' \
+        --exclude='*.example.php' \
         api/sync/ stackmap-cpanel:~/public_html/manylla/qual/api/sync/
+    
+    # Deploy database class
+    scp api/config/database.php stackmap-cpanel:~/public_html/manylla/qual/api/config/
+    
+    # Deploy main config loader
+    scp api/config/config.php stackmap-cpanel:~/public_html/manylla/qual/api/config/
+    
+    # Check if qual config exists and deploy it
+    if [ -f "api/config/config.qual.php" ]; then
+        echo -e "${YELLOW}📄 Deploying qual configuration...${NC}"
+        scp api/config/config.qual.php stackmap-cpanel:~/public_html/manylla/qual/api/config/
+        ssh stackmap-cpanel "chmod 600 ~/public_html/manylla/qual/api/config/config.qual.php"
+    else
+        echo -e "${YELLOW}⚠️  Warning: Qual API config not found. Run deploy-api-config.sh first.${NC}"
+    fi
+    
+    # Set permissions
+    ssh stackmap-cpanel "chmod 755 ~/public_html/manylla/qual/api/logs"
 fi
 
 echo

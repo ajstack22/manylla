@@ -136,21 +136,46 @@ EOF
 
 echo -e "${YELLOW}🔄 Syncing qual to production...${NC}"
 
-# Sync qual to production
+# Sync qual to production (excluding API configs)
 ssh stackmap-cpanel << 'EOF'
     cd ~/public_html/manylla
     
-    # Use rsync to make production match qual
+    # Use rsync to make production match qual (except configs)
     rsync -av \
         --exclude='.htaccess' \
         --exclude='qual' \
-        --exclude='api/config.php' \
+        --exclude='api/config/*.php' \
         --exclude='api/logs' \
         --delete \
         qual/ .
     
     echo "✅ Production updated from qual"
 EOF
+
+# Deploy production API configuration
+echo -e "${YELLOW}📡 Deploying production API configuration...${NC}"
+
+# Check if prod config exists locally
+if [ -f "$PROJECT_ROOT/api/config/config.prod.php" ]; then
+    # Check for password placeholder
+    if grep -q "YOUR_PROD_DB_PASSWORD_HERE" "$PROJECT_ROOT/api/config/config.prod.php"; then
+        echo -e "${RED}⚠️  Warning: Production database password not configured${NC}"
+        echo "Update api/config/config.prod.php with actual password"
+        read -p "Continue without API? (y/n) " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            exit 1
+        fi
+    else
+        # Deploy production API config
+        scp "$PROJECT_ROOT/api/config/config.prod.php" stackmap-cpanel:~/public_html/manylla/api/config/
+        ssh stackmap-cpanel "chmod 600 ~/public_html/manylla/api/config/config.prod.php"
+        echo -e "${GREEN}✅ Production API configuration deployed${NC}"
+    fi
+else
+    echo -e "${YELLOW}⚠️  No production API config found (api/config/config.prod.php)${NC}"
+    echo "API will use default configuration"
+fi
 
 # Verify deployment
 echo -e "${YELLOW}🔍 Verifying deployment...${NC}"
