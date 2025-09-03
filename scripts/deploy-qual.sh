@@ -133,22 +133,22 @@ fi
 echo -e "${YELLOW}🚀 Deploying to staging...${NC}"
 
 # Create qual directory if it doesn't exist
-ssh stackmap-cpanel "mkdir -p ~/stachblx/manylla/qual"
+ssh stackmap-cpanel "mkdir -p ~/public_html/manylla/qual"
 
 # Deploy build files to qual
 rsync -avz --delete \
     --exclude='.git' \
     --exclude='node_modules' \
     --exclude='.env' \
-    build/ stackmap-cpanel:~/stachblx/manylla/qual/
+    build/ stackmap-cpanel:~/public_html/manylla/qual/
 
 # Deploy API if it exists
 if [ -d "api" ]; then
     echo -e "${YELLOW}📡 Deploying API...${NC}"
-    ssh stackmap-cpanel "mkdir -p ~/stachblx/manylla/qual/api/sync"
+    ssh stackmap-cpanel "mkdir -p ~/public_html/manylla/qual/api/sync"
     rsync -avz \
         --exclude='.git' \
-        api/sync/ stackmap-cpanel:~/stachblx/manylla/qual/api/sync/
+        api/sync/ stackmap-cpanel:~/public_html/manylla/qual/api/sync/
 fi
 
 echo

@@ -34,7 +34,7 @@ rollback_prod() {
     
     echo "Restoring from backup: manylla-backup-$TIMESTAMP.tar.gz"
     ssh stackmap-cpanel << EOF
-        cd ~/stachblx/manylla
+        cd ~/public_html/manylla
         tar -xzf ~/backups/manylla-backup-$TIMESTAMP.tar.gz
         echo "✅ Production rolled back"
 EOF
@@ -109,7 +109,7 @@ fi
 
 # Check if qual exists on server
 echo -e "${YELLOW}🔍 Checking qual deployment...${NC}"
-if ! ssh stackmap-cpanel "[ -d ~/stachblx/manylla/qual ]"; then
+if ! ssh stackmap-cpanel "[ -d ~/public_html/manylla/qual ]"; then
     echo -e "${RED}❌ No qual deployment found!${NC}"
     echo "Please deploy to qual first: npm run deploy:qual"
     exit 1
@@ -119,7 +119,7 @@ echo -e "${YELLOW}📦 Creating backup...${NC}"
 
 # Create backup on server
 ssh stackmap-cpanel << 'EOF'
-    cd ~/stachblx/manylla
+    cd ~/public_html/manylla
     TIMESTAMP=$(date +%Y%m%d-%H%M%S)
     mkdir -p ~/backups
     
@@ -138,7 +138,7 @@ echo -e "${YELLOW}🔄 Syncing qual to production...${NC}"
 
 # Sync qual to production
 ssh stackmap-cpanel << 'EOF'
-    cd ~/stachblx/manylla
+    cd ~/public_html/manylla
     
     # Use rsync to make production match qual
     rsync -av \
