@@ -35,9 +35,17 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "NODE_OPTIONS=--max-old-space-size=4096 react-scripts build",
+    "build:qual": "REACT_APP_ENV=qual npm run build",
+    "build:prod": "REACT_APP_ENV=production npm run build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
+    "security:audit": "npm audit --audit-level=critical",
+    "deploy:qual": "chmod +x ./scripts/deploy-qual.sh && ./scripts/deploy-qual.sh",
+    "deploy:prod": "chmod +x ./scripts/deploy-prod.sh && ./scripts/deploy-prod.sh",
+    "deploy:rollback": "chmod +x ./scripts/deploy-prod.sh && ./scripts/deploy-prod.sh rollback"
   },
   "eslintConfig": {
     "extends": [

@@ -3,6 +3,9 @@ import { Container } from '@mui/material';
 import { ManyllaThemeProvider } from './context/ThemeContext';
 import { SyncProvider } from './context/SyncContext';
 import { Header } from './components/Layout/Header';
+import { LoadingSpinner } from './components/Loading/LoadingSpinner';
+import { LoadingOverlay } from './components/Loading/LoadingOverlay';
+import { StorageService } from './services/storageService';
 import { ProfileOverview } from './components/Profile/ProfileOverview';
 import { EntryForm } from './components/Forms/EntryForm';
 import { ShareDialog } from './components/Sharing/ShareDialog';
@@ -11,7 +14,7 @@ import { SyncDialog } from './components/Sync/SyncDialog';
 import { OnboardingWizard } from './components/Onboarding/OnboardingWizard';
 import { ProfileCreateDialog } from './components/Profile/ProfileCreateDialog';
 import { ChildProfile, Entry, CategoryConfig } from './types/ChildProfile';
-import { unifiedCategories, migrateQuickInfoToCategories } from './utils/unifiedCategories';
+import { unifiedCategories } from './utils/unifiedCategories';
 
 // Create initial entries from former Quick Info data
 const quickInfoEntries: Entry[] = [
@@ -124,7 +127,8 @@ const mockProfile: ChildProfile = {
 
 function App() {
   const [profile, setProfile] = useState<ChildProfile | null>(null);
-  const [isDemo, setIsDemo] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   const [entryFormOpen, setEntryFormOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Entry['category']>('goals');
   const [editingEntry, setEditingEntry] = useState<Entry | undefined>();
@@ -137,33 +141,31 @@ function App() {
 
   // Check for share parameter and stored profile on mount
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('share');
-    if (code) {
-      setShareCode(code);
-      setIsSharedView(true);
-      setShowOnboarding(false);
-    } else {
-      // Check if user has existing profile in localStorage
-      const storedProfile = localStorage.getItem('manylla_profile');
-      if (storedProfile) {
-        try {
-          const parsed = JSON.parse(storedProfile);
-          // Convert date strings back to Date objects
-          parsed.dateOfBirth = new Date(parsed.dateOfBirth);
-          parsed.createdAt = new Date(parsed.createdAt);
-          parsed.updatedAt = new Date(parsed.updatedAt);
-          parsed.entries = parsed.entries.map((e: any) => ({
-            ...e,
-            date: new Date(e.date)
-          }));
-          setProfile(parsed);
+    const loadInitialData = async () => {
+      setIsLoading(true);
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('share');
+        if (code) {
+          setShareCode(code);
+          setIsSharedView(true);
           setShowOnboarding(false);
-        } catch (error) {
-          console.error('Failed to load profile:', error);
+        } else {
+          // Check if user has existing profile using StorageService
+          const storedProfile = StorageService.getProfile();
+          if (storedProfile) {
+            setProfile(storedProfile);
+            setShowOnboarding(false);
+          }
         }
+      } catch (error) {
+        console.error('Failed to load initial data:', error);
+      } finally {
+        setIsLoading(false);
       }
-    }
+    };
+    
+    loadInitialData();
   }, []);
 
 
@@ -179,48 +181,65 @@ function App() {
     setEntryFormOpen(true);
   };
 
-  const handleSaveEntry = (entryData: Omit<Entry, 'id'>) => {
+  const handleSaveEntry = async (entryData: Omit<Entry, 'id'>) => {
     if (!profile) return;
     
-    if (editingEntry) {
-      setProfile({
-        ...profile,
-        entries: profile.entries.map(e => 
-          e.id === editingEntry.id 
-            ? { ...entryData, id: editingEntry.id } 
-            : e
-        ),
-        updatedAt: new Date()
-      });
-    } else {
-      const newEntry: Entry = {
-        ...entryData,
-        id: Date.now().toString()
-      };
-      setProfile({
-        ...profile,
-        entries: [...profile.entries, newEntry],
-        updatedAt: new Date()
-      });
+    setIsSaving(true);
+    try {
+      let updatedProfile: ChildProfile;
+      
+      if (editingEntry) {
+        updatedProfile = {
+          ...profile,
+          entries: profile.entries.map(e => 
+            e.id === editingEntry.id 
+              ? { ...entryData, id: editingEntry.id } 
+              : e
+          ),
+          updatedAt: new Date()
+        };
+      } else {
+        const newEntry: Entry = {
+          ...entryData,
+          id: Date.now().toString()
+        };
+        updatedProfile = {
+          ...profile,
+          entries: [...profile.entries, newEntry],
+          updatedAt: new Date()
+        };
+      }
+      
+      // Save using StorageService with validation
+      const saved = StorageService.saveProfile(updatedProfile);
+      if (saved) {
+        setProfile(updatedProfile);
+      } else {
+        console.error('Failed to save profile');
+      }
+    } finally {
+      setIsSaving(false);
     }
-    
-    // Save to localStorage
-    localStorage.setItem('manylla_profile', JSON.stringify({
-      ...profile,
-      entries: editingEntry 
-        ? profile.entries.map(e => e.id === editingEntry.id ? { ...entryData, id: editingEntry.id } : e)
-        : [...profile.entries, { ...entryData, id: Date.now().toString() }],
-      updatedAt: new Date()
-    }));
   };
 
-  const handleDeleteEntry = (entryId: string) => {
+  const handleDeleteEntry = async (entryId: string) => {
     if (!profile) return;
-    setProfile({
-      ...profile,
-      entries: profile.entries.filter(e => e.id !== entryId),
-      updatedAt: new Date()
-    });
+    
+    setIsSaving(true);
+    try {
+      const updatedProfile = {
+        ...profile,
+        entries: profile.entries.filter(e => e.id !== entryId),
+        updatedAt: new Date()
+      };
+      
+      const saved = StorageService.saveProfile(updatedProfile);
+      if (saved) {
+        setProfile(updatedProfile);
+      }
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleStartFresh = () => {
@@ -246,7 +265,6 @@ function App() {
 
   const handleDemoMode = () => {
     setProfile(mockProfile);
-    setIsDemo(true);
     setShowOnboarding(false);
   };
 
@@ -255,7 +273,6 @@ function App() {
     localStorage.removeItem('manylla_profile');
     setProfile(null);
     setShowOnboarding(true);
-    setIsDemo(false);
   };
 
 
@@ -304,6 +321,15 @@ function App() {
     localStorage.setItem('manylla_profile', JSON.stringify(updatedProfile));
   };
 
+
+  // Show loading spinner during initial load
+  if (isLoading) {
+    return (
+      <ManyllaThemeProvider>
+        <LoadingSpinner fullScreen message="Loading your profile..." />
+      </ManyllaThemeProvider>
+    );
+  }
 
   // Show shared view if accessing via share link
   if (isSharedView && shareCode) {
@@ -374,6 +400,7 @@ function App() {
           open={syncDialogOpen}
           onClose={() => setSyncDialogOpen(false)}
         />
+        <LoadingOverlay open={isSaving} message="Saving..." />
       </ManyllaThemeProvider>
     </SyncProvider>
   );

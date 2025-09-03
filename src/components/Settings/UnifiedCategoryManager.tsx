@@ -10,7 +10,6 @@ import {
   ListItemText,
   ListItemIcon,
   ListItemSecondaryAction,
-  Switch,
   IconButton,
   Box,
   Typography,

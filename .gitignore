@@ -10,14 +10,64 @@
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
+# logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+error_log
+*.log
+
+# editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*~
+
+# OS files
+Thumbs.db
+
+# Deployment
+*.backup
+.last-deployment-timestamp
+.last-manylla-deploy
+
+# API secrets (should never be committed)
+api/config.local.php
+api/.env
+api/sync/.env
+
+# SSH keys (should NEVER be committed)
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_dsa*
+id_ecdsa*
+id_ed25519*
+
+# Temporary files
+*.tmp
+.cache
+.temp
+
+# Build artifacts
+*.map
+
+# Package manager locks (debatable, but often excluded)
+# package-lock.json
+# yarn.lock

@@ -11,13 +11,13 @@ const manyllaColors = {
   warning: '#F4A261',
   error: '#E76F51',
   // Light manila tones for light mode
-  lightManilaBackground: '#FAF6ED',  // Very light warm manila (like fresh folder)
-  lightManilaPaper: '#FFFFFF',       // Clean white for cards
-  lightManilaAccent: '#F4E8D8',      // Subtle manila for hover states
+  lightManilaBackground: '#F5EBDA',  // Darker warm manila (more saturated)
+  lightManilaPaper: '#FBF7F0',       // Off-white with manila tint for cards
+  lightManilaAccent: '#EDD9BC',      // More prominent manila for hover states
   // Dark manila/gold tones for dark mode
-  darkManila: '#2A2319',      // Very dark warm brown-gold (main background)
-  darkManilaPaper: '#3A3025',  // Slightly lighter for cards/papers
-  darkManilaAccent: '#4A3D2F', // Even lighter for hover states
+  darkManila: '#352B20',      // Lighter warm brown-gold (main background)
+  darkManilaPaper: '#443829',  // Slightly lighter for cards/papers
+  darkManilaAccent: '#544535', // Even lighter for hover states
   darkManilaText: '#D4C4A0',   // Warm cream text color
 };
 

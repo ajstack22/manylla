@@ -1,0 +1,45 @@
+# Manylla API Security Configuration
+
+# Enable RewriteEngine
+RewriteEngine On
+
+# Security Headers
+Header set X-Content-Type-Options "nosniff"
+Header set X-Frame-Options "DENY"
+Header set X-XSS-Protection "1; mode=block"
+
+# Environment variables (replace with your actual values in production)
+# SetEnv DB_USER your_database_user
+# SetEnv DB_PASSWORD your_database_password
+
+# Deny access to config files
+<Files "config.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Deny access to .htaccess itself
+<Files ".htaccess">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Prevent directory browsing
+Options -Indexes
+
+# PHP settings for API
+php_value upload_max_filesize 10M
+php_value post_max_size 10M
+php_value max_execution_time 30
+php_value max_input_time 30
+
+# Rate limiting (if mod_evasive is available)
+# Uncomment if your server supports it
+# <IfModule mod_evasive24.c>
+#     DOSHashTableSize 3097
+#     DOSPageCount 5
+#     DOSSiteCount 50
+#     DOSPageInterval 1
+#     DOSSiteInterval 1
+#     DOSBlockingPeriod 60
+# </IfModule>

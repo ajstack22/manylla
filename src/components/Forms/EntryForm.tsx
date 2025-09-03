@@ -20,7 +20,7 @@ import {
   Checkbox,
   FormLabel,
 } from '@mui/material';
-import { Close as CloseIcon } from '@mui/icons-material';
+import { Close as CloseIcon, Add as AddIcon } from '@mui/icons-material';
 import { Entry } from '../../types/ChildProfile';
 import { useMobileDialog } from '../../hooks/useMobileDialog';
 import { useMobileKeyboard } from '../../hooks/useMobileKeyboard';
@@ -98,7 +98,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
 
 
   const getCategoryTitle = () => {
-    if (!selectedCategory && !category) return 'Add Entry';
+    if (!selectedCategory && !category) return 'Entry';
     const catName = selectedCategory || category;
     // Convert category name to title case
     return catName
@@ -120,7 +120,8 @@ export const EntryForm: React.FC<EntryFormProps> = ({
           }}
         >
           <Toolbar>
-            <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            <Typography variant="h6" sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+              {!entry && <AddIcon />}
               {entry ? 'Edit' : 'Add'} {getCategoryTitle()}
             </Typography>
             <IconButton edge="end" onClick={onClose}>
@@ -131,7 +132,10 @@ export const EntryForm: React.FC<EntryFormProps> = ({
       ) : (
         <DialogTitle>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {entry ? 'Edit' : 'Add'} {getCategoryTitle()}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              {!entry && <AddIcon />}
+              {entry ? 'Edit' : 'Add'} {getCategoryTitle()}
+            </Box>
             <Box sx={{ flexGrow: 1 }} />
             <IconButton onClick={onClose}>
               <CloseIcon />
@@ -155,6 +159,12 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
                   label="Category"
+                  sx={{
+                    backgroundColor: (theme) => 
+                      theme.palette.mode === 'dark' 
+                        ? theme.palette.background.default
+                        : theme.palette.background.paper,
+                  }}
                 >
                   {categories.map(cat => (
                     <MenuItem key={cat.id} value={cat.name}>
@@ -195,8 +205,19 @@ export const EntryForm: React.FC<EntryFormProps> = ({
               rows={4}
             />
             
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Who can see this?</FormLabel>
+            <FormControl 
+              component="fieldset"
+              sx={{
+                p: 2,
+                borderRadius: 1,
+                border: (theme) => `1px solid ${theme.palette.divider}`,
+                backgroundColor: (theme) => 
+                  theme.palette.mode === 'dark' 
+                    ? theme.palette.background.default
+                    : theme.palette.background.paper,
+              }}
+            >
+              <FormLabel component="legend" sx={{ mb: 1 }}>Who can see this?</FormLabel>
               <FormGroup row>
                 <FormControlLabel
                   control={

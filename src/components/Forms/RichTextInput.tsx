@@ -6,7 +6,6 @@ import {
   FormControl,
   Typography,
   Paper,
-  Stack,
   useTheme,
   useMediaQuery,
   FormHelperText,
@@ -15,7 +14,6 @@ import {
   FormatBold as BoldIcon,
   FormatItalic as ItalicIcon,
   FormatListBulleted as ListIcon,
-  Link as LinkIcon,
   Code as CodeIcon,
 } from '@mui/icons-material';
 
@@ -43,7 +41,6 @@ export const RichTextInput: React.FC<RichTextInputProps> = ({
   autoFocus = false,
 }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const editorRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
@@ -262,7 +259,9 @@ export const RichTextInput: React.FC<RichTextInputProps> = ({
           position: 'relative',
           border: `1px solid ${isFocused ? theme.palette.primary.main : theme.palette.divider}`,
           borderRadius: 1,
-          backgroundColor: theme.palette.background.paper,
+          backgroundColor: theme.palette.mode === 'dark' 
+            ? theme.palette.background.default  // Use darker background in dark mode for contrast
+            : theme.palette.background.paper,
           transition: 'border-color 0.2s',
           '&:hover': {
             borderColor: isFocused ? theme.palette.primary.main : theme.palette.text.primary,
