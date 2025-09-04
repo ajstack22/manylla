@@ -8,13 +8,30 @@ import {
   Stack,
   Chip,
   CircularProgress,
+  AppBar,
+  Toolbar,
+  Avatar,
 } from '@mui/material';
-import { Security as SecurityIcon } from '@mui/icons-material';
+import { 
+  Security as SecurityIcon,
+  Visibility as VisibilityIcon,
+  Person as PersonIcon,
+} from '@mui/icons-material';
 import { ChildProfile } from '../../types/ChildProfile';
+import { unifiedCategories } from '../../utils/unifiedCategories';
 
 interface SharedViewProps {
   shareCode: string;
 }
+
+// Manylla theme colors - hardcoded for consistent provider view
+const manyllaColors = {
+  background: '#C4A66B',      // Actual manila envelope color
+  paper: '#D4B896',           // Lighter manila for cards
+  text: '#3D2F1F',            // Dark brown text
+  textSecondary: '#5D4A37',   // Medium brown for secondary text
+  border: '#A68B5B',          // Darker manila for borders
+};
 
 export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -104,20 +121,99 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
 
   // Simplified shared view - in production this would show filtered data
   return (
-    <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <Alert severity="info" sx={{ mb: 3 }}>
-        You are viewing shared information for {sharedProfile.preferredName || sharedProfile.name}. 
-        This is a temporary link that will expire.
-      </Alert>
+    <Box sx={{ 
+      minHeight: '100vh', 
+      backgroundColor: manyllaColors.background,
+    }}>
+      {/* Provider Mode Header */}
+      <AppBar position="sticky" elevation={0} sx={{ 
+        backgroundColor: manyllaColors.paper,
+        borderBottom: `1px solid ${manyllaColors.border}`,
+        color: manyllaColors.text,
+      }}>
+        <Toolbar>
+          <Typography 
+            variant="h3" 
+            sx={{ 
+              fontWeight: 700,
+              background: `linear-gradient(135deg, ${manyllaColors.text} 0%, ${manyllaColors.textSecondary} 100%)`,
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              letterSpacing: '-2px',
+              lineHeight: 1,
+              fontSize: '48px',
+              flexGrow: 1,
+              paddingBottom: '8px',
+              paddingTop: '4px',
+              overflow: 'visible',
+              display: 'inline-block',
+            }}
+          >
+            manylla
+          </Typography>
+          <VisibilityIcon sx={{ mr: 1, color: manyllaColors.textSecondary }} />
+          <Chip 
+            icon={<PersonIcon />}
+            label={sharedProfile.preferredName || sharedProfile.name}
+            sx={{
+              borderColor: manyllaColors.text,
+              color: manyllaColors.text,
+              '& .MuiChip-icon': {
+                color: manyllaColors.text,
+              }
+            }}
+            variant="outlined"
+          />
+        </Toolbar>
+      </AppBar>
+
+      <Container maxWidth="lg" sx={{ mt: 3, pb: 4 }}>
+        <Paper
+          elevation={0}
+          sx={{ 
+            mb: 3,
+            p: 2,
+            backgroundColor: manyllaColors.paper,
+            border: `1px solid ${manyllaColors.border}`,
+            color: manyllaColors.text,
+          }}
+        >
+          <Typography variant="body2" sx={{ color: manyllaColors.text }}>
+            <strong>Shared Access:</strong> You are viewing information shared by the family. 
+            This is a temporary link that will expire.
+          </Typography>
+        </Paper>
       
-      <Paper sx={{ p: 3, mb: 3 }}>
-        <Typography variant="h4" gutterBottom>
-          {sharedProfile.preferredName || sharedProfile.name}
-        </Typography>
-        <Typography variant="body1" color="text.secondary" gutterBottom>
-          {sharedProfile.pronouns} • Born {sharedProfile.dateOfBirth.toLocaleDateString()}
-        </Typography>
-      </Paper>
+        <Paper sx={{ 
+          p: 4, 
+          mb: 3, 
+          textAlign: 'center',
+          backgroundColor: manyllaColors.paper,
+          color: manyllaColors.text,
+        }}>
+          <Avatar 
+            src={sharedProfile.photo || undefined}
+            sx={{ 
+              width: 80, 
+              height: 80, 
+              margin: '0 auto',
+              mb: 2,
+              backgroundColor: manyllaColors.textSecondary,
+              color: manyllaColors.paper,
+              fontSize: '2rem',
+            }}
+          >
+            {!sharedProfile.photo && (sharedProfile.preferredName || sharedProfile.name).charAt(0).toUpperCase()}
+          </Avatar>
+          <Typography variant="h4" gutterBottom sx={{ color: manyllaColors.text }}>
+            {sharedProfile.preferredName || sharedProfile.name}
+          </Typography>
+          <Typography variant="body1" gutterBottom sx={{ color: manyllaColors.textSecondary }}>
+            {sharedProfile.pronouns && `${sharedProfile.pronouns} • `}
+            Born {sharedProfile.dateOfBirth.toLocaleDateString()}
+          </Typography>
+        </Paper>
       
       {/* Quick Info */}
       {sharedProfile.quickInfoPanels && sharedProfile.quickInfoPanels.length > 0 && (
@@ -138,29 +234,63 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
         </Paper>
       )}
       
-      {/* Entries by category */}
-      {['goals', 'successes', 'strengths', 'challenges'].map(category => {
-        const entries = sharedProfile.entries.filter(e => e.category === category);
-        if (entries.length === 0) return null;
-        
-        return (
-          <Paper key={category} sx={{ p: 3, mb: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              {category.charAt(0).toUpperCase() + category.slice(1)}
-            </Typography>
-            <Stack spacing={2}>
-              {entries.map(entry => (
-                <Box key={entry.id}>
-                  <Typography variant="subtitle1">{entry.title}</Typography>
-                  <Typography variant="body2" color="text.secondary" paragraph>
-                    {entry.description}
+        {/* Entries by category - show all unified categories */}
+        {unifiedCategories
+          .filter(cat => cat.isVisible)
+          .sort((a, b) => a.order - b.order)
+          .map(category => {
+            const entries = sharedProfile.entries.filter(e => e.category === category.name);
+            if (entries.length === 0 && !category.isQuickInfo) return null;
+            
+            // Handle Quick Info category specially
+            if (category.isQuickInfo) {
+              const quickInfoEntries = sharedProfile.entries.filter(e => e.category === 'quick-info');
+              if (quickInfoEntries.length === 0 && 
+                  (!sharedProfile.quickInfoPanels || sharedProfile.quickInfoPanels.length === 0)) {
+                return null;
+              }
+            }
+            
+            return (
+              <Paper key={category.id} sx={{ 
+                p: 3, 
+                mb: 2,
+                backgroundColor: manyllaColors.paper,
+                color: manyllaColors.text,
+              }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <Box
+                    sx={{
+                      width: 8,
+                      height: 24,
+                      backgroundColor: category.color,
+                      borderRadius: 1,
+                      mr: 2,
+                    }}
+                  />
+                  <Typography variant="h6" sx={{ color: manyllaColors.text }}>
+                    {category.displayName}
                   </Typography>
                 </Box>
-              ))}
-            </Stack>
-          </Paper>
-        );
-      })}
-    </Container>
+                <Stack spacing={2}>
+                  {entries.map(entry => (
+                    <Box key={entry.id}>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 500, color: manyllaColors.text }}>
+                        {entry.title}
+                      </Typography>
+                      <Typography 
+                        variant="body2" 
+                        paragraph
+                        sx={{ color: manyllaColors.textSecondary }}
+                        dangerouslySetInnerHTML={{ __html: entry.description }}
+                      />
+                    </Box>
+                  ))}
+                </Stack>
+              </Paper>
+            );
+          })}
+      </Container>
+    </Box>
   );
 };

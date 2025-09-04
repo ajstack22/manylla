@@ -9,11 +9,10 @@ import {
   Box,
   Typography,
   Chip,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
   IconButton,
   Alert,
+  Checkbox,
+  FormControlLabel,
   Stack,
   Paper,
   InputAdornment,
@@ -27,12 +26,8 @@ import {
 import {
   Close as CloseIcon,
   ContentCopy as CopyIcon,
-  QrCode as QrCodeIcon,
   CalendarToday as CalendarIcon,
-  Security as SecurityIcon,
   Share as ShareIcon,
-  Print as PrintIcon,
-  Link as LinkIcon,
   ArrowBack as ArrowBackIcon,
   ArrowForward as ArrowForwardIcon,
   Check as CheckIcon,
@@ -68,8 +63,8 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
   const [recipientName, setRecipientName] = useState('');
   const [recipientType, setRecipientType] = useState('');
   const [expirationDays, setExpirationDays] = useState(7);
-  const [includeQuickInfo, setIncludeQuickInfo] = useState(true);
   const [shareNote, setShareNote] = useState('');
+  const [includePhoto, setIncludePhoto] = useState(false);
   const [generatedLink, setGeneratedLink] = useState('');
   const [accessCode, setAccessCode] = useState('');
   const [showPrintPreview, setShowPrintPreview] = useState(false);
@@ -82,8 +77,8 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
       setRecipientName('');
       setRecipientType('');
       setExpirationDays(7);
-      setIncludeQuickInfo(true);
       setShareNote('');
+      setIncludePhoto(false);
       setGeneratedLink('');
       setAccessCode('');
     }
@@ -114,7 +109,7 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
     if (currentStep === 'recipient') {
       return recipientType !== '';
     } else if (currentStep === 'content') {
-      return selectedCategories.length > 0 || includeQuickInfo;
+      return selectedCategories.length > 0;
     }
     return true;
   };
@@ -134,10 +129,10 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
       entries: profile.entries.filter(entry => 
         selectedCategories.includes(entry.category)
       ),
-      // Only include visible quick info if includeQuickInfo is true
-      quickInfoPanels: includeQuickInfo 
-        ? profile.quickInfoPanels?.filter(panel => panel.isVisible) || []
-        : []
+      // Include photo only if selected
+      photo: includePhoto ? profile.photo : '',
+      // Keep quickInfoPanels for backward compatibility, but will be empty
+      quickInfoPanels: []
     };
     
     shares[code] = {
@@ -268,56 +263,34 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
                 borderRadius: 2,
               }}
             >
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={includeQuickInfo}
-                      onChange={(e) => setIncludeQuickInfo(e.target.checked)}
-                    />
-                  }
-                  label={
-                    <Box>
-                      <Typography variant="subtitle2">Quick Info</Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Emergency contacts, medical info, dietary needs
-                      </Typography>
-                    </Box>
-                  }
-                />
-              </FormGroup>
-            </Paper>
-
-            <Paper 
-              elevation={0}
-              sx={{ 
-                p: 2, 
-                border: '1px solid',
-                borderColor: 'divider',
-                borderRadius: 2,
-              }}
-            >
               <Typography variant="subtitle2" sx={{ mb: 2 }}>
                 Select Categories to Share
               </Typography>
               <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                {profile.categories.filter(cat => cat.isVisible && !cat.isQuickInfo).map(category => (
+                {profile.categories.filter(cat => cat.isVisible).map(category => (
                   <Chip
                     key={category.id}
                     label={category.displayName}
                     onClick={() => handleCategoryToggle(category.name)}
                     color={selectedCategories.includes(category.name) ? 'primary' : 'default'}
                     variant={selectedCategories.includes(category.name) ? 'filled' : 'outlined'}
+                    sx={{
+                      ...(category.isQuickInfo && {
+                        fontWeight: 600,
+                        border: selectedCategories.includes(category.name) ? 'none' : '2px solid',
+                        borderColor: category.color,
+                      })
+                    }}
                   />
                 ))}
               </Box>
             </Paper>
 
-            {(selectedCategories.length > 0 || includeQuickInfo) && (
+            {selectedCategories.length > 0 && (
               <Alert severity="info">
                 Sharing {
                   profile.entries.filter(entry => selectedCategories.includes(entry.category)).length
-                } entries {includeQuickInfo && '+ Quick Info'}
+                } entries from {selectedCategories.length} {selectedCategories.length === 1 ? 'category' : 'categories'}
               </Alert>
             )}
           </Stack>
@@ -369,6 +342,33 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
                 placeholder="Any special instructions or context for the recipient..."
                 fullWidth
                 size="small"
+              />
+            </Paper>
+
+            <Paper 
+              elevation={0}
+              sx={{ 
+                p: 2, 
+                border: '1px solid',
+                borderColor: 'divider',
+                borderRadius: 2,
+              }}
+            >
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={includePhoto}
+                    onChange={(e) => setIncludePhoto(e.target.checked)}
+                  />
+                }
+                label={
+                  <Box>
+                    <Typography variant="subtitle2">Include Profile Photo</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Share the child's profile photo with the recipient
+                    </Typography>
+                  </Box>
+                }
               />
             </Paper>
 
@@ -551,7 +551,6 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
           strengths: profile.entries.filter(e => e.category === 'strengths'),
           challenges: profile.entries.filter(e => e.category === 'challenges'),
         }}
-        includeQuickInfo={includeQuickInfo}
         recipientName={recipientName}
         note={shareNote}
       />

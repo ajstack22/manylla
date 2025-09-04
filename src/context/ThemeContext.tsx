@@ -1,12 +1,15 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { lightTheme, darkTheme } from '../theme/theme';
+import { lightTheme, darkTheme, manyllaTheme } from '../theme/theme';
+
+export type ThemeMode = 'light' | 'dark' | 'manylla';
 
 interface ThemeContextType {
-  isDarkMode: boolean;
+  themeMode: ThemeMode;
+  isDarkMode: boolean; // Keep for backward compatibility
   toggleTheme: () => void;
-  setThemeMode: (mode: 'light' | 'dark') => void;
+  setThemeMode: (mode: ThemeMode) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -21,8 +24,8 @@ export const useTheme = () => {
 
 interface ThemeProviderProps {
   children: ReactNode;
-  initialThemeMode?: 'light' | 'dark';
-  onThemeChange?: (mode: 'light' | 'dark') => void;
+  initialThemeMode?: ThemeMode;
+  onThemeChange?: (mode: ThemeMode) => void;
 }
 
 export const ManyllaThemeProvider: React.FC<ThemeProviderProps> = ({ 
@@ -30,28 +33,38 @@ export const ManyllaThemeProvider: React.FC<ThemeProviderProps> = ({
   initialThemeMode = 'dark',
   onThemeChange 
 }) => {
-  const [isDarkMode, setIsDarkMode] = useState(initialThemeMode === 'dark');
+  const [themeMode, setThemeModeState] = useState<ThemeMode>(initialThemeMode);
 
   const toggleTheme = () => {
-    const newMode = !isDarkMode;
-    setIsDarkMode(newMode);
+    // Cycle through: light -> dark -> manylla -> light
+    const nextMode: ThemeMode = 
+      themeMode === 'light' ? 'dark' : 
+      themeMode === 'dark' ? 'manylla' : 
+      'light';
+    
+    setThemeModeState(nextMode);
     if (onThemeChange) {
-      onThemeChange(newMode ? 'dark' : 'light');
+      onThemeChange(nextMode);
     }
   };
 
-  const setThemeMode = (mode: 'light' | 'dark') => {
-    const newIsDarkMode = mode === 'dark';
-    setIsDarkMode(newIsDarkMode);
+  const setThemeMode = (mode: ThemeMode) => {
+    setThemeModeState(mode);
     if (onThemeChange) {
       onThemeChange(mode);
     }
   };
 
-  const theme = isDarkMode ? darkTheme : lightTheme;
+  const theme = 
+    themeMode === 'dark' ? darkTheme : 
+    themeMode === 'manylla' ? manyllaTheme : 
+    lightTheme;
+  
+  // Keep isDarkMode for backward compatibility
+  const isDarkMode = themeMode === 'dark';
 
   return (
-    <ThemeContext.Provider value={{ isDarkMode, toggleTheme, setThemeMode }}>
+    <ThemeContext.Provider value={{ themeMode, isDarkMode, toggleTheme, setThemeMode }}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         {children}

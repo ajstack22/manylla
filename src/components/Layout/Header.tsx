@@ -13,8 +13,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import {
-  Brightness4,
-  Brightness7,
+  Palette as PaletteIcon,
   Menu as MenuIcon,
   CloudUpload as CloudUploadIcon,
   CloudDone as CloudDoneIcon,
@@ -22,10 +21,10 @@ import {
   Logout as LogoutIcon,
   Share as ShareIcon,
   MoreVert as MoreVertIcon,
-  Settings as SettingsIcon,
   Label as LabelIcon,
 } from '@mui/icons-material';
 import { useTheme as useAppTheme } from '../../context/ThemeContext';
+import { useToast } from '../../context/ToastContext';
 
 interface HeaderProps {
   onMenuClick?: () => void;
@@ -45,9 +44,19 @@ export const Header: React.FC<HeaderProps> = ({
   syncStatus = 'not-setup' 
 }) => {
   const theme = useTheme();
-  const { isDarkMode, toggleTheme } = useAppTheme();
+  const { themeMode, toggleTheme } = useAppTheme();
+  const { showInfo } = useToast();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  
+  const handleThemeToggle = () => {
+    toggleTheme();
+    const nextMode = 
+      themeMode === 'light' ? 'Dark' : 
+      themeMode === 'dark' ? 'Manylla' : 
+      'Light';
+    showInfo(`${nextMode} Mode`);
+  };
   
   // Get sync icon based on status
   const getSyncIcon = () => {
@@ -140,11 +149,9 @@ export const Header: React.FC<HeaderProps> = ({
                   <ListItemText>Sync</ListItemText>
                 </MenuItem>
               )}
-              <MenuItem onClick={() => { toggleTheme(); setAnchorEl(null); }}>
-                <ListItemIcon>
-                  {isDarkMode ? <Brightness7 /> : <Brightness4 />}
-                </ListItemIcon>
-                <ListItemText>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</ListItemText>
+              <MenuItem onClick={() => { handleThemeToggle(); setAnchorEl(null); }}>
+                <ListItemIcon><PaletteIcon /></ListItemIcon>
+                <ListItemText>Theme</ListItemText>
               </MenuItem>
               {onCloseProfile && (
                 <MenuItem onClick={() => { onCloseProfile(); setAnchorEl(null); }}>
@@ -172,8 +179,9 @@ export const Header: React.FC<HeaderProps> = ({
                 {getSyncIcon()}
               </IconButton>
             )}
-            <IconButton onClick={toggleTheme} color="inherit" sx={{ mr: 1 }} title={isDarkMode ? 'Light Mode' : 'Dark Mode'}>
-              {isDarkMode ? <Brightness7 /> : <Brightness4 />}
+            <IconButton onClick={handleThemeToggle} color="inherit" sx={{ mr: 1 }} 
+              title="Theme">
+              <PaletteIcon />
             </IconButton>
             {onCloseProfile && (
               <IconButton onClick={onCloseProfile} color="inherit" title="Close Profile">

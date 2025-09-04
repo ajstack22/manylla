@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container } from '@mui/material';
 import { ManyllaThemeProvider } from './context/ThemeContext';
 import { SyncProvider } from './context/SyncContext';
+import { ToastProvider } from './context/ToastContext';
 import { Header } from './components/Layout/Header';
 import { LoadingSpinner } from './components/Loading/LoadingSpinner';
 import { LoadingOverlay } from './components/Loading/LoadingOverlay';
@@ -326,7 +327,9 @@ function App() {
   if (isLoading) {
     return (
       <ManyllaThemeProvider>
-        <LoadingSpinner fullScreen message="Loading your profile..." />
+        <ToastProvider>
+          <LoadingSpinner fullScreen message="Loading your profile..." />
+        </ToastProvider>
       </ManyllaThemeProvider>
     );
   }
@@ -334,8 +337,10 @@ function App() {
   // Show shared view if accessing via share link
   if (isSharedView && shareCode) {
     return (
-      <ManyllaThemeProvider>
-        <SharedView shareCode={shareCode} />
+      <ManyllaThemeProvider initialThemeMode="manylla">
+        <ToastProvider>
+          <SharedView shareCode={shareCode} />
+        </ToastProvider>
       </ManyllaThemeProvider>
     );
   }
@@ -344,7 +349,8 @@ function App() {
   if (showOnboarding) {
     return (
       <ManyllaThemeProvider>
-        <ProgressiveOnboarding
+        <ToastProvider>
+          <ProgressiveOnboarding
           onComplete={(data) => {
             if (data.mode === 'demo') {
               handleDemoMode();
@@ -376,6 +382,7 @@ function App() {
             }
           }}
         />
+        </ToastProvider>
       </ManyllaThemeProvider>
     );
   }
@@ -389,6 +396,7 @@ function App() {
         initialThemeMode={profile?.themeMode || 'light'}
         onThemeChange={handleThemeChange}
       >
+        <ToastProvider>
         <Header 
           onSyncClick={() => setSyncDialogOpen(true)} 
           onCloseProfile={handleCloseProfile}
@@ -431,6 +439,7 @@ function App() {
           onUpdate={handleUpdateCategories}
         />
         <LoadingOverlay open={isSaving} message="Saving..." />
+        </ToastProvider>
       </ManyllaThemeProvider>
     </SyncProvider>
   );
