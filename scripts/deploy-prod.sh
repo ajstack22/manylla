@@ -49,29 +49,21 @@ if [ "$1" = "rollback" ]; then
     rollback_prod
 fi
 
-# Auto-commit any uncommitted changes before production deploy
+# Check for uncommitted changes - these should NOT go to production
 if [[ -n $(git status --porcelain) ]]; then
-    echo -e "${YELLOW}📝 Found uncommitted changes. Auto-committing before production deployment...${NC}"
-    
-    git add -A
-    TIMESTAMP=$(date +%Y-%m-%d_%H:%M:%S)
-    COMMIT_MSG="Deploy to production: $TIMESTAMP"
-    
-    # Check for custom message
-    if [ -f "DEPLOY_NOTES.md" ] && [ -s "DEPLOY_NOTES.md" ]; then
-        CUSTOM_MSG=$(head -n 1 DEPLOY_NOTES.md | sed 's/^#\+ *//')
-        if [ -n "$CUSTOM_MSG" ]; then
-            COMMIT_MSG="Deploy to production: $CUSTOM_MSG"
-        fi
-        # Clear the file
-        echo "# Deploy Notes" > DEPLOY_NOTES.md
-        echo "" >> DEPLOY_NOTES.md
-        echo "Add notes here for the next deployment..." >> DEPLOY_NOTES.md
+    echo -e "${RED}❌ Uncommitted changes detected!${NC}"
+    echo "Production deployments should only promote tested code from qual."
+    echo ""
+    echo "You have two options:"
+    echo "1. Deploy these changes to qual first: npm run deploy:qual"
+    echo "2. Stash/discard these changes and deploy current qual to prod"
+    echo ""
+    read -p "Continue anyway? (not recommended) (y/n) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        exit 1
     fi
-    
-    git commit -m "$COMMIT_MSG"
-    git push origin main 2>/dev/null || git push origin master 2>/dev/null || true
-    echo -e "${GREEN}✅ Changes committed and pushed${NC}"
+    echo -e "${YELLOW}⚠️  WARNING: Proceeding with uncommitted changes${NC}"
 fi
 
 # Run final safety checks before production
@@ -137,19 +129,23 @@ EOF
 echo -e "${YELLOW}🔄 Syncing qual to production...${NC}"
 
 # Sync qual to production (excluding API configs)
+# Using --delete to remove files that no longer exist in qual
 ssh stackmap-cpanel << 'EOF'
     cd ~/public_html/manylla
     
-    # Use rsync to make production match qual (except configs)
-    rsync -av \
+    # Use rsync to make production match qual exactly (except protected files)
+    # --delete removes files from prod that don't exist in qual
+    rsync -av --delete \
         --exclude='.htaccess' \
+        --exclude='.htpasswd*' \
         --exclude='qual' \
+        --exclude='demo' \
         --exclude='api/config/*.php' \
         --exclude='api/logs' \
-        --delete \
+        --exclude='*.log' \
         qual/ .
     
-    echo "✅ Production updated from qual"
+    echo "✅ Production updated from qual (old files cleaned up)"
 EOF
 
 # Deploy production API configuration
