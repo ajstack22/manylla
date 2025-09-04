@@ -1,28 +1,27 @@
 # Deploy Notes
 
-## 2025-01-04 - UI/UX Improvements
+## 2025_01_04_01 - Environment Configuration Fix
+Fixed share URL generation in qual environment to use correct domain paths. Created environment-specific configuration files for staging and production builds.
 
-### Modal Aesthetic Updates
-- Applied consistent design pattern across all major modals (Sync, Add Entry, Edit Profile, Manage Categories)
-- Added centered large icons (64px), bold titles, and descriptive subtitles to all modals
-- Implemented panel-based layouts with 2px borders and hover effects for better visual hierarchy
-- Standardized DialogActions padding (px: 2, py: 2) across all modals
+### Changes
+- Created `.env.staging` and `.env.production` configuration files
+- Updated `deploy-qual.sh` to use staging environment variables
+- Added fallback logic in ShareDialogNew.tsx for environment detection
+- Share links now correctly generate with `/qual` path in staging
+- Documentation reorganization for LLM optimization
 
-### Share Modal Wizard Implementation
-- Converted Share modal from single-page form to 4-step wizard for improved UX
-- Step 1: Select recipient type (Teacher, Babysitter, Medical Team, Family, Custom)
-- Step 2: Choose content to share (Quick Info and/or specific categories)
-- Step 3: Configure access settings (expiration, notes)
-- Step 4: Display generated access code and shareable link
-- Fixed share URL generation to use Manylla domain instead of StackMap
+### Technical Details
+- Share URLs in qual now use `https://manylla.com/qual` instead of production URL
+- Environment variables properly segregated between staging and production
+- Deployment script now copies `.env.staging` to `.env.production.local` during build
 
-### Icon Updates
-- Changed Categories button in header from Settings icon to Label icon
-- Updated Sync modal to use Cloud icon (not CloudSync) for consistency
-- Added appropriate icons to all modal headers (AddCircle, Person, Label, etc.)
+---
 
-### Technical Improvements
-- Created new ShareDialogNew.tsx component for wizard implementation
-- Fixed duplicate Stack import in EntryForm.tsx
-- Improved responsive design for mobile dialogs
-- Enhanced visual feedback with transitions and hover states
+## Previous Deployments
+
+### 2025_01_04_00 - UI/UX Improvements
+- Applied consistent design patterns across all modals
+- Converted Share modal to 4-step wizard
+- Fixed demo mode navigation issues
+- Updated icons throughout application
+- Created comprehensive documentation structure

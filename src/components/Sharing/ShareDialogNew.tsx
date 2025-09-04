@@ -150,7 +150,22 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
     
     localStorage.setItem('manylla_shares', JSON.stringify(shares));
     
-    const shareDomain = process.env.REACT_APP_SHARE_DOMAIN || window.location.origin;
+    // Get the correct domain based on environment
+    const getShareDomain = () => {
+      // First check for environment variable
+      if (process.env.REACT_APP_SHARE_DOMAIN) {
+        return process.env.REACT_APP_SHARE_DOMAIN;
+      }
+      // Fallback: detect if we're in qual based on current URL
+      const origin = window.location.origin;
+      const pathname = window.location.pathname;
+      if (pathname.startsWith('/qual')) {
+        return `${origin}/qual`;
+      }
+      return origin;
+    };
+    
+    const shareDomain = getShareDomain();
     setGeneratedLink(`${shareDomain}?share=${code}`);
   };
 

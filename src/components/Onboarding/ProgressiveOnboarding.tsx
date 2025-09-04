@@ -77,8 +77,12 @@ export const ProgressiveOnboarding: React.FC<ProgressiveOnboardingProps> = ({ on
     setMode(selectedMode);
     if (selectedMode === 'join') {
       setShowAccessCode(true);
+    } else if (selectedMode === 'demo') {
+      // For demo mode, skip directly to privacy step
+      setCurrentStep('privacy');
     } else {
-      handleNext();
+      // For fresh mode, go to child-info step
+      setCurrentStep('child-info');
     }
   };
 
@@ -193,8 +197,10 @@ export const ProgressiveOnboarding: React.FC<ProgressiveOnboardingProps> = ({ on
                   mb: 4 
                 }}>
                   <Stack spacing={2.5} sx={{ textAlign: 'left' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
                       <Box sx={{
+                        minWidth: 40,
+                        minHeight: 40,
                         width: 40,
                         height: 40,
                         borderRadius: '50%',
@@ -202,6 +208,7 @@ export const ProgressiveOnboarding: React.FC<ProgressiveOnboardingProps> = ({ on
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        flexShrink: 0,
                       }}>
                         <SecurityIcon sx={{ color: 'white', fontSize: 22 }} />
                       </Box>
@@ -214,8 +221,10 @@ export const ProgressiveOnboarding: React.FC<ProgressiveOnboardingProps> = ({ on
                         </Typography>
                       </Box>
                     </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
                       <Box sx={{
+                        minWidth: 40,
+                        minHeight: 40,
                         width: 40,
                         height: 40,
                         borderRadius: '50%',
@@ -223,6 +232,7 @@ export const ProgressiveOnboarding: React.FC<ProgressiveOnboardingProps> = ({ on
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        flexShrink: 0,
                       }}>
                         <CloudSyncIcon sx={{ color: 'white', fontSize: 22 }} />
                       </Box>
@@ -235,8 +245,10 @@ export const ProgressiveOnboarding: React.FC<ProgressiveOnboardingProps> = ({ on
                         </Typography>
                       </Box>
                     </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
                       <Box sx={{
+                        minWidth: 40,
+                        minHeight: 40,
                         width: 40,
                         height: 40,
                         borderRadius: '50%',
@@ -244,6 +256,7 @@ export const ProgressiveOnboarding: React.FC<ProgressiveOnboardingProps> = ({ on
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        flexShrink: 0,
                       }}>
                         <ShareIcon sx={{ color: 'white', fontSize: 22 }} />
                       </Box>

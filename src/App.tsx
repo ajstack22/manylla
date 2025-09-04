@@ -261,6 +261,8 @@ function App() {
   const handleDemoMode = () => {
     setProfile(mockProfile);
     setShowOnboarding(false);
+    // Save demo profile to localStorage
+    localStorage.setItem('manylla_profile', JSON.stringify(mockProfile));
     // Mark onboarding as complete for demo mode
     localStorage.setItem('manylla_onboarding_completed', 'true');
   };

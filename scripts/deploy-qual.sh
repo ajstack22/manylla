@@ -36,17 +36,22 @@ if [[ -n $(git status --porcelain) ]]; then
     
     # Check if there's a custom message in DEPLOY_NOTES.md
     if [ -f "DEPLOY_NOTES.md" ] && [ -s "DEPLOY_NOTES.md" ]; then
-        # Extract first line as commit title
-        CUSTOM_MSG=$(head -n 1 DEPLOY_NOTES.md | sed 's/^#\+ *//')
-        if [ -n "$CUSTOM_MSG" ]; then
-            COMMIT_MSG="Deploy to qual: $CUSTOM_MSG"
-            echo -e "${GREEN}📋 Using custom message from DEPLOY_NOTES.md${NC}"
-        fi
+        # Extract version and description from the latest deployment entry
+        # Looking for pattern: ## YYYY_MM_DD_VV - Description
+        VERSION_LINE=$(grep -E "^## [0-9]{4}_[0-9]{2}_[0-9]{2}_[0-9]{2} -" DEPLOY_NOTES.md | head -n 1)
         
-        # Clear the file after use
-        echo "# Deploy Notes" > DEPLOY_NOTES.md
-        echo "" >> DEPLOY_NOTES.md
-        echo "Add notes here for the next deployment..." >> DEPLOY_NOTES.md
+        if [ -n "$VERSION_LINE" ]; then
+            # Extract version (YYYY_MM_DD_VV)
+            VERSION=$(echo "$VERSION_LINE" | sed -E 's/^## ([0-9]{4}_[0-9]{2}_[0-9]{2}_[0-9]{2}) .*/\1/')
+            # Extract description (everything after the dash)
+            DESCRIPTION=$(echo "$VERSION_LINE" | sed -E 's/^## [0-9]{4}_[0-9]{2}_[0-9]{2}_[0-9]{2} - //')
+            
+            if [ -n "$VERSION" ] && [ -n "$DESCRIPTION" ]; then
+                COMMIT_MSG="v${VERSION}: ${DESCRIPTION}"
+                echo -e "${GREEN}📋 Using version ${VERSION} from DEPLOY_NOTES.md${NC}"
+                echo -e "${GREEN}📝 Description: ${DESCRIPTION}${NC}"
+            fi
+        fi
     fi
     
     # Commit changes
@@ -99,9 +104,13 @@ fi
 echo -e "${GREEN}✅ Pre-deployment checks complete${NC}"
 echo
 
-# Set environment to qual
-export REACT_APP_ENV=qual
-export REACT_APP_API_URL=https://manylla.com/qual/api
+# Copy staging environment file
+if [ -f .env.staging ]; then
+    cp .env.staging .env.production.local
+    echo -e "${GREEN}✅ Using staging environment configuration${NC}"
+else
+    echo -e "${YELLOW}⚠️  No .env.staging file found, using defaults${NC}"
+fi
 
 echo -e "${YELLOW}📦 Building for staging...${NC}"
 
@@ -113,8 +122,11 @@ pkg.homepage = '/qual';
 require('fs').writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
 "
 
-# Build the app
+# Build the app (will use .env.production.local which we just created)
 npm run build
+
+# Clean up environment file
+rm -f .env.production.local
 
 # Restore original package.json
 mv package.json.backup package.json
