@@ -168,18 +168,49 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
             if (category.isQuickInfo && entries.length <= 1) {
               return (
                 <Box key={category.id} sx={{ width: { xs: '100%', sm: 'calc(50% - 12px)', md: 'calc(33.333% - 16px)' } }}>
-                  <Card variant="outlined" sx={{ borderLeft: `4px solid ${category.color}` }}>
+                  <Card 
+                    variant="outlined" 
+                    sx={{ 
+                      borderLeft: `4px solid ${category.color}`,
+                      position: 'relative',
+                      '&:hover .edit-button': {
+                        opacity: 1,
+                      },
+                    }}
+                  >
                     <CardContent>
-                      <Typography variant="overline" color="text.secondary">
-                        {category.displayName}
-                      </Typography>
-                      {entries.length > 0 ? (
-                        <HtmlRenderer content={entries[0].description} variant="body2" />
-                      ) : (
-                        <Typography variant="body2" color="text.secondary">
-                          No information added yet
-                        </Typography>
-                      )}
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <Box sx={{ flex: 1 }}>
+                          <Typography variant="overline" color="text.secondary">
+                            {category.displayName}
+                          </Typography>
+                          {entries.length > 0 ? (
+                            <HtmlRenderer content={entries[0].description} variant="body2" />
+                          ) : (
+                            <Typography variant="body2" color="text.secondary">
+                              No information added yet
+                            </Typography>
+                          )}
+                        </Box>
+                        <IconButton
+                          className="edit-button"
+                          size="small"
+                          onClick={() => {
+                            if (entries.length > 0 && onEditEntry) {
+                              onEditEntry(entries[0]);
+                            } else if (onAddEntry) {
+                              onAddEntry(category.name);
+                            }
+                          }}
+                          sx={{
+                            opacity: { xs: 1, sm: 0 },
+                            transition: 'opacity 0.2s',
+                            ml: 1,
+                          }}
+                        >
+                          {entries.length > 0 ? <EditIcon fontSize="small" /> : <AddIcon fontSize="small" />}
+                        </IconButton>
+                      </Box>
                     </CardContent>
                   </Card>
                 </Box>
@@ -194,7 +225,7 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
                   entries={entries}
                   color={category.color}
                   icon={null}
-                  onAddEntry={undefined}
+                  onAddEntry={onAddEntry ? () => onAddEntry(category.name) : undefined}
                   onEditEntry={onEditEntry}
                   onDeleteEntry={onDeleteEntry}
                 />

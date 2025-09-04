@@ -90,16 +90,18 @@ export class ProfileValidator {
       errors.push('Description required');
     }
 
-    // Validate visibility is an array
-    if (!Array.isArray(entry.visibility)) {
-      errors.push('Visibility must be an array');
-    } else {
-      const validVisibility = ['private', 'family', 'medical', 'education'];
-      entry.visibility.forEach((v: any) => {
-        if (!validVisibility.includes(v)) {
-          errors.push(`Invalid visibility: ${v}`);
-        }
-      });
+    // Validate visibility is an array (optional, defaults to ['private'])
+    if (entry.visibility !== undefined) {
+      if (!Array.isArray(entry.visibility)) {
+        errors.push('Visibility must be an array');
+      } else {
+        const validVisibility = ['private', 'family', 'medical', 'education'];
+        entry.visibility.forEach((v: any) => {
+          if (!validVisibility.includes(v)) {
+            errors.push(`Invalid visibility: ${v}`);
+          }
+        });
+      }
     }
 
     // Validate date
@@ -161,7 +163,7 @@ export class ProfileValidator {
         ...entry,
         title: this.sanitizeHtml(entry.title).trim(),
         description: this.sanitizeHtml(entry.description).trim(),
-        visibility: Array.isArray(entry.visibility) ? entry.visibility : ['private']
+        visibility: entry.visibility && Array.isArray(entry.visibility) ? entry.visibility : ['private']
       })),
       updatedAt: new Date()
     };

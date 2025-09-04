@@ -15,9 +15,9 @@ const manyllaColors = {
   lightManilaPaper: '#FBF7F0',       // Off-white with manila tint for cards
   lightManilaAccent: '#EDD9BC',      // More prominent manila for hover states
   // Dark manila/gold tones for dark mode
-  darkManila: '#352B20',      // Lighter warm brown-gold (main background)
-  darkManilaPaper: '#443829',  // Slightly lighter for cards/papers
-  darkManilaAccent: '#544535', // Even lighter for hover states
+  darkManila: '#3A3328',      // More gold, less brown (main background)
+  darkManilaPaper: '#4A4135',  // Warmer gold for cards/papers
+  darkManilaAccent: '#5A4F40', // Golden brown for hover states
   darkManilaText: '#D4C4A0',   // Warm cream text color
 };
 
