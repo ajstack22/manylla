@@ -8,53 +8,30 @@ import { LoadingOverlay } from './components/Loading/LoadingOverlay';
 import { StorageService } from './services/storageService';
 import { ProfileOverview } from './components/Profile/ProfileOverview';
 import { EntryForm } from './components/Forms/EntryForm';
-import { ShareDialog } from './components/Sharing/ShareDialog';
+import { ShareDialog } from './components/Sharing/ShareDialogNew';
 import { SharedView } from './components/Sharing/SharedView';
 import { SyncDialog } from './components/Sync/SyncDialog';
+import { UnifiedCategoryManager } from './components/Settings/UnifiedCategoryManager';
 import { ProgressiveOnboarding } from './components/Onboarding/ProgressiveOnboarding';
 import { ProfileCreateDialog } from './components/Profile/ProfileCreateDialog';
 import { ChildProfile, Entry, CategoryConfig } from './types/ChildProfile';
 import { unifiedCategories } from './utils/unifiedCategories';
 
-// Create initial entries from former Quick Info data
+// Create initial Quick Info entry
 const quickInfoEntries: Entry[] = [
   {
-    id: 'qi-communication',
-    category: 'communication',
-    title: 'Communication',
-    description: 'Uses 2-3 word phrases. Understands more than she can express.',
-    date: new Date(),
-    visibility: ['private'],
-  },
-  {
-    id: 'qi-sensory',
-    category: 'sensory',
-    title: 'Sensory',
-    description: 'Sensitive to loud noises and bright lights. Loves soft textures.',
-    date: new Date(),
-    visibility: ['private'],
-  },
-  {
-    id: 'qi-medical',
-    category: 'medical',
-    title: 'Medical',
-    description: 'No allergies. Takes melatonin for sleep (prescribed).',
-    date: new Date(),
-    visibility: ['private'],
-  },
-  {
-    id: 'qi-dietary',
-    category: 'dietary',
-    title: 'Dietary',
-    description: 'Gluten-free diet. Prefers crunchy foods. No nuts.',
-    date: new Date(),
-    visibility: ['private'],
-  },
-  {
-    id: 'qi-emergency',
-    category: 'emergency',
-    title: 'Emergency',
-    description: 'Mom: 555-0123, Dad: 555-0124. Dr. Smith: 555-0199',
+    id: 'qi-1',
+    category: 'quick-info',
+    title: 'Essential Information',
+    description: `<strong>Communication:</strong> Uses 2-3 word phrases. Understands more than she can express.
+    
+<strong>Sensory:</strong> Sensitive to loud noises and bright lights. Loves soft textures.
+
+<strong>Medical:</strong> No allergies. Takes melatonin for sleep (prescribed).
+
+<strong>Dietary:</strong> Gluten-free diet. Prefers crunchy foods. No nuts.
+
+<strong>Emergency Contacts:</strong> Mom: 555-0123, Dad: 555-0124. Dr. Smith: 555-0199`,
     date: new Date(),
     visibility: ['private'],
   },
@@ -90,7 +67,7 @@ const mockProfile: ChildProfile = {
     },
     {
       id: '3',
-      category: 'strengths',
+      category: 'education',
       title: 'Visual Learning',
       description: 'Ellie learns best with visual aids. Picture cards, visual schedules, and demonstrations work much better than verbal instructions alone.',
       date: new Date('2024-01-08'),
@@ -98,7 +75,7 @@ const mockProfile: ChildProfile = {
     },
     {
       id: '4',
-      category: 'challenges',
+      category: 'behaviors',
       title: 'Loud Noises',
       description: 'Sudden loud noises (fire alarms, hand dryers) cause significant distress. Always warn beforehand when possible. Noise-canceling headphones help.',
       date: new Date('2024-01-05'),
@@ -106,7 +83,7 @@ const mockProfile: ChildProfile = {
     },
     {
       id: '5',
-      category: 'medical-history',
+      category: 'medical',
       title: 'Autism Diagnosis',
       description: 'Diagnosed with Autism Spectrum Disorder at age 3. Evaluation done by Dr. Smith at Children\'s Hospital.',
       date: new Date('2021-08-20'),
@@ -135,6 +112,7 @@ function App() {
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [syncDialogOpen, setSyncDialogOpen] = useState(false);
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [isSharedView, setIsSharedView] = useState(false);
   const [shareCode, setShareCode] = useState<string | null>(null);
   const [profileCreateOpen, setProfileCreateOpen] = useState(false);
@@ -151,11 +129,27 @@ function App() {
           setIsSharedView(true);
           setShowOnboarding(false);
         } else {
-          // Check if user has existing profile using StorageService
+          // Check if onboarding has been completed
+          const onboardingCompleted = localStorage.getItem('manylla_onboarding_completed') === 'true';
           const storedProfile = StorageService.getProfile();
-          if (storedProfile) {
-            setProfile(storedProfile);
+          
+          // Only proceed if onboarding is complete AND we have a valid profile with a name
+          if (onboardingCompleted && storedProfile && storedProfile.name) {
+            // Update stored profile with new categories structure
+            const updatedProfile = {
+              ...storedProfile,
+              categories: unifiedCategories
+            };
+            setProfile(updatedProfile);
             setShowOnboarding(false);
+          } else {
+            // Show onboarding if not completed or profile is invalid
+            setShowOnboarding(true);
+            // Clear any invalid data
+            if (!storedProfile?.name) {
+              localStorage.removeItem('manylla_profile');
+              localStorage.removeItem('manylla_onboarding_completed');
+            }
           }
         }
       } catch (error) {
@@ -251,8 +245,9 @@ function App() {
     setShowOnboarding(false);
     setProfileCreateOpen(false);
     
-    // Save to localStorage
+    // Save to localStorage and mark onboarding as complete
     localStorage.setItem('manylla_profile', JSON.stringify(newProfile));
+    localStorage.setItem('manylla_onboarding_completed', 'true');
   };
 
   const handleJoinWithCode = (code: string) => {
@@ -266,11 +261,14 @@ function App() {
   const handleDemoMode = () => {
     setProfile(mockProfile);
     setShowOnboarding(false);
+    // Mark onboarding as complete for demo mode
+    localStorage.setItem('manylla_onboarding_completed', 'true');
   };
 
   const handleCloseProfile = () => {
-    // Clear the current profile and go back to onboarding
+    // Clear the current profile and onboarding flag
     localStorage.removeItem('manylla_profile');
+    localStorage.removeItem('manylla_onboarding_completed');
     setProfile(null);
     setShowOnboarding(true);
   };
@@ -352,10 +350,15 @@ function App() {
               handleJoinWithCode(data.accessCode);
             } else {
               // For fresh mode, create profile with the provided name
+              // Ensure we have a valid name before proceeding
+              if (!data.childName || !data.childName.trim()) {
+                console.error('Cannot create profile without child name');
+                return;
+              }
               const newProfile: ChildProfile = {
                 id: Date.now().toString(),
-                name: data.childName,
-                preferredName: data.preferredName || data.childName,
+                name: data.childName.trim(),
+                preferredName: data.preferredName?.trim() || data.childName.trim(),
                 dateOfBirth: new Date(),
                 pronouns: '',
                 photo: '',
@@ -388,6 +391,8 @@ function App() {
           onSyncClick={() => setSyncDialogOpen(true)} 
           onCloseProfile={handleCloseProfile}
           onShare={() => setShareDialogOpen(true)}
+          onCategoriesClick={() => setCategoriesOpen(true)}
+          syncStatus="not-setup" // TODO: Get from sync context
         />
         <Container maxWidth="lg" sx={{ px: { xs: 1, sm: 2, md: 3 } }}>
           <ProfileOverview
@@ -416,6 +421,12 @@ function App() {
         <SyncDialog
           open={syncDialogOpen}
           onClose={() => setSyncDialogOpen(false)}
+        />
+        <UnifiedCategoryManager
+          open={categoriesOpen}
+          onClose={() => setCategoriesOpen(false)}
+          categories={profile.categories}
+          onUpdate={handleUpdateCategories}
         />
         <LoadingOverlay open={isSaving} message="Saving..." />
       </ManyllaThemeProvider>

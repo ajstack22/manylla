@@ -4,24 +4,19 @@ import {
   Paper,
   Typography,
   Avatar,
-  Card,
-  CardContent,
   Chip,
-  Button,
   IconButton,
+  Fab,
 } from '@mui/material';
 import {
-  Settings as SettingsIcon,
   Edit as EditIcon,
   Add as AddIcon,
 } from '@mui/icons-material';
 import { ChildProfile, Entry } from '../../types/ChildProfile';
 import { CategorySection } from './CategorySection';
 import { getVisibleCategories } from '../../utils/unifiedCategories';
-import { UnifiedCategoryManager } from '../Settings/UnifiedCategoryManager';
 import { ProfileEditDialog } from './ProfileEditDialog';
 import { CategoryConfig } from '../../types/ChildProfile';
-import { HtmlRenderer } from '../Forms/HtmlRenderer';
 
 interface ProfileOverviewProps {
   profile: ChildProfile;
@@ -42,7 +37,6 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
   onUpdateCategories,
   onUpdateProfile,
 }) => {
-  const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [profileEditOpen, setProfileEditOpen] = useState(false);
   
   const getEntriesByCategory = (category: string) => 
@@ -50,10 +44,15 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
     
   const allCategories = getVisibleCategories(profile.categories);
   
-  // Only show categories that have entries OR are priority categories (former Quick Info)
+  // Show categories that have entries OR are Quick Info (always show Quick Info)
   const visibleCategories = allCategories.filter(category => {
     const entries = getEntriesByCategory(category.name);
     return entries.length > 0 || category.isQuickInfo;
+  }).sort((a, b) => {
+    // Quick Info categories always come first
+    if (a.isQuickInfo && !b.isQuickInfo) return -1;
+    if (!a.isQuickInfo && b.isQuickInfo) return 1;
+    return a.order - b.order;
   });
 
   const calculateAge = (dob: Date) => {
@@ -110,114 +109,11 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
       </Paper>
 
       <Box sx={{ position: 'relative' }}>
-        {/* Centered Add Entry button */}
-        {onAddEntry && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={() => onAddEntry('')}
-              size="large"
-              sx={{ 
-                textTransform: 'none',
-                borderRadius: 3,
-                px: 4,
-                py: 1.5,
-                fontSize: '16px',
-                fontWeight: 500,
-                boxShadow: 2,
-                '&:hover': {
-                  boxShadow: 4,
-                },
-              }}
-            >
-              Add Entry
-            </Button>
-          </Box>
-        )}
-        
-        {/* Centered Manage Categories button */}
-        {onUpdateCategories && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
-            <Button
-              variant="outlined"
-              startIcon={<SettingsIcon />}
-              onClick={() => setCategoriesOpen(true)}
-              sx={{ 
-                textTransform: 'none',
-                borderRadius: 2,
-                px: 3,
-                py: 1,
-                borderColor: 'divider',
-                color: 'text.secondary',
-                '&:hover': {
-                  borderColor: 'text.primary',
-                  backgroundColor: 'action.hover',
-                },
-              }}
-            >
-              Manage Categories
-            </Button>
-          </Box>
-        )}
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: { xs: 2, sm: 3 } }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: { xs: 2, sm: 3 }, mb: 8 }}>
           {visibleCategories.map((category) => {
             const entries = getEntriesByCategory(category.name);
             
-            // For priority categories (former Quick Info), show as compact if only one entry
-            if (category.isQuickInfo && entries.length <= 1) {
-              return (
-                <Box key={category.id} sx={{ width: { xs: '100%', sm: 'calc(50% - 12px)', md: 'calc(33.333% - 16px)' } }}>
-                  <Card 
-                    variant="outlined" 
-                    sx={{ 
-                      borderLeft: `4px solid ${category.color}`,
-                      position: 'relative',
-                      '&:hover .edit-button': {
-                        opacity: 1,
-                      },
-                    }}
-                  >
-                    <CardContent>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <Box sx={{ flex: 1 }}>
-                          <Typography variant="overline" color="text.secondary">
-                            {category.displayName}
-                          </Typography>
-                          {entries.length > 0 ? (
-                            <HtmlRenderer content={entries[0].description} variant="body2" />
-                          ) : (
-                            <Typography variant="body2" color="text.secondary">
-                              No information added yet
-                            </Typography>
-                          )}
-                        </Box>
-                        <IconButton
-                          className="edit-button"
-                          size="small"
-                          onClick={() => {
-                            if (entries.length > 0 && onEditEntry) {
-                              onEditEntry(entries[0]);
-                            } else if (onAddEntry) {
-                              onAddEntry(category.name);
-                            }
-                          }}
-                          sx={{
-                            opacity: { xs: 1, sm: 0 },
-                            transition: 'opacity 0.2s',
-                            ml: 1,
-                          }}
-                        >
-                          {entries.length > 0 ? <EditIcon fontSize="small" /> : <AddIcon fontSize="small" />}
-                        </IconButton>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Box>
-              );
-            }
-            
-            // Regular categories show as full sections
+            // All categories show as full sections
             return (
               <Box key={category.id} sx={{ width: { xs: '100%', md: 'calc(50% - 12px)' } }}>
                 <CategorySection
@@ -233,16 +129,24 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
             );
           })}
         </Box>
+        
+        {/* Floating Action Button for Add Entry */}
+        {onAddEntry && (
+          <Fab
+            color="primary"
+            aria-label="add entry"
+            onClick={() => onAddEntry('')}
+            sx={{
+              position: 'fixed',
+              bottom: { xs: 16, sm: 24 },
+              right: { xs: 16, sm: 24 },
+              zIndex: 1200,
+            }}
+          >
+            <AddIcon />
+          </Fab>
+        )}
       </Box>
-      
-      {onUpdateCategories && (
-        <UnifiedCategoryManager
-          open={categoriesOpen}
-          onClose={() => setCategoriesOpen(false)}
-          categories={profile.categories}
-          onUpdate={onUpdateCategories}
-        />
-      )}
       
       {onUpdateProfile && (
         <ProfileEditDialog

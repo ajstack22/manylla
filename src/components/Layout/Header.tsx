@@ -16,10 +16,14 @@ import {
   Brightness4,
   Brightness7,
   Menu as MenuIcon,
-  CloudSync as CloudSyncIcon,
+  CloudUpload as CloudUploadIcon,
+  CloudDone as CloudDoneIcon,
+  ErrorOutline as CloudAlertIcon,
   Logout as LogoutIcon,
   Share as ShareIcon,
   MoreVert as MoreVertIcon,
+  Settings as SettingsIcon,
+  Label as LabelIcon,
 } from '@mui/icons-material';
 import { useTheme as useAppTheme } from '../../context/ThemeContext';
 
@@ -28,13 +32,35 @@ interface HeaderProps {
   onSyncClick?: () => void;
   onCloseProfile?: () => void;
   onShare?: () => void;
+  onCategoriesClick?: () => void;
+  syncStatus?: 'not-setup' | 'synced' | 'error';
 }
 
-export const Header: React.FC<HeaderProps> = ({ onMenuClick, onSyncClick, onCloseProfile, onShare }) => {
+export const Header: React.FC<HeaderProps> = ({ 
+  onMenuClick, 
+  onSyncClick, 
+  onCloseProfile, 
+  onShare, 
+  onCategoriesClick,
+  syncStatus = 'not-setup' 
+}) => {
   const theme = useTheme();
   const { isDarkMode, toggleTheme } = useAppTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  
+  // Get sync icon based on status
+  const getSyncIcon = () => {
+    switch(syncStatus) {
+      case 'synced':
+        return <CloudDoneIcon />;
+      case 'error':
+        return <CloudAlertIcon />;
+      case 'not-setup':
+      default:
+        return <CloudUploadIcon />;
+    }
+  };
 
   return (
     <AppBar position="sticky" elevation={0} sx={{ 
@@ -82,12 +108,12 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, onSyncClick, onClos
           </Typography>
         </Box>
 
-        {/* Mobile view - show only Share and Menu */}
+        {/* Mobile view - show Categories and Menu */}
         {isMobile ? (
           <>
-            {onShare && (
-              <IconButton onClick={onShare} color="inherit" sx={{ mr: 1 }} title="Share Profile">
-                <ShareIcon />
+            {onCategoriesClick && (
+              <IconButton onClick={onCategoriesClick} color="inherit" sx={{ mr: 1 }} title="Manage Categories">
+                <LabelIcon />
               </IconButton>
             )}
             <IconButton 
@@ -102,9 +128,15 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, onSyncClick, onClos
               open={Boolean(anchorEl)}
               onClose={() => setAnchorEl(null)}
             >
+              {onShare && (
+                <MenuItem onClick={() => { onShare(); setAnchorEl(null); }}>
+                  <ListItemIcon><ShareIcon /></ListItemIcon>
+                  <ListItemText>Share</ListItemText>
+                </MenuItem>
+              )}
               {onSyncClick && (
                 <MenuItem onClick={() => { onSyncClick(); setAnchorEl(null); }}>
-                  <ListItemIcon><CloudSyncIcon /></ListItemIcon>
+                  <ListItemIcon>{getSyncIcon()}</ListItemIcon>
                   <ListItemText>Sync</ListItemText>
                 </MenuItem>
               )}
@@ -125,24 +157,29 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, onSyncClick, onClos
         ) : (
           /* Desktop view - show all buttons */
           <>
+            {onCategoriesClick && (
+              <IconButton onClick={onCategoriesClick} color="inherit" sx={{ mr: 1 }} title="Manage Categories">
+                <LabelIcon />
+              </IconButton>
+            )}
             {onShare && (
               <IconButton onClick={onShare} color="inherit" sx={{ mr: 1 }} title="Share Profile">
                 <ShareIcon />
               </IconButton>
             )}
+            {onSyncClick && (
+              <IconButton onClick={onSyncClick} color="inherit" sx={{ mr: 1 }} title="Sync">
+                {getSyncIcon()}
+              </IconButton>
+            )}
+            <IconButton onClick={toggleTheme} color="inherit" sx={{ mr: 1 }} title={isDarkMode ? 'Light Mode' : 'Dark Mode'}>
+              {isDarkMode ? <Brightness7 /> : <Brightness4 />}
+            </IconButton>
             {onCloseProfile && (
-              <IconButton onClick={onCloseProfile} color="inherit" sx={{ mr: 1 }} title="Close Profile">
+              <IconButton onClick={onCloseProfile} color="inherit" title="Close Profile">
                 <LogoutIcon />
               </IconButton>
             )}
-            {onSyncClick && (
-              <IconButton onClick={onSyncClick} color="inherit" sx={{ mr: 1 }} title="Sync">
-                <CloudSyncIcon />
-              </IconButton>
-            )}
-            <IconButton onClick={toggleTheme} color="inherit" title={isDarkMode ? 'Light Mode' : 'Dark Mode'}>
-              {isDarkMode ? <Brightness7 /> : <Brightness4 />}
-            </IconButton>
           </>
         )}
       </Toolbar>

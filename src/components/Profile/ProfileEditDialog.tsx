@@ -13,11 +13,13 @@ import {
   Stack,
   AppBar,
   Toolbar,
+  Paper,
 } from '@mui/material';
 import {
   Close as CloseIcon,
   PhotoCamera as PhotoCameraIcon,
   CalendarToday as CalendarIcon,
+  Person as PersonIcon,
 } from '@mui/icons-material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -90,6 +92,7 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
       {isMobile ? (
         <AppBar position="sticky" color="default" elevation={0}>
           <Toolbar>
+            <PersonIcon sx={{ mr: 1 }} />
             <Typography variant="h6" sx={{ flexGrow: 1 }}>
               Edit Profile
             </Typography>
@@ -99,16 +102,45 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
           </Toolbar>
         </AppBar>
       ) : (
-        <DialogTitle>Edit Profile</DialogTitle>
+        <DialogTitle>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <PersonIcon sx={{ mr: 1 }} />
+            Edit Profile
+            <Box sx={{ flexGrow: 1 }} />
+            <IconButton onClick={onClose}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        </DialogTitle>
       )}
       
       <DialogContent sx={{ pt: isMobile ? 2 : 3 }}>
-        <Stack spacing={3}>
+        {!isMobile && (
+          <Box sx={{ textAlign: 'center', mb: 4 }}>
+            <PersonIcon sx={{ fontSize: 64, color: 'primary.main', mb: 2 }} />
+            <Typography variant="h4" gutterBottom fontWeight="bold">
+              Edit Profile
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Update your child's profile information
+            </Typography>
+          </Box>
+        )}
+        <Stack spacing={2}>
           {/* Profile Photo */}
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Paper 
+            elevation={0}
+            sx={{ 
+              p: 3, 
+              border: '1px solid',
+              borderColor: 'divider',
+              borderRadius: 2,
+              textAlign: 'center',
+            }}
+          >
             <Avatar
               src={photoPreview}
-              sx={{ width: 120, height: 120, mb: 2 }}
+              sx={{ width: 100, height: 100, mb: 2, mx: 'auto' }}
             >
               {formData.name.charAt(0)}
             </Avatar>
@@ -123,62 +155,77 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
               variant="outlined"
               startIcon={<PhotoCameraIcon />}
               onClick={() => fileInputRef.current?.click()}
+              size="small"
             >
               Change Photo
             </Button>
-          </Box>
+          </Paper>
 
-          {/* Name Fields */}
-          <TextField
-            label="Full Name"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            fullWidth
-            required
-          />
-          
-          <TextField
-            label="Preferred Name"
-            value={formData.preferredName}
-            onChange={(e) => setFormData({ ...formData, preferredName: e.target.value })}
-            fullWidth
-            helperText="What they like to be called"
-          />
+          {/* Basic Information */}
+          <Paper 
+            elevation={0}
+            sx={{ 
+              p: 2, 
+              border: '1px solid',
+              borderColor: 'divider',
+              borderRadius: 2,
+            }}
+          >
+            <Stack spacing={2}>
+              <TextField
+                label="Full Name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                fullWidth
+                required
+                size="small"
+              />
+              
+              <TextField
+                label="Preferred Name"
+                value={formData.preferredName}
+                onChange={(e) => setFormData({ ...formData, preferredName: e.target.value })}
+                fullWidth
+                helperText="What they like to be called"
+                size="small"
+              />
 
-          {/* Date of Birth */}
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DatePicker
-              label="Date of Birth"
-              value={formData.dateOfBirth}
-              onChange={(newValue: Date | null) => {
-                if (newValue) {
-                  setFormData({ ...formData, dateOfBirth: newValue });
-                }
-              }}
-              slotProps={{
-                textField: {
-                  fullWidth: true,
-                  InputProps: {
-                    endAdornment: <CalendarIcon />,
-                  },
-                  helperText: `Age: ${calculateAge(formData.dateOfBirth)} years`,
-                },
-              }}
-            />
-          </LocalizationProvider>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  label="Date of Birth"
+                  value={formData.dateOfBirth}
+                  onChange={(newValue: Date | null) => {
+                    if (newValue) {
+                      setFormData({ ...formData, dateOfBirth: newValue });
+                    }
+                  }}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      size: 'small',
+                      InputProps: {
+                        endAdornment: <CalendarIcon fontSize="small" />,
+                      },
+                      helperText: `Age: ${calculateAge(formData.dateOfBirth)} years`,
+                    },
+                  }}
+                />
+              </LocalizationProvider>
 
-          {/* Pronouns */}
-          <TextField
-            label="Pronouns"
-            value={formData.pronouns}
-            onChange={(e) => setFormData({ ...formData, pronouns: e.target.value })}
-            fullWidth
-            placeholder="e.g., she/her, he/him, they/them"
-          />
+              <TextField
+                label="Pronouns"
+                value={formData.pronouns}
+                onChange={(e) => setFormData({ ...formData, pronouns: e.target.value })}
+                fullWidth
+                placeholder="e.g., she/her, he/him, they/them"
+                size="small"
+              />
+            </Stack>
+          </Paper>
         </Stack>
       </DialogContent>
       
-      <DialogActions>
+      <DialogActions sx={{ px: 2, py: 2 }}>
         <Button onClick={onClose}>Cancel</Button>
         <Button variant="contained" onClick={handleSave}>
           Save Changes

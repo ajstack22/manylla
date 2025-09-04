@@ -18,6 +18,8 @@ import {
   useMediaQuery,
   AppBar,
   Toolbar,
+  Paper,
+  Stack,
 } from '@mui/material';
 import {
   DragIndicator as DragIcon,
@@ -26,6 +28,7 @@ import {
   ArrowDownward as ArrowDownIcon,
   Visibility as VisibilityIcon,
   VisibilityOff as VisibilityOffIcon,
+  Label as LabelIcon,
 } from '@mui/icons-material';
 import {
   DndContext,
@@ -91,42 +94,49 @@ const SortableItem: React.FC<SortableItemProps> = ({
   };
 
   return (
-    <ListItem
+    <Paper
       ref={setNodeRef}
       style={style}
+      elevation={0}
       sx={{
+        p: 2,
+        mb: 1.5,
+        border: '2px solid',
+        borderColor: isDragging ? 'primary.main' : 'divider',
         backgroundColor: isDragging ? 'action.hover' : 'background.paper',
-        borderRadius: 1,
-        mb: 1,
-        border: '1px solid',
-        borderColor: 'divider',
+        borderRadius: 2,
+        transition: 'all 0.2s ease',
+        '&:hover': {
+          borderColor: 'primary.light',
+        },
       }}
     >
-      {!isMobile && (
-        <ListItemIcon
-          {...attributes}
-          {...listeners}
-          sx={{ cursor: 'grab', minWidth: 40 }}
-        >
-          <DragIcon />
-        </ListItemIcon>
-      )}
-      
-      <Box
-        sx={{
-          width: 24,
-          height: 24,
-          borderRadius: '50%',
-          backgroundColor: category.color,
-          mr: 2,
-          flexShrink: 0,
-        }}
-      />
-      
-      <ListItemText
-        primary={
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            {category.displayName}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        {!isMobile && (
+          <Box
+            {...attributes}
+            {...listeners}
+            sx={{ cursor: 'grab', color: 'text.secondary' }}
+          >
+            <DragIcon />
+          </Box>
+        )}
+        
+        <Box
+          sx={{
+            width: 32,
+            height: 32,
+            borderRadius: '50%',
+            backgroundColor: category.color,
+            flexShrink: 0,
+          }}
+        />
+        
+        <Box sx={{ flex: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+              {category.displayName}
+            </Typography>
             {category.isQuickInfo && (
               <Chip label="Priority" size="small" color="primary" />
             )}
@@ -134,15 +144,11 @@ const SortableItem: React.FC<SortableItemProps> = ({
               <Chip label="Custom" size="small" variant="outlined" />
             )}
           </Box>
-        }
-        secondary={
-          <Typography variant="caption" color="text.secondary">
-            {category.isVisible ? 'Visible' : 'Hidden'}
+          <Typography variant="body2" color="text.secondary">
+            {category.isVisible ? 'Visible in profile' : 'Hidden from profile'}
           </Typography>
-        }
-      />
-      
-      <ListItemSecondaryAction>
+        </Box>
+        
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
           {isMobile && (
             <>
@@ -176,8 +182,8 @@ const SortableItem: React.FC<SortableItemProps> = ({
             )}
           </IconButton>
         </Box>
-      </ListItemSecondaryAction>
-    </ListItem>
+      </Box>
+    </Paper>
   );
 };
 
@@ -288,6 +294,7 @@ export const UnifiedCategoryManager: React.FC<UnifiedCategoryManagerProps> = ({
       {isMobile ? (
         <AppBar position="sticky" color="default" elevation={0}>
           <Toolbar>
+            <LabelIcon sx={{ mr: 1 }} />
             <Typography variant="h6" sx={{ flexGrow: 1 }}>
               Manage Categories
             </Typography>
@@ -299,6 +306,7 @@ export const UnifiedCategoryManager: React.FC<UnifiedCategoryManagerProps> = ({
       ) : (
         <DialogTitle>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <LabelIcon sx={{ mr: 1 }} />
             Manage Categories
             <Box sx={{ flexGrow: 1 }} />
             <IconButton onClick={handleCancel}>
@@ -309,6 +317,17 @@ export const UnifiedCategoryManager: React.FC<UnifiedCategoryManagerProps> = ({
       )}
       
       <DialogContent sx={{ pt: isMobile ? 2 : 3 }}>
+        {!isMobile && (
+          <Box sx={{ textAlign: 'center', mb: 4 }}>
+            <LabelIcon sx={{ fontSize: 64, color: 'primary.main', mb: 2 }} />
+            <Typography variant="h4" gutterBottom fontWeight="bold">
+              Manage Categories
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+              Organize and customize the categories for tracking your child's information
+            </Typography>
+          </Box>
+        )}
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
           {isMobile 
             ? 'Use arrows to reorder categories. Toggle visibility with the eye icon.'
@@ -317,7 +336,7 @@ export const UnifiedCategoryManager: React.FC<UnifiedCategoryManagerProps> = ({
         
         {isMobile ? (
           // Mobile: Use arrow buttons
-          <List sx={{ pt: 0 }}>
+          <Stack spacing={0}>
             {localCategories.map((category, index) => (
               <SortableItem
                 key={category.id}
@@ -330,7 +349,7 @@ export const UnifiedCategoryManager: React.FC<UnifiedCategoryManagerProps> = ({
                 isMobile={true}
               />
             ))}
-          </List>
+          </Stack>
         ) : (
           // Desktop: Use drag and drop
           <DndContext
@@ -342,7 +361,7 @@ export const UnifiedCategoryManager: React.FC<UnifiedCategoryManagerProps> = ({
               items={localCategories.map(c => c.id)}
               strategy={verticalListSortingStrategy}
             >
-              <List sx={{ pt: 0 }}>
+              <Stack spacing={0}>
                 {localCategories.map((category, index) => (
                   <SortableItem
                     key={category.id}
@@ -353,7 +372,7 @@ export const UnifiedCategoryManager: React.FC<UnifiedCategoryManagerProps> = ({
                     isMobile={false}
                   />
                 ))}
-              </List>
+              </Stack>
             </SortableContext>
           </DndContext>
         )}

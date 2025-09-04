@@ -19,8 +19,12 @@ import {
   FormControlLabel,
   Checkbox,
   FormLabel,
+  Paper,
 } from '@mui/material';
-import { Close as CloseIcon, Add as AddIcon } from '@mui/icons-material';
+import { 
+  Close as CloseIcon, 
+  AddCircle as AddCircleIcon,
+} from '@mui/icons-material';
 import { Entry } from '../../types/ChildProfile';
 import { useMobileDialog } from '../../hooks/useMobileDialog';
 import { useMobileKeyboard } from '../../hooks/useMobileKeyboard';
@@ -120,8 +124,8 @@ export const EntryForm: React.FC<EntryFormProps> = ({
           }}
         >
           <Toolbar>
-            <Typography variant="h6" sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
-              {!entry && <AddIcon />}
+            <AddCircleIcon sx={{ mr: 1 }} />
+            <Typography variant="h6" sx={{ flexGrow: 1 }}>
               {entry ? 'Edit' : 'Add'} {getCategoryTitle()}
             </Typography>
             <IconButton edge="end" onClick={onClose}>
@@ -132,10 +136,8 @@ export const EntryForm: React.FC<EntryFormProps> = ({
       ) : (
         <DialogTitle>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              {!entry && <AddIcon />}
-              {entry ? 'Edit' : 'Add'} {getCategoryTitle()}
-            </Box>
+            <AddCircleIcon sx={{ mr: 1 }} />
+            {entry ? 'Edit' : 'Add'} {getCategoryTitle()}
             <Box sx={{ flexGrow: 1 }} />
             <IconButton onClick={onClose}>
               <CloseIcon />
@@ -150,74 +152,100 @@ export const EntryForm: React.FC<EntryFormProps> = ({
             pb: isMobile && isKeyboardVisible ? `${keyboardPadding + 80}px` : 3,
           }}
         >
-          <Stack spacing={3}>
+          {!isMobile && (
+            <Box sx={{ textAlign: 'center', mb: 4 }}>
+              <AddCircleIcon sx={{ fontSize: 64, color: 'primary.main', mb: 2 }} />
+              <Typography variant="h4" gutterBottom fontWeight="bold">
+                {entry ? 'Edit' : 'Add'} {getCategoryTitle()}
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                {entry ? 'Update the details for this entry' : 'Create a new entry to track important information'}
+              </Typography>
+            </Box>
+          )}
+          <Stack spacing={2}>
             {/* Category selector - only show if we have categories list and not editing */}
             {categories.length > 0 && !entry && (
-              <FormControl fullWidth required>
-                <InputLabel>Category</InputLabel>
-                <Select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  label="Category"
-                  sx={{
-                    backgroundColor: (theme) => 
-                      theme.palette.mode === 'dark' 
-                        ? theme.palette.background.default
-                        : theme.palette.background.paper,
-                  }}
-                >
-                  {categories.map(cat => (
-                    <MenuItem key={cat.id} value={cat.name}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Box
-                          sx={{
-                            width: 16,
-                            height: 16,
-                            borderRadius: '50%',
-                            backgroundColor: cat.color,
-                          }}
-                        />
-                        {cat.displayName}
-                      </Box>
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Paper 
+                elevation={0}
+                sx={{ 
+                  p: 2, 
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  borderRadius: 2,
+                }}
+              >
+                <FormControl fullWidth required size="small">
+                  <InputLabel>Category</InputLabel>
+                  <Select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    label="Category"
+                  >
+                    {categories.map(cat => (
+                      <MenuItem key={cat.id} value={cat.name}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Box
+                            sx={{
+                              width: 16,
+                              height: 16,
+                              borderRadius: '50%',
+                              backgroundColor: cat.color,
+                            }}
+                          />
+                          {cat.displayName}
+                        </Box>
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Paper>
             )}
             
-            <RichTextInput
-              label="Title"
-              value={formData.title}
-              onChange={(value) => setFormData({ ...formData, title: value })}
-              required
-              placeholder={getPlaceholder(category, 'title')}
-              multiline={false}
-              autoFocus={!entry}
-            />
-            
-            <RichTextInput
-              label="Description"
-              value={formData.description}
-              onChange={(value) => setFormData({ ...formData, description: value })}
-              required
-              placeholder={getPlaceholder(category, 'description')}
-              helperText={`Example: ${getRandomExample(category) || 'Add details here'}`}
-              rows={4}
-            />
-            
-            <FormControl 
-              component="fieldset"
-              sx={{
-                p: 2,
-                borderRadius: 1,
-                border: (theme) => `1px solid ${theme.palette.divider}`,
-                backgroundColor: (theme) => 
-                  theme.palette.mode === 'dark' 
-                    ? theme.palette.background.default
-                    : theme.palette.background.paper,
+            <Paper 
+              elevation={0}
+              sx={{ 
+                p: 2, 
+                border: '1px solid',
+                borderColor: 'divider',
+                borderRadius: 2,
               }}
             >
-              <FormLabel component="legend" sx={{ mb: 1 }}>Who can see this?</FormLabel>
+              <Stack spacing={2}>
+                <RichTextInput
+                  label="Title"
+                  value={formData.title}
+                  onChange={(value) => setFormData({ ...formData, title: value })}
+                  required
+                  placeholder={getPlaceholder(category, 'title')}
+                  multiline={false}
+                  autoFocus={!entry}
+                />
+                
+                <RichTextInput
+                  label="Description"
+                  value={formData.description}
+                  onChange={(value) => setFormData({ ...formData, description: value })}
+                  required
+                  placeholder={getPlaceholder(category, 'description')}
+                  helperText={`Example: ${getRandomExample(category) || 'Add details here'}`}
+                  rows={4}
+                />
+              </Stack>
+            </Paper>
+            
+            <Paper 
+              elevation={0}
+              sx={{ 
+                p: 2, 
+                border: '1px solid',
+                borderColor: 'divider',
+                borderRadius: 2,
+              }}
+            >
+              <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 600 }}>
+                Who can see this?
+              </Typography>
               <FormGroup row>
                 <FormControlLabel
                   control={
@@ -225,9 +253,13 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                       checked={selectedVisibility.includes('private')}
                       onChange={(e) => {
                         if (e.target.checked) {
+                          // When checking Private, uncheck all others
                           setSelectedVisibility(['private']);
                         } else {
-                          setSelectedVisibility([]);
+                          // When unchecking Private with nothing else selected, keep it checked
+                          if (selectedVisibility.length === 1) {
+                            setSelectedVisibility(['private']);
+                          }
                         }
                       }}
                     />
@@ -242,22 +274,25 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                         checked={selectedVisibility.includes(option.value)}
                         onChange={(e) => {
                           if (e.target.checked) {
+                            // When checking a non-private option, remove 'private' and add this option
                             setSelectedVisibility(
                               selectedVisibility.filter(v => v !== 'private').concat(option.value)
                             );
                           } else {
+                            // When unchecking, remove this option
                             const newVis = selectedVisibility.filter(v => v !== option.value);
+                            // If nothing is selected, default back to private
                             setSelectedVisibility(newVis.length > 0 ? newVis : ['private']);
                           }
                         }}
-                        disabled={selectedVisibility.includes('private')}
+                        // Don't disable - allow selection even when private is checked
                       />
                     }
                     label={option.label}
                   />
                 ))}
               </FormGroup>
-            </FormControl>
+            </Paper>
           </Stack>
         </DialogContent>
         <DialogActions sx={{ px: 2, py: 2 }}>

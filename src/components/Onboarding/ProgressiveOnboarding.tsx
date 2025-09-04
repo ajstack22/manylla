@@ -45,6 +45,7 @@ export const ProgressiveOnboarding: React.FC<ProgressiveOnboardingProps> = ({ on
   const [preferredName, setPreferredName] = useState('');
   const [accessCode, setAccessCode] = useState('');
   const [showAccessCode, setShowAccessCode] = useState(false);
+  const [nameError, setNameError] = useState(false);
 
   const handleNext = () => {
     const stepOrder: OnboardingStep[] = ['welcome', 'choose-path', 'child-info', 'privacy', 'ready'];
@@ -404,9 +405,14 @@ export const ProgressiveOnboarding: React.FC<ProgressiveOnboardingProps> = ({ on
                 <TextField
                   label="Child's Name"
                   value={childName}
-                  onChange={(e) => setChildName(e.target.value)}
+                  onChange={(e) => {
+                    setChildName(e.target.value);
+                    setNameError(false);
+                  }}
                   fullWidth
-                  helperText="This is required to continue"
+                  required
+                  error={nameError}
+                  helperText={nameError ? "Child's name is required" : "This is how your child will be identified in the app"}
                   autoFocus
                 />
                 <TextField
@@ -425,8 +431,13 @@ export const ProgressiveOnboarding: React.FC<ProgressiveOnboardingProps> = ({ on
                   variant="contained"
                   size="large"
                   endIcon={<ArrowForwardIcon />}
-                  onClick={handleNext}
-                  disabled={!childName.trim()}
+                  onClick={() => {
+                    if (!childName.trim()) {
+                      setNameError(true);
+                    } else {
+                      handleNext();
+                    }
+                  }}
                   fullWidth
                   sx={{ py: 1.5 }}
                 >

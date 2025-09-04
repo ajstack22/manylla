@@ -24,6 +24,7 @@ import {
   ContentCopy as CopyIcon,
   Security as SecurityIcon,
   Check as CheckIcon,
+  Cloud as CloudIcon,
   CloudSync as CloudSyncIcon,
 } from '@mui/icons-material';
 import { useSync } from '../../context/SyncContext';
@@ -89,129 +90,210 @@ export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
   const renderContent = () => {
     if (syncEnabled && mode === 'menu') {
       return (
-        <>
-          <Alert severity="success" icon={<CloudSyncIcon />} sx={{ mb: 3 }}>
+        <Stack spacing={2}>
+          <Alert severity="success" icon={<CloudSyncIcon />}>
             Multi-device sync is enabled
           </Alert>
           
-          <Stack spacing={2}>
-            <Paper sx={{ p: 2 }}>
-              <Typography variant="subtitle2" gutterBottom>
-                Sync Status
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Chip
-                  label={syncStatus}
-                  color={syncStatus === 'success' ? 'success' : 'default'}
-                  size="small"
-                />
-                <Button
-                  size="small"
-                  startIcon={<SyncIcon />}
-                  onClick={handleSyncNow}
-                  disabled={loading}
-                >
-                  Sync Now
-                </Button>
+          <Paper sx={{ p: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+              <SyncIcon sx={{ color: 'primary.main', mt: 0.5 }} />
+              <Box sx={{ flex: 1 }}>
+                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                  Sync Status
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  Your data is synchronized across devices
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Chip
+                    label={syncStatus}
+                    color={syncStatus === 'success' ? 'success' : 'default'}
+                    size="small"
+                  />
+                  <Button
+                    size="small"
+                    startIcon={<SyncIcon />}
+                    onClick={handleSyncNow}
+                    disabled={loading}
+                  >
+                    Sync Now
+                  </Button>
+                </Box>
               </Box>
-            </Paper>
-            
-            <Alert severity="info">
-              Your child's information is encrypted and synced across your devices. 
-              Only you can access this data with your recovery phrase.
-            </Alert>
-            
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => disableSync()}
-              fullWidth
-            >
-              Disable Sync
-            </Button>
-          </Stack>
-        </>
+            </Box>
+          </Paper>
+          
+          <Paper sx={{ p: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+              <SecurityIcon sx={{ color: 'info.main', mt: 0.5 }} />
+              <Box sx={{ flex: 1 }}>
+                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                  Security
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Your child's information is encrypted and synced across your devices. 
+                  Only you can access this data with your recovery phrase.
+                </Typography>
+              </Box>
+            </Box>
+          </Paper>
+          
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={() => disableSync()}
+            fullWidth
+          >
+            Disable Sync
+          </Button>
+        </Stack>
       );
     }
 
     switch (mode) {
       case 'menu':
         return (
-          <>
-            <Typography variant="body1" sx={{ mb: 3 }}>
-              Sync your child's information securely across all your devices. 
-              No account needed - just a recovery phrase.
-            </Typography>
+          <Stack spacing={2}>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 3,
+                cursor: 'pointer',
+                border: '2px solid',
+                borderColor: 'divider',
+                borderRadius: 2,
+                transition: 'all 0.2s ease',
+                '&:hover': { 
+                  borderColor: 'primary.main',
+                  backgroundColor: 'action.hover',
+                },
+              }}
+              onClick={() => setMode('enable')}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <CloudSyncIcon sx={{ fontSize: 32, color: 'primary.main' }} />
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                    Enable Sync on This Device
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Create a new sync group for your devices
+                  </Typography>
+                </Box>
+              </Box>
+            </Paper>
             
-            <Stack spacing={2}>
-              <Button
-                variant="contained"
-                startIcon={<CloudSyncIcon />}
-                onClick={() => setMode('enable')}
-                fullWidth
-                size="large"
-              >
-                Enable Sync on This Device
-              </Button>
-              
-              <Button
-                variant="outlined"
-                startIcon={<SyncIcon />}
-                onClick={() => setMode('join')}
-                fullWidth
-                size="large"
-              >
-                Join Existing Sync
-              </Button>
-            </Stack>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 3,
+                cursor: 'pointer',
+                border: '2px solid',
+                borderColor: 'divider',
+                borderRadius: 2,
+                transition: 'all 0.2s ease',
+                '&:hover': { 
+                  borderColor: 'primary.main',
+                  backgroundColor: 'action.hover',
+                },
+              }}
+              onClick={() => setMode('join')}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <SyncIcon sx={{ fontSize: 32, color: 'info.main' }} />
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                    Join Existing Sync
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Connect to your existing sync group with a recovery phrase
+                  </Typography>
+                </Box>
+              </Box>
+            </Paper>
             
-            <Alert severity="info" sx={{ mt: 3 }}>
+            <Alert severity="info">
               <Typography variant="caption">
                 All data is encrypted on your device. We never see your information.
               </Typography>
             </Alert>
-          </>
+          </Stack>
         );
 
       case 'enable':
         return (
-          <>
-            <Typography variant="body1" sx={{ mb: 3 }}>
-              This will create a secure sync group for your devices. 
-              You'll receive a recovery phrase to access your data from other devices.
-            </Typography>
+          <Stack spacing={2}>
+            <Paper 
+              elevation={0}
+              sx={{ 
+                p: 3, 
+                backgroundColor: 'background.paper',
+                border: '1px solid',
+                borderColor: 'divider',
+                borderRadius: 2,
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+                <SecurityIcon sx={{ fontSize: 32, color: 'primary.main' }} />
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                    Create Secure Sync
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    This will create a secure sync group for your devices. 
+                    You'll receive a recovery phrase to access your data from other devices.
+                  </Typography>
+                </Box>
+              </Box>
+            </Paper>
             
-            <Stack spacing={3}>
-              <Paper sx={{ p: 2, backgroundColor: 'action.hover' }}>
-                <Typography variant="subtitle2" gutterBottom>
-                  What happens next:
-                </Typography>
-                <Typography variant="body2">
-                  1. Generate a unique recovery phrase<br />
-                  2. Encrypt your data locally<br />
-                  3. Create secure sync group<br />
-                  4. Show recovery phrase (save it!)
-                </Typography>
-              </Paper>
-              
-              {error && <Alert severity="error">{error}</Alert>}
-              
-              <Stack direction="row" spacing={2}>
-                <Button onClick={() => setMode('menu')} disabled={loading}>
-                  Back
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={handleEnableSync}
-                  disabled={loading}
-                  startIcon={loading ? <CircularProgress size={20} /> : <SecurityIcon />}
-                  fullWidth
-                >
-                  Create Secure Sync
-                </Button>
-              </Stack>
+            <Paper 
+              elevation={0}
+              sx={{ 
+                p: 3, 
+                backgroundColor: 'info.light',
+                backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(33, 150, 243, 0.08)' : 'rgba(33, 150, 243, 0.08)',
+                border: '1px solid',
+                borderColor: 'info.main',
+                borderRadius: 2,
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+                <CheckIcon sx={{ fontSize: 32, color: 'info.main' }} />
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                    What happens next
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" component="div">
+                    <ol style={{ margin: 0, paddingLeft: 20 }}>
+                      <li>Generate a unique recovery phrase</li>
+                      <li>Encrypt your data locally</li>
+                      <li>Create secure sync group</li>
+                      <li>Show recovery phrase (save it!)</li>
+                    </ol>
+                  </Typography>
+                </Box>
+              </Box>
+            </Paper>
+            
+            {error && <Alert severity="error">{error}</Alert>}
+            
+            <Stack direction="row" spacing={2}>
+              <Button onClick={() => setMode('menu')} disabled={loading}>
+                Back
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleEnableSync}
+                disabled={loading}
+                startIcon={loading ? <CircularProgress size={20} /> : <SecurityIcon />}
+                fullWidth
+              >
+                Create Secure Sync
+              </Button>
             </Stack>
-          </>
+          </Stack>
         );
 
       case 'join':
@@ -304,7 +386,7 @@ export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
       {isMobile ? (
         <AppBar position="sticky" color="default" elevation={0}>
           <Toolbar>
-            <CloudSyncIcon sx={{ mr: 1 }} />
+            <CloudIcon sx={{ mr: 1 }} />
             <Typography variant="h6" sx={{ flexGrow: 1 }}>
               Multi-Device Sync
             </Typography>
@@ -316,7 +398,7 @@ export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
       ) : (
         <DialogTitle>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <CloudSyncIcon sx={{ mr: 1 }} />
+            <CloudIcon sx={{ mr: 1 }} />
             Multi-Device Sync
             <Box sx={{ flexGrow: 1 }} />
             <IconButton onClick={onClose}>
@@ -327,6 +409,17 @@ export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
       )}
       
       <DialogContent sx={{ pt: isMobile ? 2 : 3 }}>
+        {!isMobile && (
+          <Box sx={{ textAlign: 'center', mb: 4 }}>
+            <CloudIcon sx={{ fontSize: 64, color: 'primary.main', mb: 2 }} />
+            <Typography variant="h4" gutterBottom fontWeight="bold">
+              Multi-Device Sync
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Keep your child's information synchronized across all your devices
+            </Typography>
+          </Box>
+        )}
         {renderContent()}
       </DialogContent>
     </Dialog>

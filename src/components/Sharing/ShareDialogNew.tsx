@@ -15,7 +15,6 @@ import {
   IconButton,
   Alert,
   Stack,
-  Divider,
   Paper,
   InputAdornment,
   Select,
@@ -38,7 +37,7 @@ import {
   ArrowForward as ArrowForwardIcon,
   Check as CheckIcon,
 } from '@mui/icons-material';
-import { Entry, ChildProfile } from '../../types/ChildProfile';
+import { ChildProfile } from '../../types/ChildProfile';
 import { PrintPreview } from './PrintPreview';
 import { useMobileDialog } from '../../hooks/useMobileDialog';
 
@@ -66,7 +65,6 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
   const { mobileDialogProps, isMobile } = useMobileDialog();
   const [currentStep, setCurrentStep] = useState<WizardStep>('recipient');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedEntries, setSelectedEntries] = useState<string[]>([]);
   const [recipientName, setRecipientName] = useState('');
   const [recipientType, setRecipientType] = useState('');
   const [expirationDays, setExpirationDays] = useState(7);
@@ -138,7 +136,7 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
       ),
       // Only include visible quick info if includeQuickInfo is true
       quickInfoPanels: includeQuickInfo 
-        ? profile.quickInfoPanels.filter(panel => panel.isVisible)
+        ? profile.quickInfoPanels?.filter(panel => panel.isVisible) || []
         : []
     };
     
@@ -152,7 +150,7 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
     
     localStorage.setItem('manylla_shares', JSON.stringify(shares));
     
-    const shareDomain = process.env.REACT_APP_SHARE_DOMAIN || 'https://stackmap.app/manylla';
+    const shareDomain = process.env.REACT_APP_SHARE_DOMAIN || window.location.origin;
     setGeneratedLink(`${shareDomain}?share=${code}`);
   };
 
@@ -379,7 +377,6 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
               elevation={0}
               sx={{ 
                 p: 3, 
-                backgroundColor: 'primary.light',
                 backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(144, 202, 249, 0.08)' : 'rgba(33, 150, 243, 0.08)',
                 border: '2px solid',
                 borderColor: 'primary.main',
@@ -445,263 +442,104 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
   return (
     <>
       <Dialog open={open} onClose={onClose} {...(isMobile ? { ...mobileDialogProps, maxWidth: 'md' } : { maxWidth: 'md', fullWidth: true })}>
-      {isMobile ? (
-        <AppBar position="sticky" color="default" elevation={0}>
-          <Toolbar>
-            <ShareIcon sx={{ mr: 1 }} />
-            <Typography variant="h6" sx={{ flexGrow: 1 }}>
-              Share {profile.preferredName || profile.name}'s Info
-            </Typography>
-            <IconButton edge="end" onClick={onClose}>
-              <CloseIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-      ) : (
-        <DialogTitle>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <ShareIcon sx={{ mr: 1 }} />
-            Share {profile.preferredName || profile.name}'s Information
-            <Box sx={{ flexGrow: 1 }} />
-            <IconButton onClick={onClose}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-        </DialogTitle>
-      )}
-      
-      <DialogContent sx={{ pt: isMobile ? 2 : 3 }}>
-        {!isMobile && (
-          <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <ShareIcon sx={{ fontSize: 64, color: 'primary.main', mb: 2 }} />
-            <Typography variant="h4" gutterBottom fontWeight="bold">
-              Share {profile.preferredName || profile.name}'s Information
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Securely share selected information with caregivers and professionals
-            </Typography>
-          </Box>
-        )}
-        <Stack spacing={2}>
-          {/* Recipient Information */}
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-              Who are you sharing with?
-            </Typography>
-            <Stack spacing={2}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Recipient Type</InputLabel>
-                <Select
-                  value={recipientType}
-                  onChange={(e) => handlePresetChange(e.target.value)}
-                  label="Recipient Type"
-                >
-                  {sharePresets.map(preset => (
-                    <MenuItem key={preset.value} value={preset.value}>
-                      {preset.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              
-              <TextField
-                label="Recipient Name (optional)"
-                value={recipientName}
-                onChange={(e) => setRecipientName(e.target.value)}
-                placeholder="e.g., Ms. Johnson"
-                fullWidth
-                size="small"
-              />
-            </Stack>
-          </Paper>
-
-          {/* Content Selection */}
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-              What information to share?
-            </Typography>
-            
-            <FormGroup>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={includeQuickInfo}
-                    onChange={(e) => setIncludeQuickInfo(e.target.checked)}
-                    size="small"
-                  />
-                }
-                label="Include Quick Info (Emergency contacts, medical, dietary)"
-              />
-            </FormGroup>
-
-            <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>
-              Categories to Share:
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-              {profile.categories.filter(cat => cat.isVisible).map(category => (
-                <Chip
-                  key={category.id}
-                  label={category.displayName}
-                  onClick={() => handleCategoryToggle(category.name)}
-                  color={selectedCategories.includes(category.name) ? 'primary' : 'default'}
-                  variant={selectedCategories.includes(category.name) ? 'filled' : 'outlined'}
-                  size="small"
-                />
-              ))}
-            </Box>
-
-            {selectedCategories.length > 0 && (
-              <Alert severity="info" sx={{ mt: 2 }}>
-                Sharing {profile.entries
-                  .filter(entry => selectedCategories.includes(entry.category))
-                  .length
-                } entries across {selectedCategories.length} categories
-              </Alert>
-            )}
-          </Paper>
-
-          {/* Access Settings */}
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-              Access Settings
-            </Typography>
-            
-            <Stack spacing={2}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Access Duration</InputLabel>
-                <Select
-                  value={expirationDays}
-                  onChange={(e) => setExpirationDays(e.target.value as number)}
-                  label="Access Duration"
-                >
-                  <MenuItem value={1}>24 hours</MenuItem>
-                  <MenuItem value={3}>3 days</MenuItem>
-                  <MenuItem value={7}>1 week</MenuItem>
-                  <MenuItem value={30}>1 month</MenuItem>
-                  <MenuItem value={90}>3 months</MenuItem>
-                  <MenuItem value={365}>1 year</MenuItem>
-                </Select>
-              </FormControl>
-
-              <TextField
-                label="Optional Note"
-                value={shareNote}
-                onChange={(e) => setShareNote(e.target.value)}
-                multiline
-                rows={2}
-                placeholder="Any special instructions or context for the recipient..."
-                fullWidth
-                size="small"
-              />
-            </Stack>
-          </Paper>
-
-          {/* Generated Link */}
-          {generatedLink && (
-            <Paper sx={{ p: 2, backgroundColor: 'action.hover' }}>
-              <Typography variant="h6" gutterBottom>
-                <SecurityIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
-                Secure Share Link Generated
+        {isMobile ? (
+          <AppBar position="sticky" color="default" elevation={0}>
+            <Toolbar>
+              <ShareIcon sx={{ mr: 1 }} />
+              <Typography variant="h6" sx={{ flexGrow: 1 }}>
+                Share Information
               </Typography>
-              
-              <Stack spacing={2}>
-                <TextField
-                  value={generatedLink}
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton onClick={() => copyToClipboard(generatedLink)}>
-                          <CopyIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                
-                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                  <Chip
-                    label={`Access Code: ${accessCode}`}
-                    color="primary"
-                    icon={<SecurityIcon />}
-                  />
-                  <Chip
-                    label={`Expires in ${expirationDays} days`}
-                    icon={<CalendarIcon />}
-                  />
-                </Box>
-
-                <Alert severity="success">
-                  Share this link with {recipientName || 'the recipient'}. They'll need the access code: <strong>{accessCode}</strong>
-                </Alert>
-
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                  <Button
-                    variant="outlined"
-                    startIcon={<QrCodeIcon />}
-                    onClick={() => {/* Generate QR */}}
-                  >
-                    Show QR Code
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    onClick={() => {/* Preview */}}
-                  >
-                    Preview Shared View
-                  </Button>
-                </Box>
-              </Stack>
-            </Paper>
-          )}
-        </Stack>
-      </DialogContent>
-
-      <DialogActions sx={{ px: 2, py: 2 }}>
-        <Button onClick={onClose}>Cancel</Button>
-        {!generatedLink ? (
-          <>
-            <Button
-              variant="outlined"
-              startIcon={<PrintIcon />}
-              onClick={() => setShowPrintPreview(true)}
-              disabled={selectedCategories.length === 0}
-              sx={{ mr: 1 }}
-            >
-              Export/Print
-            </Button>
-            <Button
-              variant="contained"
-              startIcon={<LinkIcon />}
-              onClick={handleGenerateLink}
-              disabled={selectedCategories.length === 0}
-            >
-              Generate Secure Link
-            </Button>
-          </>
+              <IconButton edge="end" onClick={onClose}>
+                <CloseIcon />
+              </IconButton>
+            </Toolbar>
+          </AppBar>
         ) : (
-          <Button variant="contained" onClick={onClose}>
-            Done
-          </Button>
+          <DialogTitle>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <ShareIcon sx={{ mr: 1 }} />
+              Share Information
+              <Box sx={{ flexGrow: 1 }} />
+              <IconButton onClick={onClose}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+          </DialogTitle>
         )}
-      </DialogActions>
-    </Dialog>
-    
-    <PrintPreview
-      open={showPrintPreview}
-      onClose={() => setShowPrintPreview(false)}
-      childName={profile.preferredName || profile.name}
-      selectedCategories={selectedCategories}
-      entries={{
-        goals: profile.entries.filter(e => e.category === 'goals'),
-        successes: profile.entries.filter(e => e.category === 'successes'),
-        strengths: profile.entries.filter(e => e.category === 'strengths'),
-        challenges: profile.entries.filter(e => e.category === 'challenges'),
-      }}
-      includeQuickInfo={includeQuickInfo}
-      recipientName={recipientName}
-      note={shareNote}
-    />
+        
+        <DialogContent sx={{ pt: isMobile ? 2 : 3 }}>
+          {!isMobile && (
+            <Box sx={{ textAlign: 'center', mb: 4 }}>
+              <ShareIcon sx={{ fontSize: 64, color: 'primary.main', mb: 2 }} />
+              <Typography variant="h4" gutterBottom fontWeight="bold">
+                {getStepTitle()}
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                Step {currentStep === 'recipient' ? 1 : currentStep === 'content' ? 2 : currentStep === 'settings' ? 3 : 4} of 4
+              </Typography>
+            </Box>
+          )}
+          {renderStepContent()}
+        </DialogContent>
+
+        <DialogActions sx={{ px: 2, py: 2 }}>
+          {currentStep !== 'complete' ? (
+            <>
+              <Button onClick={onClose}>Cancel</Button>
+              {currentStep !== 'recipient' && (
+                <Button
+                  onClick={handleBack}
+                  startIcon={<ArrowBackIcon />}
+                >
+                  Back
+                </Button>
+              )}
+              <Box sx={{ flex: 1 }} />
+              <Button
+                variant="contained"
+                onClick={handleNext}
+                disabled={!canProceed()}
+                endIcon={currentStep === 'settings' ? <CheckIcon /> : <ArrowForwardIcon />}
+              >
+                {currentStep === 'settings' ? 'Generate Link' : 'Next'}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setCurrentStep('recipient');
+                  setGeneratedLink('');
+                  setAccessCode('');
+                }}
+              >
+                Share Another
+              </Button>
+              <Box sx={{ flex: 1 }} />
+              <Button variant="contained" onClick={onClose}>
+                Done
+              </Button>
+            </>
+          )}
+        </DialogActions>
+      </Dialog>
+      
+      <PrintPreview
+        open={showPrintPreview}
+        onClose={() => setShowPrintPreview(false)}
+        childName={profile.preferredName || profile.name}
+        selectedCategories={selectedCategories}
+        entries={{
+          goals: profile.entries.filter(e => e.category === 'goals'),
+          successes: profile.entries.filter(e => e.category === 'successes'),
+          strengths: profile.entries.filter(e => e.category === 'strengths'),
+          challenges: profile.entries.filter(e => e.category === 'challenges'),
+        }}
+        includeQuickInfo={includeQuickInfo}
+        recipientName={recipientName}
+        note={shareNote}
+      />
     </>
   );
 };
