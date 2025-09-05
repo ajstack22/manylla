@@ -15,6 +15,7 @@ import {
   Divider,
   InputAdornment,
 } from '@mui/material';
+import { manyllaColors } from '../../theme/theme';
 import {
   Lock as LockIcon,
   AccessTime as AccessTimeIcon,
@@ -176,7 +177,14 @@ export const SharedProfileView: React.FC<SharedProfileViewProps> = ({
         {/* Child Info */}
         <Paper sx={{ p: 3, mb: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-            <Avatar sx={{ width: 80, height: 80, mr: 2 }}>
+            <Avatar sx={{ 
+              width: 80, 
+              height: 80, 
+              mr: 2,
+              bgcolor: manyllaColors.avatarDefaultBg,
+              color: 'white',
+              fontSize: '2rem',
+            }}>
               {sharedData.childName.charAt(0)}
             </Avatar>
             <Box>

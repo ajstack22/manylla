@@ -35,7 +35,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "NODE_OPTIONS=--max-old-space-size=4096 react-scripts build",
+    "build": "NODE_OPTIONS=--max-old-space-size=6144 react-scripts build",
     "build:qual": "REACT_APP_ENV=qual npm run build",
     "build:prod": "REACT_APP_ENV=production npm run build",
     "test": "react-scripts test",

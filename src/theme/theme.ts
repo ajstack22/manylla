@@ -1,6 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 
-const manyllaColors = {
+// Export the color palette for use across the app
+export const manyllaColors = {
   manila: '#F4E4C1',
   manilaLight: '#FAF3E3',
   manilaDark: '#E8D4A2',
@@ -20,12 +21,16 @@ const manyllaColors = {
   manyllaAccent: '#E0C9A6',          // Even lighter manila for hover states
   manyllaText: '#3D2F1F',            // Dark brown text for contrast
   manyllaTextSecondary: '#5D4A37',   // Medium brown for secondary text
+  manyllaBorder: '#A68B5B',          // Darker manila for borders
   // Dark mode - Traditional dark theme
   darkBackground: '#1A1611',         // Very dark brown-black
   darkPaper: '#2A2319',               // Slightly lighter dark
   darkAccent: '#3A3328',              // Dark accent for hover
   darkText: '#E8DCC0',                // Warm cream text
-  darkTextSecondary: '#B8A888'       // Muted cream for secondary
+  darkTextSecondary: '#B8A888',      // Muted cream for secondary
+  // Component specific colors
+  avatarDefaultBg: '#5D4E37',        // Default avatar background (dark brown)
+  inputBackground: '#FFFFFF',        // White background for form inputs
 };
 
 export const lightTheme = createTheme({
@@ -58,7 +63,7 @@ export const lightTheme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
     h1: {
       fontSize: '2.5rem',
       fontWeight: 600,
@@ -149,7 +154,15 @@ export const darkTheme = createTheme({
       main: '#EA8368', // Bright red for visibility
     },
   },
-  typography: lightTheme.typography,
+  typography: {
+    fontFamily: '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
+    h1: lightTheme.typography.h1,
+    h2: lightTheme.typography.h2,
+    h3: lightTheme.typography.h3,
+    h4: lightTheme.typography.h4,
+    h5: lightTheme.typography.h5,
+    h6: lightTheme.typography.h6,
+  },
   shape: lightTheme.shape,
   components: {
     ...lightTheme.components,
@@ -206,7 +219,15 @@ export const manyllaTheme = createTheme({
       main: '#8B3A3A', // Burgundy for manila
     },
   },
-  typography: lightTheme.typography,
+  typography: {
+    fontFamily: '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
+    h1: lightTheme.typography.h1,
+    h2: lightTheme.typography.h2,
+    h3: lightTheme.typography.h3,
+    h4: lightTheme.typography.h4,
+    h5: lightTheme.typography.h5,
+    h6: lightTheme.typography.h6,
+  },
   shape: lightTheme.shape,
   components: {
     ...lightTheme.components,

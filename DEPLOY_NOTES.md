@@ -1,5 +1,42 @@
 # Deploy Notes
 
+## 2025_09_04_03 - Onboarding Enhancement & Design System Improvements
+Enhanced onboarding wizard with photo/birthday fields, implemented Atkinson Hyperlegible font for accessibility, created centralized theming system, and fixed deployment scripts.
+
+### Changes
+- **Onboarding Improvements**
+  - Added optional birthday and photo upload to onboarding wizard
+  - Applied Manylla theme colors throughout onboarding
+  - Fixed TextField readability with white backgrounds and rounded corners
+  - Removed preferred name field for simplification
+  - Made fields responsive (side-by-side on wider screens)
+
+- **Typography & Branding**
+  - Implemented Atkinson Hyperlegible font across entire application
+  - Created new favicon with lowercase "m" in manila colors
+  - Updated page title format to "manylla - [Profile Name]"
+
+- **Design System**
+  - Created centralized theme configuration with exported `manyllaColors`
+  - Built `modalTheme.ts` for consistent modal styling
+  - Fixed all Avatar components to use theme colors (no hardcoded values)
+  - Standardized modal panel layouts and styling
+
+- **Technical Improvements**
+  - Fixed deployment script to properly clean old files (rsync --delete)
+  - Production script now rejects uncommitted changes (promotes from qual only)
+  - Increased Node memory allocation to 6GB for builds
+
+### Technical Details
+- Atkinson Hyperlegible chosen for superior readability and accessibility
+- Theme system now exports colors for use across components
+- Modal theme provides consistent styling configurations
+- Avatar default background: #5D4E37 (dark brown)
+- Input fields: white background with 12px border radius
+- Deployment uses promotion model: qual → production
+
+---
+
 ## 2025_09_04_02 - Three-Mode Theme System & Sharing Enhancements
 Implemented three-mode theme system (Light, Dark, Manylla) with authentic manila envelope aesthetic. Enhanced sharing with photo options and provider-focused Manylla-themed view.
 

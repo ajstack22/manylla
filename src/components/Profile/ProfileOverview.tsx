@@ -8,6 +8,7 @@ import {
   IconButton,
   Fab,
 } from '@mui/material';
+import { manyllaColors } from '../../theme/theme';
 import {
   Edit as EditIcon,
   Add as AddIcon,
@@ -74,7 +75,15 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
           <Avatar
             src={profile.photo}
-            sx={{ width: 120, height: 120, mb: 2, cursor: 'pointer' }}
+            sx={{ 
+              width: 120, 
+              height: 120, 
+              mb: 2, 
+              cursor: 'pointer',
+              bgcolor: profile.photo ? 'transparent' : manyllaColors.avatarDefaultBg,
+              color: profile.photo ? 'inherit' : 'white',
+              fontSize: '3rem',
+            }}
             onClick={() => onUpdateProfile && setProfileEditOpen(true)}
           >
             {profile.name.charAt(0)}

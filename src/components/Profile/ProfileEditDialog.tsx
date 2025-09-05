@@ -15,6 +15,8 @@ import {
   Toolbar,
   Paper,
 } from '@mui/material';
+import { manyllaColors } from '../../theme/theme';
+import { modalTheme, getModalDialogProps } from '../../theme/modalTheme';
 import {
   Close as CloseIcon,
   PhotoCamera as PhotoCameraIcon,
@@ -88,7 +90,7 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} {...mobileDialogProps}>
+    <Dialog open={open} onClose={onClose} {...getModalDialogProps(isMobile)}>
       {isMobile ? (
         <AppBar position="sticky" color="default" elevation={0}>
           <Toolbar>
@@ -140,7 +142,15 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
           >
             <Avatar
               src={photoPreview}
-              sx={{ width: 100, height: 100, mb: 2, mx: 'auto' }}
+              sx={{ 
+                width: 100, 
+                height: 100, 
+                mb: 2, 
+                mx: 'auto',
+                bgcolor: photoPreview ? 'transparent' : manyllaColors.avatarDefaultBg,
+                color: photoPreview ? 'inherit' : 'white',
+                fontSize: '2.5rem',
+              }}
             >
               {formData.name.charAt(0)}
             </Avatar>
@@ -162,23 +172,14 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
           </Paper>
 
           {/* Basic Information */}
-          <Paper 
-            elevation={0}
-            sx={{ 
-              p: 2, 
-              border: '1px solid',
-              borderColor: 'divider',
-              borderRadius: 2,
-            }}
-          >
+          <Paper {...modalTheme.panel}>
             <Stack spacing={2}>
               <TextField
                 label="Full Name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                fullWidth
                 required
-                size="small"
+                {...modalTheme.textField}
               />
               
               <TextField

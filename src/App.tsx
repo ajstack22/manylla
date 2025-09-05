@@ -163,6 +163,14 @@ function App() {
     loadInitialData();
   }, []);
 
+  // Update document title when profile changes
+  useEffect(() => {
+    if (profile) {
+      document.title = `manylla - ${profile.preferredName || profile.name}`;
+    } else {
+      document.title = 'manylla';
+    }
+  }, [profile]);
 
   const handleAddEntry = (category: Entry['category']) => {
     setSelectedCategory(category);
@@ -366,12 +374,12 @@ function App() {
               const newProfile: ChildProfile = {
                 id: Date.now().toString(),
                 name: data.childName.trim(),
-                preferredName: data.preferredName?.trim() || data.childName.trim(),
-                dateOfBirth: new Date(),
+                preferredName: data.childName.trim(),
+                dateOfBirth: data.dateOfBirth || new Date(),
                 pronouns: '',
-                photo: '',
+                photo: data.photo || '',
                 categories: unifiedCategories,
-                themeMode: 'dark',
+                themeMode: 'manylla',
                 quickInfoPanels: [],
                 entries: [],
                 createdAt: new Date(),

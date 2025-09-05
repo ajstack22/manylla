@@ -17,6 +17,7 @@ import {
   Step,
   StepLabel,
 } from '@mui/material';
+import { manyllaColors } from '../../theme/theme';
 import {
   Close as CloseIcon,
   PhotoCamera as PhotoCameraIcon,
@@ -198,7 +199,14 @@ export const ProfileCreateDialog: React.FC<ProfileCreateDialogProps> = ({
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <Avatar
                 src={photoPreview}
-                sx={{ width: 120, height: 120, mb: 2 }}
+                sx={{ 
+                  width: 120, 
+                  height: 120, 
+                  mb: 2,
+                  bgcolor: photoPreview ? 'transparent' : manyllaColors.avatarDefaultBg,
+                  color: photoPreview ? 'inherit' : 'white',
+                  fontSize: '3rem',
+                }}
               >
                 {formData.name.charAt(0).toUpperCase()}
               </Avatar>
