@@ -43,64 +43,118 @@ class ManyllaEncryptionService {
   constructor() {
     this.masterKey = null;
     this.syncId = null;
+    // Match StackMap's iteration count
+    this.KEY_DERIVATION_ITERATIONS = 100000;
   }
 
   /**
-   * Generate a recovery phrase using child-friendly words
+   * Generate a recovery phrase - now using 32-char hex like StackMap
    */
   generateRecoveryPhrase() {
-    // Simple word list for POC - in production, use curated child-friendly BIP39 subset
-    const words = [
-      'happy', 'sunny', 'friend', 'play', 'smile', 'rainbow',
-      'garden', 'flower', 'butterfly', 'gentle', 'caring', 'helper',
-      'bright', 'warm', 'safe', 'love', 'hope', 'dream',
-      'star', 'moon', 'cloud', 'tree', 'bird', 'song'
-    ];
-    
-    const phrase = [];
-    const randomBytes = nacl.randomBytes(16);
-    
-    // Generate 12 words from random bytes
-    for (let i = 0; i < 12; i++) {
-      const index = randomBytes[i % randomBytes.length] % words.length;
-      phrase.push(words[index]);
-    }
-    
-    return phrase.join(' ');
+    const bytes = nacl.randomBytes(16);
+    return Array.from(bytes)
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
   }
 
   /**
-   * Derive encryption key from recovery phrase
+   * Derive encryption key from recovery phrase using nacl.hash iterations (like StackMap)
    */
   async deriveKeyFromPhrase(recoveryPhrase, salt = null) {
+    // Use fixed salt for sync ID generation (like StackMap)
+    const fixedSalt = 'ManyllaSyncSalt2025';
+    
     if (!salt) {
       salt = nacl.randomBytes(SALT_LENGTH);
     } else if (typeof salt === 'string') {
       salt = util.decodeBase64(salt);
     }
 
-    const phraseBytes = util.decodeUTF8(recoveryPhrase);
-    const combined = new Uint8Array(phraseBytes.length + salt.length);
-    combined.set(phraseBytes);
-    combined.set(salt, phraseBytes.length);
+    // Manual UTF-8 encoding for cross-platform compatibility
+    const phraseBytes = this.encodeUTF8(recoveryPhrase + fixedSalt);
     
-    // Hash multiple times for key stretching
-    let key = nacl.hash(combined);
-    for (let i = 0; i < 1000; i++) {
+    // Use nacl.hash iterations like StackMap (not PBKDF2)
+    let key = phraseBytes;
+    for (let i = 0; i < this.KEY_DERIVATION_ITERATIONS; i++) {
       key = nacl.hash(key);
     }
     
-    // Derive sync ID from first 16 bytes
+    // Derive sync ID from first 16 bytes (same as StackMap)
     const syncId = util.encodeBase64(key.slice(0, 16))
       .replace(/[^a-zA-Z0-9]/g, '')
       .substring(0, 32)
       .toLowerCase();
     
+    // Derive actual encryption key
+    const encKeyBytes = this.encodeUTF8(recoveryPhrase);
+    const encSaltedBytes = new Uint8Array(encKeyBytes.length + salt.length);
+    encSaltedBytes.set(encKeyBytes);
+    encSaltedBytes.set(salt, encKeyBytes.length);
+    
+    let encKey = encSaltedBytes;
+    for (let i = 0; i < this.KEY_DERIVATION_ITERATIONS; i++) {
+      encKey = nacl.hash(encKey);
+    }
+    
     return {
-      key: key.slice(0, KEY_LENGTH),
+      key: encKey.slice(0, KEY_LENGTH),
       salt: util.encodeBase64(salt),
       syncId
     };
+  }
+  
+  /**
+   * Manual UTF-8 encoding for iOS compatibility (from StackMap)
+   */
+  encodeUTF8(str) {
+    const bytes = [];
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      if (char < 0x80) {
+        bytes.push(char);
+      } else if (char < 0x800) {
+        bytes.push(0xc0 | (char >> 6));
+        bytes.push(0x80 | (char & 0x3f));
+      } else if (char < 0x10000) {
+        bytes.push(0xe0 | (char >> 12));
+        bytes.push(0x80 | ((char >> 6) & 0x3f));
+        bytes.push(0x80 | (char & 0x3f));
+      } else {
+        bytes.push(0xf0 | (char >> 18));
+        bytes.push(0x80 | ((char >> 12) & 0x3f));
+        bytes.push(0x80 | ((char >> 6) & 0x3f));
+        bytes.push(0x80 | (char & 0x3f));
+      }
+    }
+    return new Uint8Array(bytes);
+  }
+  
+  /**
+   * Manual UTF-8 decoding for iOS compatibility
+   */
+  decodeUTF8(bytes) {
+    const chars = [];
+    let i = 0;
+    while (i < bytes.length) {
+      const byte1 = bytes[i++];
+      if (byte1 < 0x80) {
+        chars.push(String.fromCharCode(byte1));
+      } else if ((byte1 & 0xe0) === 0xc0) {
+        const byte2 = bytes[i++];
+        chars.push(String.fromCharCode(((byte1 & 0x1f) << 6) | (byte2 & 0x3f)));
+      } else if ((byte1 & 0xf0) === 0xe0) {
+        const byte2 = bytes[i++];
+        const byte3 = bytes[i++];
+        chars.push(String.fromCharCode(((byte1 & 0x0f) << 12) | ((byte2 & 0x3f) << 6) | (byte3 & 0x3f)));
+      } else {
+        const byte2 = bytes[i++];
+        const byte3 = bytes[i++];
+        const byte4 = bytes[i++];
+        const codePoint = ((byte1 & 0x07) << 18) | ((byte2 & 0x3f) << 12) | ((byte3 & 0x3f) << 6) | (byte4 & 0x3f);
+        chars.push(String.fromCharCode(codePoint));
+      }
+    }
+    return chars.join('');
   }
 
   /**
@@ -133,7 +187,7 @@ class ManyllaEncryptionService {
     }
 
     const dataString = JSON.stringify(data);
-    let dataBytes = util.decodeUTF8(dataString);
+    let dataBytes = this.encodeUTF8(dataString);
     let isCompressed = false;
 
     // Compress if data is large enough
@@ -166,15 +220,39 @@ class ManyllaEncryptionService {
     combined.set(nonce, metadata.length);
     combined.set(encrypted, metadata.length + nonce.length);
     
-    return util.encodeBase64(combined);
+    // Add integrity check (HMAC) for medical data
+    const hmac = nacl.auth(combined, this.masterKey);
+    
+    // Return with HMAC
+    return {
+      data: util.encodeBase64(combined),
+      hmac: util.encodeBase64(hmac)
+    };
   }
 
   /**
    * Decrypt Manylla profile data
    */
-  decryptData(encryptedData) {
+  decryptData(encryptedPayload) {
     if (!this.masterKey) {
       throw new Error('Encryption not initialized');
+    }
+
+    // Handle both old format (string) and new format (object with HMAC)
+    let encryptedData;
+    if (typeof encryptedPayload === 'string') {
+      // Old format without HMAC (backward compatibility)
+      encryptedData = encryptedPayload;
+    } else {
+      // New format with HMAC - verify integrity first
+      const combined = util.decodeBase64(encryptedPayload.data);
+      const hmac = util.decodeBase64(encryptedPayload.hmac);
+      
+      if (!nacl.auth.verify(hmac, combined, this.masterKey)) {
+        throw new Error('Data integrity check failed - data may have been tampered with');
+      }
+      
+      encryptedData = encryptedPayload.data;
     }
 
     const combined = util.decodeBase64(encryptedData);
@@ -205,7 +283,7 @@ class ManyllaEncryptionService {
       }
     }
 
-    const dataString = util.encodeUTF8(dataBytes);
+    const dataString = this.decodeUTF8(dataBytes);
     return JSON.parse(dataString);
   }
 
@@ -228,7 +306,7 @@ class ManyllaEncryptionService {
    * Encrypt with a specific key (for device-specific encryption)
    */
   async encryptWithKey(data, key) {
-    const dataBytes = util.decodeUTF8(data);
+    const dataBytes = this.encodeUTF8(data);
     const nonce = nacl.randomBytes(nacl.secretbox.nonceLength);
     const encrypted = nacl.secretbox(dataBytes, nonce, key);
     
@@ -289,7 +367,7 @@ class ManyllaEncryptionService {
         return false;
       }
       
-      const recoveryPhrase = util.encodeUTF8(decrypted);
+      const recoveryPhrase = this.decodeUTF8(decrypted);
       await this.initialize(recoveryPhrase, salt);
       
       return true;

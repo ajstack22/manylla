@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Container } from '@mui/material';
 import { ManyllaThemeProvider } from './context/ThemeContext';
-import { SyncProvider } from './context/SyncContext';
+import { SyncProvider, useSync } from './context/SyncContext';
 import { ToastProvider } from './context/ToastContext';
 import { Header } from './components/Layout/Header';
 import { LoadingSpinner } from './components/Loading/LoadingSpinner';
@@ -9,7 +9,7 @@ import { LoadingOverlay } from './components/Loading/LoadingOverlay';
 import { StorageService } from './services/storageService';
 import { ProfileOverview } from './components/Profile/ProfileOverview';
 import { EntryForm } from './components/Forms/EntryForm';
-import { ShareDialog } from './components/Sharing/ShareDialogNew';
+import { ShareDialogOptimized } from './components/Sharing/ShareDialogOptimized';
 import { SharedView } from './components/Sharing/SharedView';
 import { SyncDialog } from './components/Sync/SyncDialog';
 import { UnifiedCategoryManager } from './components/Settings/UnifiedCategoryManager';
@@ -46,7 +46,7 @@ const mockProfile: ChildProfile = {
   pronouns: 'she/her',
   photo: '/ellie.png',
   categories: unifiedCategories,
-  themeMode: 'dark',
+  themeMode: 'manylla',
   quickInfoPanels: [], // Will be removed in future
   entries: [
     ...quickInfoEntries,
@@ -103,7 +103,9 @@ const mockProfile: ChildProfile = {
   updatedAt: new Date('2024-01-15')
 };
 
-function App() {
+// Main App content that needs sync context
+function AppContent() {
+  const { pushProfile, syncStatus } = useSync();
   const [profile, setProfile] = useState<ChildProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -123,10 +125,46 @@ function App() {
     const loadInitialData = async () => {
       setIsLoading(true);
       try {
+        // Check for new share URL pattern (/share/[token])
+        const pathname = window.location.pathname;
+        const shareMatch = pathname.match(/\/share\/([a-zA-Z0-9]+)/);
+        
+        // Check for sync invite URL pattern (/sync/[invite-code])
+        const syncMatch = pathname.match(/\/sync\/([A-Z0-9]{4}-[A-Z0-9]{4})/i);
+        
+        // Check for old share URL pattern (?share=CODE)
         const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('share');
-        if (code) {
-          setShareCode(code);
+        const oldCode = urlParams.get('share');
+        
+        if (shareMatch) {
+          // New encrypted share format
+          const token = shareMatch[1];
+          setShareCode(token);
+          setIsSharedView(true);
+          setShowOnboarding(false);
+        } else if (syncMatch) {
+          // Sync invite code format
+          const inviteCode = syncMatch[1];
+          const recoveryPhrase = window.location.hash.substring(1);
+          
+          if (inviteCode && recoveryPhrase) {
+            // Store invite code mapping for join flow
+            const { storeInviteCode } = await import('./utils/inviteCode');
+            storeInviteCode(inviteCode, '', recoveryPhrase); // syncId will be derived later
+            
+            // Redirect to main app to show sync dialog
+            window.history.replaceState(null, '', '/');
+            
+            // Show sync dialog in join mode
+            setTimeout(() => {
+              setSyncDialogOpen(true);
+              // TODO: Set join mode with invite code
+            }, 100);
+          }
+          setShowOnboarding(false);
+        } else if (oldCode) {
+          // Old share format (backward compatibility)
+          setShareCode(oldCode);
           setIsSharedView(true);
           setShowOnboarding(false);
         } else {
@@ -171,6 +209,14 @@ function App() {
       document.title = 'manylla';
     }
   }, [profile]);
+
+  // Push profile changes to sync
+  useEffect(() => {
+    if (profile && !isLoading) {
+      // Push profile to sync (will only happen if sync is enabled)
+      pushProfile(profile);
+    }
+  }, [profile, isLoading, pushProfile]);
 
   const handleAddEntry = (category: Entry['category']) => {
     setSelectedCategory(category);
@@ -217,6 +263,7 @@ function App() {
       const saved = StorageService.saveProfile(updatedProfile);
       if (saved) {
         setProfile(updatedProfile);
+        // Push to sync will be handled by SyncProvider watching profile changes
       } else {
         console.error('Failed to save profile');
       }
@@ -399,18 +446,17 @@ function App() {
   if (!profile) return null; // This shouldn't happen, but just in case
 
   return (
-    <SyncProvider>
-      <ManyllaThemeProvider 
-        initialThemeMode={profile?.themeMode || 'light'}
-        onThemeChange={handleThemeChange}
-      >
-        <ToastProvider>
+    <ManyllaThemeProvider 
+      initialThemeMode={profile?.themeMode || 'light'}
+      onThemeChange={handleThemeChange}
+    >
+      <ToastProvider>
         <Header 
           onSyncClick={() => setSyncDialogOpen(true)} 
           onCloseProfile={handleCloseProfile}
           onShare={() => setShareDialogOpen(true)}
           onCategoriesClick={() => setCategoriesOpen(true)}
-          syncStatus="not-setup" // TODO: Get from sync context
+          syncStatus={syncStatus}
         />
         <Container maxWidth="lg" sx={{ px: { xs: 1, sm: 2, md: 3 } }}>
           <ProfileOverview
@@ -431,7 +477,7 @@ function App() {
           entry={editingEntry}
           categories={profile.categories.filter(c => c.isVisible)}
         />
-        <ShareDialog
+        <ShareDialogOptimized
           open={shareDialogOpen}
           onClose={() => setShareDialogOpen(false)}
           profile={profile}
@@ -447,8 +493,24 @@ function App() {
           onUpdate={handleUpdateCategories}
         />
         <LoadingOverlay open={isSaving} message="Saving..." />
-        </ToastProvider>
-      </ManyllaThemeProvider>
+      </ToastProvider>
+    </ManyllaThemeProvider>
+  );
+}
+
+// Main App wrapper with providers
+function App() {
+  const [profileForSync, setProfileForSync] = useState<ChildProfile | null>(null);
+
+  // Handle profile updates from sync
+  const handleProfileFromSync = useCallback((syncedProfile: ChildProfile) => {
+    console.log('[App] Received profile from sync');
+    setProfileForSync(syncedProfile);
+  }, []);
+
+  return (
+    <SyncProvider onProfileReceived={handleProfileFromSync}>
+      <AppContent />
     </SyncProvider>
   );
 }

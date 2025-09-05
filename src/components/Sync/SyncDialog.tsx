@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -22,13 +22,25 @@ import {
   Close as CloseIcon,
   Sync as SyncIcon,
   ContentCopy as CopyIcon,
+  ContentCopy,
   Security as SecurityIcon,
   Check as CheckIcon,
   Cloud as CloudIcon,
   CloudSync as CloudSyncIcon,
+  QrCode as QrCodeIcon,
+  Share as ShareIcon,
 } from '@mui/icons-material';
 import { useSync } from '../../context/SyncContext';
 import { useMobileDialog } from '../../hooks/useMobileDialog';
+import { 
+  generateInviteCode, 
+  validateInviteCode, 
+  normalizeInviteCode,
+  generateInviteUrl,
+  storeInviteCode,
+  getInviteCode,
+  formatInviteCodeForDisplay 
+} from '../../utils/inviteCode';
 
 interface SyncDialogProps {
   open: boolean;
@@ -36,24 +48,28 @@ interface SyncDialogProps {
 }
 
 export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
-  const { syncEnabled, syncStatus, enableSync, joinSync, disableSync, syncNow } = useSync();
+  const { syncEnabled, syncStatus, enableSync, disableSync, syncNow, recoveryPhrase: existingPhrase, syncId } = useSync();
   const { mobileDialogProps, isMobile } = useMobileDialog();
-  const [mode, setMode] = useState<'menu' | 'enable' | 'join' | 'phrase'>('menu');
-  const [recoveryPhrase, setRecoveryPhrase] = useState('');
+  const [mode, setMode] = useState<'menu' | 'enable' | 'join' | 'phrase' | 'existing' | 'invite'>('menu');
+  const [generatedPhrase, setGeneratedPhrase] = useState('');
   const [joinPhrase, setJoinPhrase] = useState('');
+  const [joinInviteCode, setJoinInviteCode] = useState('');
+  const [currentInviteCode, setCurrentInviteCode] = useState('');
+  const [inviteUrl, setInviteUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [showPhrase, setShowPhrase] = useState(false);
 
   const handleEnableSync = async () => {
     try {
       setLoading(true);
       setError('');
-      const { recoveryPhrase } = await enableSync();
-      setRecoveryPhrase(recoveryPhrase);
+      const { recoveryPhrase } = await enableSync(true);
+      setGeneratedPhrase(recoveryPhrase);
       setMode('phrase');
     } catch (err: any) {
-      setError(err.message || 'Failed to enable sync');
+      setError(err.message || 'Failed to enable backup');
     } finally {
       setLoading(false);
     }
@@ -63,17 +79,61 @@ export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
     try {
       setLoading(true);
       setError('');
-      await joinSync(joinPhrase);
+      
+      let recoveryPhraseToUse = joinPhrase.trim();
+      
+      // Check if it's an invite code (XXXX-XXXX format)
+      if (validateInviteCode(recoveryPhraseToUse)) {
+        // Try to get recovery phrase from invite code
+        const inviteData = getInviteCode(recoveryPhraseToUse);
+        if (!inviteData) {
+          throw new Error('Invalid or expired invite code');
+        }
+        recoveryPhraseToUse = inviteData.recoveryPhrase;
+      } else {
+        // Validate 32-char hex format
+        const cleanPhrase = recoveryPhraseToUse.toLowerCase();
+        if (!cleanPhrase.match(/^[a-f0-9]{32}$/)) {
+          throw new Error('Invalid format. Enter an 8-character invite code (XXXX-XXXX) or 32-character backup code.');
+        }
+        recoveryPhraseToUse = cleanPhrase;
+      }
+      
+      await enableSync(false, recoveryPhraseToUse);
       onClose();
     } catch (err: any) {
-      setError(err.message || 'Failed to join sync');
+      setError(err.message || 'Failed to join backup');
     } finally {
       setLoading(false);
     }
   };
+  
+  const handleGenerateInvite = () => {
+    if (!existingPhrase || !syncId) {
+      setError('Sync must be enabled to generate invite codes');
+      return;
+    }
+    
+    const inviteCode = generateInviteCode();
+    const url = generateInviteUrl(inviteCode, existingPhrase);
+    
+    // Store invite code mapping locally
+    storeInviteCode(inviteCode, syncId, existingPhrase);
+    
+    setCurrentInviteCode(inviteCode);
+    setInviteUrl(url);
+    setMode('invite');
+  };
 
   const handleCopyPhrase = () => {
-    navigator.clipboard.writeText(recoveryPhrase);
+    const phrase = generatedPhrase || existingPhrase || '';
+    navigator.clipboard.writeText(phrase);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  
+  const handleCopyInvite = (text: string) => {
+    navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -129,12 +189,29 @@ export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
               <SecurityIcon sx={{ color: 'info.main', mt: 0.5 }} />
               <Box sx={{ flex: 1 }}>
                 <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                  Security
+                  Security & Sharing
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Your child's information is encrypted and synced across your devices. 
-                  Only you can access this data with your recovery phrase.
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  Your child's information is encrypted and backed up across your devices.
                 </Typography>
+                <Stack direction="row" spacing={1}>
+                  <Button
+                    size="small"
+                    onClick={() => setMode('existing')}
+                    startIcon={<SecurityIcon />}
+                    variant="outlined"
+                  >
+                    View Backup Code
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={handleGenerateInvite}
+                    startIcon={<ContentCopy />}
+                    variant="contained"
+                  >
+                    Create Invite Code
+                  </Button>
+                </Stack>
               </Box>
             </Box>
           </Paper>
@@ -175,10 +252,10 @@ export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
                 <CloudSyncIcon sx={{ fontSize: 32, color: 'primary.main' }} />
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                    Enable Sync on This Device
+                    Enable Backup on This Device
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Create a new sync group for your devices
+                    Create a new backup for your devices
                   </Typography>
                 </Box>
               </Box>
@@ -204,10 +281,10 @@ export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
                 <SyncIcon sx={{ fontSize: 32, color: 'info.main' }} />
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                    Join Existing Sync
+                    Restore from Backup
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Connect to your existing sync group with a recovery phrase
+                    Connect to your existing backup with a backup code
                   </Typography>
                 </Box>
               </Box>
@@ -300,19 +377,20 @@ export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
         return (
           <>
             <Typography variant="body1" sx={{ mb: 3 }}>
-              Enter your recovery phrase from another device to sync your data.
+              Enter an invite code or backup code from another device to restore your data.
             </Typography>
             
             <Stack spacing={3}>
               <TextField
-                label="Recovery Phrase"
+                label="Invite Code or Backup Code"
                 value={joinPhrase}
                 onChange={(e) => setJoinPhrase(e.target.value)}
-                multiline
-                rows={3}
                 fullWidth
-                placeholder="Enter your 12-word recovery phrase"
-                helperText="Words should be separated by spaces"
+                placeholder="XXXX-XXXX or 32-character code"
+                helperText="Enter an 8-character invite code (XXXX-XXXX) or 32-character backup code"
+                inputProps={{
+                  style: { fontFamily: 'monospace' }
+                }}
               />
               
               {error && <Alert severity="error">{error}</Alert>}
@@ -348,8 +426,16 @@ export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
             </Typography>
             
             <Paper sx={{ p: 3, backgroundColor: 'warning.light', mb: 3 }}>
-              <Typography variant="h6" gutterBottom sx={{ fontFamily: 'monospace' }}>
-                {recoveryPhrase}
+              <Typography 
+                variant="h6" 
+                gutterBottom 
+                sx={{ 
+                  fontFamily: 'monospace',
+                  wordBreak: 'break-all',
+                  fontSize: { xs: '1rem', sm: '1.25rem' }
+                }}
+              >
+                {generatedPhrase}
               </Typography>
               <Button
                 startIcon={copied ? <CheckIcon /> : <CopyIcon />}
@@ -374,7 +460,164 @@ export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
               fullWidth
               sx={{ mt: 3 }}
             >
-              I've Saved My Recovery Phrase
+              I've Saved My Backup Code
+            </Button>
+          </>
+        );
+        
+      case 'invite':
+        return (
+          <>
+            <Alert severity="success" icon={<CheckIcon />} sx={{ mb: 3 }}>
+              Invite code created successfully!
+            </Alert>
+            
+            <Typography variant="body1" sx={{ mb: 3 }}>
+              Share this invite code with another device. It expires in 24 hours.
+            </Typography>
+            
+            <Paper sx={{ 
+              p: 3, 
+              backgroundColor: 'primary.light',
+              backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(144, 202, 249, 0.08)' : 'rgba(33, 150, 243, 0.08)',
+              mb: 2,
+              textAlign: 'center'
+            }}>
+              <Typography variant="h3" sx={{ 
+                fontFamily: 'monospace',
+                fontWeight: 'bold',
+                letterSpacing: 2,
+                mb: 2
+              }}>
+                {formatInviteCodeForDisplay(currentInviteCode)}
+              </Typography>
+              <Button
+                startIcon={copied ? <CheckIcon /> : <CopyIcon />}
+                onClick={() => handleCopyInvite(currentInviteCode)}
+                variant="contained"
+                size="small"
+              >
+                {copied ? 'Copied!' : 'Copy Invite Code'}
+              </Button>
+            </Paper>
+            
+            <Paper sx={{ 
+              p: 2, 
+              backgroundColor: 'grey.100',
+              backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.03)',
+              mb: 3
+            }}>
+              <Typography variant="subtitle2" gutterBottom>
+                Or share this link:
+              </Typography>
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  fontFamily: 'monospace',
+                  wordBreak: 'break-all',
+                  mb: 1
+                }}
+              >
+                {inviteUrl}
+              </Typography>
+              <Button
+                startIcon={copied ? <CheckIcon /> : <ShareIcon />}
+                onClick={() => handleCopyInvite(inviteUrl)}
+                size="small"
+                fullWidth
+              >
+                {copied ? 'Copied!' : 'Copy Link'}
+              </Button>
+            </Paper>
+            
+            <Alert severity="info">
+              <Typography variant="caption">
+                The recipient can enter the invite code or click the link to restore the backup on their device.
+              </Typography>
+            </Alert>
+            
+            <Button
+              variant="outlined"
+              onClick={() => setMode('menu')}
+              fullWidth
+              sx={{ mt: 3 }}
+            >
+              Done
+            </Button>
+          </>
+        );
+        
+      case 'existing':
+        return (
+          <>
+            <Typography variant="body1" sx={{ mb: 3 }}>
+              Your backup code for accessing data from other devices:
+            </Typography>
+            
+            <Paper sx={{ 
+              p: 3, 
+              backgroundColor: 'info.light',
+              mb: 3,
+              position: 'relative'
+            }}>
+              <Typography 
+                variant="h6" 
+                gutterBottom 
+                sx={{ 
+                  fontFamily: 'monospace',
+                  wordBreak: 'break-all',
+                  fontSize: { xs: '1rem', sm: '1.25rem' },
+                  filter: showPhrase ? 'none' : 'blur(8px)',
+                  userSelect: showPhrase ? 'text' : 'none',
+                  transition: 'filter 0.3s ease'
+                }}
+              >
+                {existingPhrase || 'No backup code available'}
+              </Typography>
+              {!showPhrase && (
+                <Box sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)'
+                }}>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={() => setShowPhrase(true)}
+                  >
+                    Click to reveal
+                  </Button>
+                </Box>
+              )}
+              {showPhrase && (
+                <Button
+                  startIcon={copied ? <CheckIcon /> : <CopyIcon />}
+                  onClick={handleCopyPhrase}
+                  size="small"
+                  sx={{ mt: 1 }}
+                >
+                  {copied ? 'Copied!' : 'Copy to Clipboard'}
+                </Button>
+              )}
+            </Paper>
+            
+            <Alert severity="info">
+              <Typography variant="caption">
+                Use this code to restore your backup on another device.
+              </Typography>
+            </Alert>
+            
+            <Button
+              variant="outlined"
+              onClick={() => {
+                setShowPhrase(false);
+                setMode('menu');
+              }}
+              fullWidth
+              sx={{ mt: 3 }}
+            >
+              Back
             </Button>
           </>
         );
@@ -388,7 +631,7 @@ export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
           <Toolbar>
             <CloudIcon sx={{ mr: 1 }} />
             <Typography variant="h6" sx={{ flexGrow: 1 }}>
-              Multi-Device Sync
+              Backup & Sync
             </Typography>
             <IconButton edge="end" onClick={onClose}>
               <CloseIcon />
@@ -399,7 +642,7 @@ export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
         <DialogTitle>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <CloudIcon sx={{ mr: 1 }} />
-            Multi-Device Sync
+            Backup & Sync
             <Box sx={{ flexGrow: 1 }} />
             <IconButton onClick={onClose}>
               <CloseIcon />
@@ -413,7 +656,7 @@ export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
           <Box sx={{ textAlign: 'center', mb: 4 }}>
             <CloudIcon sx={{ fontSize: 64, color: 'primary.main', mb: 2 }} />
             <Typography variant="h4" gutterBottom fontWeight="bold">
-              Multi-Device Sync
+              Backup & Sync
             </Typography>
             <Typography variant="body1" color="text.secondary">
               Keep your child's information synchronized across all your devices

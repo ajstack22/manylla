@@ -1,15 +1,17 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import encryptionService from '../services/sync/manyllaEncryptionService';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import manyllaMinimalSyncService from '../services/sync/manyllaMinimalSyncService';
+import { ChildProfile } from '../types/ChildProfile';
 
 interface SyncContextType {
   syncEnabled: boolean;
-  syncStatus: 'idle' | 'syncing' | 'error' | 'success';
+  syncStatus: 'idle' | 'syncing' | 'error' | 'success' | 'not-setup';
   lastSyncTime: Date | null;
   recoveryPhrase: string | null;
-  enableSync: () => Promise<{ recoveryPhrase: string; syncId: string }>;
+  syncId: string | null;
+  enableSync: (isNewSync: boolean, recoveryPhrase?: string) => Promise<{ recoveryPhrase: string; syncId: string }>;
   disableSync: () => Promise<void>;
   syncNow: () => Promise<void>;
-  joinSync: (recoveryPhrase: string) => Promise<void>;
+  pushProfile: (profile: ChildProfile) => Promise<void>;
 }
 
 const SyncContext = createContext<SyncContextType | undefined>(undefined);
@@ -24,68 +26,88 @@ export const useSync = () => {
 
 interface SyncProviderProps {
   children: ReactNode;
+  onProfileReceived?: (profile: ChildProfile) => void;
 }
 
-export const SyncProvider: React.FC<SyncProviderProps> = ({ children }) => {
+export const SyncProvider: React.FC<SyncProviderProps> = ({ children, onProfileReceived }) => {
   const [syncEnabled, setSyncEnabled] = useState(false);
-  const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'error' | 'success'>('idle');
+  const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'error' | 'success' | 'not-setup'>('not-setup');
   const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
   const [recoveryPhrase, setRecoveryPhrase] = useState<string | null>(null);
+  const [syncId, setSyncId] = useState<string | null>(null);
+
+  // Handle profile updates from sync
+  const handleProfileReceived = useCallback((profile: ChildProfile) => {
+    console.log('[SyncContext] Received profile from sync');
+    setLastSyncTime(new Date());
+    if (onProfileReceived) {
+      onProfileReceived(profile);
+    }
+  }, [onProfileReceived]);
 
   // Check sync status on mount
   useEffect(() => {
     checkSyncStatus();
   }, []);
 
+  // Set up sync data callback
+  useEffect(() => {
+    manyllaMinimalSyncService.setDataCallback(handleProfileReceived);
+  }, [handleProfileReceived]);
+
   const checkSyncStatus = async () => {
     try {
-      const enabled = await encryptionService.isEnabled();
+      const enabled = localStorage.getItem('manylla_sync_enabled') === 'true';
       setSyncEnabled(enabled);
       
       if (enabled) {
-        // Try to restore encryption
-        await encryptionService.restore();
+        const storedPhrase = localStorage.getItem('manylla_recovery_phrase');
+        const storedSyncId = localStorage.getItem('manylla_sync_id');
+        
+        if (storedPhrase && storedSyncId) {
+          setRecoveryPhrase(storedPhrase);
+          setSyncId(storedSyncId);
+          
+          // Re-enable sync with stored phrase
+          await manyllaMinimalSyncService.enableSync(storedPhrase, false);
+          setSyncStatus('idle');
+        }
+      } else {
+        setSyncStatus('not-setup');
       }
     } catch (error) {
       console.error('Failed to check sync status:', error);
+      setSyncStatus('error');
     }
   };
 
-  const enableSync = async () => {
+  const enableSync = async (isNewSync: boolean = true, existingPhrase?: string) => {
     try {
       setSyncStatus('syncing');
       
-      // Generate new recovery phrase
-      const phrase = encryptionService.generateRecoveryPhrase();
-      const { syncId } = await encryptionService.initialize(phrase);
+      // Generate new or use existing recovery phrase
+      const phrase = existingPhrase || manyllaMinimalSyncService.generateRecoveryPhrase();
       
-      // TODO: Call API to create sync group
-      const apiUrl = process.env.REACT_APP_API_URL || '/api/manylla';
-      const response = await fetch(`${apiUrl}/sync/create.php`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sync_id: syncId,
-          encrypted_blob: await encryptionService.encryptData({
-            profiles: [],
-            settings: {},
-            version: 1
-          }),
-          recovery_salt: await localStorage.getItem('secure_manylla_salt'),
-          device_id: await generateDeviceId()
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create sync group');
-      }
-
+      // Enable sync with the service
+      await manyllaMinimalSyncService.enableSync(phrase, isNewSync);
+      
+      const syncIdValue = manyllaMinimalSyncService.getSyncId();
+      
+      // Store in localStorage for persistence
+      localStorage.setItem('manylla_sync_enabled', 'true');
+      localStorage.setItem('manylla_recovery_phrase', phrase);
+      localStorage.setItem('manylla_sync_id', syncIdValue);
+      
       setSyncEnabled(true);
       setSyncStatus('success');
       setRecoveryPhrase(phrase);
+      setSyncId(syncIdValue);
       setLastSyncTime(new Date());
       
-      return { recoveryPhrase: phrase, syncId };
+      // Brief success status then back to idle
+      setTimeout(() => setSyncStatus('idle'), 2000);
+      
+      return { recoveryPhrase: phrase, syncId: syncIdValue };
     } catch (error) {
       console.error('Failed to enable sync:', error);
       setSyncStatus('error');
@@ -93,48 +115,35 @@ export const SyncProvider: React.FC<SyncProviderProps> = ({ children }) => {
     }
   };
 
-  const joinSync = async (phrase: string) => {
+  const pushProfile = async (profile: ChildProfile) => {
+    if (!syncEnabled || !manyllaMinimalSyncService.isSyncEnabled()) {
+      return;
+    }
+    
     try {
       setSyncStatus('syncing');
-      
-      // Initialize with existing phrase
-      const { syncId } = await encryptionService.initialize(phrase);
-      
-      // TODO: Pull data from server
-      const apiUrl = process.env.REACT_APP_API_URL || '/api/manylla';
-      const response = await fetch(`${apiUrl}/sync/pull.php?sync_id=${syncId}`, {
-        headers: { 'Content-Type': 'application/json' }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to join sync group');
-      }
-
-      const data = await response.json();
-      
-      // Decrypt and restore data
-      if (data.encrypted_blob) {
-        const decrypted = await encryptionService.decryptData(data.encrypted_blob);
-        // TODO: Restore profiles and settings from decrypted data
-        console.log('Restored data:', decrypted);
-      }
-
-      setSyncEnabled(true);
-      setSyncStatus('success');
+      await manyllaMinimalSyncService.pushData(profile);
       setLastSyncTime(new Date());
+      setSyncStatus('idle');
     } catch (error) {
-      console.error('Failed to join sync:', error);
+      console.error('Failed to push profile:', error);
       setSyncStatus('error');
-      throw error;
     }
   };
 
   const disableSync = async () => {
     try {
-      await encryptionService.clear();
+      await manyllaMinimalSyncService.disableSync();
+      
+      // Clear localStorage
+      localStorage.removeItem('manylla_sync_enabled');
+      localStorage.removeItem('manylla_recovery_phrase');
+      localStorage.removeItem('manylla_sync_id');
+      
       setSyncEnabled(false);
-      setSyncStatus('idle');
+      setSyncStatus('not-setup');
       setRecoveryPhrase(null);
+      setSyncId(null);
       setLastSyncTime(null);
     } catch (error) {
       console.error('Failed to disable sync:', error);
@@ -143,21 +152,19 @@ export const SyncProvider: React.FC<SyncProviderProps> = ({ children }) => {
   };
 
   const syncNow = async () => {
-    if (!syncEnabled) return;
+    if (!syncEnabled || !manyllaMinimalSyncService.isSyncEnabled()) return;
 
     try {
       setSyncStatus('syncing');
       
-      // TODO: Implement actual sync logic
-      // 1. Get current state
-      // 2. Encrypt data
-      // 3. Push to server
-      // 4. Pull latest from server
-      // 5. Merge changes
-      // 6. Update local state
+      // Force a pull to get latest data
+      await manyllaMinimalSyncService.pullData(true);
       
       setSyncStatus('success');
       setLastSyncTime(new Date());
+      
+      // Return to idle after brief success indication
+      setTimeout(() => setSyncStatus('idle'), 2000);
     } catch (error) {
       console.error('Sync failed:', error);
       setSyncStatus('error');
@@ -172,10 +179,11 @@ export const SyncProvider: React.FC<SyncProviderProps> = ({ children }) => {
         syncStatus,
         lastSyncTime,
         recoveryPhrase,
+        syncId,
         enableSync,
         disableSync,
         syncNow,
-        joinSync,
+        pushProfile,
       }}
     >
       {children}
@@ -183,16 +191,3 @@ export const SyncProvider: React.FC<SyncProviderProps> = ({ children }) => {
   );
 };
 
-// Utility function to generate device ID
-async function generateDeviceId(): Promise<string> {
-  let deviceId = localStorage.getItem('manylla_device_id');
-  
-  if (!deviceId) {
-    deviceId = Array.from(crypto.getRandomValues(new Uint8Array(16)))
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('');
-    localStorage.setItem('manylla_device_id', deviceId);
-  }
-  
-  return deviceId;
-}

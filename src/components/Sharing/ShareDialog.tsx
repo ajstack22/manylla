@@ -38,6 +38,8 @@ import {
   ArrowForward as ArrowForwardIcon,
   Check as CheckIcon,
 } from '@mui/icons-material';
+import nacl from 'tweetnacl';
+import util from 'tweetnacl-util';
 import { Entry, ChildProfile } from '../../types/ChildProfile';
 import { PrintPreview } from './PrintPreview';
 import { useMobileDialog } from '../../hooks/useMobileDialog';
@@ -57,6 +59,38 @@ const sharePresets = [
 ];
 
 type WizardStep = 'recipient' | 'content' | 'settings' | 'complete';
+
+// Encryption functions for secure share storage
+const encryptShare = (data: any, shareCode: string): string => {
+  // Derive key from share code
+  const codeBytes = new TextEncoder().encode(shareCode + 'ManyllaShare2025');
+  let key = codeBytes;
+  for (let i = 0; i < 1000; i++) {
+    key = nacl.hash(key);
+  }
+  key = key.slice(0, 32);
+  
+  // Encrypt
+  const nonce = nacl.randomBytes(24);
+  const dataBytes = new TextEncoder().encode(JSON.stringify(data));
+  const encrypted = nacl.secretbox(dataBytes, nonce, key);
+  
+  // Combine nonce + encrypted
+  const combined = new Uint8Array(nonce.length + encrypted.length);
+  combined.set(nonce);
+  combined.set(encrypted, nonce.length);
+  
+  return util.encodeBase64(combined);
+};
+
+// Secure code generation using crypto.getRandomValues
+const generateSecureCode = (): string => {
+  const bytes = crypto.getRandomValues(new Uint8Array(4));
+  return Array.from(bytes)
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('')
+    .toUpperCase();
+};
 
 export const ShareDialog: React.FC<ShareDialogProps> = ({
   open,
@@ -122,8 +156,8 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
   };
 
   const handleGenerateLink = () => {
-    // Generate access code
-    const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+    // Generate secure access code
+    const code = generateSecureCode();
     setAccessCode(code);
     
     // Store the shared data in localStorage
@@ -142,10 +176,10 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
         : []
     };
     
+    // Encrypt the shared profile data
     shares[code] = {
-      profile: sharedProfile,
-      createdAt: new Date(),
-      expiresAt: new Date(Date.now() + expirationDays * 24 * 60 * 60 * 1000),
+      encrypted: encryptShare(sharedProfile, code),
+      expiresAt: new Date(Date.now() + expirationDays * 24 * 60 * 60 * 1000).toISOString(),
       recipientName,
       note: shareNote
     };

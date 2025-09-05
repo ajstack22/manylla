@@ -1,5 +1,39 @@
 # Deploy Notes
 
+## 2025_09_05_01 - Critical Security Enhancements
+Implemented comprehensive security fixes for medical data protection including encrypted share storage, secure code generation, URL fragment clearing, rate limiting, and data integrity checks.
+
+### Changes
+- **Share Security**
+  - Encrypted share data in localStorage using XSalsa20-Poly1305
+  - Replaced Math.random() with crypto.getRandomValues() for share codes
+  - Added decryption logic with backward compatibility
+  - Share codes now use 8-character secure hex strings
+
+- **Sync Security**
+  - Added URL fragment clearing to prevent recovery phrase exposure in browser history
+  - Implemented rate limiting (max 1 pull/2s, max 1 push/5s)
+  - Added runaway pull prevention (stops after 100 attempts)
+  - Recovery phrases cleared from memory after 30 seconds
+
+- **Data Integrity**
+  - Added HMAC authentication to encrypted medical data
+  - Integrity verification on all sync operations
+  - Backward compatibility maintained for existing data
+
+- **React Fixes**
+  - Fixed useCallback hook conditional call error in App.tsx
+  - Removed duplicate hook definitions
+
+### Technical Details
+- Encryption: 1000 nacl.hash iterations for key derivation
+- Share encryption uses share code as key source with salt
+- Rate limiting prevents API abuse and runaway sync loops
+- HMAC provides tamper detection for medical data
+- All security fixes maintain backward compatibility
+
+---
+
 ## 2025_09_04_03 - Onboarding Enhancement & Design System Improvements
 Enhanced onboarding wizard with photo/birthday fields, implemented Atkinson Hyperlegible font for accessibility, created centralized theming system, and fixed deployment scripts.
 
