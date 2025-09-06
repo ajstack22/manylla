@@ -203,7 +203,8 @@ export const ShareDialogOptimized: React.FC<ShareDialogOptimizedProps> = ({
     
     const shareDomain = getShareDomain();
     const keyBase64 = util.encodeBase64(shareKey);
-    setGeneratedLink(`${shareDomain}/share/${token}#${keyBase64}`);
+    // Use query parameter format for better subdirectory compatibility
+    setGeneratedLink(`${shareDomain}?share=${token}#${keyBase64}`);
     setStep('complete');
   };
 

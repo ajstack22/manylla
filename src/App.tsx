@@ -126,20 +126,26 @@ function AppContent() {
       setIsLoading(true);
       try {
         // Check for new share URL pattern (/share/[token])
+        // Handle both root and subdirectory deployments (e.g., /qual/share/[token])
         const pathname = window.location.pathname;
         const shareMatch = pathname.match(/\/share\/([a-zA-Z0-9]+)/);
         
         // Check for sync invite URL pattern (/sync/[invite-code])
         const syncMatch = pathname.match(/\/sync\/([A-Z0-9]{4}-[A-Z0-9]{4})/i);
         
-        // Check for old share URL pattern (?share=CODE)
+        // Check for query parameter share URL pattern (?share=CODE)
         const urlParams = new URLSearchParams(window.location.search);
-        const oldCode = urlParams.get('share');
+        const queryShareCode = urlParams.get('share');
         
         if (shareMatch) {
-          // New encrypted share format
+          // Path-based share format (/share/[token])
           const token = shareMatch[1];
           setShareCode(token);
+          setIsSharedView(true);
+          setShowOnboarding(false);
+        } else if (queryShareCode) {
+          // Query parameter share format (?share=[token])
+          setShareCode(queryShareCode);
           setIsSharedView(true);
           setShowOnboarding(false);
         } else if (syncMatch) {
@@ -161,11 +167,6 @@ function AppContent() {
               // TODO: Set join mode with invite code
             }, 100);
           }
-          setShowOnboarding(false);
-        } else if (oldCode) {
-          // Old share format (backward compatibility)
-          setShareCode(oldCode);
-          setIsSharedView(true);
           setShowOnboarding(false);
         } else {
           // Check if onboarding has been completed
