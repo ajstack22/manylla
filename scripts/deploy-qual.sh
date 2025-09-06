@@ -23,6 +23,57 @@ NC='\033[0m' # No Color
 # Check for required tools
 command -v npm >/dev/null 2>&1 || { echo "npm is required but not installed. Aborting." >&2; exit 1; }
 
+# Function to increment version
+increment_version() {
+    # Get current version from package.json
+    if [ -f "$PROJECT_ROOT/package.json" ]; then
+        CURRENT_VERSION=$(grep '"version":' "$PROJECT_ROOT/package.json" | head -1 | cut -d'"' -f4)
+    else
+        CURRENT_VERSION="0.0.0.0"
+    fi
+    echo -e "${YELLOW}📌 Current version: $CURRENT_VERSION${NC}"
+    
+    # Parse version parts (format: YYYY.MM.DD.BUILD)
+    IFS='.' read -r YEAR MONTH DAY BUILD <<< "$CURRENT_VERSION"
+    
+    # Get current date with leading zeros
+    CURRENT_DATE=$(date +"%Y.%m.%d")
+    IFS='.' read -r NEW_YEAR NEW_MONTH NEW_DAY <<< "$CURRENT_DATE"
+    
+    # Ensure month and day have leading zeros
+    NEW_MONTH=$(printf "%02d" $((10#$NEW_MONTH)))
+    NEW_DAY=$(printf "%02d" $((10#$NEW_DAY)))
+    
+    # If it's a new day, reset build number to 1, otherwise increment
+    if [[ "$YEAR.$MONTH.$DAY" == "$NEW_YEAR.$NEW_MONTH.$NEW_DAY" ]]; then
+        NEW_BUILD=$((BUILD + 1))
+    else
+        NEW_BUILD=1
+    fi
+    
+    # Create new version
+    NEW_VERSION="$NEW_YEAR.$NEW_MONTH.$NEW_DAY.$NEW_BUILD"
+    echo -e "${GREEN}📈 New version: $NEW_VERSION${NC}"
+    
+    # Update package.json
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS
+        sed -i '' "s/\"version\": \"$CURRENT_VERSION\"/\"version\": \"$NEW_VERSION\"/" "$PROJECT_ROOT/package.json"
+    else
+        # Linux
+        sed -i "s/\"version\": \"$CURRENT_VERSION\"/\"version\": \"$NEW_VERSION\"/" "$PROJECT_ROOT/package.json"
+    fi
+    
+    echo -e "${GREEN}✅ Version updated to $NEW_VERSION${NC}"
+    
+    # Export for use later
+    export NEW_VERSION
+    export CURRENT_VERSION
+}
+
+# Increment version first
+increment_version
+
 # Auto-commit any uncommitted changes
 if [[ -n $(git status --porcelain) ]]; then
     echo -e "${YELLOW}📝 Found uncommitted changes. Auto-committing before deployment...${NC}"
@@ -30,27 +81,16 @@ if [[ -n $(git status --porcelain) ]]; then
     # Add all changes
     git add -A
     
-    # Generate commit message with timestamp
-    TIMESTAMP=$(date +%Y-%m-%d_%H:%M:%S)
-    COMMIT_MSG="Deploy to qual: $TIMESTAMP"
+    # Generate commit message with version and description
+    COMMIT_MSG="v${NEW_VERSION}: Deploy to qual"
     
-    # Check if there's a custom message in DEPLOY_NOTES.md
-    if [ -f "DEPLOY_NOTES.md" ] && [ -s "DEPLOY_NOTES.md" ]; then
-        # Extract version and description from the latest deployment entry
-        # Looking for pattern: ## YYYY_MM_DD_VV - Description
-        VERSION_LINE=$(grep -E "^## [0-9]{4}_[0-9]{2}_[0-9]{2}_[0-9]{2} -" DEPLOY_NOTES.md | head -n 1)
-        
-        if [ -n "$VERSION_LINE" ]; then
-            # Extract version (YYYY_MM_DD_VV)
-            VERSION=$(echo "$VERSION_LINE" | sed -E 's/^## ([0-9]{4}_[0-9]{2}_[0-9]{2}_[0-9]{2}) .*/\1/')
-            # Extract description (everything after the dash)
-            DESCRIPTION=$(echo "$VERSION_LINE" | sed -E 's/^## [0-9]{4}_[0-9]{2}_[0-9]{2}_[0-9]{2} - //')
-            
-            if [ -n "$VERSION" ] && [ -n "$DESCRIPTION" ]; then
-                COMMIT_MSG="v${VERSION}: ${DESCRIPTION}"
-                echo -e "${GREEN}📋 Using version ${VERSION} from DEPLOY_NOTES.md${NC}"
-                echo -e "${GREEN}📝 Description: ${DESCRIPTION}${NC}"
-            fi
+    # Check if RELEASE_NOTES.md has a description for this version
+    if [ -f "RELEASE_NOTES.md" ]; then
+        # Try to extract the latest version's title from release notes
+        LATEST_TITLE=$(grep -A1 "^## Version" RELEASE_NOTES.md | head -2 | tail -1 | sed 's/^[^-]*- //')
+        if [ -n "$LATEST_TITLE" ]; then
+            COMMIT_MSG="v${NEW_VERSION}: ${LATEST_TITLE}"
+            echo -e "${GREEN}📝 Using description from RELEASE_NOTES.md${NC}"
         fi
     fi
     
