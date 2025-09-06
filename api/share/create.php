@@ -11,15 +11,33 @@ require_once '../utils/validation.php';
 require_once '../utils/cors.php';
 require_once '../utils/rate-limiter.php';
 
+// Define constants if not already defined
+if (!defined('DEFAULT_SHARE_EXPIRY_HOURS')) {
+    define('DEFAULT_SHARE_EXPIRY_HOURS', 48);
+}
+if (!defined('SHARE_ACCESS_LOG_ENABLED')) {
+    define('SHARE_ACCESS_LOG_ENABLED', false);
+}
+
+// Define message constants
+$ERROR_MESSAGES = [
+    'INVALID_SHARE_DATA' => 'Invalid share data',
+    'SERVER_ERROR' => 'Server error occurred'
+];
+
+$SHARE_MESSAGES = [
+    'SHARE_CREATED' => 'Share created successfully'
+];
+
 // Set CORS headers
 setCorsHeaders();
 
 // Validate request method
 validateRequestMethod('POST');
 
-// Check rate limit
+// Check rate limit - using IP-based rate limiting for share creation
 $rateLimiter = new RateLimiter();
-$rateLimiter->checkLimit('share_create');
+$rateLimiter->checkIPRateLimit(getClientIp(), 30, 60); // 30 requests per minute
 
 // Get JSON input
 $data = getJsonInput();
@@ -27,7 +45,7 @@ validateRequired($data, ['encrypted_data']);
 
 // Validate inputs
 if (!validateEncryptedBlob($data['encrypted_data'])) {
-    sendError(ERROR_MESSAGES['INVALID_SHARE_DATA'], 400);
+    sendError($ERROR_MESSAGES['INVALID_SHARE_DATA'], 400);
 }
 
 // Optional fields
@@ -107,10 +125,10 @@ try {
         'access_code' => $accessCode,
         'expires_at' => $expiresAt,
         'share_url' => 'https://' . $_SERVER['HTTP_HOST'] . '/manylla?share=' . $accessCode
-    ], SHARE_MESSAGES['SHARE_CREATED']);
+    ], $SHARE_MESSAGES['SHARE_CREATED']);
     
 } catch (Exception $e) {
     error_log("Share creation failed: " . $e->getMessage());
-    sendError(ERROR_MESSAGES['SERVER_ERROR'], 500);
+    sendError($ERROR_MESSAGES['SERVER_ERROR'], 500);
 }
 ?>

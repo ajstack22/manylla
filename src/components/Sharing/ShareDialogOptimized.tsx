@@ -40,6 +40,7 @@ import { ChildProfile } from '../../types/ChildProfile';
 import { useMobileDialog } from '../../hooks/useMobileDialog';
 import { manyllaColors } from '../../theme/theme';
 import { QRCodeModal } from './QRCodeModal';
+import { API_ENDPOINTS } from '../../config/api';
 
 interface ShareDialogOptimizedProps {
   open: boolean;
@@ -138,13 +139,10 @@ export const ShareDialogOptimized: React.FC<ShareDialogOptimizedProps> = ({
     );
   };
 
-  const handleGenerateLink = () => {
-    // Generate cryptographically secure token and encryption key
-    const tokenBytes = new Uint8Array(8);
-    crypto.getRandomValues(tokenBytes);
-    const token = util.encodeBase64(tokenBytes)
-      .replace(/[^a-zA-Z0-9]/g, '')
-      .substring(0, 16);
+  const handleGenerateLink = async () => {
+    // Generate invite code in XXXX-XXXX format (matching StackMap)
+    const { generateInviteCode } = require('../../utils/inviteCode');
+    const token = generateInviteCode();
     
     // Generate 32-byte encryption key
     const shareKey = nacl.randomBytes(32);
@@ -176,17 +174,33 @@ export const ShareDialogOptimized: React.FC<ShareDialogOptimizedProps> = ({
       new Uint8Array([...nonce, ...encrypted])
     );
     
-    // Store encrypted share in localStorage
-    const existingShares = localStorage.getItem('manylla_shares_v2') || '{}';
-    const shares = JSON.parse(existingShares);
-    
-    shares[token] = {
-      encryptedData: encryptedBlob,
-      createdAt: new Date().toISOString(),
-      expiresAt: new Date(Date.now() + expirationDays * 24 * 60 * 60 * 1000).toISOString(),
-    };
-    
-    localStorage.setItem('manylla_shares_v2', JSON.stringify(shares));
+    // Phase 3: Store encrypted share in database via API
+    try {
+      const response = await fetch(API_ENDPOINTS.share.create, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_code: token,
+          encrypted_data: encryptedBlob,
+          recipient_type: recipientType,
+          expiry_hours: expirationDays * 24
+        })
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        console.error('[ShareDialog] Failed to create share:', error);
+        // Handle error - you might want to show an error message
+        return;
+      }
+      
+      const result = await response.json();
+      console.log('[ShareDialog] Share created successfully:', result);
+    } catch (error) {
+      console.error('[ShareDialog] Failed to create share:', error);
+      // Handle error - you might want to show an error message
+      return;
+    }
     
     // Generate link with key in fragment
     const getShareDomain = () => {

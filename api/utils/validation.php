@@ -5,6 +5,11 @@
  * Validates and sanitizes all user inputs
  */
 
+// Define constants if not already defined
+if (!defined('SHARE_CODE_LENGTH')) {
+    define('SHARE_CODE_LENGTH', 9); // XXXX-XXXX format (including hyphen)
+}
+
 /**
  * Validate sync ID format (32 hex characters)
  */
@@ -20,13 +25,15 @@ function validateSyncId($syncId) {
 /**
  * Validate device ID format (32 hex characters)
  */
-function validateDeviceId($deviceId) {
-    if (empty($deviceId)) {
-        return false;
+if (!function_exists('validateDeviceId')) {
+    function validateDeviceId($deviceId) {
+        if (empty($deviceId)) {
+            return false;
+        }
+        
+        // Must be exactly 32 hexadecimal characters
+        return preg_match('/^[a-f0-9]{32}$/i', $deviceId) === 1;
     }
-    
-    // Must be exactly 32 hexadecimal characters
-    return preg_match('/^[a-f0-9]{32}$/i', $deviceId) === 1;
 }
 
 /**
@@ -78,15 +85,15 @@ function validateSyncType($type) {
 }
 
 /**
- * Validate access code (Manylla-specific)
+ * Validate access code (XXXX-XXXX format, matching StackMap)
  */
 function validateAccessCode($code) {
     if (empty($code)) {
         return false;
     }
     
-    // Must be alphanumeric, case-insensitive
-    return preg_match('/^[A-Z0-9]{' . SHARE_CODE_LENGTH . '}$/i', $code) === 1;
+    // Must be in XXXX-XXXX format (alphanumeric with hyphen)
+    return preg_match('/^[A-Z0-9]{4}-[A-Z0-9]{4}$/i', $code) === 1;
 }
 
 /**
@@ -213,13 +220,22 @@ function validateRequired($data, $fields) {
 }
 
 /**
- * Generate secure access code
+ * Generate secure access code in XXXX-XXXX format (matching StackMap)
  */
 function generateAccessCode() {
     $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     $code = '';
     
-    for ($i = 0; $i < SHARE_CODE_LENGTH; $i++) {
+    // Generate first 4 characters
+    for ($i = 0; $i < 4; $i++) {
+        $code .= $characters[random_int(0, strlen($characters) - 1)];
+    }
+    
+    // Add hyphen
+    $code .= '-';
+    
+    // Generate last 4 characters
+    for ($i = 0; $i < 4; $i++) {
         $code .= $characters[random_int(0, strlen($characters) - 1)];
     }
     

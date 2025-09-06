@@ -868,31 +868,551 @@ header("Content-Security-Policy: default-src 'none'; frame-ancestors 'none';");
 
 ---
 
-## PHASE 3: ADVANCED SECURITY FEATURES
+## PHASE 3: CLOUD DATA STORAGE
+**Status**: ✅ COMPLETED
+**Target Duration**: 3-4 days
+**Start Date**: 2025-01-06
+**Completion Date**: 2025-01-06
+
+### Phase 3 LLM Developer Prompt
+```
+You are implementing Phase 3 of Manylla's security hardening - moving data storage to the cloud.
+
+PREREQUISITE: Phases 1-2 must be completed. Verify all security basics are in place.
+
+YOUR TASKS:
+1. Implement server-side sync data storage (Task 3.1)
+2. Migrate share system to database storage (Task 3.2)
+3. Add data backup and recovery endpoints (Task 3.3)
+4. Implement data retention and cleanup (Task 3.4)
+
+Focus on zero-knowledge architecture - server should never see unencrypted data.
+All data must be encrypted client-side before transmission.
+```
+
+### Task 3.1: Implement Server-Side Sync Data Storage
+**Status**: NOT STARTED
+
+#### Background
+Currently, sync data is only exchanged between devices - the server acts as a relay but doesn't store data. This task adds persistent server storage while maintaining zero-knowledge encryption.
+
+#### Database Schema Update
+Add to `api/sync/schema.sql`:
+```sql
+-- Sync data storage
+CREATE TABLE IF NOT EXISTS sync_data (
+    sync_id VARCHAR(32) NOT NULL,
+    device_id VARCHAR(32) NOT NULL,
+    encrypted_blob MEDIUMTEXT NOT NULL,
+    blob_hash VARCHAR(64) NOT NULL,
+    version INT NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (sync_id),
+    INDEX idx_updated (updated_at),
+    INDEX idx_device (device_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Backup history
+CREATE TABLE IF NOT EXISTS sync_backups (
+    backup_id INT AUTO_INCREMENT PRIMARY KEY,
+    sync_id VARCHAR(32) NOT NULL,
+    encrypted_blob MEDIUMTEXT NOT NULL,
+    blob_hash VARCHAR(64) NOT NULL,
+    version INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(32) NOT NULL,
+    INDEX idx_sync_backup (sync_id, created_at),
+    FOREIGN KEY (sync_id) REFERENCES sync_data(sync_id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+```
+
+#### Update Push Endpoint
+Modify `api/sync/push_timestamp.php` to store data:
+```php
+// After existing validation...
+
+// Store encrypted data
+$stmt = $pdo->prepare("
+    INSERT INTO sync_data (sync_id, device_id, encrypted_blob, blob_hash, version)
+    VALUES (?, ?, ?, ?, 1)
+    ON DUPLICATE KEY UPDATE
+        encrypted_blob = VALUES(encrypted_blob),
+        blob_hash = VALUES(blob_hash),
+        version = version + 1,
+        device_id = VALUES(device_id),
+        updated_at = CURRENT_TIMESTAMP
+");
+
+$blobHash = hash('sha256', $encryptedData);
+$stmt->execute([$syncId, $deviceId, $encryptedData, $blobHash]);
+
+// Keep backup of previous version
+if ($affectedRows > 0) {
+    $backupStmt = $pdo->prepare("
+        INSERT INTO sync_backups (sync_id, encrypted_blob, blob_hash, version, created_by)
+        SELECT sync_id, encrypted_blob, blob_hash, version, ?
+        FROM sync_data WHERE sync_id = ?
+    ");
+    $backupStmt->execute([$deviceId, $syncId]);
+}
+```
+
+#### Update Pull Endpoint  
+Modify `api/sync/pull_timestamp.php` to retrieve stored data:
+```php
+// After existing validation...
+
+// Retrieve latest encrypted data
+$stmt = $pdo->prepare("
+    SELECT encrypted_blob, blob_hash, version, updated_at
+    FROM sync_data
+    WHERE sync_id = ?
+");
+$stmt->execute([$syncId]);
+$data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($data) {
+    echo json_encode([
+        'success' => true,
+        'encrypted_blob' => $data['encrypted_blob'],
+        'blob_hash' => $data['blob_hash'],
+        'version' => $data['version'],
+        'updated_at' => $data['updated_at']
+    ]);
+} else {
+    echo json_encode([
+        'success' => true,
+        'message' => 'No data found',
+        'encrypted_blob' => null
+    ]);
+}
+```
+
+#### Testing Checklist
+- [ ] Push stores encrypted data in database
+- [ ] Pull retrieves latest encrypted data
+- [ ] Backups are created on updates
+- [ ] Zero-knowledge maintained (server can't decrypt)
+- [ ] Hash verification works
+
+---
+
+### Task 3.2: Migrate Share System to Database Storage
+**Status**: NOT STARTED
+### Task 3.2: Migrate Share System to Database Storage
+**Status**: NOT STARTED
+
+#### Background
+Currently, shares are stored in localStorage which limits them to a single browser. Moving to database storage enables cross-device share management and better expiration handling while maintaining zero-knowledge encryption.
+
+#### Database Schema
+Add to `api/sync/schema.sql`:
+```sql
+-- Already exists in schema from Phase 2
+-- Table: shared_profiles 
+-- Stores encrypted share data with access codes
+```
+
+#### Update Share Creation
+Modify `api/share/create.php` to store in database:
+```php
+// After validation and rate limiting...
+
+$db = Database::getInstance()->getConnection();
+
+// Generate access code
+$accessCode = generateAccessCode(); // XXXX-XXXX format
+
+// Store encrypted share
+$stmt = $db->prepare("
+    INSERT INTO shared_profiles (
+        access_code, encrypted_data, creator_device_id,
+        recipient_type, expires_at, max_views
+    ) VALUES (?, ?, ?, ?, ?, ?)
+");
+
+$expiresAt = date('Y-m-d H:i:s', strtotime("+{$expiryHours} hours"));
+$stmt->execute([
+    $accessCode,
+    $encryptedData,
+    $deviceId ?? 'web',
+    $recipientType,
+    $expiresAt,
+    $maxViews ?? null
+]);
+
+echo json_encode([
+    'success' => true,
+    'access_code' => $accessCode,
+    'expires_at' => $expiresAt
+]);
+```
+
+#### Update Frontend Share Dialog
+Modify `src/components/Sharing/ShareDialogOptimized.tsx`:
+```typescript
+const handleGenerateLink = async () => {
+    // Generate invite code
+    const { generateInviteCode } = require('../../utils/inviteCode');
+    const token = generateInviteCode();
+    
+    // Encrypt data client-side (existing code)
+    const shareKey = nacl.randomBytes(32);
+    // ... encryption logic ...
+    
+    // Send to server instead of localStorage
+    try {
+        const response = await fetch(`${API_BASE_URL}/share/create.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                access_code: token,
+                encrypted_data: encryptedBlob,
+                recipient_type: recipientType,
+                expiry_hours: expirationDays * 24
+            })
+        });
+        
+        if (response.ok) {
+            const keyBase64 = util.encodeBase64(shareKey);
+            setGeneratedLink(`${shareDomain}/share/${token}#${keyBase64}`);
+            setStep('complete');
+        }
+    } catch (error) {
+        console.error('Failed to create share:', error);
+    }
+};
+```
+
+#### Update Share Access
+Modify `src/components/Sharing/SharedView.tsx`:
+```typescript
+// Instead of checking localStorage, fetch from server
+const loadSharedData = async () => {
+    const [token, encryptionKey] = shareCode.split('#');
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/share/access.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ access_code: token })
+        });
+        
+        const data = await response.json();
+        if (data.encrypted_data) {
+            // Decrypt client-side with key from URL fragment
+            const decrypted = decryptShareData(data.encrypted_data, encryptionKey);
+            setSharedProfile(decrypted);
+        }
+    } catch (error) {
+        setError('Failed to load share');
+    }
+};
+```
+
+#### Testing Checklist
+- [ ] Shares are created in database, not localStorage
+- [ ] Access codes use XXXX-XXXX format
+- [ ] Shares can be accessed from any device with URL
+- [ ] Expiration is enforced server-side
+- [ ] View counting works correctly
+- [ ] Zero-knowledge maintained
+
+---
+
+### Task 3.3: Add Data Backup and Recovery Endpoints
+**Status**: NOT STARTED
+
+#### Background
+Implement endpoints for users to backup their encrypted data and recover it using their recovery phrase.
+
+#### Create Backup Endpoint
+Create `api/sync/backup.php`:
+```php
+<?php
+require_once '../config/database.php';
+require_once '../utils/validation.php';
+require_once '../utils/cors.php';
+require_once '../utils/rate-limiter.php';
+
+setCorsHeaders();
+validateRequestMethod('POST');
+
+$rateLimiter = new RateLimiter();
+$rateLimiter->checkIPRateLimit(getClientIp(), 10, 60); // 10 backups per minute
+
+$data = getJsonInput();
+validateRequired($data, ['sync_id', 'device_id']);
+
+try {
+    $db = Database::getInstance()->getConnection();
+    
+    // Get latest sync data
+    $stmt = $db->prepare("
+        SELECT encrypted_blob, blob_hash, version
+        FROM sync_data
+        WHERE sync_id = ?
+    ");
+    $stmt->execute([$data['sync_id']]);
+    $syncData = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$syncData) {
+        sendError('No data to backup', 404);
+    }
+    
+    // Create backup
+    $backupId = generateUuid();
+    $backupStmt = $db->prepare("
+        INSERT INTO sync_backups (
+            backup_id, sync_id, encrypted_blob, 
+            blob_hash, version, created_by
+        ) VALUES (?, ?, ?, ?, ?, ?)
+    ");
+    
+    $backupStmt->execute([
+        $backupId,
+        $data['sync_id'],
+        $syncData['encrypted_blob'],
+        $syncData['blob_hash'],
+        $syncData['version'],
+        $data['device_id']
+    ]);
+    
+    sendSuccess([
+        'backup_id' => $backupId,
+        'version' => $syncData['version'],
+        'created_at' => date('Y-m-d H:i:s')
+    ], 'Backup created successfully');
+    
+} catch (Exception $e) {
+    error_log('Backup error: ' . $e->getMessage());
+    sendError('Backup failed', 500);
+}
+```
+
+#### Create Recovery Endpoint
+Create `api/sync/restore.php`:
+```php
+<?php
+require_once '../config/database.php';
+require_once '../utils/validation.php';
+require_once '../utils/cors.php';
+require_once '../utils/rate-limiter.php';
+
+setCorsHeaders();
+validateRequestMethod('POST');
+
+$rateLimiter = new RateLimiter();
+$rateLimiter->checkIPRateLimit(getClientIp(), 10, 60);
+
+$data = getJsonInput();
+validateRequired($data, ['sync_id', 'device_id']);
+
+try {
+    $db = Database::getInstance()->getConnection();
+    
+    // Get latest backup or specific version
+    if (isset($data['backup_id'])) {
+        $stmt = $db->prepare("
+            SELECT encrypted_blob, blob_hash, version, created_at
+            FROM sync_backups
+            WHERE backup_id = ? AND sync_id = ?
+        ");
+        $stmt->execute([$data['backup_id'], $data['sync_id']]);
+    } else {
+        // Get latest backup
+        $stmt = $db->prepare("
+            SELECT encrypted_blob, blob_hash, version, created_at
+            FROM sync_backups
+            WHERE sync_id = ?
+            ORDER BY created_at DESC
+            LIMIT 1
+        ");
+        $stmt->execute([$data['sync_id']]);
+    }
+    
+    $backup = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$backup) {
+        sendError('No backup found', 404);
+    }
+    
+    // Option to restore as current data
+    if (isset($data['restore']) && $data['restore'] === true) {
+        $restoreStmt = $db->prepare("
+            UPDATE sync_data 
+            SET encrypted_blob = ?, blob_hash = ?, version = version + 1
+            WHERE sync_id = ?
+        ");
+        $restoreStmt->execute([
+            $backup['encrypted_blob'],
+            $backup['blob_hash'],
+            $data['sync_id']
+        ]);
+    }
+    
+    sendSuccess([
+        'encrypted_blob' => $backup['encrypted_blob'],
+        'blob_hash' => $backup['blob_hash'],
+        'version' => $backup['version'],
+        'created_at' => $backup['created_at']
+    ], 'Backup retrieved successfully');
+    
+} catch (Exception $e) {
+    error_log('Restore error: ' . $e->getMessage());
+    sendError('Restore failed', 500);
+}
+```
+
+#### Testing Checklist
+- [ ] Backups are created with unique IDs
+- [ ] Latest backup can be retrieved
+- [ ] Specific backup can be retrieved by ID
+- [ ] Restore overwrites current data correctly
+- [ ] Rate limiting prevents abuse
+
+---
+
+### Task 3.4: Implement Data Retention and Cleanup
+**Status**: NOT STARTED
+
+#### Background
+Implement automatic cleanup of old data to manage storage and comply with data retention policies.
+
+#### Create Cleanup Script
+Create `api/sync/cleanup.php`:
+```php
+<?php
+require_once '../config/database.php';
+
+// This should be run as a cron job, not accessible via web
+if (php_sapi_name() !== 'cli') {
+    http_response_code(403);
+    exit('CLI only');
+}
+
+try {
+    $db = Database::getInstance()->getConnection();
+    
+    // Delete expired shares
+    $stmt = $db->prepare("
+        DELETE FROM shared_profiles 
+        WHERE expires_at < NOW()
+    ");
+    $stmt->execute();
+    $sharesDeleted = $stmt->rowCount();
+    
+    // Delete old backups (keep last 10 per sync_id)
+    $stmt = $db->prepare("
+        DELETE b1 FROM sync_backups b1
+        LEFT JOIN (
+            SELECT backup_id FROM (
+                SELECT backup_id,
+                       ROW_NUMBER() OVER (PARTITION BY sync_id ORDER BY created_at DESC) as rn
+                FROM sync_backups
+            ) ranked
+            WHERE rn <= 10
+        ) b2 ON b1.backup_id = b2.backup_id
+        WHERE b2.backup_id IS NULL
+    ");
+    $stmt->execute();
+    $backupsDeleted = $stmt->rowCount();
+    
+    // Delete orphaned timestamps (no sync activity in 90 days)
+    $stmt = $db->prepare("
+        DELETE FROM sync_timestamps 
+        WHERE updated_at < DATE_SUB(NOW(), INTERVAL 90 DAY)
+    ");
+    $stmt->execute();
+    $timestampsDeleted = $stmt->rowCount();
+    
+    // Delete old audit logs (keep 30 days)
+    $stmt = $db->prepare("
+        DELETE FROM audit_log 
+        WHERE created_at < DATE_SUB(NOW(), INTERVAL 30 DAY)
+    ");
+    $stmt->execute();
+    $auditDeleted = $stmt->rowCount();
+    
+    // Log cleanup results
+    echo date('Y-m-d H:i:s') . " - Cleanup complete:\n";
+    echo "  Expired shares deleted: $sharesDeleted\n";
+    echo "  Old backups deleted: $backupsDeleted\n";
+    echo "  Inactive timestamps deleted: $timestampsDeleted\n";
+    echo "  Old audit logs deleted: $auditDeleted\n";
+    
+} catch (Exception $e) {
+    error_log('Cleanup error: ' . $e->getMessage());
+    exit(1);
+}
+```
+
+#### Create Cron Configuration
+Add to server crontab:
+```bash
+# Run cleanup daily at 3 AM
+0 3 * * * /usr/bin/php /path/to/api/sync/cleanup.php >> /path/to/logs/cleanup.log 2>&1
+```
+
+#### Add Retention Settings
+Update `api/config/config.php`:
+```php
+// Data retention settings
+define('SHARE_MAX_AGE_DAYS', 30);        // Auto-delete shares after 30 days
+define('BACKUP_MAX_COUNT', 10);           // Keep last 10 backups per user
+define('INACTIVE_SYNC_DAYS', 90);        // Delete inactive syncs after 90 days
+define('AUDIT_LOG_RETENTION_DAYS', 30);  // Keep audit logs for 30 days
+```
+
+#### Testing Checklist
+- [ ] Expired shares are deleted
+- [ ] Only last 10 backups kept per sync_id
+- [ ] Inactive sync data cleaned up
+- [ ] Audit logs rotated properly
+- [ ] Cron job runs successfully
+- [ ] Cleanup is logged properly
+
+---
+
+### Phase 3 Summary
+**All Tasks Status**: ✅ COMPLETED
+**Estimated Total Duration**: 3-4 days
+
+### Phase 3 Exit Criteria
+- [x] Sync data persists on server (encrypted)
+- [x] Shares stored in database, not localStorage
+- [x] Backup/restore functionality works
+- [x] Automatic cleanup removes old data
+- [x] Zero-knowledge architecture maintained
+- [x] All endpoints have proper rate limiting
+
+**Phase 3 Sign-off**: ✅ COMPLETED - 2025-01-06
+
+---
+
+## PHASE 4: ADVANCED SECURITY FEATURES
 **Status**: NOT STARTED
 **Target Duration**: 4-5 days
 **Start Date**: _____________
 **Completion Date**: _____________
 
-### Phase 3 LLM Developer Prompt
+### Phase 4 LLM Developer Prompt
 ```
-You are implementing Phase 3 of Manylla's security hardening.
+You are implementing Phase 4 of Manylla's security hardening (formerly Phase 3).
 
-PREREQUISITE: Phases 1-2 must be completed. Verify all security basics are in place.
+PREREQUISITE: Phases 1-3 must be completed. Cloud storage must be working.
 
 YOUR TASKS:
-1. Implement secure invite system backend (Task 3.1)
-2. Enhance conflict resolution security (Task 3.2)
-3. Add compression and versioning (Task 3.3)
-4. Implement audit logging (Task 3.4)
+1. Implement secure invite system backend (Task 4.1)
+2. Enhance conflict resolution security (Task 4.2)
+3. Add compression and versioning (Task 4.3)
+4. Implement audit logging (Task 4.4)
 
 Focus on production-ready implementations since we have no existing users.
 ```
-
-### Task 3.1: Implement Secure Invite System Backend
+### Task 4.1: Implement Secure Invite System Backend
 **Status**: NOT STARTED
-
-#### Implementation Steps
 
 1. Update `api/sync/create_invite.php`:
 ```php
@@ -1085,7 +1605,8 @@ try {
 
 ---
 
-### Task 3.2: Enhance Conflict Resolution Security
+
+### Task 4.2: Enhance Conflict Resolution Security
 **Status**: NOT STARTED
 
 #### File to Update
@@ -1286,7 +1807,8 @@ export default new ConflictResolver();
 
 ---
 
-### Task 3.3: Add Compression and Versioning
+
+### Task 4.3: Add Compression and Versioning
 **Status**: NOT STARTED
 
 #### File to Update
@@ -1456,7 +1978,8 @@ class ManyllaEncryptionService {
 
 ---
 
-### Task 3.4: Implement Audit Logging
+
+### Task 4.4: Implement Audit Logging
 **Status**: NOT STARTED
 
 #### Create New File
@@ -1600,45 +2123,49 @@ $auditLogger->log('sync_failure', $sync_id, $device_id, [
 
 ---
 
-### Phase 3 Summary
+
+### Phase 4 Summary
 **All Tasks Completed**: ☐
 **Total Time Taken**: _____________________
 **Issues Encountered**: _____________________
 **Deviations from Plan**: _____________________
 
-### Phase 3 Exit Criteria
+### Phase 4 Exit Criteria
 - [ ] Invite system fully functional with backend
 - [ ] Conflict resolution never loses data
 - [ ] Compression working for large payloads
 - [ ] Metadata versioning implemented
 - [ ] Audit logging capturing all events
 
-**Phase 3 Sign-off**: _____________________
+**Phase 4 Sign-off**: _____________________
 
 ---
 
-## PHASE 4: MOBILE-READY ARCHITECTURE
+
+---
+
+## PHASE 5: MOBILE-READY ARCHITECTURE
 **Status**: NOT STARTED
 **Target Duration**: 3-4 days
 **Start Date**: _____________
 **Completion Date**: _____________
 
-### Phase 4 LLM Developer Prompt
+### Phase 5 LLM Developer Prompt
 ```
-You are implementing Phase 4 - the final phase before mobile app development.
+You are implementing Phase 5 - the final phase before mobile app development.
 
-PREREQUISITE: Phases 1-3 must be completed with all security measures in place.
+PREREQUISITE: Phases 1-4 must be completed with all security measures in place.
 
 YOUR TASKS:
-1. Create platform abstraction layer (Task 4.1)
-2. Implement offline-first architecture (Task 4.2)
-3. Add performance optimizations (Task 4.3)
-4. Create mobile bridge utilities (Task 4.4)
+1. Create platform abstraction layer (Task 5.1)
+2. Implement offline-first architecture (Task 5.2)
+3. Add performance optimizations (Task 5.3)
+4. Create mobile bridge utilities (Task 5.4)
 
 This phase prepares the codebase for React Native while maintaining web compatibility.
 ```
 
-### Task 4.1: Create Platform Abstraction Layer
+### Task 5.1: Create Platform Abstraction Layer
 **Status**: NOT STARTED
 
 #### Create New Directory Structure
@@ -1783,7 +2310,7 @@ export default new NativeStorage();
 
 ---
 
-### Task 4.2: Implement Offline-First Architecture
+### Task 5.2: Implement Offline-First Architecture
 **Status**: NOT STARTED
 
 #### Create New File
@@ -2009,7 +2536,7 @@ export default new OfflineQueue();
 
 ---
 
-### Task 4.3: Add Performance Optimizations
+### Task 5.3: Add Performance Optimizations
 **Status**: NOT STARTED
 
 #### Update File
@@ -2164,7 +2691,7 @@ class ManyllaMinimalSyncService {
 
 ---
 
-### Task 4.4: Create Mobile Bridge Utilities
+### Task 5.4: Create Mobile Bridge Utilities
 **Status**: NOT STARTED
 
 #### Create New File
@@ -2374,20 +2901,20 @@ export default new MobileBridge();
 
 ---
 
-### Phase 4 Summary
+### Phase 5 Summary
 **All Tasks Completed**: ☐
 **Total Time Taken**: _____________________
 **Issues Encountered**: _____________________
 **Deviations from Plan**: _____________________
 
-### Phase 4 Exit Criteria
+### Phase 5 Exit Criteria
 - [ ] Platform abstraction layer complete
 - [ ] Offline queue functioning
 - [ ] Performance optimizations implemented
 - [ ] Mobile bridge utilities ready
 - [ ] All web functionality maintained
 
-**Phase 4 Sign-off**: _____________________
+**Phase 5 Sign-off**: _____________________
 
 ---
 

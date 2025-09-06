@@ -2,6 +2,7 @@ import nacl from 'tweetnacl';
 import util from 'tweetnacl-util';
 import manyllaEncryptionService from './manyllaEncryptionService';
 import conflictResolver from './conflictResolver';
+import { API_ENDPOINTS } from '../../config/api';
 
 class ManyllaMinimalSyncService {
   constructor() {
@@ -259,47 +260,55 @@ class ManyllaMinimalSyncService {
   }
 
   /**
-   * Create a new sync group (localStorage for now)
+   * Create a new sync group via API
    */
   async createSync() {
     console.log('[ManyllaSync] Creating new sync group...');
     
-    // Store in localStorage for now (will be API call later)
-    const syncData = {
-      syncId: this.syncId,
-      created: Date.now(),
-      devices: [this.deviceId]
-    };
+    const response = await fetch(API_ENDPOINTS.sync.create, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sync_id: this.syncId,
+        device_id: this.deviceId
+      })
+    });
     
-    localStorage.setItem(`manylla_sync_${this.syncId}`, JSON.stringify(syncData));
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to create sync group');
+    }
+    
+    const result = await response.json();
+    console.log('[ManyllaSync] Sync group created successfully', result);
+    
     localStorage.setItem('manylla_sync_enabled', 'true');
-    
-    // Future: POST to /api/sync/create_timestamp.php
   }
 
   /**
-   * Join an existing sync group
+   * Join an existing sync group via API
    */
   async joinSync() {
     console.log('[ManyllaSync] Joining existing sync group...');
     
-    // Check if sync exists in localStorage (will be API call later)
-    const existingSync = localStorage.getItem(`manylla_sync_${this.syncId}`);
+    const response = await fetch(API_ENDPOINTS.sync.join, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sync_id: this.syncId,
+        device_id: this.deviceId
+      })
+    });
     
-    if (existingSync) {
-      const syncData = JSON.parse(existingSync);
-      if (!syncData.devices.includes(this.deviceId)) {
-        syncData.devices.push(this.deviceId);
-        localStorage.setItem(`manylla_sync_${this.syncId}`, JSON.stringify(syncData));
-      }
-    } else {
-      // First device to join with this phrase
-      await this.createSync();
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to join sync group');
     }
     
-    localStorage.setItem('manylla_sync_enabled', 'true');
+    const result = await response.json();
+    console.log('[ManyllaSync] Joined sync group successfully', result);
     
-    // Future: POST to /api/sync/join_timestamp.php
+    localStorage.setItem('manylla_sync_enabled', 'true');
   }
 
   /**
@@ -352,36 +361,27 @@ class ManyllaMinimalSyncService {
         throw new Error('Failed to encrypt sync data');
       }
       
-      // Store in localStorage for now (will be API call later)
-      const storageKey = `manylla_sync_data_${this.syncId}`;
-      const existingData = JSON.parse(localStorage.getItem(storageKey) || '[]');
-      
-      existingData.push({
-        encrypted: encryptedData,
-        timestamp: timestamp,
-        deviceId: this.deviceId
+      // Phase 3: Push to cloud storage (no fallback)
+      const response = await fetch(API_ENDPOINTS.sync.push, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sync_id: this.syncId,
+          encrypted_data: encryptedData,
+          timestamp: timestamp,
+          device_id: this.deviceId
+        })
       });
       
-      // Keep only last 10 entries in localStorage
-      if (existingData.length > 10) {
-        existingData.shift();
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to push data to server');
       }
       
-      localStorage.setItem(storageKey, JSON.stringify(existingData));
+      const result = await response.json();
+      console.log('[ManyllaSync] Data pushed to cloud successfully', result);
       
       console.log('[ManyllaSync] Data pushed successfully', { timestamp });
-      
-      // Future: POST to /api/sync/push_timestamp.php
-      // const response = await fetch('/api/sync/push_timestamp.php', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({
-      //     sync_id: this.syncId,
-      //     encrypted_blob: encryptedData,
-      //     timestamp: timestamp,
-      //     device_id: this.deviceId
-      //   })
-      // });
       } catch (error) {
         console.error('[ManyllaSync] Failed to push data:', error);
         this.emitError('push', error.message);
@@ -415,26 +415,30 @@ class ManyllaMinimalSyncService {
       
       const since = forceFullPull ? 0 : this.lastPullTimestamp;
       
-      // Get from localStorage for now (will be API call later)
-      const storageKey = `manylla_sync_data_${this.syncId}`;
-      const syncEntries = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      // Phase 3: Pull from cloud storage (no fallback)
+      const response = await fetch(`${API_ENDPOINTS.sync.pull}?sync_id=${this.syncId}&since=${since}&device_id=${this.deviceId}`, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
+      });
       
-      // Filter entries newer than last pull
-      const newEntries = syncEntries.filter(entry => 
-        entry.timestamp > since && entry.deviceId !== this.deviceId
-      );
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to pull data from server');
+      }
       
-      if (newEntries.length === 0) {
-        console.log('[ManyllaSync] No new data to pull');
+      const result = await response.json();
+      
+      if (!result.encrypted_blob) {
+        console.log('[ManyllaSync] No new data to pull from cloud');
         return;
       }
       
-      console.log(`[ManyllaSync] Found ${newEntries.length} new entries`);
+      const latestEntry = {
+        encrypted: result.encrypted_blob,
+        timestamp: result.timestamp
+      };
       
-      // Get the most recent entry
-      const latestEntry = newEntries.reduce((latest, entry) => 
-        entry.timestamp > latest.timestamp ? entry : latest
-      );
+      console.log('[ManyllaSync] Pulled data from cloud', { version: result.version, hash: result.blob_hash });
       
       // Decrypt the data
       let decryptedData;

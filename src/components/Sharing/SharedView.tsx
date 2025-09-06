@@ -21,12 +21,13 @@ import nacl from 'tweetnacl';
 import util from 'tweetnacl-util';
 import { ChildProfile } from '../../types/ChildProfile';
 import { unifiedCategories } from '../../utils/unifiedCategories';
+import { API_ENDPOINTS } from '../../config/api';
 
 interface SharedViewProps {
   shareCode: string;
 }
 
-// V2 shares don't need this old decryption function anymore
+// Phase 3: All shares use database storage, no localStorage compatibility
 
 // Manylla theme colors - hardcoded for consistent provider view
 const manyllaColors = {
@@ -47,7 +48,7 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
   React.useEffect(() => {
     const loadSharedData = async () => {
       try {
-        // Parse share code - should be "token#key" format
+        // Parse share code - must be "token#key" format
         if (!shareCode.includes('#')) {
           setError('Invalid share URL format');
           setIsLoading(false);
@@ -55,7 +56,7 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
         }
         
         const [token, encryptionKey] = shareCode.split('#');
-        console.log('[SharedView] Loading share:', { token, hasKey: !!encryptionKey });
+        console.log('[SharedView] Loading share from API:', { token, hasKey: !!encryptionKey });
         
         if (!encryptionKey) {
           setError('Missing decryption key in URL');
@@ -63,35 +64,38 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
           return;
         }
         
-        // Check for V2 shares in localStorage
-        const storedShares = localStorage.getItem('manylla_shares_v2');
-        if (!storedShares) {
-          setError('Share code not found');
-          setIsLoading(false);
-          return;
-        }
-        
-        const shares = JSON.parse(storedShares);
-        const shareData = shares[token];
-        
-        if (!shareData) {
-          setError('Share code not found');
-          setIsLoading(false);
-          return;
-        }
-        
-        // Check expiration
-        const expiresAt = new Date(shareData.expiresAt);
-        if (expiresAt < new Date()) {
-          setError('This share has expired');
-          setIsLoading(false);
-          return;
-        }
-        
+        // Phase 3: Fetch share from database via API
         try {
+          const response = await fetch(API_ENDPOINTS.share.access, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ access_code: token })
+          });
+          
+          if (!response.ok) {
+            const errorData = await response.json();
+            if (response.status === 404) {
+              setError('Share not found');
+            } else if (response.status === 403) {
+              setError(errorData.error || 'Share has expired or reached view limit');
+            } else {
+              setError('Failed to load share');
+            }
+            setIsLoading(false);
+            return;
+          }
+          
+          const result = await response.json();
+          
+          if (!result.encrypted_data) {
+            setError('Share data is missing');
+            setIsLoading(false);
+            return;
+          }
+          
           // Decrypt with the key from URL fragment
           const keyBytes = util.decodeBase64(encryptionKey);
-          const combined = util.decodeBase64(shareData.encryptedData);
+          const combined = util.decodeBase64(result.encrypted_data);
           const nonce = combined.slice(0, 24);
           const ciphertext = combined.slice(24);
           

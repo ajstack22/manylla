@@ -1,100 +1,98 @@
 <?php
 /**
- * Manylla Sync API - Backup Endpoint
- * Stores encrypted profile data for a recovery hash
+ * Manylla Sync API - Backup Endpoint (Phase 3)
+ * Creates a backup of encrypted sync data
+ * 
+ * POST /api/sync/backup.php
+ * Body: {
+ *   sync_id: string,
+ *   device_id: string
+ * }
  */
 
-require_once 'config.php';
+require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../utils/validation.php';
+require_once __DIR__ . '/../utils/cors.php';
+require_once __DIR__ . '/../utils/rate-limiter.php';
+require_once __DIR__ . '/../utils/error-handler.php';
 
-// Only accept POST requests
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['error' => 'Method not allowed']);
-    exit();
-}
+// Set CORS headers
+setCorsHeaders();
+
+// Validate request method
+validateRequestMethod('POST');
+
+// Apply rate limiting - 10 backups per minute
+$rateLimiter = new RateLimiter();
+$rateLimiter->checkIPRateLimit(getClientIp(), 10, 60);
 
 // Get JSON input
-$input = json_decode(file_get_contents('php://input'), true);
+$data = getJsonInput();
+validateRequired($data, ['sync_id', 'device_id']);
 
-// Validate input
-if (!$input || !isset($input['recovery_hash']) || !isset($input['encrypted_blob']) || !isset($input['version'])) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Missing required fields']);
-    exit();
+// Validate sync_id format
+if (!validateSyncId($data['sync_id'])) {
+    sendError('Invalid sync_id format', 400);
 }
 
-$recoveryHash = $input['recovery_hash'];
-$encryptedBlob = $input['encrypted_blob'];
-$version = intval($input['version']);
-$deviceId = $input['device_id'] ?? null;
-
-// Validate recovery hash
-if (!validateRecoveryHash($recoveryHash)) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Invalid recovery hash']);
-    exit();
-}
-
-// Validate encrypted blob (should be base64)
-if (!base64_decode($encryptedBlob, true)) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Invalid encrypted data']);
-    exit();
+// Validate device_id format
+if (!validateDeviceId($data['device_id'])) {
+    sendError('Invalid device_id format', 400);
 }
 
 try {
-    $pdo = getDbConnection();
+    $db = Database::getInstance()->getConnection();
     
-    // Check if this recovery hash already has data
-    $stmt = $pdo->prepare("SELECT id, version FROM sync_data WHERE recovery_hash = ? ORDER BY version DESC LIMIT 1");
-    $stmt->execute([$recoveryHash]);
-    $existing = $stmt->fetch();
+    // Get latest sync data
+    $stmt = $db->prepare("
+        SELECT encrypted_blob, blob_hash, version
+        FROM sync_data
+        WHERE sync_id = ?
+    ");
+    $stmt->execute([$data['sync_id']]);
+    $syncData = $stmt->fetch(PDO::FETCH_ASSOC);
     
-    if ($existing) {
-        // Update existing record only if version is newer
-        if ($version <= $existing['version']) {
-            http_response_code(409);
-            echo json_encode([
-                'error' => 'Older version',
-                'current_version' => $existing['version'],
-                'your_version' => $version
-            ]);
-            exit();
-        }
-        
-        // Update the existing record
-        $stmt = $pdo->prepare("
-            UPDATE sync_data 
-            SET encrypted_blob = ?, 
-                version = ?, 
-                device_id = ?,
-                updated_at = NOW()
-            WHERE id = ?
-        ");
-        $stmt->execute([$encryptedBlob, $version, $deviceId, $existing['id']]);
-        
-        $message = 'Backup updated successfully';
-    } else {
-        // Insert new record
-        $stmt = $pdo->prepare("
-            INSERT INTO sync_data (recovery_hash, encrypted_blob, version, device_id)
-            VALUES (?, ?, ?, ?)
-        ");
-        $stmt->execute([$recoveryHash, $encryptedBlob, $version, $deviceId]);
-        
-        $message = 'Backup created successfully';
+    if (!$syncData) {
+        sendError('No data to backup', 404);
     }
     
-    // Return success response
-    echo json_encode([
-        'success' => true,
-        'message' => $message,
-        'version' => $version,
-        'timestamp' => time()
+    // Generate unique backup ID
+    $backupId = bin2hex(random_bytes(18)); // 36 char UUID
+    
+    // Create backup
+    $backupStmt = $db->prepare("
+        INSERT INTO sync_backups (
+            backup_id, sync_id, encrypted_blob, 
+            blob_hash, version, created_by
+        ) VALUES (?, ?, ?, ?, ?, ?)
+    ");
+    
+    $backupStmt->execute([
+        $backupId,
+        $data['sync_id'],
+        $syncData['encrypted_blob'],
+        $syncData['blob_hash'],
+        $syncData['version'],
+        $data['device_id']
     ]);
     
+    // Log backup creation
+    if (class_exists('AuditLogger')) {
+        $auditLogger = new AuditLogger($db);
+        $auditLogger->log('backup_created', $data['sync_id'], $data['device_id'], [
+            'backup_id' => $backupId,
+            'version' => $syncData['version']
+        ]);
+    }
+    
+    sendSuccess([
+        'backup_id' => $backupId,
+        'version' => $syncData['version'],
+        'blob_hash' => $syncData['blob_hash'],
+        'created_at' => date('Y-m-d H:i:s')
+    ], 'Backup created successfully');
+    
 } catch (Exception $e) {
-    error_log("Backup failed: " . $e->getMessage());
-    http_response_code(500);
-    echo json_encode(['error' => 'Backup failed']);
+    error_log('Backup error: ' . $e->getMessage());
+    sendError('Backup failed', 500);
 }

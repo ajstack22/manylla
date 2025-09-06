@@ -59,70 +59,68 @@ if ($rateLimiter) {
     $rateLimiter->enforceAllLimits($sync_id, $device_id, getClientIp());
 }
 
-// TODO: When backend is ready, uncomment and configure database
-/*
-require_once '../config/database.php';
+// Phase 3: Retrieve encrypted data from database
+require_once __DIR__ . '/../config/database.php';
 
 try {
-    // Verify sync group exists
-    $stmt = $pdo->prepare("SELECT id FROM manylla_sync_groups WHERE sync_id = ?");
+    $db = Database::getInstance()->getConnection();
+    
+    // Retrieve latest encrypted data
+    $stmt = $db->prepare("
+        SELECT encrypted_blob, blob_hash, version, timestamp, updated_at
+        FROM sync_data
+        WHERE sync_id = ?
+    ");
     $stmt->execute([$sync_id]);
-    
-    if ($stmt->rowCount() === 0) {
-        http_response_code(404);
-        echo json_encode(['error' => 'Sync group not found']);
-        exit;
-    }
-    
-    // Get latest data after timestamp (excluding requesting device's own data)
-    $query = "
-        SELECT encrypted_data, timestamp, device_id 
-        FROM manylla_sync_data 
-        WHERE sync_id = ? 
-        AND timestamp > ?
-    ";
-    
-    $params = [$sync_id, $since];
-    
-    // Optionally exclude requesting device's data
-    if ($device_id) {
-        $query .= " AND device_id != ?";
-        $params[] = $device_id;
-    }
-    
-    $query .= " ORDER BY timestamp DESC LIMIT 1";
-    
-    $stmt = $pdo->prepare($query);
-    $stmt->execute($params);
-    
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if ($data) {
-        echo json_encode([
-            'success' => true,
-            'encrypted_data' => $data['encrypted_data'],
-            'timestamp' => $data['timestamp'],
-            'device_id' => $data['device_id']
-        ]);
+        // Check if data is newer than requested timestamp
+        if ($since > 0 && $data['timestamp'] <= $since) {
+            // No new data since requested timestamp
+            sendSuccess([
+                'encrypted_blob' => null,
+                'message' => 'No new data since timestamp'
+            ]);
+        } else {
+            // Update device last seen if device_id provided
+            if ($device_id) {
+                $deviceStmt = $db->prepare("
+                    INSERT INTO sync_devices (sync_id, device_id, last_seen)
+                    VALUES (?, ?, NOW())
+                    ON DUPLICATE KEY UPDATE
+                        last_seen = NOW()
+                ");
+                $deviceStmt->execute([$sync_id, $device_id]);
+            }
+            
+            // Log successful pull
+            if (class_exists('AuditLogger')) {
+                $auditLogger = new AuditLogger($db);
+                $auditLogger->log('sync_pull_success', $sync_id, $device_id ?? 'unknown', [
+                    'blob_hash' => $data['blob_hash'],
+                    'version' => $data['version']
+                ]);
+            }
+            
+            sendSuccess([
+                'encrypted_blob' => $data['encrypted_blob'],
+                'blob_hash' => $data['blob_hash'],
+                'version' => $data['version'],
+                'timestamp' => intval($data['timestamp']),
+                'updated_at' => $data['updated_at']
+            ]);
+        }
     } else {
-        echo json_encode([
-            'success' => true,
-            'encrypted_data' => null,
-            'message' => 'No new data'
+        // No data found for this sync_id
+        sendSuccess([
+            'encrypted_blob' => null,
+            'message' => 'No data found for sync_id'
         ]);
     }
     
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Server error']);
     error_log('Manylla pull error: ' . $e->getMessage());
+    sendError('Failed to retrieve data', 500);
 }
-*/
-
-// For now, return no new data (localStorage only mode)
-echo json_encode([
-    'success' => true,
-    'encrypted_data' => null,
-    'message' => 'API endpoint ready for deployment'
-]);
 ?>

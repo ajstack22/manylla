@@ -1,14 +1,33 @@
 -- Manylla Database Schema
--- Phase 2 Security Implementation
+-- Phase 3 Cloud Data Storage Implementation
 -- Proper constraints and indexes for security and performance
 
--- Sync data table with proper constraints
+-- Enhanced sync data table for Phase 3 encrypted blob storage
 CREATE TABLE IF NOT EXISTS sync_data (
     sync_id VARCHAR(32) PRIMARY KEY,
-    encrypted_data MEDIUMTEXT,
+    device_id VARCHAR(32) NOT NULL,
+    encrypted_blob MEDIUMTEXT NOT NULL,
+    blob_hash VARCHAR(64) NOT NULL,
+    version INT NOT NULL DEFAULT 1,
     timestamp BIGINT NOT NULL,
-    last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_updated (updated_at),
+    INDEX idx_device (device_id),
     INDEX idx_timestamp (timestamp)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Backup history table for Phase 3
+CREATE TABLE IF NOT EXISTS sync_backups (
+    backup_id VARCHAR(36) PRIMARY KEY,
+    sync_id VARCHAR(32) NOT NULL,
+    encrypted_blob MEDIUMTEXT NOT NULL,
+    blob_hash VARCHAR(64) NOT NULL,
+    version INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(32) NOT NULL,
+    INDEX idx_sync_backup (sync_id, created_at),
+    FOREIGN KEY (sync_id) REFERENCES sync_data(sync_id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Devices table with foreign key
@@ -76,7 +95,7 @@ CREATE TABLE IF NOT EXISTS rate_limits (
     INDEX idx_window_end (window_end)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Add cleanup job for expired data
+-- Add cleanup job for expired data (Enhanced for Phase 3)
 DELIMITER //
 CREATE EVENT IF NOT EXISTS cleanup_expired_data
 ON SCHEDULE EVERY 1 HOUR
@@ -93,5 +112,21 @@ BEGIN
     
     -- Delete old rate limit records
     DELETE FROM rate_limits WHERE window_end < NOW();
+    
+    -- Delete old backups (keep last 10 per sync_id)
+    DELETE b1 FROM sync_backups b1
+    LEFT JOIN (
+        SELECT backup_id FROM (
+            SELECT backup_id,
+                   ROW_NUMBER() OVER (PARTITION BY sync_id ORDER BY created_at DESC) as rn
+            FROM sync_backups
+        ) ranked
+        WHERE rn <= 10
+    ) b2 ON b1.backup_id = b2.backup_id
+    WHERE b2.backup_id IS NULL;
+    
+    -- Delete inactive sync data (no activity in 90 days)
+    DELETE FROM sync_data 
+    WHERE updated_at < DATE_SUB(NOW(), INTERVAL 90 DAY);
 END//
 DELIMITER ;

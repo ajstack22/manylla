@@ -1,16 +1,27 @@
 # Manylla Security Implementation Context
-## Updated: September 6, 2025 - Phase 2 Complete
+## Updated: September 6, 2025 - Phase 2 Complete, Phase 3 Redefined
 
 ## Current Implementation Status
 
 ### ✅ Phase 1 Security Hardening Complete
 ### ✅ Phase 2 Network & Data Security Complete
+### 🔄 Phase 3 Cloud Data Storage (Redefined - Not Started)
+### ⏳ Phase 4 Advanced Security Features (Formerly Phase 3)
+### ⏳ Phase 5 Mobile-Ready Architecture (Formerly Phase 4)
+
+## Key Changes in This Update
+1. **Backward Compatibility Removed** - All V1 share code eliminated
+2. **Unified Invite Code Format** - XXXX-XXXX format everywhere (matching StackMap)
+3. **Phase 3 Redefined** - Now focuses on moving data to cloud storage
+4. **Dark Mode Fixes** - Sync dialog Paper components now theme-aware
+5. **Onboarding Fix** - Join mode now skips child-info step correctly
 
 All critical security vulnerabilities have been addressed. The application now implements:
 - Zero-knowledge encrypted share storage (V2 format only)
 - Comprehensive input validation on all API endpoints
 - Multi-layer rate limiting (client and server)
 - Proper URL routing with hash fragment preservation
+- XXXX-XXXX invite codes for both sync and shares
 
 ### Core Security Files (Phase 1 Complete)
 
@@ -141,12 +152,24 @@ npm start  # http://localhost:3000
 4. ✅ Enhanced CORS security headers
 5. ✅ Database schema with proper constraints
 
-### What's Next (Phase 3)
-1. Implement secure invite system backend
-2. Enhance conflict resolution security
-3. Add compression and versioning
-4. Implement audit logging
-5. Connect backend when deployed
+### What's Next (Phase 3 - Cloud Data Storage)
+1. **Server-Side Sync Storage**: Move from relay-only to persistent encrypted storage
+2. **Share System Migration**: Move shares from localStorage to database
+3. **Backup & Recovery**: Add endpoints for data backup and restoration
+4. **Data Retention**: Implement automatic cleanup and retention policies
+5. **Zero-Knowledge Maintained**: Server never sees unencrypted data
+
+### Phase 4 (Advanced Security - Formerly Phase 3)
+1. Secure invite system backend for sync
+2. Enhanced conflict resolution security
+3. Compression and versioning
+4. Comprehensive audit logging
+
+### Phase 5 (Mobile-Ready - Formerly Phase 4)
+1. Platform abstraction layer
+2. Offline-first architecture
+3. Performance optimizations
+4. Mobile bridge utilities
 
 ### Important Files Reference
 ```

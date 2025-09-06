@@ -73,52 +73,83 @@ if ($rateLimiter) {
     $rateLimiter->checkDataReduction($sync_id, $device_id, strlen($encrypted_data));
 }
 
-// TODO: When backend is ready, uncomment and configure database
-/*
-require_once '../config/database.php';
+// Phase 3: Store encrypted data in database
+require_once __DIR__ . '/../config/database.php';
 
 try {
-    // Verify sync group exists
-    $stmt = $pdo->prepare("SELECT id FROM manylla_sync_groups WHERE sync_id = ?");
-    $stmt->execute([$sync_id]);
+    $db = Database::getInstance()->getConnection();
     
-    if ($stmt->rowCount() === 0) {
-        http_response_code(404);
-        echo json_encode(['error' => 'Sync group not found']);
-        exit;
-    }
+    // Calculate blob hash for integrity
+    $blobHash = hash('sha256', $encrypted_data);
     
-    // Store encrypted data (zero-knowledge - server can't decrypt)
-    $stmt = $pdo->prepare("
-        INSERT INTO manylla_sync_data (
-            sync_id, 
-            encrypted_data, 
-            timestamp, 
-            device_id,
-            created_at
-        ) VALUES (?, ?, ?, ?, NOW())
+    // Store encrypted data with versioning
+    $stmt = $db->prepare("
+        INSERT INTO sync_data (sync_id, device_id, encrypted_blob, blob_hash, version, timestamp)
+        VALUES (?, ?, ?, ?, 1, ?)
         ON DUPLICATE KEY UPDATE
-            encrypted_data = VALUES(encrypted_data),
+            encrypted_blob = VALUES(encrypted_blob),
+            blob_hash = VALUES(blob_hash),
+            version = version + 1,
+            device_id = VALUES(device_id),
             timestamp = VALUES(timestamp),
-            updated_at = NOW()
+            updated_at = CURRENT_TIMESTAMP
     ");
     
-    $stmt->execute([$sync_id, $encrypted_data, $timestamp, $device_id]);
+    $stmt->execute([$sync_id, $device_id, $encrypted_data, $blobHash, $timestamp]);
+    $affectedRows = $stmt->rowCount();
     
-    echo json_encode([
-        'success' => true,
-        'timestamp' => $timestamp
-    ]);
+    // Create backup of previous version if this was an update
+    if ($affectedRows > 0) {
+        // Get the current version for backup
+        $versionStmt = $db->prepare("SELECT version FROM sync_data WHERE sync_id = ?");
+        $versionStmt->execute([$sync_id]);
+        $currentVersion = $versionStmt->fetchColumn();
+        
+        // Only backup if this was an update (not first insert)
+        if ($currentVersion > 1) {
+            $backupId = bin2hex(random_bytes(18)); // 36 char UUID
+            $backupStmt = $db->prepare("
+                INSERT INTO sync_backups (backup_id, sync_id, encrypted_blob, blob_hash, version, created_by)
+                VALUES (?, ?, ?, ?, ?, ?)
+            ");
+            $backupStmt->execute([
+                $backupId,
+                $sync_id,
+                $encrypted_data,
+                $blobHash,
+                $currentVersion - 1,
+                $device_id
+            ]);
+        }
+    }
+    
+    // Update device last seen
+    $deviceStmt = $db->prepare("
+        INSERT INTO sync_devices (sync_id, device_id, last_seen)
+        VALUES (?, ?, NOW())
+        ON DUPLICATE KEY UPDATE
+            last_seen = NOW()
+    ");
+    $deviceStmt->execute([$sync_id, $device_id]);
+    
+    // Log successful sync
+    if (class_exists('AuditLogger')) {
+        $auditLogger = new AuditLogger($db);
+        $auditLogger->log('sync_push_success', $sync_id, $device_id, [
+            'data_size' => strlen($encrypted_data),
+            'blob_hash' => $blobHash,
+            'timestamp' => $timestamp
+        ]);
+    }
+    
+    sendSuccess([
+        'timestamp' => $timestamp,
+        'blob_hash' => $blobHash,
+        'version' => $currentVersion ?? 1
+    ], 'Data stored successfully');
     
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Server error']);
     error_log('Manylla push error: ' . $e->getMessage());
+    sendError('Failed to store data', 500);
 }
-*/
-
-// For now, return success (localStorage only mode)
-sendSuccess([
-    'timestamp' => $timestamp
-], 'API endpoint ready for deployment with validation');
 ?>
