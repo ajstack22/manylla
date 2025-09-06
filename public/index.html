@@ -30,6 +30,27 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Manylla - Special Needs Information Manager</title>
+    <script>
+      // Capture hash fragment early for share URLs (before React routing)
+      // This prevents the hash from being lost during React navigation
+      (function() {
+        if (window.location.hash) {
+          const pathname = window.location.pathname;
+          // Check for share URL pattern: /share/[token]#[key]
+          if (pathname.includes('/share/')) {
+            const match = pathname.match(/\/share\/([A-Za-z0-9\-_]+)/);
+            if (match) {
+              // Store the share data for React to pick up
+              window.__earlyShareData = {
+                shareToken: match[1],
+                encryptionKey: window.location.hash.substring(1)
+              };
+              console.log('[Manylla] Captured share data:', window.__earlyShareData);
+            }
+          }
+        }
+      })();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

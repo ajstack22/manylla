@@ -125,70 +125,88 @@ function AppContent() {
     const loadInitialData = async () => {
       setIsLoading(true);
       try {
-        // Check for new share URL pattern (/share/[token])
-        // Handle both root and subdirectory deployments (e.g., /qual/share/[token])
-        const pathname = window.location.pathname;
-        const shareMatch = pathname.match(/\/share\/([a-zA-Z0-9]+)/);
-        
-        // Check for sync invite URL pattern (/sync/[invite-code])
-        const syncMatch = pathname.match(/\/sync\/([A-Z0-9]{4}-[A-Z0-9]{4})/i);
-        
-        // Check for query parameter share URL pattern (?share=CODE)
-        const urlParams = new URLSearchParams(window.location.search);
-        const queryShareCode = urlParams.get('share');
-        
-        if (shareMatch) {
-          // Path-based share format (/share/[token])
-          const token = shareMatch[1];
-          setShareCode(token);
+        // Check for early captured share data (from index.html script)
+        // This preserves the hash fragment which contains the encryption key
+        if ((window as any).__earlyShareData) {
+          const { shareToken, encryptionKey } = (window as any).__earlyShareData;
+          console.log('[App] Using early captured share data:', shareToken);
+          // Combine token and key for SharedView to process
+          setShareCode(`${shareToken}#${encryptionKey}`);
           setIsSharedView(true);
           setShowOnboarding(false);
-        } else if (queryShareCode) {
-          // Query parameter share format (?share=[token])
-          setShareCode(queryShareCode);
-          setIsSharedView(true);
-          setShowOnboarding(false);
-        } else if (syncMatch) {
-          // Sync invite code format
-          const inviteCode = syncMatch[1];
-          const recoveryPhrase = window.location.hash.substring(1);
-          
-          if (inviteCode && recoveryPhrase) {
-            // Store invite code mapping for join flow
-            const { storeInviteCode } = await import('./utils/inviteCode');
-            storeInviteCode(inviteCode, '', recoveryPhrase); // syncId will be derived later
-            
-            // Redirect to main app to show sync dialog
-            window.history.replaceState(null, '', '/');
-            
-            // Show sync dialog in join mode
-            setTimeout(() => {
-              setSyncDialogOpen(true);
-              // TODO: Set join mode with invite code
-            }, 100);
-          }
-          setShowOnboarding(false);
+          // Clean up the temporary data
+          delete (window as any).__earlyShareData;
         } else {
-          // Check if onboarding has been completed
-          const onboardingCompleted = localStorage.getItem('manylla_onboarding_completed') === 'true';
-          const storedProfile = StorageService.getProfile();
+          // Fall back to standard URL parsing
+          const pathname = window.location.pathname;
+          const shareMatch = pathname.match(/\/share\/([a-zA-Z0-9]+)/);
           
-          // Only proceed if onboarding is complete AND we have a valid profile with a name
-          if (onboardingCompleted && storedProfile && storedProfile.name) {
-            // Update stored profile with new categories structure
-            const updatedProfile = {
-              ...storedProfile,
-              categories: unifiedCategories
-            };
-            setProfile(updatedProfile);
+          // Check for sync invite URL pattern (/sync/[invite-code])
+          const syncMatch = pathname.match(/\/sync\/([A-Z0-9]{4}-[A-Z0-9]{4})/i);
+          
+          // Check for query parameter share URL pattern (?share=CODE)
+          const urlParams = new URLSearchParams(window.location.search);
+          const queryShareCode = urlParams.get('share');
+          
+          if (shareMatch) {
+            // Path-based share format (/share/[token])
+            const token = shareMatch[1];
+            // Check if there's a hash fragment we can still capture
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+              setShareCode(`${token}#${hash}`);
+            } else {
+              setShareCode(token);
+            }
+            setIsSharedView(true);
+            setShowOnboarding(false);
+          } else if (queryShareCode) {
+            // Query parameter share format (?share=[token])
+            setShareCode(queryShareCode);
+            setIsSharedView(true);
+            setShowOnboarding(false);
+          } else if (syncMatch) {
+            // Sync invite code format
+            const inviteCode = syncMatch[1];
+            const recoveryPhrase = window.location.hash.substring(1);
+            
+            if (inviteCode && recoveryPhrase) {
+              // Store invite code mapping for join flow
+              const { storeInviteCode } = await import('./utils/inviteCode');
+              storeInviteCode(inviteCode, '', recoveryPhrase); // syncId will be derived later
+              
+              // Redirect to main app to show sync dialog
+              window.history.replaceState(null, '', '/');
+              
+              // Show sync dialog in join mode
+              setTimeout(() => {
+                setSyncDialogOpen(true);
+                // TODO: Set join mode with invite code
+              }, 100);
+            }
             setShowOnboarding(false);
           } else {
-            // Show onboarding if not completed or profile is invalid
-            setShowOnboarding(true);
-            // Clear any invalid data
-            if (!storedProfile?.name) {
-              localStorage.removeItem('manylla_profile');
-              localStorage.removeItem('manylla_onboarding_completed');
+            // Check if onboarding has been completed
+            const onboardingCompleted = localStorage.getItem('manylla_onboarding_completed') === 'true';
+            const storedProfile = StorageService.getProfile();
+            
+            // Only proceed if onboarding is complete AND we have a valid profile with a name
+            if (onboardingCompleted && storedProfile && storedProfile.name) {
+              // Update stored profile with new categories structure
+              const updatedProfile = {
+                ...storedProfile,
+                categories: unifiedCategories
+              };
+              setProfile(updatedProfile);
+              setShowOnboarding(false);
+            } else {
+              // Show onboarding if not completed or profile is invalid
+              setShowOnboarding(true);
+              // Clear any invalid data
+              if (!storedProfile?.name) {
+                localStorage.removeItem('manylla_profile');
+                localStorage.removeItem('manylla_onboarding_completed');
+              }
             }
           }
         }

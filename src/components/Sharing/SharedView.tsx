@@ -66,18 +66,31 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
   React.useEffect(() => {
     const loadSharedData = async () => {
       try {
+        // Parse share code - it might be "token#key" format or just "token"
+        let token = shareCode;
+        let encryptionKey = '';
+        
+        if (shareCode.includes('#')) {
+          const parts = shareCode.split('#');
+          token = parts[0];
+          encryptionKey = parts[1];
+          console.log('[SharedView] Using token+key format:', { token, hasKey: !!encryptionKey });
+        }
+        
         // Check for shares in localStorage
         const storedShares = localStorage.getItem('manylla_shares');
         if (storedShares) {
           const shares = JSON.parse(storedShares);
-          const shareData = shares[shareCode];
+          // Try both the full shareCode and just the token part
+          const shareData = shares[shareCode] || shares[token];
           
           if (shareData) {
             // Check if it's encrypted (new format)
             if (shareData.encrypted) {
               try {
-                // Decrypt the share
-                const decryptedData = decryptShare(shareData.encrypted, shareCode);
+                // Use the token (not the full shareCode with key) for decryption
+                // The token itself is used to derive the encryption key
+                const decryptedData = decryptShare(shareData.encrypted, token);
                 
                 // Handle both old format (direct profile) and new format (profile inside shareData)
                 const profile = decryptedData.profile || decryptedData;
