@@ -11,15 +11,14 @@
  * - device_id: Requesting device ID (optional)
  */
 
-// Load validation utilities
+// Load security utilities
+require_once __DIR__ . '/../utils/error-handler.php';
 require_once __DIR__ . '/../utils/validation.php';
 require_once __DIR__ . '/../utils/rate-limiter.php';
+require_once __DIR__ . '/../utils/cors.php';
 
-// CORS headers
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
-header('Content-Type: application/json');
+// Initialize headers with enhanced security
+initializeHeaders();
 
 // Handle preflight
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {

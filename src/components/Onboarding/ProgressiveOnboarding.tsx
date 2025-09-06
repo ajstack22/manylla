@@ -71,8 +71,8 @@ export const ProgressiveOnboarding: React.FC<ProgressiveOnboardingProps> = ({ on
     const stepOrder: OnboardingStep[] = ['welcome', 'choose-path', 'child-info', 'privacy', 'ready'];
     const currentIndex = stepOrder.indexOf(currentStep);
     if (currentIndex < stepOrder.length - 1) {
-      // Skip child-info if demo mode
-      if (mode === 'demo' && stepOrder[currentIndex + 1] === 'child-info') {
+      // Skip child-info if demo mode or join mode
+      if ((mode === 'demo' || mode === 'join') && stepOrder[currentIndex + 1] === 'child-info') {
         setCurrentStep(stepOrder[currentIndex + 2]);
       } else {
         setCurrentStep(stepOrder[currentIndex + 1]);
@@ -84,8 +84,8 @@ export const ProgressiveOnboarding: React.FC<ProgressiveOnboardingProps> = ({ on
     const stepOrder: OnboardingStep[] = ['welcome', 'choose-path', 'child-info', 'privacy', 'ready'];
     const currentIndex = stepOrder.indexOf(currentStep);
     if (currentIndex > 0) {
-      // Skip child-info if demo mode when going back
-      if (mode === 'demo' && stepOrder[currentIndex - 1] === 'child-info') {
+      // Skip child-info if demo mode or join mode when going back
+      if ((mode === 'demo' || mode === 'join') && stepOrder[currentIndex - 1] === 'child-info') {
         setCurrentStep(stepOrder[currentIndex - 2]);
       } else {
         setCurrentStep(stepOrder[currentIndex - 1]);
@@ -108,7 +108,8 @@ export const ProgressiveOnboarding: React.FC<ProgressiveOnboardingProps> = ({ on
 
   const handleJoinWithCode = () => {
     if (accessCode.length === 6) {
-      handleNext();
+      setMode('join');
+      setCurrentStep('privacy'); // Skip directly to privacy step for join mode
     }
   };
 
@@ -123,7 +124,7 @@ export const ProgressiveOnboarding: React.FC<ProgressiveOnboardingProps> = ({ on
   };
 
   const getStepNumber = (): number => {
-    if (mode === 'demo') {
+    if (mode === 'demo' || mode === 'join') {
       switch (currentStep) {
         case 'welcome': return 0;
         case 'choose-path': return 1;
@@ -142,7 +143,7 @@ export const ProgressiveOnboarding: React.FC<ProgressiveOnboardingProps> = ({ on
     }
   };
 
-  const getTotalSteps = () => mode === 'demo' ? 4 : 5;
+  const getTotalSteps = () => (mode === 'demo' || mode === 'join') ? 4 : 5;
 
   return (
     <Box sx={{ 

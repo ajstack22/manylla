@@ -31,23 +31,34 @@
     -->
     <title>Manylla - Special Needs Information Manager</title>
     <script>
-      // Capture hash fragment early for share URLs (before React routing)
-      // This prevents the hash from being lost during React navigation
+      // Enhanced URL fragment security - capture before ANY other scripts
       (function() {
         if (window.location.hash) {
+          // Store the hash immediately
+          window.__initialHash = window.location.hash;
+          
+          // Clear from URL immediately to prevent exposure
+          window.history.replaceState(null, '', window.location.pathname + window.location.search);
+          
+          // Process for share URLs
           const pathname = window.location.pathname;
-          // Check for share URL pattern: /share/[token]#[key]
           if (pathname.includes('/share/')) {
             const match = pathname.match(/\/share\/([A-Za-z0-9\-_]+)/);
             if (match) {
-              // Store the share data for React to pick up
               window.__earlyShareData = {
                 shareToken: match[1],
-                encryptionKey: window.location.hash.substring(1)
+                encryptionKey: window.__initialHash.substring(1)
               };
-              console.log('[Manylla] Captured share data:', window.__earlyShareData);
             }
           }
+          
+          // Clear from memory after 10 seconds
+          setTimeout(function() {
+            window.__initialHash = null;
+            if (window.__earlyShareData) {
+              window.__earlyShareData = null;
+            }
+          }, 10000);
         }
       })();
     </script>

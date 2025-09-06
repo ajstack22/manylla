@@ -329,7 +329,6 @@ export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
               elevation={0}
               sx={{ 
                 p: 3, 
-                backgroundColor: 'info.light',
                 backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(33, 150, 243, 0.08)' : 'rgba(33, 150, 243, 0.08)',
                 border: '1px solid',
                 borderColor: 'info.main',
@@ -425,14 +424,21 @@ export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
               You'll need it to access your data from other devices.
             </Typography>
             
-            <Paper sx={{ p: 3, backgroundColor: 'warning.light', mb: 3 }}>
+            <Paper sx={{ 
+              p: 3, 
+              backgroundColor: (theme) => theme.palette.mode === 'dark' 
+                ? 'rgba(255, 167, 38, 0.08)' 
+                : theme.palette.warning.light,
+              mb: 3 
+            }}>
               <Typography 
                 variant="h6" 
                 gutterBottom 
                 sx={{ 
                   fontFamily: 'monospace',
                   wordBreak: 'break-all',
-                  fontSize: { xs: '1rem', sm: '1.25rem' }
+                  fontSize: { xs: '1rem', sm: '1.25rem' },
+                  color: (theme) => theme.palette.text.primary
                 }}
               >
                 {generatedPhrase}
@@ -503,7 +509,6 @@ export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
             
             <Paper sx={{ 
               p: 2, 
-              backgroundColor: 'grey.100',
               backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.03)',
               mb: 3
             }}>
@@ -556,7 +561,9 @@ export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
             
             <Paper sx={{ 
               p: 3, 
-              backgroundColor: 'info.light',
+              backgroundColor: (theme) => theme.palette.mode === 'dark' 
+                ? 'rgba(33, 150, 243, 0.08)' 
+                : theme.palette.info.light,
               mb: 3,
               position: 'relative'
             }}>

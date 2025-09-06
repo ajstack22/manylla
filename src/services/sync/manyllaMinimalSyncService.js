@@ -25,23 +25,25 @@ class ManyllaMinimalSyncService {
     this.lastPush = 0;
     this.pullAttempts = 0;
     
-    // Extract and clear recovery phrase from URL fragment
-    if (typeof window !== 'undefined' && window.location.hash) {
-      const fragment = window.location.hash.substring(1);
+    // Check for captured fragment from index.html first
+    if (typeof window !== 'undefined') {
+      const capturedHash = window.__initialHash;
       
-      // Clear immediately to prevent exposure in browser history
-      window.history.replaceState(null, '', 
-        window.location.pathname + window.location.search);
-      
-      // Check if it looks like a recovery phrase (32 hex chars)
-      if (fragment.match(/^[a-f0-9]{32}$/)) {
-        this.pendingRecoveryPhrase = fragment;
+      if (capturedHash) {
+        const fragment = capturedHash.substring(1);
         
-        // Clear from memory after 30 seconds
-        setTimeout(() => {
-          this.pendingRecoveryPhrase = null;
-        }, 30000);
-      }
+        // Clear the captured hash
+        window.__initialHash = null;
+        
+        // Check if it looks like a recovery phrase (32 hex chars)
+        if (fragment.match(/^[a-f0-9]{32}$/)) {
+          this.pendingRecoveryPhrase = fragment;
+          
+          // Clear from memory after 10 seconds (reduced from 30)
+          setTimeout(() => {
+            this.pendingRecoveryPhrase = null;
+          }, 10000);
+        }
     }
     
     // Listen for app visibility changes to sync when user returns

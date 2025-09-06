@@ -238,24 +238,18 @@ class ManyllaEncryptionService {
       throw new Error('Encryption not initialized');
     }
 
-    // Handle both old format (string) and new format (object with HMAC)
-    let encryptedData;
+    // Only support new format with HMAC
     if (typeof encryptedPayload === 'string') {
-      // Old format without HMAC (backward compatibility)
-      encryptedData = encryptedPayload;
-    } else {
-      // New format with HMAC - verify integrity first
-      const combined = util.decodeBase64(encryptedPayload.data);
-      const hmac = util.decodeBase64(encryptedPayload.hmac);
-      
-      if (!nacl.auth.verify(hmac, combined, this.masterKey)) {
-        throw new Error('Data integrity check failed - data may have been tampered with');
-      }
-      
-      encryptedData = encryptedPayload.data;
+      throw new Error('Invalid encrypted data format - HMAC required');
     }
-
-    const combined = util.decodeBase64(encryptedData);
+    
+    // Verify integrity first
+    const combined = util.decodeBase64(encryptedPayload.data);
+    const hmac = util.decodeBase64(encryptedPayload.hmac);
+    
+    if (!nacl.auth.verify(hmac, combined, this.masterKey)) {
+      throw new Error('Data integrity check failed - data may have been tampered with');
+    }
     
     // Extract metadata
     const version = combined[0];

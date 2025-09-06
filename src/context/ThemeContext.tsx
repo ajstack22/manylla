@@ -7,7 +7,6 @@ export type ThemeMode = 'light' | 'dark' | 'manylla';
 
 interface ThemeContextType {
   themeMode: ThemeMode;
-  isDarkMode: boolean; // Keep for backward compatibility
   toggleTheme: () => void;
   setThemeMode: (mode: ThemeMode) => void;
 }
@@ -59,12 +58,9 @@ export const ManyllaThemeProvider: React.FC<ThemeProviderProps> = ({
     themeMode === 'dark' ? darkTheme : 
     themeMode === 'manylla' ? manyllaTheme : 
     lightTheme;
-  
-  // Keep isDarkMode for backward compatibility
-  const isDarkMode = themeMode === 'dark';
 
   return (
-    <ThemeContext.Provider value={{ themeMode, isDarkMode, toggleTheme, setThemeMode }}>
+    <ThemeContext.Provider value={{ themeMode, toggleTheme, setThemeMode }}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         {children}
