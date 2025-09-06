@@ -77,115 +77,90 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
           console.log('[SharedView] Using token+key format:', { token, hasKey: !!encryptionKey });
         }
         
-        // Check for shares in localStorage
-        const storedShares = localStorage.getItem('manylla_shares');
-        if (storedShares) {
-          const shares = JSON.parse(storedShares);
-          // Try both the full shareCode and just the token part
-          const shareData = shares[shareCode] || shares[token];
-          
+        // Check for shares in localStorage - try both v2 (new) and v1 (old) formats
+        const storedSharesV2 = localStorage.getItem('manylla_shares_v2');
+        const storedSharesV1 = localStorage.getItem('manylla_shares');
+        
+        let shareData = null;
+        let isV2Format = false;
+        
+        // First try v2 format (from ShareDialogOptimized)
+        if (storedSharesV2) {
+          const sharesV2 = JSON.parse(storedSharesV2);
+          const v2Data = sharesV2[token]; // V2 uses just the token
+          if (v2Data) {
+            shareData = v2Data;
+            isV2Format = true;
+            console.log('[SharedView] Found v2 share for token:', token);
+          }
+        }
+        
+        // Fall back to v1 format if not found
+        if (!shareData && storedSharesV1) {
+          const sharesV1 = JSON.parse(storedSharesV1);
+          shareData = sharesV1[shareCode] || sharesV1[token];
           if (shareData) {
-            // Check if it's encrypted (new format)
-            if (shareData.encrypted) {
-              try {
-                // Use the token (not the full shareCode with key) for decryption
-                // The token itself is used to derive the encryption key
-                const decryptedData = decryptShare(shareData.encrypted, token);
-                
-                // Handle both old format (direct profile) and new format (profile inside shareData)
-                const profile = decryptedData.profile || decryptedData;
-                
-                // Check expiration
-                const expiresAt = new Date(shareData.expiresAt);
-                if (expiresAt < new Date()) {
-                  setError('This share has expired');
-                } else {
-                  // Parse dates
-                  profile.dateOfBirth = new Date(profile.dateOfBirth);
-                  profile.createdAt = new Date(profile.createdAt);
-                  profile.updatedAt = new Date(profile.updatedAt);
-                  profile.entries = profile.entries.map((e: any) => ({
-                    ...e,
-                    date: new Date(e.date)
-                  }));
-                  
-                  setSharedProfile(profile);
-                  setIsAuthenticated(true);
-                }
-              } catch (decryptError) {
-                console.error('Decryption error:', decryptError);
-                setError('Invalid share code or decryption failed');
+            console.log('[SharedView] Found v1 share');
+          }
+        }
+        
+        if (shareData) {
+          try {
+            let decryptedData;
+            
+            if (isV2Format && shareData.encryptedData) {
+              // V2 format: uses encryptedData field and key from URL
+              if (!encryptionKey) {
+                setError('Missing decryption key in URL');
+                setIsLoading(false);
+                return;
               }
-            } else {
-              // Old unencrypted format (backward compatibility)
-              const profile = shareData.profile;
               
-              // Check expiration for old format
-              const expiresAt = new Date(shareData.expiresAt);
-              if (expiresAt < new Date()) {
-                setError('This share has expired');
-              } else {
-                // Parse dates
-                profile.dateOfBirth = new Date(profile.dateOfBirth);
-                profile.createdAt = new Date(profile.createdAt);
-                profile.updatedAt = new Date(profile.updatedAt);
-                profile.entries = profile.entries.map((e: any) => ({
-                  ...e,
-                  date: new Date(e.date)
-                }));
-                
-                setSharedProfile(profile);
-                setIsAuthenticated(true);
+              // Decrypt with the key from URL fragment
+              const keyBytes = util.decodeBase64(encryptionKey);
+              const combined = util.decodeBase64(shareData.encryptedData);
+              const nonce = combined.slice(0, 24);
+              const ciphertext = combined.slice(24);
+              
+              const decrypted = nacl.secretbox.open(ciphertext, nonce, keyBytes);
+              if (!decrypted) {
+                throw new Error('Invalid share key');
               }
+              
+              decryptedData = JSON.parse(util.encodeUTF8(decrypted));
+            } else if (shareData.encrypted) {
+              // V1 format: uses token to derive key
+              decryptedData = decryptShare(shareData.encrypted, token);
+            } else {
+              throw new Error('Unknown share format');
             }
-          } else {
-            setError('Invalid or expired share code');
+            
+            // Handle both old format (direct profile) and new format (profile inside shareData)
+            const profile = decryptedData.profile || decryptedData;
+            
+            // Check expiration
+            const expiresAt = new Date(shareData.expiresAt);
+            if (expiresAt < new Date()) {
+              setError('This share has expired');
+            } else {
+              // Parse dates
+              profile.dateOfBirth = new Date(profile.dateOfBirth);
+              profile.createdAt = new Date(profile.createdAt);
+              profile.updatedAt = new Date(profile.updatedAt);
+              profile.entries = profile.entries.map((e: any) => ({
+                ...e,
+                date: new Date(e.date)
+              }));
+              
+              setSharedProfile(profile);
+              setIsAuthenticated(true);
+            }
+          } catch (decryptError) {
+            console.error('Decryption error:', decryptError);
+            setError('Invalid share code or decryption failed');
           }
         } else {
           setError('Share code not found');
-        }
-        
-        // Check for encrypted shares (v2) - keeping for backward compatibility
-        const encryptedShares = localStorage.getItem('manylla_shares_v2');
-        if (!storedShares && encryptedShares) {
-          const sharesV2 = JSON.parse(encryptedShares);
-          const encryptedShare = sharesV2[shareCode];
-          
-          if (encryptedShare) {
-            // Extract key from URL fragment
-            const keyBase64 = window.location.hash.substring(1);
-            
-            if (keyBase64) {
-              try {
-                // Decrypt the share
-                const shareKey = util.decodeBase64(keyBase64);
-                const combined = util.decodeBase64(encryptedShare.encryptedData);
-                const nonce = combined.slice(0, 24);
-                const ciphertext = combined.slice(24);
-                
-                const decrypted = nacl.secretbox.open(ciphertext, nonce, shareKey);
-                if (decrypted) {
-                  const shareData = JSON.parse(util.encodeUTF8(decrypted));
-                  
-                  // Check expiration
-                  const expiresAt = new Date(shareData.expiresAt);
-                  if (expiresAt < new Date()) {
-                    setError('This share has expired');
-                  } else {
-                    setSharedProfile(shareData.profile);
-                    setIsAuthenticated(true);
-                  }
-                } else {
-                  setError('Invalid share link or decryption failed');
-                }
-              } catch (decryptError) {
-                console.error('Decryption error:', decryptError);
-                setError('Unable to decrypt share. Please check the link.');
-              }
-            } else {
-              setError('Share key missing. Please use the complete link.');
-            }
-          }
         }
       } catch (err) {
         setError('Failed to load shared data');
