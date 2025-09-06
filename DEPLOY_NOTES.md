@@ -33,8 +33,9 @@ Completed all Phase 1 critical security tasks including share encryption fixes, 
 ### Technical Details
 - Rate limiting uses file-based caching (ready for Redis upgrade)
 - All API endpoints now validate and rate limit before processing
-- Share URLs changed from `/share/[token]` to `?share=[token]` for better compatibility
-- Added .htaccess for proper React routing in subdirectories
+- Share URLs use path format `/share/[token]#[key]` for clean URLs
+- Added explicit RewriteRules in .htaccess for share and sync routes
+- Fixed Apache routing issues with subdirectory deployments
 
 ---
 

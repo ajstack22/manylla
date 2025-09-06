@@ -2,7 +2,13 @@
   RewriteEngine On
   RewriteBase /qual/
   
-  # Don't rewrite files or directories
+  # Handle share routes explicitly - always send to React app
+  RewriteRule ^share/.*$ /qual/index.html [L]
+  
+  # Handle sync routes explicitly - always send to React app  
+  RewriteRule ^sync/.*$ /qual/index.html [L]
+  
+  # Don't rewrite files or directories (except share and sync)
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
