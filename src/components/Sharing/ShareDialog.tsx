@@ -176,12 +176,17 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
         : []
     };
     
-    // Encrypt the shared profile data
-    shares[code] = {
-      encrypted: encryptShare(sharedProfile, code),
-      expiresAt: new Date(Date.now() + expirationDays * 24 * 60 * 60 * 1000).toISOString(),
+    // Encrypt ALL data including metadata to prevent plaintext exposure
+    const shareData = {
+      profile: sharedProfile,
       recipientName,
       note: shareNote
+    };
+    
+    shares[code] = {
+      encrypted: encryptShare(shareData, code),
+      expiresAt: new Date(Date.now() + expirationDays * 24 * 60 * 60 * 1000).toISOString()
+      // recipientName and note are now inside the encrypted payload
     };
     
     localStorage.setItem('manylla_shares', JSON.stringify(shares));

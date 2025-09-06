@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Share Encryption</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #f0f0f0; }
+        .test-section { background: white; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
+        .warning { color: orange; font-weight: bold; }
+        pre { background: #f5f5f5; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Manylla Share Encryption Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Instructions:</h2>
+        <ol>
+            <li>Open the Manylla app at <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></li>
+            <li>Create a test profile with some medical information</li>
+            <li>Click "Share" and generate a share link</li>
+            <li>Come back to this page and click "Check localStorage"</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <button onclick="checkLocalStorage()">Check localStorage for Plaintext</button>
+        <button onclick="clearShares()">Clear All Shares</button>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+        const sensitiveTerms = [
+            // Medical conditions
+            'adhd', 'autism', 'asthma', 'diabetes', 'epilepsy', 'anxiety',
+            // Medications
+            'medication', 'medicine', 'prescription', 'dosage', 'mg', 'ml',
+            'ritalin', 'adderall', 'insulin', 'epipen', 'inhaler',
+            // Medical providers
+            'doctor', 'physician', 'pediatrician', 'therapist', 'specialist',
+            'dr.', 'md', 'hospital', 'clinic',
+            // Allergies
+            'allergy', 'allergic', 'peanut', 'dairy', 'gluten', 'shellfish',
+            // Personal info
+            'ssn', 'social security', 'birth', 'dob', 'address', 'phone'
+        ];
+
+        function checkLocalStorage() {
+            const results = document.getElementById('results');
+            results.innerHTML = '';
+            
+            // Get all localStorage items
+            const sharesKey = 'manylla_shares';
+            const sharesData = localStorage.getItem(sharesKey);
+            
+            if (!sharesData) {
+                results.innerHTML = '<div class="test-section"><p class="warning">No shares found in localStorage. Please create a share first.</p></div>';
+                return;
+            }
+            
+            let html = '<div class="test-section">';
+            html += '<h3>localStorage Contents:</h3>';
+            html += '<pre>' + JSON.stringify(JSON.parse(sharesData), null, 2) + '</pre>';
+            html += '</div>';
+            
+            // Check for plaintext
+            html += '<div class="test-section">';
+            html += '<h3>Security Check Results:</h3>';
+            
+            const lowerData = sharesData.toLowerCase();
+            let foundPlaintext = [];
+            
+            for (const term of sensitiveTerms) {
+                if (lowerData.includes(term.toLowerCase())) {
+                    foundPlaintext.push(term);
+                }
+            }
+            
+            if (foundPlaintext.length === 0) {
+                html += '<p class="success">✅ PASS: No sensitive plaintext found in localStorage!</p>';
+                html += '<p>All medical data appears to be properly encrypted.</p>';
+            } else {
+                html += '<p class="error">❌ FAIL: Found potential plaintext in localStorage:</p>';
+                html += '<ul>';
+                for (const term of foundPlaintext) {
+                    html += '<li>' + term + '</li>';
+                }
+                html += '</ul>';
+                html += '<p class="error">This is a security vulnerability!</p>';
+            }
+            
+            // Check structure
+            try {
+                const shares = JSON.parse(sharesData);
+                const shareKeys = Object.keys(shares);
+                
+                if (shareKeys.length > 0) {
+                    html += '<h4>Share Structure Analysis:</h4>';
+                    html += '<ul>';
+                    
+                    for (const key of shareKeys) {
+                        const share = shares[key];
+                        html += '<li>Share ID: ' + key + '</li>';
+                        html += '<ul>';
+                        
+                        if (share.encrypted) {
+                            html += '<li class="success">✅ Has encrypted field</li>';
+                            
+                            // Check if it looks like base64
+                            if (/^[A-Za-z0-9+/]+=*$/.test(share.encrypted)) {
+                                html += '<li class="success">✅ Encrypted data appears to be base64</li>';
+                            }
+                        } else {
+                            html += '<li class="error">❌ Missing encrypted field</li>';
+                        }
+                        
+                        if (share.recipientName) {
+                            html += '<li class="error">❌ recipientName stored in plaintext!</li>';
+                        }
+                        
+                        if (share.note) {
+                            html += '<li class="error">❌ note stored in plaintext!</li>';
+                        }
+                        
+                        if (share.expiresAt) {
+                            html += '<li>Expires: ' + new Date(share.expiresAt).toLocaleString() + '</li>';
+                        }
+                        
+                        html += '</ul>';
+                    }
+                    
+                    html += '</ul>';
+                }
+            } catch (e) {
+                html += '<p class="error">Error parsing shares: ' + e.message + '</p>';
+            }
+            
+            html += '</div>';
+            results.innerHTML = html;
+        }
+        
+        function clearShares() {
+            localStorage.removeItem('manylla_shares');
+            alert('All shares have been cleared from localStorage');
+            checkLocalStorage();
+        }
+    </script>
+</body>
+</html>

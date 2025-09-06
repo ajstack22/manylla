@@ -77,7 +77,10 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
             if (shareData.encrypted) {
               try {
                 // Decrypt the share
-                const profile = decryptShare(shareData.encrypted, shareCode);
+                const decryptedData = decryptShare(shareData.encrypted, shareCode);
+                
+                // Handle both old format (direct profile) and new format (profile inside shareData)
+                const profile = decryptedData.profile || decryptedData;
                 
                 // Check expiration
                 const expiresAt = new Date(shareData.expiresAt);
