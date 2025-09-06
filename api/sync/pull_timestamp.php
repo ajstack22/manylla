@@ -11,6 +11,10 @@
  * - device_id: Requesting device ID (optional)
  */
 
+// Load validation utilities
+require_once __DIR__ . '/../utils/validation.php';
+require_once __DIR__ . '/../utils/rate-limiter.php';
+
 // CORS headers
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
@@ -22,27 +26,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-// Only accept GET
-if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    http_response_code(405);
-    echo json_encode(['error' => 'Method not allowed']);
-    exit;
+// Validate request method
+validateRequestMethod('GET');
+
+// Get and validate parameters
+$sync_id = $_GET['sync_id'] ?? null;
+$since = $_GET['since'] ?? 0;
+$device_id = $_GET['device_id'] ?? null;
+
+// Validate required sync_id
+if (!$sync_id) {
+    sendError('sync_id is required', 400);
+}
+
+// Validate sync_id format
+if (!validateSyncId($sync_id)) {
+    sendError('Invalid sync_id format', 400);
+}
+
+// Validate device_id if provided
+if ($device_id && !validateDeviceId($device_id)) {
+    sendError('Invalid device_id format', 400);
+}
+
+// Validate since timestamp
+if (!is_numeric($since) || $since < 0) {
+    sendError('Invalid since timestamp', 400);
+}
+
+// Apply rate limiting
+global $rateLimiter;
+if ($rateLimiter) {
+    $rateLimiter->enforceAllLimits($sync_id, $device_id, getClientIp());
 }
 
 // TODO: When backend is ready, uncomment and configure database
 /*
 require_once '../config/database.php';
-
-// Get parameters
-$sync_id = $_GET['sync_id'] ?? null;
-$since = $_GET['since'] ?? 0;
-$device_id = $_GET['device_id'] ?? null;
-
-if (!$sync_id) {
-    http_response_code(400);
-    echo json_encode(['error' => 'sync_id is required']);
-    exit;
-}
 
 try {
     // Verify sync group exists

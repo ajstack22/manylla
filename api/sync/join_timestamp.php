@@ -12,6 +12,10 @@
  * }
  */
 
+// Load validation utilities
+require_once __DIR__ . '/../utils/validation.php';
+require_once __DIR__ . '/../utils/rate-limiter.php';
+
 // CORS headers
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
@@ -23,28 +27,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-// Only accept POST
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['error' => 'Method not allowed']);
-    exit;
+// Validate request method
+validateRequestMethod('POST');
+
+// Get and validate input
+$input = getJsonInput();
+
+// Validate required fields
+validateRequired($input, ['sync_id', 'device_id']);
+
+// Validate sync_id format
+if (!validateSyncId($input['sync_id'])) {
+    sendError('Invalid sync_id format', 400);
+}
+
+// Validate device_id format
+if (!validateDeviceId($input['device_id'])) {
+    sendError('Invalid device_id format', 400);
+}
+
+$sync_id = $input['sync_id'];
+$device_id = $input['device_id'];
+
+// Apply rate limiting
+global $rateLimiter;
+if ($rateLimiter) {
+    $rateLimiter->enforceAllLimits($sync_id, $device_id, getClientIp());
 }
 
 // TODO: When backend is ready, uncomment and configure database
 /*
 require_once '../config/database.php';
-
-// Get input
-$input = json_decode(file_get_contents('php://input'), true);
-
-if (!$input || !isset($input['sync_id'])) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Missing sync_id']);
-    exit;
-}
-
-$sync_id = $input['sync_id'];
-$device_id = $input['device_id'] ?? 'unknown';
 
 try {
     // Check if sync group exists

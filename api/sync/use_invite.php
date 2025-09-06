@@ -19,6 +19,8 @@
  * }
  */
 
+require_once __DIR__ . '/../utils/validation.php';
+
 // CORS headers
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
@@ -30,34 +32,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-// Only accept POST
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['error' => 'Method not allowed']);
-    exit;
-}
+// Validate request method
+validateRequestMethod('POST');
 
 // TODO: When backend is ready, uncomment and configure database
 /*
 require_once '../config/database.php';
 
-// Get input
-$input = json_decode(file_get_contents('php://input'), true);
+// Get JSON input
+$input = getJsonInput();
 
-if (!$input || !isset($input['invite_code'])) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Missing invite code']);
-    exit;
+if (!$input) {
+    sendError('Missing request body', 400);
 }
+
+// Validate required fields
+validateRequired($input, ['invite_code']);
 
 $invite_code = strtoupper(trim($input['invite_code']));
 $device_id = $input['device_id'] ?? 'unknown';
 
-// Validate format: XXXX-XXXX
-if (!preg_match('/^[A-Z2-9]{4}-[A-Z2-9]{4}$/', $invite_code)) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Invalid invite code format']);
-    exit;
+// Validate invite code format: XXXX-XXXX
+if (!preg_match('/^[A-Z0-9]{4}-[A-Z0-9]{4}$/', $invite_code)) {
+    sendError('Invalid invite code format', 400);
 }
 
 try {
@@ -74,18 +71,14 @@ try {
     $stmt->execute([$invite_code]);
     
     if ($stmt->rowCount() === 0) {
-        http_response_code(404);
-        echo json_encode(['error' => 'Invite code not found']);
-        exit;
+        sendError('Invite code not found', 404);
     }
     
     $invite = $stmt->fetch(PDO::FETCH_ASSOC);
     
     // Check if expired
     if (strtotime($invite['expires_at']) < time()) {
-        http_response_code(410);
-        echo json_encode(['error' => 'Invite code has expired']);
-        exit;
+        sendError('Invite code has expired', 410);
     }
     
     // Mark as used (but still allow multiple uses within expiration)
@@ -125,17 +118,15 @@ try {
     
     $latest_data = $stmt->fetch(PDO::FETCH_ASSOC);
     
-    echo json_encode([
-        'success' => true,
+    sendSuccess([
         'sync_id' => $invite['sync_id'],
         'encrypted_data' => $latest_data['encrypted_data'] ?? null,
         'timestamp' => $latest_data['timestamp'] ?? 0
     ]);
     
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Server error']);
     error_log('Manylla use invite error: ' . $e->getMessage());
+    sendError('Server error', 500);
 }
 */
 

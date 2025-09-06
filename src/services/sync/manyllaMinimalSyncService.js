@@ -17,6 +17,10 @@ class ManyllaMinimalSyncService {
     this.PULL_INTERVAL = 60000; // 1 minute
     
     // Rate limiting properties
+    this.MIN_REQUEST_INTERVAL = 200; // 200ms between API requests
+    this.lastRequestTime = 0;
+    this.requestQueue = [];
+    this.isProcessingQueue = false;
     this.lastPull = 0;
     this.lastPush = 0;
     this.pullAttempts = 0;
@@ -57,6 +61,37 @@ class ManyllaMinimalSyncService {
     return Array.from(bytes)
       .map(b => b.toString(16).padStart(2, '0'))
       .join('');
+  }
+  
+  /**
+   * Enforce rate limiting between API requests
+   */
+  async enforceRateLimit() {
+    const now = Date.now();
+    const timeSinceLastRequest = now - this.lastRequestTime;
+    
+    if (timeSinceLastRequest < this.MIN_REQUEST_INTERVAL) {
+      const waitTime = this.MIN_REQUEST_INTERVAL - timeSinceLastRequest;
+      console.log(`[ManyllaSync] Rate limiting: waiting ${waitTime}ms`);
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+    }
+    
+    this.lastRequestTime = Date.now();
+  }
+  
+  /**
+   * Make a rate-limited request
+   * @param {Function} requestFn - The request function to execute
+   * @returns {Promise} The result of the request
+   */
+  async makeRequest(requestFn) {
+    await this.enforceRateLimit();
+    try {
+      return await requestFn();
+    } catch (error) {
+      console.error('[ManyllaSync] Request failed:', error);
+      throw error;
+    }
   }
   
   /**
@@ -279,15 +314,8 @@ class ManyllaMinimalSyncService {
       return;
     }
     
-    // Rate limit: Max 1 push per 5 seconds
-    const now = Date.now();
-    if (now - this.lastPush < 5000) {
-      console.log('[ManyllaSync] Rate limited, delaying push');
-      return;
-    }
-    this.lastPush = now;
-    
-    try {
+    // Use rate-limited request wrapper
+    return this.makeRequest(async () => {
       console.log('[ManyllaSync] Pushing data...', { deviceId: this.deviceId });
       
       const timestamp = Date.now();
@@ -355,6 +383,7 @@ class ManyllaMinimalSyncService {
       this.emitError('push', error.message);
       throw error;
     }
+    }); // End of makeRequest wrapper
   }
 
   /**
@@ -367,14 +396,6 @@ class ManyllaMinimalSyncService {
       return;
     }
     
-    // Rate limit: Max 1 pull per 2 seconds
-    const now = Date.now();
-    if (now - this.lastPull < 2000) {
-      console.log('[ManyllaSync] Rate limited, skipping pull');
-      return;
-    }
-    this.lastPull = now;
-    
     // Prevent runaway pulls
     this.pullAttempts++;
     if (this.pullAttempts > 100) {
@@ -383,7 +404,8 @@ class ManyllaMinimalSyncService {
       return;
     }
     
-    try {
+    // Use rate-limited request wrapper
+    return this.makeRequest(async () => {
       console.log('[ManyllaSync] Pulling data...', { forceFullPull, lastPull: this.lastPullTimestamp });
       
       const since = forceFullPull ? 0 : this.lastPullTimestamp;
@@ -455,6 +477,7 @@ class ManyllaMinimalSyncService {
       this.emitError('pull', error.message);
       throw error;
     }
+    }); // End of makeRequest wrapper
   }
 
   /**

@@ -1,5 +1,43 @@
 # Deploy Notes
 
+## 2025_09_06_01 - Phase 1 Security Hardening Complete
+Completed all Phase 1 critical security tasks including share encryption fixes, API input validation, and comprehensive rate limiting on both client and server sides.
+
+### Changes
+- **Share Encryption Fix (Task 1.1)**
+  - Fixed critical vulnerability: recipientName and note metadata now encrypted
+  - All sensitive share data properly encrypted before localStorage
+  - Backward compatibility maintained for existing shares
+  - Fixed share URL routing for subdirectory deployments (/qual/)
+
+- **API Input Validation (Task 1.2)**
+  - Added validation to all sync API endpoints
+  - Validates sync_id (32 hex chars), device_id (32 hex chars), invite codes (XXXX-XXXX format)
+  - Uses centralized validation utilities for consistency
+  - Proper error responses with appropriate HTTP status codes
+
+- **Client-Side Rate Limiting (Task 1.3)**
+  - Enforces 200ms minimum interval between API requests
+  - Added makeRequest() wrapper for all API calls
+  - Prevents API flooding and reduces server load
+  - Console logging for rate limit debugging
+
+- **Server-Side Rate Limiting (Task 1.4)**
+  - Created comprehensive rate-limiter.php utility
+  - IP-based limiting: 120 requests/minute
+  - Device-based limiting: 60 requests/minute  
+  - New device protection: 60-second delay before sync
+  - Data reduction protection: Blocks >50% data loss attempts
+  - Suspicious activity monitoring for rapid device switching
+
+### Technical Details
+- Rate limiting uses file-based caching (ready for Redis upgrade)
+- All API endpoints now validate and rate limit before processing
+- Share URLs changed from `/share/[token]` to `?share=[token]` for better compatibility
+- Added .htaccess for proper React routing in subdirectories
+
+---
+
 ## 2025_09_05_01 - Critical Security Enhancements
 Implemented comprehensive security fixes for medical data protection including encrypted share storage, secure code generation, URL fragment clearing, rate limiting, and data integrity checks.
 

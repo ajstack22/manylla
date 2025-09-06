@@ -13,6 +13,8 @@
  * }
  */
 
+require_once __DIR__ . '/../utils/validation.php';
+
 // CORS headers
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
@@ -24,12 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-// Only accept GET
-if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    http_response_code(405);
-    echo json_encode(['error' => 'Method not allowed']);
-    exit;
-}
+// Validate request method
+validateRequestMethod('GET');
 
 // TODO: When backend is ready, uncomment and configure database
 /*
@@ -38,20 +36,17 @@ require_once '../config/database.php';
 // Get invite code from query parameter
 $invite_code = $_GET['code'] ?? null;
 
-if (!$invite_code) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Missing invite code']);
-    exit;
+// Validate required fields
+if (empty($invite_code)) {
+    sendError('Missing invite code', 400);
 }
 
 // Normalize invite code (uppercase, trim)
 $invite_code = strtoupper(trim($invite_code));
 
-// Validate format: XXXX-XXXX
-if (!preg_match('/^[A-Z2-9]{4}-[A-Z2-9]{4}$/', $invite_code)) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Invalid invite code format']);
-    exit;
+// Validate invite code format: XXXX-XXXX
+if (!preg_match('/^[A-Z0-9]{4}-[A-Z0-9]{4}$/', $invite_code)) {
+    sendError('Invalid invite code format', 400);
 }
 
 try {
@@ -67,34 +62,28 @@ try {
     $stmt->execute([$invite_code]);
     
     if ($stmt->rowCount() === 0) {
-        http_response_code(404);
-        echo json_encode(['error' => 'Invite code not found']);
-        exit;
+        sendError('Invite code not found', 404);
     }
     
     $invite = $stmt->fetch(PDO::FETCH_ASSOC);
     
     // Check if expired
     if (strtotime($invite['expires_at']) < time()) {
-        http_response_code(410);
-        echo json_encode(['error' => 'Invite code has expired']);
-        exit;
+        sendError('Invite code has expired', 410);
     }
     
     // Note: We don't check if it's been used - invites can be used multiple times
     // within the expiration period (family-friendly approach)
     
-    echo json_encode([
-        'success' => true,
+    sendSuccess([
         'sync_id' => $invite['sync_id'],
         'expires_at' => $invite['expires_at'],
         'is_used' => !empty($invite['used_at'])
     ]);
     
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Server error']);
     error_log('Manylla validate invite error: ' . $e->getMessage());
+    sendError('Server error', 500);
 }
 */
 
