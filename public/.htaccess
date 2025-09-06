@@ -1,18 +1,19 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /qual/
   
-  # Handle share URLs
+  # For production (root)
+  RewriteCond %{REQUEST_URI} !^/qual
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_FILENAME} !-l
-  RewriteRule ^share/(.*)$ /qual/index.html [L]
+  RewriteRule ^(.*)$ /index.html [L]
   
-  # Handle all other routes
+  # For qual (subdirectory)
+  RewriteCond %{REQUEST_URI} ^/qual
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_FILENAME} !-l
-  RewriteRule . /qual/index.html [L]
+  RewriteRule ^qual/(.*)$ /qual/index.html [L]
 </IfModule>
 
 # Enable client-side routing
