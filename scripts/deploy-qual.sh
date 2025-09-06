@@ -154,6 +154,14 @@ rsync -avz --delete \
     --exclude='.env' \
     build/ stackmap-cpanel:~/public_html/manylla/qual/
 
+# Copy the correct .htaccess file for qual
+if [ -f "public/.htaccess.qual" ]; then
+    echo -e "${YELLOW}📄 Deploying qual .htaccess...${NC}"
+    scp public/.htaccess.qual stackmap-cpanel:~/public_html/manylla/qual/.htaccess
+else
+    echo -e "${YELLOW}⚠️  Using default .htaccess${NC}"
+fi
+
 # Deploy API if it exists
 if [ -d "api" ]; then
     echo -e "${YELLOW}📡 Deploying API...${NC}"
