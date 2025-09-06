@@ -26,26 +26,7 @@ interface SharedViewProps {
   shareCode: string;
 }
 
-// Decryption function for shares
-const decryptShare = (encryptedData: string, shareCode: string): any => {
-  // Derive same key
-  const codeBytes = new TextEncoder().encode(shareCode + 'ManyllaShare2025');
-  let key = codeBytes;
-  for (let i = 0; i < 1000; i++) {
-    key = nacl.hash(key);
-  }
-  key = key.slice(0, 32);
-  
-  // Decrypt
-  const combined = util.decodeBase64(encryptedData);
-  const nonce = combined.slice(0, 24);
-  const ciphertext = combined.slice(24);
-  
-  const decrypted = nacl.secretbox.open(ciphertext, nonce, key);
-  if (!decrypted) throw new Error('Invalid share code');
-  
-  return JSON.parse(new TextDecoder().decode(decrypted));
-};
+// V2 shares don't need this old decryption function anymore
 
 // Manylla theme colors - hardcoded for consistent provider view
 const manyllaColors = {
@@ -66,101 +47,76 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
   React.useEffect(() => {
     const loadSharedData = async () => {
       try {
-        // Parse share code - it might be "token#key" format or just "token"
-        let token = shareCode;
-        let encryptionKey = '';
-        
-        if (shareCode.includes('#')) {
-          const parts = shareCode.split('#');
-          token = parts[0];
-          encryptionKey = parts[1];
-          console.log('[SharedView] Using token+key format:', { token, hasKey: !!encryptionKey });
+        // Parse share code - should be "token#key" format
+        if (!shareCode.includes('#')) {
+          setError('Invalid share URL format');
+          setIsLoading(false);
+          return;
         }
         
-        // Check for shares in localStorage - try both v2 (new) and v1 (old) formats
-        const storedSharesV2 = localStorage.getItem('manylla_shares_v2');
-        const storedSharesV1 = localStorage.getItem('manylla_shares');
+        const [token, encryptionKey] = shareCode.split('#');
+        console.log('[SharedView] Loading share:', { token, hasKey: !!encryptionKey });
         
-        let shareData = null;
-        let isV2Format = false;
-        
-        // First try v2 format (from ShareDialogOptimized)
-        if (storedSharesV2) {
-          const sharesV2 = JSON.parse(storedSharesV2);
-          const v2Data = sharesV2[token]; // V2 uses just the token
-          if (v2Data) {
-            shareData = v2Data;
-            isV2Format = true;
-            console.log('[SharedView] Found v2 share for token:', token);
-          }
+        if (!encryptionKey) {
+          setError('Missing decryption key in URL');
+          setIsLoading(false);
+          return;
         }
         
-        // Fall back to v1 format if not found
-        if (!shareData && storedSharesV1) {
-          const sharesV1 = JSON.parse(storedSharesV1);
-          shareData = sharesV1[shareCode] || sharesV1[token];
-          if (shareData) {
-            console.log('[SharedView] Found v1 share');
-          }
-        }
-        
-        if (shareData) {
-          try {
-            let decryptedData;
-            
-            if (isV2Format && shareData.encryptedData) {
-              // V2 format: uses encryptedData field and key from URL
-              if (!encryptionKey) {
-                setError('Missing decryption key in URL');
-                setIsLoading(false);
-                return;
-              }
-              
-              // Decrypt with the key from URL fragment
-              const keyBytes = util.decodeBase64(encryptionKey);
-              const combined = util.decodeBase64(shareData.encryptedData);
-              const nonce = combined.slice(0, 24);
-              const ciphertext = combined.slice(24);
-              
-              const decrypted = nacl.secretbox.open(ciphertext, nonce, keyBytes);
-              if (!decrypted) {
-                throw new Error('Invalid share key');
-              }
-              
-              decryptedData = JSON.parse(util.encodeUTF8(decrypted));
-            } else if (shareData.encrypted) {
-              // V1 format: uses token to derive key
-              decryptedData = decryptShare(shareData.encrypted, token);
-            } else {
-              throw new Error('Unknown share format');
-            }
-            
-            // Handle both old format (direct profile) and new format (profile inside shareData)
-            const profile = decryptedData.profile || decryptedData;
-            
-            // Check expiration
-            const expiresAt = new Date(shareData.expiresAt);
-            if (expiresAt < new Date()) {
-              setError('This share has expired');
-            } else {
-              // Parse dates
-              profile.dateOfBirth = new Date(profile.dateOfBirth);
-              profile.createdAt = new Date(profile.createdAt);
-              profile.updatedAt = new Date(profile.updatedAt);
-              profile.entries = profile.entries.map((e: any) => ({
-                ...e,
-                date: new Date(e.date)
-              }));
-              
-              setSharedProfile(profile);
-              setIsAuthenticated(true);
-            }
-          } catch (decryptError) {
-            console.error('Decryption error:', decryptError);
-            setError('Invalid share code or decryption failed');
-          }
-        } else {
+        // Check for V2 shares in localStorage
+        const storedShares = localStorage.getItem('manylla_shares_v2');
+        if (!storedShares) {
           setError('Share code not found');
+          setIsLoading(false);
+          return;
+        }
+        
+        const shares = JSON.parse(storedShares);
+        const shareData = shares[token];
+        
+        if (!shareData) {
+          setError('Share code not found');
+          setIsLoading(false);
+          return;
+        }
+        
+        // Check expiration
+        const expiresAt = new Date(shareData.expiresAt);
+        if (expiresAt < new Date()) {
+          setError('This share has expired');
+          setIsLoading(false);
+          return;
+        }
+        
+        try {
+          // Decrypt with the key from URL fragment
+          const keyBytes = util.decodeBase64(encryptionKey);
+          const combined = util.decodeBase64(shareData.encryptedData);
+          const nonce = combined.slice(0, 24);
+          const ciphertext = combined.slice(24);
+          
+          const decrypted = nacl.secretbox.open(ciphertext, nonce, keyBytes);
+          if (!decrypted) {
+            throw new Error('Invalid share key');
+          }
+          
+          const decryptedData = JSON.parse(util.encodeUTF8(decrypted));
+          const profile = decryptedData.profile;
+          
+          // Parse dates
+          profile.dateOfBirth = new Date(profile.dateOfBirth);
+          profile.createdAt = new Date(profile.createdAt);
+          profile.updatedAt = new Date(profile.updatedAt);
+          profile.entries = profile.entries.map((e: any) => ({
+            ...e,
+            date: new Date(e.date)
+          }));
+          
+          setSharedProfile(profile);
+          setIsAuthenticated(true);
+        } catch (decryptError) {
+          console.error('Decryption error:', decryptError);
+          setError('Invalid share code or decryption failed');
         }
       } catch (err) {
         setError('Failed to load shared data');
