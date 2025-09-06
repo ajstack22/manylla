@@ -44,6 +44,7 @@ class ManyllaMinimalSyncService {
             this.pendingRecoveryPhrase = null;
           }, 10000);
         }
+      }
     }
     
     // Listen for app visibility changes to sync when user returns
