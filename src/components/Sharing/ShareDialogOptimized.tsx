@@ -182,7 +182,7 @@ export const ShareDialogOptimized: React.FC<ShareDialogOptimizedProps> = ({
         body: JSON.stringify({
           access_code: token,
           encrypted_data: encryptedBlob,
-          recipient_type: recipientType,
+          recipient_type: selectedPreset,
           expiry_hours: expirationDays * 24
         })
       });
