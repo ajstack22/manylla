@@ -316,9 +316,10 @@ class ManyllaMinimalSyncService {
     
     // Use rate-limited request wrapper
     return this.makeRequest(async () => {
-      console.log('[ManyllaSync] Pushing data...', { deviceId: this.deviceId });
-      
-      const timestamp = Date.now();
+      try {
+        console.log('[ManyllaSync] Pushing data...', { deviceId: this.deviceId });
+        
+        const timestamp = Date.now();
       
       // Add timestamp to profile for conflict resolution
       const profileWithTimestamp = {
@@ -378,11 +379,11 @@ class ManyllaMinimalSyncService {
       //     device_id: this.deviceId
       //   })
       // });
-    } catch (error) {
-      console.error('[ManyllaSync] Failed to push data:', error);
-      this.emitError('push', error.message);
-      throw error;
-    }
+      } catch (error) {
+        console.error('[ManyllaSync] Failed to push data:', error);
+        this.emitError('push', error.message);
+        throw error;
+      }
     }); // End of makeRequest wrapper
   }
 
@@ -406,7 +407,8 @@ class ManyllaMinimalSyncService {
     
     // Use rate-limited request wrapper
     return this.makeRequest(async () => {
-      console.log('[ManyllaSync] Pulling data...', { forceFullPull, lastPull: this.lastPullTimestamp });
+      try {
+        console.log('[ManyllaSync] Pulling data...', { forceFullPull, lastPull: this.lastPullTimestamp });
       
       const since = forceFullPull ? 0 : this.lastPullTimestamp;
       
@@ -471,12 +473,12 @@ class ManyllaMinimalSyncService {
       console.log('[ManyllaSync] Data pulled and merged successfully');
       
       // Future: GET from /api/sync/pull_timestamp.php
-    } catch (error) {
-      console.error('[ManyllaSync] Failed to pull data:', error);
-      // Emit error event for UI feedback
-      this.emitError('pull', error.message);
-      throw error;
-    }
+      } catch (error) {
+        console.error('[ManyllaSync] Failed to pull data:', error);
+        // Emit error event for UI feedback
+        this.emitError('pull', error.message);
+        throw error;
+      }
     }); // End of makeRequest wrapper
   }
 

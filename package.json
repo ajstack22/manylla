@@ -2,7 +2,7 @@
   "name": "manylla-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": ".",
+  "homepage": "/qual",
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
