@@ -1,17 +1,95 @@
+import { Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// Import random bytes polyfill for React Native
+import 'react-native-get-random-values';
 import nacl from 'tweetnacl';
-import util from 'tweetnacl-util';
 import pako from 'pako';
+
+// Base64 encoding from tweetnacl-util (this works fine)
+const util = require('tweetnacl-util');
+const encodeBase64 = (arr) => util.encodeBase64(arr);
+const decodeBase64 = (str) => util.decodeBase64(str);
 
 const ENCRYPTION_VERSION = 2;
 const SALT_LENGTH = 16;
 const KEY_LENGTH = 32;
 const COMPRESSION_THRESHOLD = 1024;
 
-// Web-compatible storage
+// UTF-8 encoding - use manual implementation for iOS compatibility
+let encodeUTF8;
+let decodeUTF8;
+
+// Always use manual implementation like StackMap does
+console.log('[ManyllaEncryption] Using manual UTF-8 implementation for all platforms');
+
+// Manual UTF-8 encoding that works reliably on all platforms
+encodeUTF8 = (str) => {
+  const bytes = [];
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    if (char < 0x80) {
+      bytes.push(char);
+    } else if (char < 0x800) {
+      bytes.push(0xc0 | (char >> 6));
+      bytes.push(0x80 | (char & 0x3f));
+    } else if (char < 0xd800 || char >= 0xe000) {
+      bytes.push(0xe0 | (char >> 12));
+      bytes.push(0x80 | ((char >> 6) & 0x3f));
+      bytes.push(0x80 | (char & 0x3f));
+    } else {
+      // Surrogate pair
+      i++;
+      const char2 = str.charCodeAt(i);
+      const codePoint = 0x10000 + (((char & 0x3ff) << 10) | (char2 & 0x3ff));
+      bytes.push(0xf0 | (codePoint >> 18));
+      bytes.push(0x80 | ((codePoint >> 12) & 0x3f));
+      bytes.push(0x80 | ((codePoint >> 6) & 0x3f));
+      bytes.push(0x80 | (codePoint & 0x3f));
+    }
+  }
+  return new Uint8Array(bytes);
+};
+
+decodeUTF8 = (arr) => {
+  const bytes = Array.from(arr);
+  let result = '';
+  let i = 0;
+  
+  while (i < bytes.length) {
+    const byte1 = bytes[i++];
+    if (byte1 < 0x80) {
+      result += String.fromCharCode(byte1);
+    } else if ((byte1 & 0xe0) === 0xc0) {
+      const byte2 = bytes[i++];
+      result += String.fromCharCode(((byte1 & 0x1f) << 6) | (byte2 & 0x3f));
+    } else if ((byte1 & 0xf0) === 0xe0) {
+      const byte2 = bytes[i++];
+      const byte3 = bytes[i++];
+      result += String.fromCharCode(
+        ((byte1 & 0x0f) << 12) | ((byte2 & 0x3f) << 6) | (byte3 & 0x3f)
+      );
+    } else if ((byte1 & 0xf8) === 0xf0) {
+      const byte2 = bytes[i++];
+      const byte3 = bytes[i++];
+      const byte4 = bytes[i++];
+      const codePoint =
+        ((byte1 & 0x07) << 18) |
+        ((byte2 & 0x3f) << 12) |
+        ((byte3 & 0x3f) << 6) |
+        (byte4 & 0x3f);
+      const high = Math.floor((codePoint - 0x10000) / 0x400) + 0xd800;
+      const low = ((codePoint - 0x10000) % 0x400) + 0xdc00;
+      result += String.fromCharCode(high, low);
+    }
+  }
+  return result;
+};
+
+// Cross-platform storage using AsyncStorage
 const SecureStorage = {
   async getItem(key) {
     try {
-      return localStorage.getItem(`secure_${key}`);
+      return await AsyncStorage.getItem(`secure_${key}`);
     } catch (error) {
       console.error('Storage error:', error);
       return null;
@@ -20,7 +98,7 @@ const SecureStorage = {
 
   async setItem(key, value) {
     try {
-      localStorage.setItem(`secure_${key}`, value);
+      await AsyncStorage.setItem(`secure_${key}`, value);
       return true;
     } catch (error) {
       console.error('Storage error:', error);
@@ -30,7 +108,7 @@ const SecureStorage = {
 
   async removeItem(key) {
     try {
-      localStorage.removeItem(`secure_${key}`);
+      await AsyncStorage.removeItem(`secure_${key}`);
       return true;
     } catch (error) {
       console.error('Storage error:', error);
@@ -71,7 +149,7 @@ class ManyllaEncryptionService {
     }
 
     // Manual UTF-8 encoding for cross-platform compatibility
-    const phraseBytes = this.encodeUTF8(recoveryPhrase + fixedSalt);
+    const phraseBytes = encodeUTF8(recoveryPhrase + fixedSalt);
     
     // Use nacl.hash iterations like StackMap (not PBKDF2)
     let key = phraseBytes;
@@ -86,7 +164,7 @@ class ManyllaEncryptionService {
       .toLowerCase();
     
     // Derive actual encryption key
-    const encKeyBytes = this.encodeUTF8(recoveryPhrase);
+    const encKeyBytes = encodeUTF8(recoveryPhrase);
     const encSaltedBytes = new Uint8Array(encKeyBytes.length + salt.length);
     encSaltedBytes.set(encKeyBytes);
     encSaltedBytes.set(salt, encKeyBytes.length);
@@ -103,59 +181,7 @@ class ManyllaEncryptionService {
     };
   }
   
-  /**
-   * Manual UTF-8 encoding for iOS compatibility (from StackMap)
-   */
-  encodeUTF8(str) {
-    const bytes = [];
-    for (let i = 0; i < str.length; i++) {
-      const char = str.charCodeAt(i);
-      if (char < 0x80) {
-        bytes.push(char);
-      } else if (char < 0x800) {
-        bytes.push(0xc0 | (char >> 6));
-        bytes.push(0x80 | (char & 0x3f));
-      } else if (char < 0x10000) {
-        bytes.push(0xe0 | (char >> 12));
-        bytes.push(0x80 | ((char >> 6) & 0x3f));
-        bytes.push(0x80 | (char & 0x3f));
-      } else {
-        bytes.push(0xf0 | (char >> 18));
-        bytes.push(0x80 | ((char >> 12) & 0x3f));
-        bytes.push(0x80 | ((char >> 6) & 0x3f));
-        bytes.push(0x80 | (char & 0x3f));
-      }
-    }
-    return new Uint8Array(bytes);
-  }
-  
-  /**
-   * Manual UTF-8 decoding for iOS compatibility
-   */
-  decodeUTF8(bytes) {
-    const chars = [];
-    let i = 0;
-    while (i < bytes.length) {
-      const byte1 = bytes[i++];
-      if (byte1 < 0x80) {
-        chars.push(String.fromCharCode(byte1));
-      } else if ((byte1 & 0xe0) === 0xc0) {
-        const byte2 = bytes[i++];
-        chars.push(String.fromCharCode(((byte1 & 0x1f) << 6) | (byte2 & 0x3f)));
-      } else if ((byte1 & 0xf0) === 0xe0) {
-        const byte2 = bytes[i++];
-        const byte3 = bytes[i++];
-        chars.push(String.fromCharCode(((byte1 & 0x0f) << 12) | ((byte2 & 0x3f) << 6) | (byte3 & 0x3f)));
-      } else {
-        const byte2 = bytes[i++];
-        const byte3 = bytes[i++];
-        const byte4 = bytes[i++];
-        const codePoint = ((byte1 & 0x07) << 18) | ((byte2 & 0x3f) << 12) | ((byte3 & 0x3f) << 6) | (byte4 & 0x3f);
-        chars.push(String.fromCharCode(codePoint));
-      }
-    }
-    return chars.join('');
-  }
+  // UTF-8 methods removed - using global functions instead
 
   /**
    * Initialize encryption with a recovery phrase
@@ -187,7 +213,7 @@ class ManyllaEncryptionService {
     }
 
     const dataString = JSON.stringify(data);
-    let dataBytes = this.encodeUTF8(dataString);
+    let dataBytes = encodeUTF8(dataString);
     let isCompressed = false;
 
     // Compress if data is large enough
@@ -277,7 +303,7 @@ class ManyllaEncryptionService {
       }
     }
 
-    const dataString = this.decodeUTF8(dataBytes);
+    const dataString = decodeUTF8(dataBytes);
     return JSON.parse(dataString);
   }
 
@@ -300,7 +326,7 @@ class ManyllaEncryptionService {
    * Encrypt with a specific key (for device-specific encryption)
    */
   async encryptWithKey(data, key) {
-    const dataBytes = this.encodeUTF8(data);
+    const dataBytes = encodeUTF8(data);
     const nonce = nacl.randomBytes(nacl.secretbox.nonceLength);
     const encrypted = nacl.secretbox(dataBytes, nonce, key);
     
@@ -361,7 +387,7 @@ class ManyllaEncryptionService {
         return false;
       }
       
-      const recoveryPhrase = this.decodeUTF8(decrypted);
+      const recoveryPhrase = decodeUTF8(decrypted);
       await this.initialize(recoveryPhrase, salt);
       
       return true;

@@ -1,0 +1,530 @@
+openapi: 3.0.0
+info:
+  title: Manylla API
+  description: Zero-knowledge encrypted medical information management API
+  version: 1.0.0
+  contact:
+    name: Manylla Support
+    email: support@manylla.com
+
+servers:
+  - url: https://manylla.com/api
+    description: Production server
+  - url: https://manylla.com/qual/api
+    description: Staging server
+  - url: http://localhost:3000/api
+    description: Development server
+
+components:
+  schemas:
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Operation completed successfully"
+        
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          example: "Error message"
+          
+    EncryptedPayload:
+      type: object
+      properties:
+        data:
+          type: string
+          description: Base64 encoded encrypted data
+          example: "eyJlbmNyeXB0ZWQiOiJ0cnVlIn0="
+        nonce:
+          type: string
+          description: Base64 encoded nonce for decryption
+          example: "dGVzdG5vbmNl"
+          
+    ShareData:
+      type: object
+      properties:
+        encryptedData:
+          type: string
+          description: Encrypted profile data
+        encryptionKey:
+          type: string
+          description: Base64 encoded encryption key
+        expiresAt:
+          type: string
+          format: date-time
+          description: Share expiration timestamp
+        metadata:
+          type: object
+          properties:
+            createdAt:
+              type: string
+              format: date-time
+            shareType:
+              type: string
+              enum: [link, email, print]
+            recipientInfo:
+              type: string
+              nullable: true
+
+paths:
+  /sync/health.php:
+    get:
+      summary: Health check endpoint
+      description: Check API and database connectivity status
+      tags:
+        - System
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+                  version:
+                    type: string
+                    example: "1.0.0"
+                  database:
+                    type: string
+                    example: "connected"
+                  timestamp:
+                    type: string
+                    format: date-time
+              example:
+                status: "healthy"
+                version: "1.0.0"
+                database: "connected"
+                timestamp: "2025-01-07T10:30:00Z"
+        '503':
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /sync/push_timestamp.php:
+    post:
+      summary: Push encrypted sync data
+      description: Save encrypted profile data to cloud storage for multi-device sync
+      tags:
+        - Sync
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - recoveryHash
+                - encryptedData
+                - deviceId
+                - timestamp
+              properties:
+                recoveryHash:
+                  type: string
+                  description: SHA256 hash of recovery phrase
+                  example: "a1b2c3d4e5f6..."
+                encryptedData:
+                  $ref: '#/components/schemas/EncryptedPayload'
+                deviceId:
+                  type: string
+                  description: Unique device identifier
+                  example: "device-123-456"
+                timestamp:
+                  type: integer
+                  description: Unix timestamp of last modification
+                  example: 1704624000
+                metadata:
+                  type: object
+                  properties:
+                    version:
+                      type: string
+                      example: "1.0.0"
+                    platform:
+                      type: string
+                      enum: [web, ios, android]
+            example:
+              recoveryHash: "8a7f3d2e9b1c4a6d5f8e2b9c1d4a7f3e8b2c9d1a4f6e3b8c2d9a1f4e7b3c8d"
+              encryptedData:
+                data: "U2FsdGVkX1+..."
+                nonce: "dGVzdG5vbmNl..."
+              deviceId: "browser-chrome-123"
+              timestamp: 1704624000
+              metadata:
+                version: "1.0.0"
+                platform: "web"
+      responses:
+        '200':
+          description: Data successfully pushed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Data synchronized successfully"
+                  timestamp:
+                    type: integer
+                    example: 1704624000
+                  version:
+                    type: integer
+                    example: 1
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid recovery hash
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /sync/pull_timestamp.php:
+    post:
+      summary: Pull encrypted sync data
+      description: Retrieve latest encrypted profile data from cloud storage
+      tags:
+        - Sync
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - recoveryHash
+                - timestamp
+              properties:
+                recoveryHash:
+                  type: string
+                  description: SHA256 hash of recovery phrase
+                  example: "a1b2c3d4e5f6..."
+                timestamp:
+                  type: integer
+                  description: Last known timestamp (for delta sync)
+                  example: 1704620000
+                deviceId:
+                  type: string
+                  description: Requesting device identifier
+                  example: "device-123-456"
+            example:
+              recoveryHash: "8a7f3d2e9b1c4a6d5f8e2b9c1d4a7f3e8b2c9d1a4f6e3b8c2d9a1f4e7b3c8d"
+              timestamp: 1704620000
+              deviceId: "mobile-ios-456"
+      responses:
+        '200':
+          description: Data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  hasUpdates:
+                    type: boolean
+                    example: true
+                  encryptedData:
+                    $ref: '#/components/schemas/EncryptedPayload'
+                  timestamp:
+                    type: integer
+                    example: 1704624000
+                  lastDeviceId:
+                    type: string
+                    example: "browser-chrome-123"
+              example:
+                success: true
+                hasUpdates: true
+                encryptedData:
+                  data: "U2FsdGVkX1+..."
+                  nonce: "dGVzdG5vbmNl..."
+                timestamp: 1704624000
+                lastDeviceId: "browser-chrome-123"
+        '204':
+          description: No updates available
+        '401':
+          description: Invalid recovery hash
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /share/create.php:
+    post:
+      summary: Create temporary encrypted share
+      description: Create a temporary share link with encrypted profile data
+      tags:
+        - Sharing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - encryptedData
+                - expiresIn
+              properties:
+                encryptedData:
+                  $ref: '#/components/schemas/ShareData'
+                expiresIn:
+                  type: integer
+                  description: Expiration time in hours (1-168)
+                  example: 24
+                shareType:
+                  type: string
+                  enum: [link, email, print]
+                  default: link
+                recipientInfo:
+                  type: string
+                  description: Optional recipient information
+                  example: "Dr. Smith - Pediatrician"
+                accessLimit:
+                  type: integer
+                  description: Maximum number of accesses (optional)
+                  minimum: 1
+                  maximum: 100
+                  example: 5
+            example:
+              encryptedData:
+                encryptedData: "U2FsdGVkX1+..."
+                encryptionKey: "base64key..."
+                expiresAt: "2025-01-08T10:00:00Z"
+                metadata:
+                  shareType: "link"
+                  recipientInfo: "School Nurse"
+              expiresIn: 24
+              shareType: "link"
+              recipientInfo: "School Nurse - Lincoln Elementary"
+              accessLimit: 3
+      responses:
+        '200':
+          description: Share created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  shareId:
+                    type: string
+                    description: Unique share identifier
+                    example: "ABC123"
+                  shareUrl:
+                    type: string
+                    description: Complete share URL
+                    example: "https://manylla.com/share/ABC123#encryptionKey"
+                  expiresAt:
+                    type: string
+                    format: date-time
+                  qrCode:
+                    type: string
+                    description: Base64 encoded QR code image (optional)
+              example:
+                success: true
+                shareId: "ABC123"
+                shareUrl: "https://manylla.com/share/ABC123#base64key"
+                expiresAt: "2025-01-08T10:00:00Z"
+                qrCode: "data:image/png;base64,..."
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded (10 shares per hour)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /share/access.php:
+    get:
+      summary: Access encrypted share
+      description: Retrieve encrypted profile data from a share link
+      tags:
+        - Sharing
+      parameters:
+        - in: query
+          name: shareId
+          required: true
+          schema:
+            type: string
+          description: Share identifier
+          example: "ABC123"
+        - in: query
+          name: key
+          required: false
+          schema:
+            type: string
+          description: Optional encryption key (if not in URL fragment)
+      responses:
+        '200':
+          description: Share data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  encryptedData:
+                    type: string
+                    description: Base64 encoded encrypted profile data
+                  expiresAt:
+                    type: string
+                    format: date-time
+                  metadata:
+                    type: object
+                    properties:
+                      shareType:
+                        type: string
+                      recipientInfo:
+                        type: string
+                      accessCount:
+                        type: integer
+                      remainingAccesses:
+                        type: integer
+                        nullable: true
+              example:
+                success: true
+                encryptedData: "U2FsdGVkX1+..."
+                expiresAt: "2025-01-08T10:00:00Z"
+                metadata:
+                  shareType: "link"
+                  recipientInfo: "School Nurse"
+                  accessCount: 2
+                  remainingAccesses: 1
+        '404':
+          description: Share not found or expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                success: false
+                error: "Share link has expired or does not exist"
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+tags:
+  - name: System
+    description: System health and status endpoints
+  - name: Sync
+    description: Multi-device synchronization endpoints
+  - name: Sharing
+    description: Temporary share creation and access
+
+x-rate-limits:
+  sync-operations:
+    limit: 100
+    window: hour
+    identifier: recoveryHash + IP
+  share-create:
+    limit: 10
+    window: hour
+    identifier: IP
+  share-access:
+    limit: 60
+    window: hour
+    identifier: IP
+  general:
+    limit: 1000
+    window: hour
+    identifier: IP
+
+x-authentication:
+  description: |
+    Manylla uses zero-knowledge encryption with no traditional authentication.
+    - **Sync**: Recovery phrase hash serves as authentication
+    - **Shares**: Temporary tokens with embedded encryption keys
+    - **No user accounts**: All data encrypted client-side
+    
+x-encryption:
+  algorithm: XSalsa20-Poly1305 (TweetNaCl)
+  key-derivation: 100,000 iterations of nacl.hash
+  recovery-phrase: 32-character hexadecimal string
+  
+x-mobile-considerations:
+  description: |
+    ## React Native Integration
+    
+    ### Biometric Authentication
+    - Store recovery phrase in device keychain
+    - Use FaceID/TouchID for app access
+    
+    ### Offline Support
+    - Queue sync operations when offline
+    - Automatic retry with exponential backoff
+    
+    ### Background Sync
+    - iOS: Background App Refresh
+    - Android: WorkManager
+    
+    ### Push Notifications (Future)
+    - Optional endpoint for FCM/APNS tokens
+    - Notification for share access
+    
+x-examples:
+  curl-examples:
+    health-check: |
+      curl https://manylla.com/api/sync/health.php
+      
+    push-data: |
+      curl -X POST https://manylla.com/api/sync/push_timestamp.php \
+        -H "Content-Type: application/json" \
+        -d '{
+          "recoveryHash": "hash",
+          "encryptedData": {"data": "...", "nonce": "..."},
+          "deviceId": "device-123",
+          "timestamp": 1704624000
+        }'
+        
+    create-share: |
+      curl -X POST https://manylla.com/api/share/create.php \
+        -H "Content-Type: application/json" \
+        -d '{
+          "encryptedData": {...},
+          "expiresIn": 24,
+          "shareType": "link"
+        }'

@@ -1,3 +1,8 @@
+/**
+ * Cross-Platform Onboarding Wizard
+ * Works on iOS, Android, and Web
+ */
+
 import React, { useState } from 'react';
 import {
   View,
@@ -6,24 +11,61 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  Image,
+  Platform,
 } from 'react-native';
-// import Icon from 'react-native-vector-icons/MaterialIcons'; // Temporarily disabled
 import { useTheme } from '../../context/ThemeContext';
 
-interface OnboardingWizardProps {
-  onStartFresh: () => void;
-  onJoinWithCode: (code: string) => void;
-  onDemoMode: () => void;
+// Platform-specific icon handling
+let Icon = null;
+if (Platform.OS === 'web') {
+  // For web, use Material Icons from @mui
+  try {
+    const MuiIcons = require('@mui/icons-material');
+    Icon = ({ name, size, color }) => {
+      const IconComponent = MuiIcons[name] || MuiIcons.HelpOutline;
+      return <IconComponent style={{ fontSize: size, color }} />;
+    };
+  } catch (e) {
+    // Fallback to text if MUI not available
+    Icon = ({ name }) => <Text>{name}</Text>;
+  }
+} else {
+  // For mobile, use react-native-vector-icons
+  try {
+    Icon = require('react-native-vector-icons/MaterialIcons').default;
+  } catch (e) {
+    // Fallback to text if vector icons not available
+    Icon = ({ name }) => <Text>{name}</Text>;
+  }
 }
 
-const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
-  onStartFresh,
-  onJoinWithCode,
-  onDemoMode,
-}) => {
+export const OnboardingWizard = ({ onComplete }) => {
   const [accessCode, setAccessCode] = useState('');
   const { colors } = useTheme();
+
+  const handleStartFresh = () => {
+    // For now, use default name - in production, add name input screen
+    onComplete({
+      mode: 'fresh',
+      childName: 'My Child',
+      dateOfBirth: new Date(),
+    });
+  };
+
+  const handleDemoMode = () => {
+    onComplete({
+      mode: 'demo',
+    });
+  };
+
+  const handleJoinWithCode = () => {
+    if (accessCode) {
+      onComplete({
+        mode: 'join',
+        accessCode,
+      });
+    }
+  };
 
   const styles = StyleSheet.create({
     container: {
@@ -33,11 +75,14 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
     scrollContent: {
       padding: 20,
       alignItems: 'center',
+      paddingTop: Platform.OS === 'web' ? 60 : 40,
     },
     logo: {
       width: 80,
       height: 80,
       marginBottom: 20,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     title: {
       fontSize: 28,
@@ -51,6 +96,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       color: colors.text.secondary,
       textAlign: 'center',
       marginBottom: 30,
+      paddingHorizontal: 20,
     },
     infoBox: {
       backgroundColor: colors.background.secondary,
@@ -58,6 +104,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       borderRadius: 10,
       marginBottom: 30,
       width: '100%',
+      maxWidth: 400,
     },
     infoTitle: {
       fontSize: 16,
@@ -77,6 +124,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       borderRadius: 8,
       marginBottom: 12,
       width: '100%',
+      maxWidth: 400,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
@@ -100,6 +148,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       alignItems: 'center',
       marginVertical: 20,
       width: '100%',
+      maxWidth: 400,
     },
     dividerLine: {
       flex: 1,
@@ -113,6 +162,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
     },
     inputContainer: {
       width: '100%',
+      maxWidth: 400,
       marginBottom: 20,
     },
     input: {
@@ -128,12 +178,13 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
     },
   });
 
+  const ScrollComponent = Platform.OS === 'web' ? View : ScrollView;
+
   return (
-    <ScrollView style={styles.container}>
+    <ScrollComponent style={styles.container}>
       <View style={styles.scrollContent}>
-        {/* Logo placeholder - you can replace with actual logo */}
         <View style={styles.logo}>
-          <Text style={{ fontSize: 60 }}>📁</Text>
+          {Icon && <Icon name="FolderSpecial" size={60} color={colors.primary} />}
         </View>
 
         <Text style={styles.title}>Welcome to manylla</Text>
@@ -153,19 +204,19 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
 
         <TouchableOpacity
           style={styles.button}
-          onPress={onStartFresh}
+          onPress={handleStartFresh}
           activeOpacity={0.8}
         >
-          <Text style={{ fontSize: 24, color: '#FFFFFF' }}>➕</Text>
+          {Icon && <Icon name="Add" size={24} color="#FFFFFF" />}
           <Text style={styles.buttonText}>Start Fresh</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.button, styles.buttonOutline]}
-          onPress={onDemoMode}
+          onPress={handleDemoMode}
           activeOpacity={0.8}
         >
-          <Text style={{ fontSize: 24, color: colors.primary }}>▶️</Text>
+          {Icon && <Icon name="PlayCircleOutline" size={24} color={colors.primary} />}
           <Text style={[styles.buttonText, styles.buttonTextOutline]}>
             Try Demo Mode
           </Text>
@@ -189,17 +240,15 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
           />
           <TouchableOpacity
             style={[styles.button, !accessCode && { opacity: 0.5 }]}
-            onPress={() => accessCode && onJoinWithCode(accessCode)}
+            onPress={handleJoinWithCode}
             disabled={!accessCode}
             activeOpacity={0.8}
           >
-            <Text style={{ fontSize: 24, color: '#FFFFFF' }}>🔗</Text>
+            {Icon && <Icon name="Share" size={24} color="#FFFFFF" />}
             <Text style={styles.buttonText}>Join with Access Code</Text>
           </TouchableOpacity>
         </View>
       </View>
-    </ScrollView>
+    </ScrollComponent>
   );
 };
-
-export default OnboardingWizard;

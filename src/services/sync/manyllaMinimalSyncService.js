@@ -1,3 +1,7 @@
+import { Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// Import random bytes polyfill for React Native
+import 'react-native-get-random-values';
 import nacl from 'tweetnacl';
 import util from 'tweetnacl-util';
 import manyllaEncryptionService from './manyllaEncryptionService';
@@ -6,13 +10,19 @@ import { API_ENDPOINTS } from '../../config/api';
 
 class ManyllaMinimalSyncService {
   constructor() {
+    console.log('[ManyllaSync] Constructor start');
+    console.log('[ManyllaSync] Platform:', Platform.OS);
+    
     this.isEnabled = false;
     this.syncId = null;
     this.recoveryPhrase = null;
     this.pullInterval = null;
     this.dataCallback = null;
     this.lastPullTimestamp = 0;
-    this.deviceId = this.getOrCreateDeviceId();
+    this.deviceId = null;
+    
+    // Initialize device ID asynchronously
+    this.initDeviceId();
     
     // Manylla uses 60-second interval instead of StackMap's 30
     this.PULL_INTERVAL = 60000; // 1 minute
@@ -26,8 +36,8 @@ class ManyllaMinimalSyncService {
     this.lastPush = 0;
     this.pullAttempts = 0;
     
-    // Check for captured fragment from index.html first
-    if (typeof window !== 'undefined') {
+    // Check for captured fragment from index.html first (web only)
+    if (typeof window !== 'undefined' && window.location) {
       const capturedHash = window.__initialHash;
       
       if (capturedHash) {
@@ -48,13 +58,24 @@ class ManyllaMinimalSyncService {
       }
     }
     
-    // Listen for app visibility changes to sync when user returns
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden && this.isEnabled) {
-        console.log('[ManyllaSync] App became visible, pulling data');
-        this.pullData();
-      }
-    });
+    // Listen for app visibility changes to sync when user returns (web only)
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && this.isEnabled) {
+          console.log('[ManyllaSync] App became visible, pulling data');
+          this.pullData();
+        }
+      });
+    } else if (Platform.OS === 'ios' || Platform.OS === 'android') {
+      // On React Native, use AppState for similar functionality
+      const { AppState } = require('react-native');
+      AppState.addEventListener('change', (nextAppState) => {
+        if (nextAppState === 'active' && this.isEnabled) {
+          console.log('[ManyllaSync] App became active, pulling data');
+          this.pullData();
+        }
+      });
+    }
   }
 
   /**
@@ -163,32 +184,29 @@ class ManyllaMinimalSyncService {
   }
 
   /**
-   * Get or create a device ID for this browser/device
-   * Enhanced with crypto fallback like StackMap
+   * Initialize device ID asynchronously
    */
-  getOrCreateDeviceId() {
-    let deviceId = localStorage.getItem('manylla_device_id');
-    if (!deviceId) {
-      try {
-        // Try crypto.randomUUID if available
-        if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-          deviceId = crypto.randomUUID().replace(/-/g, '').substring(0, 16);
-        } else {
-          // Fallback to nacl random bytes
-          const bytes = nacl.randomBytes(8);
-          deviceId = Array.from(bytes)
-            .map(b => b.toString(16).padStart(2, '0'))
-            .join('');
-        }
-      } catch (error) {
-        console.warn('[ManyllaSync] Failed to generate secure device ID, using fallback:', error);
-        deviceId = Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+  async initDeviceId() {
+    console.log('[ManyllaSync] Initializing device ID...');
+    try {
+      this.deviceId = await AsyncStorage.getItem('manylla_device_id');
+      if (!this.deviceId) {
+        // Generate new device ID using nacl
+        const bytes = nacl.randomBytes(8);
+        this.deviceId = Array.from(bytes)
+          .map(b => b.toString(16).padStart(2, '0'))
+          .join('');
+        await AsyncStorage.setItem('manylla_device_id', this.deviceId);
       }
-      
-      localStorage.setItem('manylla_device_id', deviceId);
-      console.log('[ManyllaSync] Generated device ID:', deviceId);
+      console.log('[ManyllaSync] Device ID:', this.deviceId);
+    } catch (error) {
+      console.log('[ManyllaSync] Error initializing device ID:', error);
+      // Generate one for this session
+      const bytes = nacl.randomBytes(8);
+      this.deviceId = Array.from(bytes)
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
     }
-    return deviceId;
   }
 
   /**
@@ -253,8 +271,8 @@ class ManyllaMinimalSyncService {
     await manyllaEncryptionService.clear();
     
     // Clear sync-related localStorage
-    localStorage.removeItem('manylla_sync_enabled');
-    localStorage.removeItem('manylla_last_pull');
+    await AsyncStorage.removeItem('manylla_sync_enabled');
+    await AsyncStorage.removeItem('manylla_last_pull');
     
     console.log('[ManyllaSync] Sync disabled');
   }
@@ -282,7 +300,7 @@ class ManyllaMinimalSyncService {
     const result = await response.json();
     console.log('[ManyllaSync] Sync group created successfully', result);
     
-    localStorage.setItem('manylla_sync_enabled', 'true');
+    await AsyncStorage.setItem('manylla_sync_enabled', 'true');
   }
 
   /**
@@ -308,7 +326,7 @@ class ManyllaMinimalSyncService {
     const result = await response.json();
     console.log('[ManyllaSync] Joined sync group successfully', result);
     
-    localStorage.setItem('manylla_sync_enabled', 'true');
+    await AsyncStorage.setItem('manylla_sync_enabled', 'true');
   }
 
   /**
@@ -450,7 +468,7 @@ class ManyllaMinimalSyncService {
       }
       
       // Get current local data for conflict resolution
-      const localProfile = this.getCurrentLocalProfile();
+      const localProfile = await this.getCurrentLocalProfile();
       
       // Resolve conflicts if we have local data
       let finalProfile;
@@ -469,7 +487,7 @@ class ManyllaMinimalSyncService {
       
       // Update last pull timestamp
       this.lastPullTimestamp = latestEntry.timestamp;
-      localStorage.setItem('manylla_last_pull', this.lastPullTimestamp.toString());
+      await AsyncStorage.setItem('manylla_last_pull', this.lastPullTimestamp.toString());
       
       // Notify callback if set
       if (this.dataCallback && finalProfile) {
@@ -531,7 +549,7 @@ class ManyllaMinimalSyncService {
       console.log('[ManyllaSync] Testing sync connection...');
       
       // For now, just check localStorage
-      const syncExists = localStorage.getItem(`manylla_sync_${this.syncId}`);
+      const syncExists = await AsyncStorage.getItem(`manylla_sync_${this.syncId}`);
       
       if (syncExists) {
         console.log('[ManyllaSync] Sync connection test successful');
@@ -566,9 +584,9 @@ class ManyllaMinimalSyncService {
    * Get current local profile data
    * @returns {Object|null} Current profile from localStorage
    */
-  getCurrentLocalProfile() {
+  async getCurrentLocalProfile() {
     try {
-      const profileData = localStorage.getItem('childProfile');
+      const profileData = await AsyncStorage.getItem('childProfile');
       return profileData ? JSON.parse(profileData) : null;
     } catch (error) {
       console.error('[ManyllaSync] Failed to get local profile:', error);
