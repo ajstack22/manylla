@@ -1,9 +1,7 @@
 # OSX
-#
 .DS_Store
 
 # Xcode
-#
 build/
 *.pbxuser
 !default.pbxuser
@@ -23,7 +21,6 @@ DerivedData
 **/.xcode.env.local
 
 # Android/IntelliJ
-#
 build/
 .idea
 .gradle
@@ -36,13 +33,11 @@ local.properties
 .kotlin/
 
 # node.js
-#
 node_modules/
 npm-debug.log
 yarn-error.log
 
 # fastlane
-#
 # It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
 # screenshots whenever they are needed.
 # For more information about the recommended setup visit:
@@ -76,14 +71,18 @@ yarn-error.log
 
 # React/Web production
 /build
+/dist
 
-# Environment files
+# Environment files (ALL of them)
 .env
+.env.*
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 .env.staging
+.env.development
+.env.production
 
 # Logs
 *.log
@@ -91,36 +90,88 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+error_log
+logs/
+/logs
 
 # Editor directories and files
-.vscode/
-.idea/
-*.swp
-*.swo
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 *~
 
 # OS files
-.DS_Store
 Thumbs.db
 
-# Package lock files (if using one package manager)
-# Uncomment the one you're NOT using:
-# package-lock.json
-# yarn.lock
-
-# API config files (sensitive)
-/api/config/*.php
-!/api/config/*.example.php
-!/api/config/config.php
-!/api/config/database.php
-
-# Backup folders
-/backup
-/backups
+# Backup and temporary files
 *.backup
+*.bak
+*.tmp
+*.temp
+.cache
+.temp
+.last-deployment-timestamp
+.last-manylla-deploy
 
-# Documentation (if private/internal)
-/docs
+# Documentation (internal only, not for public repo)
+/docs/
+docs/**
+DEPLOY_NOTES.md
+CLAUDE.md
+DEPLOYMENT_CHECKLIST.md
+CPANEL_DATABASE_SETUP.md
+APPLY_SCHEMA_MANUAL.md
+
+# API secrets (should never be committed)
+api/config.local.php
+api/.env
+api/sync/.env
+api/config/config.qual.php
+api/config/config.prod.php
+api/config/config.local.php
+# Allow example files
+!api/config/*.example.php
+
+# SSH keys (should NEVER be committed)
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_dsa*
+id_ecdsa*
+id_ed25519*
+
+# Scripts that might contain sensitive info
+scripts/deploy-*.sh
+scripts/*.sh
+!scripts/setup-ssh.sh
+
+# Test files
+test-*.sh
+*.test.sh
+
+# StackMap reference files (not needed in repo)
+stackmap_php_api_info/
+/stackmap_php_api_info
+stackmap_sync/
+
+# Database files
+*.sql
+*.db
+*.sqlite
+
+# Any files with credentials
+*credentials*
+*secret*
+*password*
+
+# Build artifacts
+*.map
 
 # Old project folders (from migration)
 /ManyllaMobile
