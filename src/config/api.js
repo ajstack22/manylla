@@ -34,26 +34,26 @@ const getApiBaseUrl = () => {
 
 export const API_BASE_URL = getApiBaseUrl();
 
-// API Endpoints
+// API Endpoints (following StackMap's pattern - files in API root)
 export const API_ENDPOINTS = {
   // Sync endpoints (Phase 3)
   sync: {
-    push: `${API_BASE_URL}/sync/push_timestamp.php`,
-    pull: `${API_BASE_URL}/sync/pull_timestamp.php`,
-    create: `${API_BASE_URL}/sync/create_timestamp.php`,
-    join: `${API_BASE_URL}/sync/join_timestamp.php`,
-    backup: `${API_BASE_URL}/sync/backup.php`,
-    restore: `${API_BASE_URL}/sync/restore.php`,
-    createInvite: `${API_BASE_URL}/sync/create_invite.php`,
-    validateInvite: `${API_BASE_URL}/sync/validate_invite.php`,
-    useInvite: `${API_BASE_URL}/sync/use_invite.php`,
-    health: `${API_BASE_URL}/sync/health.php`
+    push: `${API_BASE_URL}/sync_push.php`,
+    pull: `${API_BASE_URL}/sync_pull.php`,
+    create: `${API_BASE_URL}/sync_create.php`,
+    join: `${API_BASE_URL}/sync_join.php`,
+    backup: `${API_BASE_URL}/sync_backup.php`,
+    restore: `${API_BASE_URL}/sync_restore.php`,
+    createInvite: `${API_BASE_URL}/sync_create_invite.php`,
+    validateInvite: `${API_BASE_URL}/sync_validate_invite.php`,
+    useInvite: `${API_BASE_URL}/sync_use_invite.php`,
+    health: `${API_BASE_URL}/sync_health.php`
   },
   
   // Share endpoints (Phase 3)
   share: {
-    create: `${API_BASE_URL}/share/create.php`,
-    access: `${API_BASE_URL}/share/access.php`
+    create: `${API_BASE_URL}/share_create.php`,
+    access: `${API_BASE_URL}/share_access.php`
   }
 };
 
