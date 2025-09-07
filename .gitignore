@@ -71,6 +71,59 @@ id_ed25519*
 # Package manager locks (debatable, but often excluded)
 # package-lock.json
 # yarn.lock
+
+# Configuration files with sensitive data
 api/config/config.qual.php
 api/config/config.prod.php
 api/config/config.local.php
+api/config/config.php
+api/config/database.php
+api/sync/config.php
+
+# Documentation (internal only, not for public repo)
+/docs/
+docs/**
+DEPLOY_NOTES.md
+CLAUDE.md
+
+# Environment files (ALL of them)
+.env
+.env.*
+.env.local
+.env.production
+.env.staging
+.env.development
+
+# Scripts that might contain sensitive info
+scripts/deploy-*.sh
+scripts/*.sh
+
+# Test files
+test-*.sh
+*.test.sh
+
+# Backup and temporary files
+*.backup
+*.bak
+*.tmp
+*.temp
+*.cache
+
+# StackMap reference files (not needed in repo)
+stackmap_php_api_info/
+/stackmap_php_api_info
+
+# Database files
+*.sql
+*.db
+*.sqlite
+
+# Log files
+*.log
+logs/
+/logs
+
+# Any files with credentials
+*credentials*
+*secret*
+*password*
