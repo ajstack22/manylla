@@ -1,5 +1,47 @@
 # Manylla Release Notes
 
+## Version 2.2.0 - September 7, 2025
+
+### 📱 React Native Migration (Phase 1 Complete)
+
+#### Cross-Platform Architecture
+- **95% Code Sharing**: Implemented StackMap's proven cross-platform pattern
+- **Platform Selectors**: Created index.tsx files for automatic platform routing
+- **Unified Codebase**: Single repository for iOS, Android, and Web platforms
+
+#### Priority 1 Components Completed
+- **UnifiedAddDialog.native.tsx**: Full modal for adding/editing entries with native pickers
+- **CategorySection.native.tsx**: Native card-based category display with edit/delete actions
+- **Header.native.tsx**: App header with theme toggle, sync status, and native menu
+- **Platform Integration**: All components follow Material Design on Android, iOS Human Interface on iOS
+
+#### Mobile Features
+- **Onboarding Wizard**: Fully functional with demo mode and sync setup
+- **Profile Overview**: Native implementation with categories and entries
+- **Theme Support**: Light/Dark/Manylla themes working across platforms
+- **Storage**: AsyncStorage integration for persistent data
+
+#### Development Improvements
+- **Multi-Platform Deploy Script**: Updated deploy-qual.sh to support:
+  - Web deployment to https://manylla.com/qual
+  - iOS Simulator deployment with rebuild or quick reload options
+  - Android Emulator support (when available)
+  - Version synchronization across platforms
+
+### 🎯 Next Phase Components
+- **Priority 2**: ProfileEditDialog, UnifiedCategoryManager (Profile Management)
+- **Priority 3**: SyncDialog, ShareDialog (Sync & Share features)
+- **Priority 4**: SmartTextInput, MarkdownField (Rich text editing)
+
+### 🔧 Technical Stack
+- React Native 0.81 with React 19
+- TypeScript for type safety
+- TweetNaCl.js for cross-platform encryption
+- AsyncStorage for native persistence
+- Zero-knowledge architecture maintained
+
+---
+
 ## Version 2.1.0 - September 6, 2025
 
 ### 🔒 Security Enhancements (Phase 2 Complete)
