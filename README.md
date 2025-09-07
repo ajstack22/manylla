@@ -1,28 +1,39 @@
-# Manylla - Special Needs Information Management POC
+# Manylla - Special Needs Information Management
 
-A clean, minimal web application for special needs parents to retain and share sensitive development information about their children.
+A zero-knowledge encrypted web application for special needs parents to retain and share sensitive development information about their children.
+
+## 🎉 Phase 3 Complete - Cloud Data Storage Operational
+
+**Status**: Production-ready cloud storage with zero-knowledge encryption
+- ✅ All data stored in cloud database (no localStorage fallbacks)
+- ✅ Zero-knowledge encryption - server never sees plaintext
+- ✅ Deployed to https://manylla.com/qual/
+- ✅ Share system fully operational
+- ✅ Multi-device sync with 32-char hex recovery phrases
 
 ## Features Implemented
 
-### Data Structure
-- **Child Profile**: Core profile with name, DOB, pronouns, and quick info
+### Core Features
+- **Zero-Knowledge Encryption**: All data encrypted client-side with TweetNaCl.js
+- **Cloud Sync**: Multi-device sync with 32-character hex recovery phrases
+- **Temporary Sharing**: Create encrypted share links with expiration dates
+- **Child Profiles**: Comprehensive profiles with categories and entries
 - **Categories**: Current Goals, Recent Successes, Strengths, Challenges
-- **Entries**: Each entry has title, description, date, tags, and visibility settings
-- **Tags**: Flexible tagging system for filtering and organization
-- **Visibility Levels**: Private, Family, Medical Team, Education Team, All
+- **Smart Organization**: Tag system for filtering and organization
+
+### Security Features (Phase 3)
+- **Client-Side Encryption**: Data encrypted before leaving device
+- **Cloud Storage**: Encrypted blobs stored in MySQL database
+- **Share System**: Temporary encrypted shares with automatic expiration
+- **No User Accounts**: Privacy-first design with recovery phrases
+- **Zero-Knowledge Architecture**: Server cannot decrypt user data
 
 ### UI Components
-- **Material Design**: Clean, modern interface using Material-UI
+- **Material Design**: Clean, modern interface using Material-UI v7
 - **Light/Dark Mode**: Toggle between themes
-- **Profile Overview**: Visual summary with avatar and quick info cards
-- **Category Sections**: Color-coded sections with icons
-- **Entry Management**: Add, edit, and delete entries
-- **Tag System**: Add custom tags to entries for organization
-
-### Manila Envelope Branding
-- Manila-inspired color palette (#F4E4C1)
-- Clean typography and spacing
-- Minimalist design approach
+- **Progressive Onboarding**: Gentle introduction for new users
+- **Mobile Optimized**: Responsive design for all devices
+- **Manila Envelope Branding**: Warm, trustworthy color palette (#F4E4C1)
 
 ## Available Scripts
 

@@ -139,7 +139,7 @@ function AppContent() {
         } else {
           // Fall back to standard URL parsing
           const pathname = window.location.pathname;
-          const shareMatch = pathname.match(/\/share\/([a-zA-Z0-9]+)/);
+          const shareMatch = pathname.match(/\/share\/([a-zA-Z0-9-]+)/);
           
           // Check for sync invite URL pattern (/sync/[invite-code])
           const syncMatch = pathname.match(/\/sync\/([A-Z0-9]{4}-[A-Z0-9]{4})/i);

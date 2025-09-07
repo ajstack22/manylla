@@ -1,5 +1,12 @@
 # Deployment Guide
 
+## Current Status
+**Phase 3 COMPLETED** - Cloud Data Storage is fully operational
+- ✅ All data stored in cloud (no localStorage fallbacks)
+- ✅ Zero-knowledge encryption maintained
+- ✅ Deployed to https://manylla.com/qual/
+- ✅ All API endpoints operational
+
 ## Build Process
 
 ### Development Build
@@ -58,17 +65,28 @@ npm install
 npm start
 ```
 
-### Staging/Qual Environment
+### Staging/Qual Environment (PHASE 3 DEPLOYED)
 ```bash
+# SSH Access (Namecheap uses port 21098)
+ssh -p 21098 stachblx@manylla.com
+
 # Automatic deployment script
 ./scripts/deploy-qual.sh
 
 # Manual deployment steps:
 1. npm run build
-2. rsync -avz --delete build/ adam@manylla.com:/home/stachblx/public_html/qual/
-3. rsync -avz api/ adam@manylla.com:/home/stachblx/public_html/qual/api/
+2. rsync -avz -e "ssh -p 21098" build/ stachblx@manylla.com:/home/stachblx/public_html/manylla/qual/
+3. Deploy API files via SSH
 
 # Access URL: https://manylla.com/qual
+# API Base: https://manylla.com/qual/api/
+
+# Current API Endpoints (All Operational):
+- /api/sync_health.php - Health check
+- /api/sync_push.php - Push encrypted data
+- /api/sync_pull.php - Pull encrypted data  
+- /api/share_create.php - Create encrypted share
+- /api/share_access.php - Access encrypted share
 ```
 
 ### Production Environment
@@ -79,10 +97,11 @@ npm start
 # Manual deployment steps:
 1. Update package.json homepage to "/"
 2. npm run build
-3. rsync -avz --delete build/ adam@manylla.com:/home/stachblx/public_html/
-4. rsync -avz api/ adam@manylla.com:/home/stachblx/public_html/api/
+3. rsync -avz -e "ssh -p 21098" build/ stachblx@manylla.com:/home/stachblx/public_html/manylla/
+4. Deploy API files to /public_html/manylla/api/
 
 # Access URL: https://manylla.com
+# Note: Production deployment pending Phase 4 completion
 ```
 
 ## Deployment Scripts
@@ -191,17 +210,19 @@ Header set X-XSS-Protection "1; mode=block"
 ```php
 // api/config.php (environment-specific)
 
-// Qual/Staging
+// Qual/Staging (PHASE 3 ACTIVE)
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'stachblx_manylla_sync_qual');
-define('DB_USER', 'stachblx_manyqual');
+define('DB_USER', 'stachblx_mql');
 define('DB_PASS', '***'); // Stored securely
+define('API_ENV', 'qual');
 
-// Production
+// Production (Pending)
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'stachblx_manylla_sync_prod');
-define('DB_USER', 'stachblx_manyprod');
+define('DB_USER', 'stachblx_mpl');
 define('DB_PASS', '***'); // Stored securely
+define('API_ENV', 'production');
 
 // CORS settings
 $allowed_origins = [
