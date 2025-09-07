@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Generate Manylla Favicon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Atkinson Hyperlegible', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            margin: 10px;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+        .color-option {
+            margin: 10px;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #5D4E37;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background: #3D2F1F;
+        }
+    </style>
+</head>
+<body>
+    <h1>Manylla Favicon Generator</h1>
+    <p>Lowercase "m" in Atkinson Hyperlegible</p>
+    
+    <div id="canvasContainer">
+        <h3>Manila Background (#C4A66B)</h3>
+        <canvas id="canvas1" width="32" height="32"></canvas>
+        <canvas id="canvas1-64" width="64" height="64"></canvas>
+        <canvas id="canvas1-128" width="128" height="128"></canvas>
+        
+        <h3>Dark Brown Background (#5D4E37)</h3>
+        <canvas id="canvas2" width="32" height="32"></canvas>
+        <canvas id="canvas2-64" width="64" height="64"></canvas>
+        <canvas id="canvas2-128" width="128" height="128"></canvas>
+        
+        <h3>White Background</h3>
+        <canvas id="canvas3" width="32" height="32"></canvas>
+        <canvas id="canvas3-64" width="64" height="64"></canvas>
+        <canvas id="canvas3-128" width="128" height="128"></canvas>
+    </div>
+    
+    <button onclick="downloadFavicons()">Download All Favicons</button>
+    
+    <script>
+        function drawFavicon(canvasId, size, bgColor, textColor) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = size;
+            canvas.height = size;
+            
+            // Clear and fill background
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Configure text
+            ctx.fillStyle = textColor;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Font size adjusted for canvas size
+            const fontSize = size * 0.65;
+            ctx.font = `bold ${fontSize}px 'Atkinson Hyperlegible', sans-serif`;
+            
+            // Draw the letter 'm' centered
+            ctx.fillText('m', size / 2, size / 2 + (size * 0.05)); // Slight vertical adjustment
+        }
+        
+        // Wait for font to load
+        document.fonts.ready.then(() => {
+            // Manila background with dark brown text
+            drawFavicon('canvas1', 32, '#C4A66B', '#3D2F1F');
+            drawFavicon('canvas1-64', 64, '#C4A66B', '#3D2F1F');
+            drawFavicon('canvas1-128', 128, '#C4A66B', '#3D2F1F');
+            
+            // Dark brown background with white text
+            drawFavicon('canvas2', 32, '#5D4E37', '#FFFFFF');
+            drawFavicon('canvas2-64', 64, '#5D4E37', '#FFFFFF');
+            drawFavicon('canvas2-128', 128, '#5D4E37', '#FFFFFF');
+            
+            // White background with dark brown text
+            drawFavicon('canvas3', 32, '#FFFFFF', '#5D4E37');
+            drawFavicon('canvas3-64', 64, '#FFFFFF', '#5D4E37');
+            drawFavicon('canvas3-128', 128, '#FFFFFF', '#5D4E37');
+        });
+        
+        function downloadFavicons() {
+            // Download manila version as the main favicon
+            const canvas = document.getElementById('canvas1');
+            canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'favicon.ico';
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+            
+            // Also download larger versions
+            const sizes = ['32', '64', '128'];
+            const variants = [
+                { id: 'canvas1', name: 'favicon-manila' },
+                { id: 'canvas2', name: 'favicon-brown' },
+                { id: 'canvas3', name: 'favicon-white' }
+            ];
+            
+            variants.forEach(variant => {
+                sizes.forEach(size => {
+                    const canvasId = size === '32' ? variant.id : `${variant.id}-${size}`;
+                    const canvas = document.getElementById(canvasId);
+                    canvas.toBlob(blob => {
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `${variant.name}-${size}.png`;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                    }, 'image/png');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

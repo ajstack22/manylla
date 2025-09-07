@@ -1,0 +1,222 @@
+# Resolve react_native_pods.rb with node to allow for hoisting
+require Pod::Executable.execute_command('node', ['-p',
+  'require.resolve(
+    "react-native/scripts/react_native_pods.rb",
+    {paths: [process.argv[1]]},
+  )', __dir__]).strip
+
+platform :ios, min_ios_version_supported
+prepare_react_native_project!
+
+linkage = ENV['USE_FRAMEWORKS']
+if linkage != nil
+  Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
+  use_frameworks! :linkage => linkage.to_sym
+end
+
+target 'ManyllaMobile' do
+  config = use_native_modules!
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    # An absolute path to your application root.
+    :app_path => "#{Pod::Config.instance.installation_root}/..",
+    # Force disable New Architecture (matching StackMap configuration)
+    :fabric_enabled => false,
+    :new_arch_enabled => false
+  )
+  
+  # Permissions for react-native-permissions (if needed later)
+  # permissions_path = '../node_modules/react-native-permissions/ios'
+  # pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
+  # pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary"
+  # pod 'Permission-FaceID', :path => "#{permissions_path}/FaceID"
+
+  post_install do |installer|
+    # React Native post install
+    react_native_post_install(
+      installer,
+      config[:reactNativePath],
+      :mac_catalyst_enabled => false,
+      # :ccache_enabled => true
+    )
+    
+    # Apply comprehensive fixes for all targets
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        # Global iOS 14 compatibility
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
+        config.build_settings['ENABLE_BITCODE'] = 'NO'
+        
+        # M4 Silicon specific
+        config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'i386'
+        
+        # C++17 compatibility for all pods
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << '_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION'
+        
+        # Force disable coroutines globally for all pods that might use Folly
+        if target.name.include?("React") || target.name.include?("RN") || target.name.include?("react")
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_HAS_COROUTINES=0'
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_CFG_NO_COROUTINES=1'
+        end
+        
+        # Fix RNReanimated override warnings with aggressive settings
+        if target.name == "RNReanimated"
+          config.build_settings['OTHER_CPLUSPLUSFLAGS'] = [
+            "$(inherited)",
+            "-Wno-inconsistent-missing-override",
+            "-Wno-overriding-method-mismatch", 
+            "-Wno-error=overriding-method-mismatch",
+            "-Wno-error",
+            "-w"  # Suppress all warnings for RNReanimated
+          ].join(" ")
+          
+          config.build_settings['OTHER_CFLAGS'] = [
+            "$(inherited)",
+            "-Wno-inconsistent-missing-override",
+            "-w"  # Suppress all warnings
+          ].join(" ")
+          
+          config.build_settings['GCC_TREAT_WARNINGS_AS_ERRORS'] = 'NO'
+          config.build_settings['CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF'] = 'NO'
+          config.build_settings['GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS'] = 'NO'
+          config.build_settings['GCC_WARN_NON_VIRTUAL_DESTRUCTOR'] = 'NO'
+          config.build_settings['CLANG_WARN_CXX0X_EXTENSIONS'] = 'NO'
+          config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++20'
+          config.build_settings['CLANG_ENABLE_OBJC_WEAK'] = 'YES'
+        end
+        
+        # RCT-Folly specific comprehensive fixes
+        if target.name == "RCT-Folly"
+          puts "Applying comprehensive RCT-Folly fixes..."
+          
+          # Force disable coroutines completely with all possible flags
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_NO_CONFIG=1'
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_MOBILE=1'
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_USE_LIBCPP=1'
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_HAS_COROUTINES=0'
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_CFG_NO_COROUTINES=1'
+          
+          # Set C++ standard to C++20
+          config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++20'
+          config.build_settings['CLANG_CXX_LIBRARY'] = 'libc++'
+          
+          # Additional compiler flags with all coroutine disable flags
+          config.build_settings['OTHER_CPLUSPLUSFLAGS'] = [
+            "$(inherited)",
+            "-DFOLLY_HAS_COROUTINES=0",
+            "-DFOLLY_CFG_NO_COROUTINES=1",
+            "-DFOLLY_NO_CONFIG",
+            "-DFOLLY_MOBILE=1",
+            "-DFOLLY_USE_LIBCPP=1",
+            "-std=c++20",
+            "-Wno-comma",
+            "-Wno-shorten-64-to-32",
+            "-Wno-nullability-completeness",
+            "-Wno-documentation"
+          ].join(" ")
+          
+          # Header search paths
+          config.build_settings['HEADER_SEARCH_PATHS'] = "$(inherited) ${PODS_ROOT}/RCT-Folly"
+        end
+      end
+    end
+    
+    # Multi-location file patching for Expected.h and Optional.h
+    puts "Patching RCT-Folly Expected.h and Optional.h files..."
+    
+    # All possible locations where Expected.h and Optional.h might exist
+    files_to_patch = [
+      "#{installer.sandbox.root}/RCT-Folly/folly/Expected.h",
+      "#{installer.sandbox.root}/Headers/Public/RCT-Folly/folly/Expected.h",
+      "#{installer.sandbox.root}/Headers/Private/RCT-Folly/folly/Expected.h",
+      "#{installer.sandbox.root}/RCT-Folly/folly/Optional.h",
+      "#{installer.sandbox.root}/Headers/Public/RCT-Folly/folly/Optional.h",
+      "#{installer.sandbox.root}/Headers/Private/RCT-Folly/folly/Optional.h"
+    ]
+    
+    files_to_patch.each do |file_path|
+      if File.exist?(file_path)
+        content = File.read(file_path)
+        modified = false
+        
+        # Comment out all coroutine includes
+        if content.include?('#include <folly/coro/Coroutine.h>') || content.include?('#include <folly/experimental/coro/Coroutine.h>')
+          content.gsub!('#include <folly/coro/Coroutine.h>', '// #include <folly/coro/Coroutine.h> // Disabled to fix build')
+          content.gsub!('#include <folly/experimental/coro/Coroutine.h>', '// #include <folly/experimental/coro/Coroutine.h> // Disabled to fix build')
+          modified = true
+        end
+        
+        # Also disable the entire FOLLY_HAS_COROUTINES block
+        if content.include?('#if FOLLY_HAS_COROUTINES')
+          content.gsub!('#if FOLLY_HAS_COROUTINES', '#if 0 // FOLLY_HAS_COROUTINES disabled')
+          modified = true
+        end
+        
+        if modified
+          # Make file writable, write, then restore permissions
+          original_mode = File.stat(file_path).mode
+          File.chmod(0644, file_path)
+          File.write(file_path, content)
+          File.chmod(original_mode, file_path)
+          puts "✓ Patched: #{file_path}"
+        end
+      end
+    end
+    
+    # Also patch any other files that might reference coroutines
+    Dir.glob("#{installer.sandbox.root}/**/*.h").each do |header_file|
+      if header_file.include?("RCT-Folly") && File.exist?(header_file)
+        begin
+          content = File.read(header_file)
+          if content.include?("folly/coro/Coroutine.h") || content.include?("folly/experimental/coro/Coroutine.h")
+            content.gsub!('#include <folly/coro/Coroutine.h>', '// #include <folly/coro/Coroutine.h> // Disabled')
+            content.gsub!('#include <folly/experimental/coro/Coroutine.h>', '// #include <folly/experimental/coro/Coroutine.h> // Disabled')
+            
+            # Make file writable, write, then restore permissions
+            original_mode = File.stat(header_file).mode
+            File.chmod(0644, header_file)
+            File.write(header_file, content)
+            File.chmod(original_mode, header_file)
+            puts "✓ Additional patch applied to: #{File.basename(header_file)}"
+          end
+        rescue => e
+          puts "Warning: Could not patch #{File.basename(header_file)}: #{e.message}"
+        end
+      end
+    end
+    
+    # Fix Time.h typedef redefinition issue
+    puts "Patching RCT-Folly Time.h files..."
+    time_files_to_patch = [
+      "#{installer.sandbox.root}/RCT-Folly/folly/portability/Time.h",
+      "#{installer.sandbox.root}/Headers/Public/RCT-Folly/folly/portability/Time.h",
+      "#{installer.sandbox.root}/Headers/Private/RCT-Folly/folly/portability/Time.h"
+    ]
+    
+    time_files_to_patch.each do |file_path|
+      if File.exist?(file_path)
+        begin
+          content = File.read(file_path)
+          
+          # Comment out the problematic typedef
+          if content.include?('typedef uint8_t clockid_t;')
+            content.gsub!('typedef uint8_t clockid_t;', '// typedef uint8_t clockid_t; // Commented out to fix build')
+            
+            # Make file writable, write, then restore permissions
+            original_mode = File.stat(file_path).mode
+            File.chmod(0644, file_path)
+            File.write(file_path, content)
+            File.chmod(original_mode, file_path)
+            puts "✓ Patched Time.h: #{file_path}"
+          end
+        rescue => e
+          puts "Warning: Could not patch Time.h at #{file_path}: #{e.message}"
+        end
+      end
+    end
+    
+    puts "RCT-Folly patching complete!"
+  end
+end

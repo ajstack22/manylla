@@ -1,0 +1,74 @@
+# Resolve react_native_pods.rb with node to allow for hoisting
+require Pod::Executable.execute_command('node', ['-p',
+  'require.resolve(
+    "react-native/scripts/react_native_pods.rb",
+    {paths: [process.argv[1]]},
+  )', __dir__]).strip
+
+platform :ios, min_ios_version_supported
+prepare_react_native_project!
+
+linkage = ENV['USE_FRAMEWORKS']
+if linkage != nil
+  Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
+  use_frameworks! :linkage => linkage.to_sym
+end
+
+target 'ManyllaMobile' do
+  config = use_native_modules!
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    # An absolute path to your application root.
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
+  )
+  
+  # Permissions for react-native-permissions (if needed later)
+  # permissions_path = '../node_modules/react-native-permissions/ios'
+  # pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
+  # pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary"
+  # pod 'Permission-FaceID', :path => "#{permissions_path}/FaceID"
+
+  post_install do |installer|
+    # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
+    react_native_post_install(
+      installer,
+      config[:reactNativePath],
+      :mac_catalyst_enabled => false,
+      # :ccache_enabled => true
+    )
+    
+    # Fix RCT-Folly Expected.h coroutine issue by patching the file
+    expected_file = "#{installer.sandbox.root}/RCT-Folly/folly/Expected.h"
+    if File.exist?(expected_file)
+      content = File.read(expected_file)
+      # Comment out the coroutine include that causes issues
+      content.gsub!('#include <folly/coro/Coroutine.h>', '// #include <folly/coro/Coroutine.h> // Disabled to fix build')
+      File.write(expected_file, content)
+      puts "Patched RCT-Folly Expected.h to disable coroutines"
+    end
+    
+    # Fix for iOS 14 compatibility
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
+        config.build_settings['ENABLE_BITCODE'] = 'NO'
+        
+        # Fix for M1 Macs
+        config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'i386'
+        
+        # Fix for RCT-Folly coroutine issue
+        if target.name == "RCT-Folly"
+          config.build_settings['HEADER_SEARCH_PATHS'] = "$(inherited) ${PODS_ROOT}/RCT-Folly"
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_NO_CONFIG=1'
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_MOBILE=1'
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_USE_LIBCPP=1'
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'FOLLY_HAS_COROUTINES=0'
+          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << '_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION'
+          config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++20'
+        end
+      end
+    end
+  end
+end
