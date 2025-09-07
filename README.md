@@ -1,39 +1,50 @@
-# Manylla - Special Needs Information Management
+# Manylla
 
-A zero-knowledge encrypted web application for special needs parents to retain and share sensitive development information about their children.
+A secure, privacy-focused medical information management app for parents of children with special needs.
 
-## 🎉 Phase 3 Complete - Cloud Data Storage Operational
+## 🔒 Privacy First
 
-**Status**: Production-ready cloud storage with zero-knowledge encryption
-- ✅ All data stored in cloud database (no localStorage fallbacks)
-- ✅ Zero-knowledge encryption - server never sees plaintext
-- ✅ Deployed to https://manylla.com/qual/
-- ✅ Share system fully operational
-- ✅ Multi-device sync with 32-char hex recovery phrases
+Manylla uses zero-knowledge encryption to ensure your family's medical information stays private. All data is encrypted on your device before any transmission or storage.
 
-## Features Implemented
+## Features
 
-### Core Features
-- **Zero-Knowledge Encryption**: All data encrypted client-side with TweetNaCl.js
-- **Cloud Sync**: Multi-device sync with 32-character hex recovery phrases
-- **Temporary Sharing**: Create encrypted share links with expiration dates
-- **Child Profiles**: Comprehensive profiles with categories and entries
-- **Categories**: Current Goals, Recent Successes, Strengths, Challenges
-- **Smart Organization**: Tag system for filtering and organization
+- 📱 **Mobile-First Design** - Optimized for phones and tablets
+- 🔐 **Zero-Knowledge Encryption** - Your data remains private
+- 🌐 **Multi-Device Sync** - Access from anywhere securely
+- 📤 **Secure Sharing** - Share with doctors, schools, and caregivers
+- ✈️ **Works Offline** - No internet required for core features
+- 🎨 **Light/Dark Mode** - Choose your preferred theme
+- 📂 **Smart Organization** - Categories and tags for easy access
 
-### Security Features (Phase 3)
-- **Client-Side Encryption**: Data encrypted before leaving device
-- **Cloud Storage**: Encrypted blobs stored in MySQL database
-- **Share System**: Temporary encrypted shares with automatic expiration
-- **No User Accounts**: Privacy-first design with recovery phrases
-- **Zero-Knowledge Architecture**: Server cannot decrypt user data
+## Technology Stack
 
-### UI Components
-- **Material Design**: Clean, modern interface using Material-UI v7
-- **Light/Dark Mode**: Toggle between themes
-- **Progressive Onboarding**: Gentle introduction for new users
-- **Mobile Optimized**: Responsive design for all devices
-- **Manila Envelope Branding**: Warm, trustworthy color palette (#F4E4C1)
+- **Frontend**: React 19 with TypeScript
+- **UI Library**: Material-UI v7
+- **Encryption**: TweetNaCl.js (client-side)
+- **Architecture**: Progressive Web App (PWA)
+- **State Management**: React Context API
+
+## Getting Started
+
+### Prerequisites
+- Node.js 18 or higher
+- npm 9 or higher
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/ajstack22/manylla.git
+cd manylla/manylla-app
+
+# Install dependencies
+npm install
+
+# Start development server
+npm start
+```
+
+The app will open at [http://localhost:3000](http://localhost:3000)
 
 ## Available Scripts
 
@@ -72,8 +83,26 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
+## Privacy & Security
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Manylla implements zero-knowledge encryption, ensuring:
+- All data is encrypted on your device before transmission
+- No access to your unencrypted data by servers or third parties
+- No user accounts or personal information required
+- You control your data with a recovery phrase
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Contributing
+
+We welcome contributions! Please feel free to submit issues and pull requests.
+
+## License
+
+Copyright © 2025 Manylla. All rights reserved.
+
+## Support
+
+For questions or support, please open an issue on GitHub.
+
+---
+
+*Built with ❤️ for families managing special needs*
