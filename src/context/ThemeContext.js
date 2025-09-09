@@ -47,22 +47,22 @@ const darkTheme = {
 };
 
 const manyllaTheme = {
-  primary: "#8B7355",
-  secondary: "#6B5D54",
+  primary: "#9D8B73",  // Medium manila brown (halfway point)
+  secondary: "#8A7862", // Complementary medium brown
   background: {
-    primary: "#D4B896", // Richer manila (between light and dark)
-    secondary: "#E8D4A2", // Slightly lighter manila for contrast
-    default: "#D4B896", // Main manila background
-    paper: "#E8D4A2", // Lighter manila for cards
-    manila: "#C4A66B", // Darker manila accent
+    primary: "#EBD9C3", // Light manila but still noticeable
+    secondary: "#F2E6D5", // Lighter manila for contrast
+    default: "#EBD9C3", // Main manila background - clearly manila tinted
+    paper: "#F7F0E6", // Off-white with manila tint for cards
+    manila: "#DCC8AA", // Medium manila accent
   },
-  surface: "#E8D4A2",
+  surface: "#F7F0E6",
   text: {
-    primary: "#3D2F1F", // Dark brown for good contrast
-    secondary: "#5D4A37", // Medium brown
-    disabled: "#8B7355",
+    primary: "#3D3028", // Dark brown-gray for good contrast
+    secondary: "#5D4E42", // Medium brown
+    disabled: "#8A7862",
   },
-  border: "#A68B5B",
+  border: "#C8B59B", // Medium manila border
 };
 
 const ThemeContext = createContext(undefined);

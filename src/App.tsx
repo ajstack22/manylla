@@ -26,7 +26,8 @@ const quickInfoEntries: Entry[] = [
     title: "Communication",
     description:
       "Uses 2-3 word phrases. Understands more than she can express.",
-    date: new Date(),
+    date: new Date("2024-01-20"),
+    updatedAt: new Date("2024-02-15"),
     visibility: ["private"],
   },
   {
@@ -34,7 +35,8 @@ const quickInfoEntries: Entry[] = [
     category: "quick-info",
     title: "Emergency Contacts",
     description: "Mom: 555-0123, Dad: 555-0124. Dr. Smith: 555-0199",
-    date: new Date(),
+    date: new Date("2024-01-18"),
+    updatedAt: new Date("2024-03-01"),
     visibility: ["private"],
   },
 ];
@@ -57,6 +59,7 @@ const mockProfile: ChildProfile = {
       description:
         "Sensitive to loud noises and bright lights. Loves soft textures. Noise-canceling headphones help.",
       date: new Date("2024-01-15"),
+      updatedAt: new Date("2024-02-28"),
       visibility: ["family", "medical", "education"],
     },
     {
@@ -66,6 +69,7 @@ const mockProfile: ChildProfile = {
       description:
         "Give 5 and 2 minute warnings before transitions. Use visual timer.",
       date: new Date("2024-01-12"),
+      updatedAt: new Date("2024-03-10"),
       visibility: ["family", "medical", "education"],
     },
     {
@@ -74,6 +78,7 @@ const mockProfile: ChildProfile = {
       title: "Dietary Needs",
       description: "Gluten-free diet. Prefers crunchy foods. No nuts.",
       date: new Date("2024-01-10"),
+      updatedAt: new Date("2024-02-20"),
       visibility: ["family"],
     },
     {
@@ -83,6 +88,7 @@ const mockProfile: ChildProfile = {
       description:
         "Diagnosed with Autism Spectrum Disorder at age 3. Evaluation done by Dr. Smith at Children's Hospital.",
       date: new Date("2021-08-20"),
+      updatedAt: new Date("2024-01-05"),
       visibility: ["medical"],
     },
     {
@@ -92,6 +98,7 @@ const mockProfile: ChildProfile = {
       description:
         "Takes melatonin for sleep (prescribed). Bedtime routine essential.",
       date: new Date("2024-01-08"),
+      updatedAt: new Date("2024-03-15"),
       visibility: ["medical"],
     },
     {
@@ -101,6 +108,7 @@ const mockProfile: ChildProfile = {
       description:
         "Working on using full sentences. Practice asking for help with complete phrases.",
       date: new Date("2024-01-15"),
+      updatedAt: new Date("2024-03-20"),
       visibility: ["family", "medical", "education"],
     },
     {
@@ -110,6 +118,7 @@ const mockProfile: ChildProfile = {
       description:
         "Completed first full day without needing to come home early! Participated in circle time.",
       date: new Date("2024-01-10"),
+      updatedAt: new Date("2024-01-10"),
       visibility: ["family"],
     },
     {
@@ -119,6 +128,7 @@ const mockProfile: ChildProfile = {
       description:
         "Learns best with visual aids. Picture cards and visual schedules work well.",
       date: new Date("2024-01-08"),
+      updatedAt: new Date("2024-02-25"),
       visibility: ["education"],
     },
     {
@@ -128,6 +138,7 @@ const mockProfile: ChildProfile = {
       description:
         "Enjoys swimming and trampolining. Great for sensory input and exercise.",
       date: new Date("2024-01-05"),
+      updatedAt: new Date("2024-03-05"),
       visibility: ["family"],
     },
     {
@@ -136,6 +147,7 @@ const mockProfile: ChildProfile = {
       title: "Favorite Activities",
       description: "Loves puzzles, building blocks, and water play.",
       date: new Date("2024-01-03"),
+      updatedAt: new Date("2024-02-18"),
       visibility: ["family"],
     },
   ],
@@ -338,6 +350,10 @@ function AppContent() {
 
   const handleDeleteEntry = async (entryId: string) => {
     if (!profile) return;
+
+    // Show confirmation dialog
+    const confirmed = window.confirm('Are you sure you want to delete this entry?');
+    if (!confirmed) return;
 
     setIsSaving(true);
     try {

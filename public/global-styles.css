@@ -1,0 +1,29 @@
+/* Global styles for Manylla Web */
+
+/* Apply Atkinson Hyperlegible font to all text elements */
+body, * {
+  font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
+
+/* Ensure React Native Web text elements use the font */
+[dir="auto"] {
+  font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
+
+/* Material-UI specific elements */
+.MuiTypography-root,
+.MuiButton-root,
+.MuiTextField-root,
+.MuiMenuItem-root,
+.MuiDialog-root,
+.MuiAlert-root,
+.MuiChip-root,
+.MuiTab-root,
+.MuiTableCell-root {
+  font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
+
+/* Input and textarea elements */
+input, textarea, select, button {
+  font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif !important;
+}

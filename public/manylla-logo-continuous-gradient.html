@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manylla - Continuous Gradient with Red Y</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --manila: #F4E4C1;
+            --manila-dark: #E8D4A8;
+            --manila-light: #FAF2E2;
+            --red-accent: #D32F2F;
+            --red-light: #EF5350;
+            --red-dark: #B71C1C;
+            --brown: #8D6E63;
+            --brown-dark: #5D4037;
+            --brown-light: #A1887F;
+            --brown-darker: #3E2723;
+        }
+
+        body {
+            font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif;
+            background: linear-gradient(135deg, var(--manila-light) 0%, var(--manila) 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--brown-dark);
+            margin-bottom: 50px;
+            font-size: 2rem;
+        }
+
+        .variations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            padding: 20px;
+        }
+
+        .variation {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .variation:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo-text {
+            font-family: "Atkinson Hyperlegible", sans-serif;
+            margin: 20px 0;
+            font-size: 4rem;
+            font-weight: 700;
+            display: inline-block;
+            position: relative;
+        }
+
+        /* Base continuous gradient for all variations */
+        .continuous-gradient {
+            background: linear-gradient(90deg, var(--brown-light) 0%, var(--brown-dark) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        /* Variation 1: Original continuous gradient */
+        .v1 .continuous-gradient {
+            background: linear-gradient(90deg, var(--brown-light) 0%, var(--brown-dark) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v1 .accent-y {
+            color: var(--red-accent);
+        }
+
+        /* Variation 2: Darker gradient range */
+        .v2 .continuous-gradient {
+            background: linear-gradient(90deg, var(--brown) 0%, var(--brown-darker) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v2 .accent-y {
+            color: var(--red-accent);
+        }
+
+        /* Variation 3: Three-tone continuous */
+        .v3 .continuous-gradient {
+            background: linear-gradient(90deg, var(--brown-light) 0%, var(--brown) 50%, var(--brown-dark) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v3 .accent-y {
+            color: var(--red-light);
+        }
+
+        /* Variation 4: Wide range gradient */
+        .v4 .continuous-gradient {
+            background: linear-gradient(90deg, #A1887F 0%, #3E2723 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v4 .accent-y {
+            color: var(--red-accent);
+            font-weight: 700;
+        }
+
+        /* Variation 5: Warm browns continuous */
+        .v5 .continuous-gradient {
+            background: linear-gradient(90deg, #8B6F47 0%, #5D4037 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v5 .accent-y {
+            color: #FF5252;
+        }
+
+        /* Variation 6: Brown to manila continuous */
+        .v6 .continuous-gradient {
+            background: linear-gradient(90deg, var(--brown-dark) 0%, var(--manila-dark) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v6 .accent-y {
+            color: var(--red-dark);
+        }
+
+        /* Variation 7: Diagonal continuous gradient */
+        .v7 .continuous-gradient {
+            background: linear-gradient(135deg, var(--brown-light) 0%, var(--brown-dark) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v7 .accent-y {
+            color: var(--red-accent);
+        }
+
+        /* Variation 8: Reverse continuous gradient */
+        .v8 .continuous-gradient {
+            background: linear-gradient(90deg, var(--brown-dark) 0%, var(--brown-light) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v8 .accent-y {
+            color: var(--red-accent);
+        }
+
+        /* Variation 9: Subtle continuous gradient */
+        .v9 .continuous-gradient {
+            background: linear-gradient(90deg, #795548 0%, #6D4C41 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v9 .accent-y {
+            color: var(--red-light);
+            text-shadow: 0 1px 2px rgba(211, 47, 47, 0.2);
+        }
+
+        /* Variation 10: Complex continuous gradient */
+        .v10 .continuous-gradient {
+            background: linear-gradient(90deg, 
+                var(--brown-light) 0%, 
+                var(--brown) 35%, 
+                var(--brown-dark) 65%, 
+                var(--brown-darker) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v10 .accent-y {
+            color: var(--red-accent);
+            font-size: 4.2rem;
+        }
+
+        .label {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: var(--brown);
+            font-weight: 400;
+        }
+
+        .description {
+            font-size: 0.85rem;
+            color: var(--brown-light);
+            margin-top: 5px;
+        }
+
+        /* Info box */
+        .info-box {
+            background: var(--manila-light);
+            border-left: 4px solid var(--red-accent);
+            padding: 20px;
+            margin: 30px 20px;
+            border-radius: 8px;
+        }
+
+        .info-box h2 {
+            color: var(--brown-dark);
+            font-size: 1.2rem;
+            margin: 0 0 10px 0;
+        }
+
+        .info-box p {
+            color: var(--brown);
+            margin: 0;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Continuous Gradient with Red "Y"</h1>
+        
+        <div class="info-box">
+            <h2>Design Concept</h2>
+            <p>The gradient flows continuously through the entire word "manylla" as if it were one unit. The "y" maintains its position in the gradient flow but is colored red, creating a focal point while preserving the visual continuity.</p>
+        </div>
+        
+        <div class="variations-grid">
+            <div class="variation">
+                <div class="logo-text v1">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">1. Light to Dark Brown (Original)</div>
+                <div class="description">Smooth continuous gradient</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v2">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">2. Darker Range</div>
+                <div class="description">Medium to very dark brown</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v3">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">3. Three-Tone Flow</div>
+                <div class="description">Light-medium-dark with lighter red</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v4">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">4. Wide Range</div>
+                <div class="description">Very light to very dark</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v5">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">5. Warm Browns</div>
+                <div class="description">Warm tones with bright red</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v6">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">6. Brown to Manila</div>
+                <div class="description">Transitions to envelope color</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v7">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">7. Diagonal Flow</div>
+                <div class="description">135° gradient angle</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v8">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">8. Reverse Flow</div>
+                <div class="description">Dark to light progression</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v9">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">9. Subtle Gradient</div>
+                <div class="description">Gentle transition with soft red</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v10">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">10. Complex Flow</div>
+                <div class="description">Four-stop gradient with larger Y</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

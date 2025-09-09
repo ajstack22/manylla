@@ -128,6 +128,7 @@ module.exports = {
         { from: 'public/logo512.png', to: 'logo512.png', noErrorOnMissing: true },
         { from: 'public/manifest.json', to: 'manifest.json', noErrorOnMissing: true },
         { from: 'public/robots.txt', to: 'robots.txt', noErrorOnMissing: true },
+        { from: 'public/global-styles.css', to: 'global-styles.css', noErrorOnMissing: true },
       ],
     }),
     ...(isProduction ? [

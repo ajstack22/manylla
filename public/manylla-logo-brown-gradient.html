@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manylla - Brown Gradient with Red Y Variations</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --manila: #F4E4C1;
+            --manila-dark: #E8D4A8;
+            --manila-light: #FAF2E2;
+            --red-accent: #D32F2F;
+            --red-light: #EF5350;
+            --red-dark: #B71C1C;
+            --brown: #8D6E63;
+            --brown-dark: #5D4037;
+            --brown-light: #A1887F;
+            --brown-darker: #3E2723;
+        }
+
+        body {
+            font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif;
+            background: linear-gradient(135deg, var(--manila-light) 0%, var(--manila) 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--brown-dark);
+            margin-bottom: 50px;
+            font-size: 2rem;
+        }
+
+        .variations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            padding: 20px;
+        }
+
+        .variation {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .variation:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo-text {
+            font-family: "Atkinson Hyperlegible", sans-serif;
+            margin: 20px 0;
+            font-size: 4rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        /* Variation 1: Light to Dark Brown Gradient */
+        .v1 .letters {
+            background: linear-gradient(90deg, var(--brown-light) 0%, var(--brown-dark) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v1 .accent-y {
+            color: var(--red-accent);
+        }
+
+        /* Variation 2: Dark to Light Brown Gradient */
+        .v2 .letters {
+            background: linear-gradient(90deg, var(--brown-dark) 0%, var(--brown-light) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v2 .accent-y {
+            color: var(--red-accent);
+            font-weight: 700;
+        }
+
+        /* Variation 3: Diagonal Brown Gradient */
+        .v3 .letters {
+            background: linear-gradient(135deg, var(--brown) 0%, var(--brown-darker) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v3 .accent-y {
+            color: var(--red-light);
+            text-shadow: 0 2px 4px rgba(211, 47, 47, 0.2);
+        }
+
+        /* Variation 4: Three-tone Brown Gradient */
+        .v4 .letters {
+            background: linear-gradient(90deg, var(--brown-light) 0%, var(--brown) 50%, var(--brown-dark) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v4 .accent-y {
+            color: var(--red-accent);
+            font-size: 4.5rem;
+        }
+
+        /* Variation 5: Radial Brown Gradient from Center */
+        .v5 .letters {
+            background: radial-gradient(circle at center, var(--brown) 0%, var(--brown-dark) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v5 .accent-y {
+            color: var(--red-dark);
+            font-weight: 700;
+        }
+
+        /* Variation 6: Brown Gradient with Bold Red Y */
+        .v6 .letters {
+            background: linear-gradient(90deg, #6D4C41 0%, #8D6E63 50%, #5D4037 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v6 .accent-y {
+            color: var(--red-accent);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* Variation 7: Subtle Brown Gradient */
+        .v7 .letters {
+            background: linear-gradient(90deg, #795548 0%, #6D4C41 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v7 .accent-y {
+            background: linear-gradient(180deg, var(--red-light) 0%, var(--red-dark) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Variation 8: Wide Gradient Span */
+        .v8 .letters {
+            background: linear-gradient(90deg, var(--brown-light) 0%, var(--brown-darker) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v8 .accent-y {
+            color: var(--red-accent);
+            display: inline-block;
+            transform: scale(1.1);
+        }
+
+        /* Variation 9: Warm Brown Gradient */
+        .v9 .letters {
+            background: linear-gradient(90deg, #8B6F47 0%, #5D4037 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v9 .accent-y {
+            color: #FF5252;
+            font-style: italic;
+        }
+
+        /* Variation 10: Deep Brown to Manila Gradient */
+        .v10 .letters {
+            background: linear-gradient(90deg, var(--brown-dark) 0%, var(--brown) 50%, var(--manila-dark) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v10 .accent-y {
+            color: var(--red-accent);
+            position: relative;
+        }
+        .v10 .accent-y::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--red-accent);
+        }
+
+        .label {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: var(--brown);
+            font-weight: 400;
+        }
+
+        .description {
+            font-size: 0.85rem;
+            color: var(--brown-light);
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Brown Gradient with Red "Y" Variations</h1>
+        
+        <div class="variations-grid">
+            <div class="variation">
+                <div class="logo-text v1">
+                    <span class="letters">man</span><span class="accent-y">y</span><span class="letters">lla</span>
+                </div>
+                <div class="label">1. Light to Dark Brown</div>
+                <div class="description">Smooth gradient from light to dark brown</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v2">
+                    <span class="letters">man</span><span class="accent-y">y</span><span class="letters">lla</span>
+                </div>
+                <div class="label">2. Dark to Light Brown</div>
+                <div class="description">Reverse gradient with bold red Y</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v3">
+                    <span class="letters">man</span><span class="accent-y">y</span><span class="letters">lla</span>
+                </div>
+                <div class="label">3. Diagonal Brown</div>
+                <div class="description">135° gradient with light red Y and shadow</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v4">
+                    <span class="letters">man</span><span class="accent-y">y</span><span class="letters">lla</span>
+                </div>
+                <div class="label">4. Three-Tone Brown</div>
+                <div class="description">Light-medium-dark with larger Y</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v5">
+                    <span class="letters">man</span><span class="accent-y">y</span><span class="letters">lla</span>
+                </div>
+                <div class="label">5. Radial Brown</div>
+                <div class="description">Center-out gradient with dark red Y</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v6">
+                    <span class="letters">man</span><span class="accent-y">Y</span><span class="letters">lla</span>
+                </div>
+                <div class="label">6. Multi-Brown Gradient</div>
+                <div class="description">Complex gradient with uppercase Y</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v7">
+                    <span class="letters">man</span><span class="accent-y">y</span><span class="letters">lla</span>
+                </div>
+                <div class="label">7. Subtle Brown</div>
+                <div class="description">Gentle gradient with gradient red Y</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v8">
+                    <span class="letters">man</span><span class="accent-y">y</span><span class="letters">lla</span>
+                </div>
+                <div class="label">8. Wide Span</div>
+                <div class="description">Full range brown with scaled Y</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v9">
+                    <span class="letters">man</span><span class="accent-y">y</span><span class="letters">lla</span>
+                </div>
+                <div class="label">9. Warm Brown</div>
+                <div class="description">Warm tones with italic bright red Y</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v10">
+                    <span class="letters">man</span><span class="accent-y">y</span><span class="letters">lla</span>
+                </div>
+                <div class="label">10. Brown to Manila</div>
+                <div class="description">Transitions to manila with underlined Y</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

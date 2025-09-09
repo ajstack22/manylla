@@ -1,5 +1,27 @@
 # Manylla Release Notes
 
+## Version 2025.09.09.4
+Entry Card UI Improvements - Better Discoverability
+
+### 🎨 UI/UX Improvements
+- **Visible Entry Actions**: Added edit (pencil) and delete (trash) icons to entry cards
+  - Icons displayed in top-right corner for better discoverability
+  - Removed hidden tap-to-edit and long-press-to-delete gestures
+  - Delete icon turns red on hover for clear visual feedback
+- **Modified Date Display**: Added "Last updated" date to bottom-left of each entry card
+- **Improved Spacing**: Optimized padding between entries for better visual hierarchy
+- **Manila Theme Refinement**: Adjusted manila theme colors for subtler, more authentic appearance
+- **Atkinson Hyperlegible Font**: Ensured accessibility font is applied throughout the app
+  - Added global CSS for consistent font application
+  - Fixed font loading issues on web platform
+
+### 🔧 Technical
+- Implemented Material-UI icons for web platform
+- Added confirmation dialogs for delete actions
+- Fixed webpack configuration for CSS file serving
+- Improved accessibility with proper ARIA labels
+- Minimum 44x44px touch targets for all interactive elements
+
 ## Version 2025.09.09.3
 Category Simplification - Improved User Experience
 
@@ -18,11 +40,19 @@ Category Simplification - Improved User Experience
 - **Demo Data**: Fixed demo profile entries to use correct category names
 - **Category Matching**: Resolved issue where entries weren't displaying due to category name mismatches
 - **App.js Updates**: Synchronized old App.js with new category structure
+- **Deployment Script**: Fixed multiple critical issues:
+  - Corrected build directory path (now uses `web/build/` instead of `build/`)
+  - Fixed .htaccess configuration for Manylla (was using StackMap's config)
+  - Added error handling for grep commands that return no matches
+  - Fixed madge circular dependency check
 
 ### 🔧 Technical
 - Updated all sample data and demo profiles to use new 6-category system
 - Fixed TypeScript errors related to category refactoring
 - Added clear-storage utility page for testing
+- Created new `.htaccess.manylla-qual` with correct RewriteBase paths
+- Updated deployment script to use correct build output directory
+- Commented out all console.log statements for production
 
 ## Version 2025.09.09.2
 Build System Fix - React Native + Web Deployment

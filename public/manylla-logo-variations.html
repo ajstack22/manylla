@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manylla Logo Variations</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --manila: #F4E4C1;
+            --manila-dark: #E8D4A8;
+            --manila-light: #FAF2E2;
+            --red-accent: #D32F2F;
+            --red-light: #EF5350;
+            --red-dark: #B71C1C;
+            --brown: #8D6E63;
+            --brown-dark: #5D4037;
+        }
+
+        body {
+            font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif;
+            background: linear-gradient(135deg, var(--manila-light) 0%, var(--manila) 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--brown-dark);
+            margin-bottom: 50px;
+            font-size: 2rem;
+        }
+
+        .variations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            padding: 20px;
+        }
+
+        .variation {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .variation:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo-text {
+            font-family: "Atkinson Hyperlegible", sans-serif;
+            margin: 20px 0;
+        }
+
+        /* Variation 1: Classic Bold */
+        .v1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--brown-dark);
+        }
+
+        /* Variation 2: Red Accent First Letter */
+        .v2 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--brown-dark);
+        }
+        .v2::first-letter {
+            color: var(--red-accent);
+            font-size: 3.5rem;
+        }
+
+        /* Variation 3: All Caps with Spacing */
+        .v3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            color: var(--brown);
+            text-transform: uppercase;
+        }
+
+        /* Variation 4: Red Background */
+        .v4 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: white;
+            background: var(--red-accent);
+            padding: 15px 30px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        /* Variation 5: Outline Style */
+        .v5 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: transparent;
+            -webkit-text-stroke: 2px var(--red-accent);
+            text-stroke: 2px var(--red-accent);
+        }
+
+        /* Variation 6: Gradient Text */
+        .v6 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--red-accent), var(--red-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Variation 7: Shadow Effect */
+        .v7 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--brown-dark);
+            text-shadow: 3px 3px 0px var(--red-light);
+        }
+
+        /* Variation 8: Italic Elegant */
+        .v8 {
+            font-size: 3rem;
+            font-style: italic;
+            font-weight: 400;
+            color: var(--red-dark);
+        }
+
+        /* Variation 9: Mixed Case Red */
+        .v9 {
+            font-size: 3rem;
+            font-weight: 700;
+        }
+        .v9 .m1 { color: var(--red-accent); }
+        .v9 .a1 { color: var(--brown-dark); }
+        .v9 .n1 { color: var(--red-accent); }
+        .v9 .y1 { color: var(--brown-dark); }
+        .v9 .l1 { color: var(--red-accent); }
+        .v9 .l2 { color: var(--brown-dark); }
+        .v9 .a2 { color: var(--red-accent); }
+
+        /* Variation 10: Underlined */
+        .v10 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--brown-dark);
+            text-decoration: underline;
+            text-decoration-color: var(--red-accent);
+            text-decoration-thickness: 4px;
+            text-underline-offset: 8px;
+        }
+
+        /* Variation 11: Box Letters */
+        .v11 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--red-accent);
+            border: 3px solid var(--red-accent);
+            padding: 10px 20px;
+            display: inline-block;
+        }
+
+        /* Variation 12: Rotated Accent */
+        .v12 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--brown-dark);
+        }
+        .v12 .accent {
+            display: inline-block;
+            color: var(--red-accent);
+            transform: rotate(-5deg);
+        }
+
+        /* Variation 13: Stacked */
+        .v13 {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 0.8;
+            color: var(--brown-dark);
+        }
+        .v13 .top {
+            font-size: 1.5rem;
+            color: var(--red-accent);
+            display: block;
+        }
+
+        /* Variation 14: Circular Badge */
+        .v14 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            background: var(--red-accent);
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        /* Variation 15: Manila Background */
+        .v15 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--red-accent);
+            background: var(--manila);
+            padding: 15px 30px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        /* Variation 16: Double Line */
+        .v16 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--brown-dark);
+            position: relative;
+            padding: 15px 0;
+        }
+        .v16::before,
+        .v16::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background: var(--red-accent);
+            left: 0;
+        }
+        .v16::before { top: 0; }
+        .v16::after { bottom: 0; }
+
+        /* Variation 17: Red Dot Accent */
+        .v17 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--brown-dark);
+            position: relative;
+        }
+        .v17::after {
+            content: '•';
+            color: var(--red-accent);
+            font-size: 4rem;
+            position: absolute;
+            right: -30px;
+            top: -10px;
+        }
+
+        /* Variation 18: Soft Shadow */
+        .v18 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--red-accent);
+            text-shadow: 0 4px 8px rgba(211, 47, 47, 0.3);
+        }
+
+        /* Variation 19: Split Color */
+        .v19 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--red-accent) 50%, var(--brown-dark) 50%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Variation 20: Vintage Style */
+        .v20 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--brown-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-top: 3px solid var(--red-accent);
+            border-bottom: 3px solid var(--red-accent);
+            padding: 10px 0;
+            display: inline-block;
+        }
+
+        .label {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--brown);
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Manylla Logo Variations</h1>
+        
+        <div class="variations-grid">
+            <div class="variation">
+                <div class="logo-text v1">manylla</div>
+                <div class="label">1. Classic Bold</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v2">manylla</div>
+                <div class="label">2. Red First Letter</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v3">manylla</div>
+                <div class="label">3. All Caps Spaced</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v4">manylla</div>
+                <div class="label">4. Red Background</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v5">manylla</div>
+                <div class="label">5. Outline Style</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v6">manylla</div>
+                <div class="label">6. Gradient Text</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v7">manylla</div>
+                <div class="label">7. Shadow Effect</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v8">manylla</div>
+                <div class="label">8. Italic Elegant</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v9">
+                    <span class="m1">m</span><span class="a1">a</span><span class="n1">n</span><span class="y1">y</span><span class="l1">l</span><span class="l2">l</span><span class="a2">a</span>
+                </div>
+                <div class="label">9. Alternating Colors</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v10">manylla</div>
+                <div class="label">10. Red Underline</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v11">manylla</div>
+                <div class="label">11. Box Letters</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v12">man<span class="accent">y</span>lla</div>
+                <div class="label">12. Rotated Accent</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v13">
+                    <span class="top">THE</span>
+                    manylla
+                </div>
+                <div class="label">13. Stacked</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v14">manylla</div>
+                <div class="label">14. Circular Badge</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v15">manylla</div>
+                <div class="label">15. Manila Background</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v16">manylla</div>
+                <div class="label">16. Double Line</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v17">manylla</div>
+                <div class="label">17. Red Dot Accent</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v18">manylla</div>
+                <div class="label">18. Soft Shadow</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v19">manylla</div>
+                <div class="label">19. Split Color</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v20">manylla</div>
+                <div class="label">20. Vintage Style</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -98,7 +98,11 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
                 />
 
                 <Text style={styles.cardDate}>
-                  {new Date(entry.date).toLocaleDateString()}
+                  {new Intl.DateTimeFormat('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                  }).format(new Date(entry.updatedAt || entry.date))}
                 </Text>
               </View>
             </View>
@@ -191,9 +195,9 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   actionButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: "#F0F0F0",
     justifyContent: "center",
     alignItems: "center",

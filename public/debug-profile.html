@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Profile Data</title>
+</head>
+<body>
+    <h1>Current Profile Data</h1>
+    <pre id="output"></pre>
+    <button onclick="clearData()">Clear Local Storage</button>
+    <button onclick="loadDemo()">Load Demo Profile</button>
+    <script>
+        const profile = localStorage.getItem('manylla_profile');
+        const onboarding = localStorage.getItem('manylla_onboarding_completed');
+        document.getElementById('output').textContent = JSON.stringify({
+            hasProfile: !!profile,
+            onboardingCompleted: onboarding,
+            profile: profile ? JSON.parse(profile) : null
+        }, null, 2);
+        
+        function clearData() {
+            localStorage.removeItem('manylla_profile');
+            localStorage.removeItem('manylla_onboarding_completed');
+            alert('Data cleared! Refresh the main app.');
+            location.reload();
+        }
+        
+        function loadDemo() {
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>

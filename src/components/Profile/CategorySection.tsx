@@ -78,11 +78,12 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
                   <Stack direction="row" spacing={0.5}>
                     {onEditEntry && (
                       <IconButton
+                        size="small"
                         onClick={() => onEditEntry(entry)}
                         sx={{
-                          // Larger touch targets
-                          minWidth: 40,
-                          minHeight: 40,
+                          color: 'text.secondary',
+                          minWidth: 44,
+                          minHeight: 44,
                           "&:hover": {
                             backgroundColor: "action.hover",
                           },
@@ -93,13 +94,15 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
                     )}
                     {onDeleteEntry && (
                       <IconButton
+                        size="small"
                         onClick={() => onDeleteEntry(entry.id)}
                         sx={{
-                          minWidth: 40,
-                          minHeight: 40,
+                          color: 'text.secondary',
+                          minWidth: 44,
+                          minHeight: 44,
                           "&:hover": {
                             backgroundColor: "error.light",
-                            color: "error.contrastText",
+                            color: "error.main",
                           },
                         }}
                       >
@@ -118,7 +121,11 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
                   color="text.secondary"
                   sx={{ display: "block", mt: 1 }}
                 >
-                  {new Date(entry.date).toLocaleDateString()}
+                  {new Intl.DateTimeFormat('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                  }).format(new Date(entry.updatedAt || entry.date))}
                 </Typography>
               </CardContent>
             </Card>

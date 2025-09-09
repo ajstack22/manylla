@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fix Ellie's Data</title>
+</head>
+<body>
+    <h1>Fix Ellie's Profile Data</h1>
+    <pre id="output"></pre>
+    <button onclick="fixData()">Fix Categories & Add Dates</button>
+    <script>
+        function fixData() {
+            const profileStr = localStorage.getItem('manylla_profile');
+            if (!profileStr) {
+                alert('No profile found!');
+                return;
+            }
+            
+            const profile = JSON.parse(profileStr);
+            
+            // Category mapping
+            const categoryMap = {
+                'goals': 'development',
+                'successes': 'development', 
+                'education': 'daily-support',
+                'behaviors': 'daily-support',
+                'tips-tricks': 'daily-support',
+                'medical': 'medical',
+                'quick-info': 'quick-info'
+            };
+            
+            // Fix entries - update categories and add updatedAt dates
+            profile.entries = profile.entries.map(entry => {
+                const newCategory = categoryMap[entry.category] || 'other';
+                
+                // Add updatedAt if missing (use date + random days for variety)
+                const baseDate = new Date(entry.date);
+                const daysToAdd = Math.floor(Math.random() * 30) + 1;
+                const updatedAt = new Date(baseDate);
+                updatedAt.setDate(updatedAt.getDate() + daysToAdd);
+                
+                return {
+                    ...entry,
+                    category: newCategory,
+                    updatedAt: updatedAt.toISOString()
+                };
+            });
+            
+            // Save fixed profile
+            localStorage.setItem('manylla_profile', JSON.stringify(profile));
+            
+            document.getElementById('output').textContent = 'Fixed! Categories mapped:\n' +
+                '- goals → development\n' +
+                '- successes → development\n' +
+                '- education → daily-support\n' +
+                '- behaviors → daily-support\n' +
+                '- tips-tricks → daily-support\n' +
+                '- medical → medical\n' +
+                '- quick-info → quick-info\n\n' +
+                'Also added updatedAt dates to all entries.\n\n' +
+                'Refresh the main app to see the changes!';
+            
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

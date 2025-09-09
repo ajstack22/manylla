@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manylla - Variation 6 with Different Styles and Reds</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Base gradient colors from v6 */
+            --gradient-start: #B8A398;
+            --gradient-end: #A89185;
+            
+            /* Manila colors */
+            --manila: #F4E4C1;
+            --manila-light: #FAF2E2;
+            
+            /* Red variations */
+            --red-original: #D32F2F;
+            --red-bright: #FF5252;
+            --red-deep: #B71C1C;
+            --red-soft: #E57373;
+            --red-coral: #FF6B6B;
+            --red-crimson: #DC143C;
+            --red-vermillion: #E34234;
+            --red-scarlet: #FF2400;
+            --red-ruby: #9B111E;
+            --red-cherry: #D2042D;
+            --red-rose: #FF007F;
+            --red-burgundy: #800020;
+            --red-terracotta: #C65D00;
+            --red-salmon: #FA8072;
+            --red-tomato: #FF6347;
+            
+            /* Browns */
+            --brown: #8D6E63;
+            --brown-dark: #5D4037;
+        }
+
+        body {
+            font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif;
+            background: linear-gradient(135deg, var(--manila-light) 0%, var(--manila) 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--brown-dark);
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        h2 {
+            color: var(--brown);
+            margin: 40px 0 20px 20px;
+            font-size: 1.5rem;
+        }
+
+        .style-section {
+            margin-bottom: 60px;
+        }
+
+        .variations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 0 20px;
+        }
+
+        .variation {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .variation:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo-text {
+            font-family: "Atkinson Hyperlegible", sans-serif;
+            margin: 20px 0;
+            font-size: 3.5rem;
+            display: inline-block;
+            position: relative;
+        }
+
+        /* Base gradient for all variations */
+        .continuous-gradient {
+            background: linear-gradient(90deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Base style for all text - always bold */
+        .logo-text {
+            font-weight: 700;
+        }
+
+        /* Y-specific styles */
+        .y-regular {
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .y-bold {
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        .y-italic {
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .y-italic-bold {
+            font-style: italic;
+            font-weight: 700;
+        }
+
+        /* Red variations */
+        .red-original { color: var(--red-original); }
+        .red-bright { color: var(--red-bright); }
+        .red-deep { color: var(--red-deep); }
+        .red-soft { color: var(--red-soft); }
+        .red-coral { color: var(--red-coral); }
+        .red-crimson { color: var(--red-crimson); }
+        .red-vermillion { color: var(--red-vermillion); }
+        .red-scarlet { color: var(--red-scarlet); }
+        .red-ruby { color: var(--red-ruby); }
+        .red-cherry { color: var(--red-cherry); }
+        .red-rose { color: var(--red-rose); }
+        .red-burgundy { color: var(--red-burgundy); }
+        .red-terracotta { color: var(--red-terracotta); }
+        .red-salmon { color: var(--red-salmon); }
+        .red-tomato { color: var(--red-tomato); }
+
+        .label {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--brown);
+            font-weight: 400;
+        }
+
+        .color-code {
+            font-size: 0.75rem;
+            color: #999;
+            margin-top: 3px;
+            font-family: monospace;
+        }
+
+        /* Info box */
+        .info-box {
+            background: var(--manila-light);
+            border-left: 4px solid var(--red-original);
+            padding: 20px;
+            margin: 30px 20px;
+            border-radius: 8px;
+        }
+
+        .info-box p {
+            color: var(--brown);
+            margin: 0;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Variation 6: Style & Red Color Exploration</h1>
+        
+        <div class="info-box">
+            <p><strong>Base gradient:</strong> #B8A398 → #A89185 (Very subtle brown gradient)<br>
+            Testing different font styles (regular, bold, italic) with various red shades for the "y"</p>
+        </div>
+
+        <!-- Regular Y Weight -->
+        <div class="style-section">
+            <h2>Regular "Y" (400 weight)</h2>
+            <div class="variations-grid">
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-original y-regular">y</span>lla</span>
+                    </div>
+                    <div class="label">Original Red</div>
+                    <div class="color-code">#D32F2F</div>
+                </div>
+
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-bright y-regular">y</span>lla</span>
+                    </div>
+                    <div class="label">Bright Red</div>
+                    <div class="color-code">#FF5252</div>
+                </div>
+
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-soft y-regular">y</span>lla</span>
+                    </div>
+                    <div class="label">Soft Red</div>
+                    <div class="color-code">#E57373</div>
+                </div>
+
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-coral y-regular">y</span>lla</span>
+                    </div>
+                    <div class="label">Coral Red</div>
+                    <div class="color-code">#FF6B6B</div>
+                </div>
+
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-vermillion y-regular">y</span>lla</span>
+                    </div>
+                    <div class="label">Vermillion</div>
+                    <div class="color-code">#E34234</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bold Y Weight -->
+        <div class="style-section">
+            <h2>Bold "Y" (700 weight)</h2>
+            <div class="variations-grid">
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-original y-bold">y</span>lla</span>
+                    </div>
+                    <div class="label">Original Red</div>
+                    <div class="color-code">#D32F2F</div>
+                </div>
+
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-deep y-bold">y</span>lla</span>
+                    </div>
+                    <div class="label">Deep Red</div>
+                    <div class="color-code">#B71C1C</div>
+                </div>
+
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-crimson y-bold">y</span>lla</span>
+                    </div>
+                    <div class="label">Crimson</div>
+                    <div class="color-code">#DC143C</div>
+                </div>
+
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-cherry y-bold">y</span>lla</span>
+                    </div>
+                    <div class="label">Cherry</div>
+                    <div class="color-code">#D2042D</div>
+                </div>
+
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-ruby y-bold">y</span>lla</span>
+                    </div>
+                    <div class="label">Ruby</div>
+                    <div class="color-code">#9B111E</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Italic Y -->
+        <div class="style-section">
+            <h2>Italic "Y" (400 weight)</h2>
+            <div class="variations-grid">
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-original y-italic">y</span>lla</span>
+                    </div>
+                    <div class="label">Original Red</div>
+                    <div class="color-code">#D32F2F</div>
+                </div>
+
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-rose y-italic">y</span>lla</span>
+                    </div>
+                    <div class="label">Rose</div>
+                    <div class="color-code">#FF007F</div>
+                </div>
+
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-salmon y-italic">y</span>lla</span>
+                    </div>
+                    <div class="label">Salmon</div>
+                    <div class="color-code">#FA8072</div>
+                </div>
+
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-tomato y-italic">y</span>lla</span>
+                    </div>
+                    <div class="label">Tomato</div>
+                    <div class="color-code">#FF6347</div>
+                </div>
+
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-scarlet y-italic">y</span>lla</span>
+                    </div>
+                    <div class="label">Scarlet</div>
+                    <div class="color-code">#FF2400</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Italic Bold Y -->
+        <div class="style-section">
+            <h2>Italic Bold "Y" (700 weight)</h2>
+            <div class="variations-grid">
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-original y-italic-bold">y</span>lla</span>
+                    </div>
+                    <div class="label">Original Red</div>
+                    <div class="color-code">#D32F2F</div>
+                </div>
+
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-burgundy y-italic-bold">y</span>lla</span>
+                    </div>
+                    <div class="label">Burgundy</div>
+                    <div class="color-code">#800020</div>
+                </div>
+
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-terracotta y-italic-bold">y</span>lla</span>
+                    </div>
+                    <div class="label">Terracotta</div>
+                    <div class="color-code">#C65D00</div>
+                </div>
+
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-vermillion y-italic-bold">y</span>lla</span>
+                    </div>
+                    <div class="label">Vermillion</div>
+                    <div class="color-code">#E34234</div>
+                </div>
+
+                <div class="variation">
+                    <div class="logo-text">
+                        <span class="continuous-gradient">man<span class="red-crimson y-italic-bold">y</span>lla</span>
+                    </div>
+                    <div class="label">Crimson</div>
+                    <div class="color-code">#DC143C</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

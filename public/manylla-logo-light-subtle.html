@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manylla - Light Subtle Gradients</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --manila: #F4E4C1;
+            --manila-dark: #E8D4A8;
+            --manila-light: #FAF2E2;
+            --red-accent: #D32F2F;
+            --red-light: #EF5350;
+            --red-dark: #B71C1C;
+            --red-soft: #E57373;
+            --red-muted: #C62828;
+            --brown: #8D6E63;
+            --brown-dark: #5D4037;
+            --brown-light: #A1887F;
+            --brown-lighter: #BCAAA4;
+            --brown-lightest: #D7CCC8;
+            --tan: #C8B7A6;
+            --tan-light: #E0D5CC;
+        }
+
+        body {
+            font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif;
+            background: linear-gradient(135deg, var(--manila-light) 0%, var(--manila) 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--brown-dark);
+            margin-bottom: 50px;
+            font-size: 2rem;
+        }
+
+        .variations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            padding: 20px;
+        }
+
+        .variation {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .variation:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo-text {
+            font-family: "Atkinson Hyperlegible", sans-serif;
+            margin: 20px 0;
+            font-size: 4rem;
+            font-weight: 700;
+            display: inline-block;
+            position: relative;
+        }
+
+        /* Variation 1: Very Light Browns */
+        .v1 .continuous-gradient {
+            background: linear-gradient(90deg, #D7CCC8 0%, #BCAAA4 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v1 .accent-y {
+            color: var(--red-soft);
+        }
+
+        /* Variation 2: Tan to Light Brown */
+        .v2 .continuous-gradient {
+            background: linear-gradient(90deg, #E0D5CC 0%, #C8B7A6 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v2 .accent-y {
+            color: var(--red-light);
+        }
+
+        /* Variation 3: Manila to Light Brown */
+        .v3 .continuous-gradient {
+            background: linear-gradient(90deg, var(--manila) 0%, var(--brown-lighter) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v3 .accent-y {
+            color: var(--red-accent);
+        }
+
+        /* Variation 4: Subtle Warm Gradient */
+        .v4 .continuous-gradient {
+            background: linear-gradient(90deg, #C9ADA1 0%, #B39C94 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v4 .accent-y {
+            color: #F44336;
+        }
+
+        /* Variation 5: Light to Medium Brown */
+        .v5 .continuous-gradient {
+            background: linear-gradient(90deg, var(--brown-lightest) 0%, var(--brown-light) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v5 .accent-y {
+            color: var(--red-muted);
+        }
+
+        /* Variation 6: Very Subtle Gradient */
+        .v6 .continuous-gradient {
+            background: linear-gradient(90deg, #B8A398 0%, #A89185 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v6 .accent-y {
+            color: var(--red-accent);
+        }
+
+        /* Variation 7: Beige to Tan */
+        .v7 .continuous-gradient {
+            background: linear-gradient(90deg, #F5E6D3 0%, #D4C4B0 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v7 .accent-y {
+            color: var(--red-soft);
+        }
+
+        /* Variation 8: Soft Browns */
+        .v8 .continuous-gradient {
+            background: linear-gradient(90deg, #CABBB0 0%, #B5A297 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v8 .accent-y {
+            color: #FF6B6B;
+        }
+
+        /* Variation 9: Original Subtle (Reference) */
+        .v9 .continuous-gradient {
+            background: linear-gradient(90deg, #9C8B7E 0%, #8A7968 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v9 .accent-y {
+            color: var(--red-light);
+        }
+
+        /* Variation 10: Ultra Light */
+        .v10 .continuous-gradient {
+            background: linear-gradient(90deg, #EBE0D7 0%, #D9CCC1 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .v10 .accent-y {
+            color: var(--red-accent);
+        }
+
+        .label {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: var(--brown);
+            font-weight: 400;
+        }
+
+        .description {
+            font-size: 0.85rem;
+            color: var(--brown-light);
+            margin-top: 5px;
+        }
+
+        /* Info box */
+        .info-box {
+            background: var(--manila-light);
+            border-left: 4px solid var(--red-accent);
+            padding: 20px;
+            margin: 30px 20px;
+            border-radius: 8px;
+        }
+
+        .info-box h2 {
+            color: var(--brown-dark);
+            font-size: 1.2rem;
+            margin: 0 0 10px 0;
+        }
+
+        .info-box p {
+            color: var(--brown);
+            margin: 0;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Light & Subtle Gradient Variations</h1>
+        
+        <div class="info-box">
+            <h2>Lighter Palette</h2>
+            <p>These variations use lighter, more subtle brown and tan gradients for a softer, more refined appearance while maintaining the continuous flow and red "y" accent.</p>
+        </div>
+        
+        <div class="variations-grid">
+            <div class="variation">
+                <div class="logo-text v1">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">1. Very Light Browns</div>
+                <div class="description">Lightest brown tones with soft red</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v2">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">2. Tan to Light Brown</div>
+                <div class="description">Warm tan gradient</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v3">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">3. Manila to Light Brown</div>
+                <div class="description">Envelope color transition</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v4">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">4. Subtle Warm</div>
+                <div class="description">Warm undertones with bright red</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v5">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">5. Light to Medium</div>
+                <div class="description">Gentle progression with muted red</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v6">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">6. Very Subtle</div>
+                <div class="description">Minimal gradient change</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v7">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">7. Beige to Tan</div>
+                <div class="description">Lightest option with soft red</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v8">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">8. Soft Browns</div>
+                <div class="description">Muted tones with coral red</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v9">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">9. Original Reference</div>
+                <div class="description">Medium subtle gradient</div>
+            </div>
+
+            <div class="variation">
+                <div class="logo-text v10">
+                    <span class="continuous-gradient">man<span class="accent-y">y</span>lla</span>
+                </div>
+                <div class="label">10. Ultra Light</div>
+                <div class="description">Barely visible gradient</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

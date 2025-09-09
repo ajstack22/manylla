@@ -23,6 +23,20 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// Icon imports
+let EditIcon, DeleteIcon;
+if (Platform.OS === 'web') {
+  // Use Material-UI icons for web
+  const MuiIcons = require('@mui/icons-material');
+  EditIcon = MuiIcons.Edit;
+  DeleteIcon = MuiIcons.Delete;
+} else {
+  // Use React Native Vector Icons for mobile
+  const Icon = require('react-native-vector-icons/MaterialIcons').default;
+  EditIcon = (props) => <Icon name="edit" size={20} color={props.color || '#666'} />;
+  DeleteIcon = (props) => <Icon name="delete" size={20} color={props.color || '#666'} />;
+}
+
 // Shared imports
 import { ThemeProvider, SyncProvider, useSync, useTheme } from './src/context';
 import { OnboardingWizard } from './src/components/Onboarding';
@@ -87,12 +101,12 @@ if (Platform.OS === 'web' && typeof window !== 'undefined') {
 
 // Default color constants (will be overridden by theme)
 const defaultColors = {
-  primary: '#8B7355',
-  secondary: '#6B5D54',
+  primary: '#B8A088',  // Softer, lighter manila brown
+  secondary: '#9E8B78', // Lighter complementary brown
   background: {
     default: '#FDFBF7',
     paper: '#FFFFFF',
-    manila: '#F4E4C1',
+    manila: '#F9F2E8',  // Much lighter, subtle manila color
   },
   text: {
     primary: '#333333',
@@ -205,35 +219,65 @@ const ProfileOverview = ({
                   {quickInfoEntries.length === 0 ? (
                     <Text style={styles.emptyCategory}>No quick info yet</Text>
                   ) : (
-                    quickInfoEntries.map((entry) => (
-                      <TouchableOpacity
-                        key={entry.id}
-                        style={styles.entryItem}
-                        onPress={() => onEditEntry(entry)}
-                        onLongPress={() => {
-                          if (Platform.OS === 'web') {
-                            if (window.confirm('Delete this entry?')) {
-                              onDeleteEntry(entry.id);
-                            }
-                          } else {
-                            Alert.alert(
-                              'Delete Entry',
-                              'Are you sure you want to delete this entry?',
-                              [
-                                { text: 'Cancel', style: 'cancel' },
-                                { text: 'Delete', style: 'destructive', onPress: () => onDeleteEntry(entry.id) }
-                              ]
-                            );
-                          }
-                        }}
-                      >
-                        <Text style={styles.entryTitle}>{entry.title}</Text>
+                    quickInfoEntries.map((entry, index) => (
+                      <View key={entry.id} style={[styles.entryItem, index === 0 && { marginTop: 0 }]}>
+                        <View style={styles.entryHeader}>
+                          <Text style={styles.entryTitle}>{entry.title}</Text>
+                          <View style={styles.entryActions}>
+                            <TouchableOpacity
+                              onPress={() => onEditEntry(entry)}
+                              style={styles.iconButton}
+                              accessibilityLabel={`Edit ${entry.title}`}
+                              accessibilityRole="button"
+                            >
+                              {Platform.OS === 'web' ? (
+                                <EditIcon sx={{ fontSize: 20, color: '#666' }} />
+                              ) : (
+                                <EditIcon />
+                              )}
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              onPress={() => {
+                                if (Platform.OS === 'web') {
+                                  if (window.confirm('Are you sure you want to delete this entry?')) {
+                                    onDeleteEntry(entry.id);
+                                  }
+                                } else {
+                                  Alert.alert(
+                                    'Delete Entry',
+                                    'Are you sure you want to delete this entry?',
+                                    [
+                                      { text: 'Cancel', style: 'cancel' },
+                                      { text: 'Delete', style: 'destructive', onPress: () => onDeleteEntry(entry.id) }
+                                    ]
+                                  );
+                                }
+                              }}
+                              style={styles.iconButton}
+                              accessibilityLabel={`Delete ${entry.title}`}
+                              accessibilityRole="button"
+                            >
+                              {Platform.OS === 'web' ? (
+                                <DeleteIcon sx={{ fontSize: 20, color: '#666', '&:hover': { color: '#d32f2f' } }} />
+                              ) : (
+                                <DeleteIcon />
+                              )}
+                            </TouchableOpacity>
+                          </View>
+                        </View>
                         {entry.description && (
                           <Text style={styles.entryDescription} numberOfLines={2}>
                             {entry.description.replace(/<[^>]*>/g, '')}
                           </Text>
                         )}
-                      </TouchableOpacity>
+                        <Text style={styles.entryDate}>
+                          {new Intl.DateTimeFormat('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric'
+                          }).format(new Date(entry.updatedAt || entry.date))}
+                        </Text>
+                      </View>
                     ))
                   )}
                 </View>
@@ -267,35 +311,65 @@ const ProfileOverview = ({
                 {entries.length === 0 ? (
                   <Text style={styles.emptyCategory}>No entries yet</Text>
                 ) : (
-                  entries.map((entry) => (
-                    <TouchableOpacity
-                      key={entry.id}
-                      style={styles.entryItem}
-                      onPress={() => onEditEntry(entry)}
-                      onLongPress={() => {
-                        if (Platform.OS === 'web') {
-                          if (window.confirm('Delete this entry?')) {
-                            onDeleteEntry(entry.id);
-                          }
-                        } else {
-                          Alert.alert(
-                            'Delete Entry',
-                            'Are you sure you want to delete this entry?',
-                            [
-                              { text: 'Cancel', style: 'cancel' },
-                              { text: 'Delete', style: 'destructive', onPress: () => onDeleteEntry(entry.id) }
-                            ]
-                          );
-                        }
-                      }}
-                    >
-                      <Text style={styles.entryTitle}>{entry.title}</Text>
+                  entries.map((entry, index) => (
+                    <View key={entry.id} style={[styles.entryItem, index === 0 && { marginTop: 0 }]}>
+                      <View style={styles.entryHeader}>
+                        <Text style={styles.entryTitle}>{entry.title}</Text>
+                        <View style={styles.entryActions}>
+                          <TouchableOpacity
+                            onPress={() => onEditEntry(entry)}
+                            style={styles.iconButton}
+                            accessibilityLabel={`Edit ${entry.title}`}
+                            accessibilityRole="button"
+                          >
+                            {Platform.OS === 'web' ? (
+                              <EditIcon sx={{ fontSize: 20, color: '#666' }} />
+                            ) : (
+                              <EditIcon />
+                            )}
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => {
+                              if (Platform.OS === 'web') {
+                                if (window.confirm('Are you sure you want to delete this entry?')) {
+                                  onDeleteEntry(entry.id);
+                                }
+                              } else {
+                                Alert.alert(
+                                  'Delete Entry',
+                                  'Are you sure you want to delete this entry?',
+                                  [
+                                    { text: 'Cancel', style: 'cancel' },
+                                    { text: 'Delete', style: 'destructive', onPress: () => onDeleteEntry(entry.id) }
+                                  ]
+                                );
+                              }
+                            }}
+                            style={styles.iconButton}
+                            accessibilityLabel={`Delete ${entry.title}`}
+                            accessibilityRole="button"
+                          >
+                            {Platform.OS === 'web' ? (
+                              <DeleteIcon sx={{ fontSize: 20, color: '#666', '&:hover': { color: '#d32f2f' } }} />
+                            ) : (
+                              <DeleteIcon />
+                            )}
+                          </TouchableOpacity>
+                        </View>
+                      </View>
                       {entry.description && (
                         <Text style={styles.entryDescription} numberOfLines={2}>
                           {entry.description.replace(/<[^>]*>/g, '')}
                         </Text>
                       )}
-                    </TouchableOpacity>
+                      <Text style={styles.entryDate}>
+                        {new Intl.DateTimeFormat('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric'
+                        }).format(new Date(entry.updatedAt || entry.date))}
+                      </Text>
+                    </View>
                   ))
                 )}
               </View>
@@ -856,10 +930,17 @@ function AppContent() {
 }
 
 // Create styles function that accepts colors
-const createStyles = (colors) => StyleSheet.create({
+const createStyles = (colors) => {
+  // Base text style with Atkinson Hyperlegible font
+  const baseTextStyle = Platform.OS === 'web' ? {
+    fontFamily: '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
+  } : {};
+  
+  return StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background.default,
+    ...baseTextStyle,
   },
   loadingContainer: {
     flex: 1,
@@ -1088,14 +1169,17 @@ const createStyles = (colors) => StyleSheet.create({
     lineHeight: 18,
   },
   categoryContent: {
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    paddingTop: 4,
   },
   emptyCategory: {
     color: colors.text.disabled,
     fontStyle: 'italic',
   },
   entryItem: {
-    paddingVertical: 12,
+    paddingVertical: 6, // Reduced from 12px to 6px
+    marginTop: 6, // Reduced from 12px to 6px
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
@@ -1103,12 +1187,36 @@ const createStyles = (colors) => StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: colors.text.primary,
-    marginBottom: 4,
+    flex: 1,
   },
   entryDescription: {
     fontSize: 14,
     color: colors.text.secondary,
     lineHeight: 20,
+  },
+  entryHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  entryActions: {
+    flexDirection: 'row',
+    gap: 4,
+    marginLeft: 8,
+  },
+  iconButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  entryDate: {
+    fontSize: 12,
+    color: colors.text.disabled,
+    marginTop: 8,
   },
   quickInfoPanel: {
     marginBottom: 16,
@@ -1214,6 +1322,7 @@ const createStyles = (colors) => StyleSheet.create({
     color: colors.text.secondary,
   },
 });
+}
 
 // Default styles using default colors (for initial render)
 let styles = createStyles(defaultColors);
