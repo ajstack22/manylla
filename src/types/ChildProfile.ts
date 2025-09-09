@@ -4,6 +4,7 @@ export interface Entry {
   title: string;
   description: string;
   date: Date;
+  updatedAt?: Date; // Optional field for tracking last modification
   attachments?: string[];
   visibility?: string[]; // Array of visibility options: ['family', 'medical', 'education'] or ['all'] or ['private']
 }
