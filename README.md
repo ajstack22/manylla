@@ -1,108 +1,140 @@
 # Manylla
 
-A secure, privacy-focused medical information management app for parents of children with special needs.
+A zero-knowledge encrypted profile management application for special needs information, built with React Native for iOS/Android and React for web.
 
-## 🔒 Privacy First
-
-Manylla uses zero-knowledge encryption to ensure your family's medical information stays private. All data is encrypted on your device before any transmission or storage.
-
-## Features
-
-- 📱 **Mobile-First Design** - Optimized for phones and tablets
-- 🔐 **Zero-Knowledge Encryption** - Your data remains private
-- 🌐 **Multi-Device Sync** - Access from anywhere securely
-- 📤 **Secure Sharing** - Share with doctors, schools, and caregivers
-- ✈️ **Works Offline** - No internet required for core features
-- 🎨 **Light/Dark Mode** - Choose your preferred theme
-- 📂 **Smart Organization** - Categories and tags for easy access
-
-## Technology Stack
-
-- **Frontend**: React 19 with TypeScript
-- **UI Library**: Material-UI v7
-- **Encryption**: TweetNaCl.js (client-side)
-- **Architecture**: Progressive Web App (PWA)
-- **State Management**: React Context API
-
-## Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18 or higher
-- npm 9 or higher
+- Node.js 18+
+- Xcode (for iOS development)
+- Android Studio (for Android development)
+- CocoaPods (`gem install cocoapods`)
 
 ### Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/ajstack22/manylla.git
-cd manylla/manylla-app
-
 # Install dependencies
 npm install
 
-# Start development server
+# iOS only: Install pods
+cd ios && pod install && cd ..
+```
+
+### Running the App
+
+#### iOS
+```bash
+npx react-native run-ios
+# or for specific simulator
+npx react-native run-ios --simulator="iPhone 16 Pro"
+```
+
+#### Android
+```bash
+npx react-native run-android
+```
+
+#### Web Development
+```bash
+cd /Users/adamstack/Desktop/manylla-app
 npm start
 ```
 
-The app will open at [http://localhost:3000](http://localhost:3000)
+## 🏗️ Architecture
 
-## Available Scripts
+This is a unified codebase supporting:
+- **iOS & Android**: React Native 0.81
+- **Web**: React 19 with Material-UI
+- **95% code sharing** between platforms using platform-specific file extensions
 
-In the project directory, you can run:
+### Key Features
+- 🔐 Zero-knowledge encryption (client-side only)
+- 📱 Cross-platform (iOS, Android, Web)
+- 🔄 Multi-device sync with recovery phrases
+- 🔗 Temporary encrypted sharing
+- 🎨 Material Design (Android) & iOS Human Interface Guidelines
+- 📌 Quick Info panel for priority information
+- ➕ Material Design Floating Action Button (FAB)
+- 📐 Responsive layouts (Desktop: 2-column grid, Mobile: stacked)
 
-### `npm start`
+## 📂 Project Structure
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```
+/src
+  /components     # UI components with .native.tsx variants
+  /services       # Business logic (encryption, sync, storage)
+  /context        # React Context providers
+  /types          # TypeScript definitions
+  /utils          # Utility functions
+/docs            # Comprehensive documentation
+/api             # PHP backend (deployed separately)
+/scripts         # Deployment and utility scripts
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 🚀 Deployment
 
-### `npm test`
+```bash
+# Deploy to staging (qual) - handles both web and mobile
+./scripts/deploy-qual.sh
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Options:
+# 1) Web only
+# 2) Mobile simulators only  
+# 3) Both
+# 4) Quick reload mobile
+```
 
-### `npm run build`
+## 📖 Documentation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+See [/docs/README.md](./docs/README.md) for comprehensive documentation including:
+- Architecture guides
+- API reference
+- Mobile development guides
+- Deployment procedures
+- Security implementation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🔒 Security
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Privacy & Security
-
-Manylla implements zero-knowledge encryption, ensuring:
-- All data is encrypted on your device before transmission
-- No access to your unencrypted data by servers or third parties
+- All data encrypted client-side before storage/transmission
+- Server never has access to plaintext data
+- 32-character hex recovery phrases for device sync
 - No user accounts or personal information required
-- You control your data with a recovery phrase
 
-## Contributing
+## 🛠️ Development
 
-We welcome contributions! Please feel free to submit issues and pull requests.
+### Current Status
+- ✅ Phase 1: Core CRUD components (Complete)
+- 🚧 Phase 2: Profile management components
+- 📋 Phase 3: Sync & Share components
+- 📋 Phase 4: Rich text editing
 
-## License
+### Key Commands
+
+```bash
+# Run tests
+npm test
+
+# Type checking
+npm run typescript
+
+# Linting
+npm run lint
+
+# Build for production
+npm run build
+```
+
+## 📄 License
 
 Copyright © 2025 Manylla. All rights reserved.
 
-## Support
+## 🤝 Contributing
 
-For questions or support, please open an issue on GitHub.
+This is a private repository. For development guidelines, see `/CLAUDE.md`.
 
----
+## 🔗 Links
 
-*Built with ❤️ for families managing special needs*
+- **Production**: https://manylla.com
+- **Staging**: https://manylla.com/qual
+- **Documentation**: [/docs/](./docs/)
+- **Release Notes**: [/docs/RELEASE_NOTES.md](./docs/RELEASE_NOTES.md)

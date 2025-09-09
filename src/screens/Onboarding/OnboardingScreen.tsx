@@ -39,7 +39,7 @@ const OnboardingScreen: React.FC = () => {
 
   const handleJoinWithCode = async (code: string) => {
     // TODO: Implement joining with sync code
-    console.log('Join with code:', code);
+    // console.log('Join with code:', code);
     // This will eventually sync with the server using the provided code
   };
 

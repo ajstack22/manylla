@@ -1,0 +1,26 @@
+⚠️ DEPLOYMENT REMINDER FOR AI ASSISTANTS ⚠️
+==========================================
+
+If you're reading this file while working on the codebase,
+remember that deployment to QUAL must ONLY be done via:
+
+./scripts/deploy-qual.sh
+
+DO NOT:
+- Use npm run deploy:qual
+- Manually copy files to the server
+- Skip validation checks
+- Deploy with uncommitted changes
+- Deploy without updating release notes
+
+The deployment script will:
+1. Validate all code quality checks
+2. Require updated release notes
+3. Build and test the project
+4. Commit and push to GitHub
+5. Deploy to the qual environment
+
+If deployment fails, DO NOT bypass the checks.
+Fix the underlying issue instead.
+
+See /DEPLOYMENT_RULES.md for full details.

@@ -87,7 +87,7 @@ export const initializeSampleData = async () => {
       };
       
       await AsyncStorage.setItem('childProfile', JSON.stringify(sampleProfile));
-      console.log('Sample profile initialized successfully');
+      // console.log('Sample profile initialized successfully');
       return sampleProfile;
     }
     

@@ -195,7 +195,7 @@ export const ShareDialogOptimized: React.FC<ShareDialogOptimizedProps> = ({
       }
       
       const result = await response.json();
-      console.log('[ShareDialog] Share created successfully:', result);
+      // console.log('[ShareDialog] Share created successfully:', result);
     } catch (error) {
       console.error('[ShareDialog] Failed to create share:', error);
       // Handle error - you might want to show an error message

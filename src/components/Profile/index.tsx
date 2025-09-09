@@ -7,3 +7,11 @@ export const CategorySection = Platform.OS === 'web'
 export const ProfileOverview = Platform.OS === 'web'
   ? require('./ProfileOverview.tsx').ProfileOverview
   : require('./ProfileOverview.native').default;
+
+export const ProfileEditDialog = Platform.OS === 'web'
+  ? require('./ProfileEditDialog').ProfileEditDialog
+  : require('./ProfileEditDialog.native').ProfileEditDialog;
+
+export const ProfileCreateDialog = Platform.OS === 'web'
+  ? require('./ProfileCreateDialog').ProfileCreateDialog
+  : require('./ProfileCreateDialog.native').ProfileCreateDialog;

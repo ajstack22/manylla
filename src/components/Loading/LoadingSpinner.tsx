@@ -1,4 +1,5 @@
 import React from 'react';
+import { Platform } from 'react-native';
 import { Box, CircularProgress, Typography } from '@mui/material';
 
 interface LoadingSpinnerProps {
@@ -12,6 +13,11 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = 40,
   fullScreen = false 
 }) => {
+  // Only render on web - React Native components should import the .native version
+  if (Platform.OS === 'ios' || Platform.OS === 'android') {
+    return null;
+  }
+
   const content = (
     <>
       <CircularProgress size={size} />

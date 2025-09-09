@@ -5,10 +5,30 @@ import {
   ScrollView, 
   TouchableOpacity, 
   StyleSheet,
-  Image
+  Image,
+  Alert
 } from 'react-native';
+import { MarkdownRenderer } from '../Forms';
 
-const ProfileOverview = ({ profile, onUpdateProfile }) => {
+const ProfileOverview = ({ profile, onUpdateProfile, onLogout }) => {
+  const handleLogout = () => {
+    Alert.alert(
+      'Sign Out',
+      'Are you sure you want to sign out? Your data will be saved locally.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel'
+        },
+        {
+          text: 'Sign Out',
+          style: 'destructive',
+          onPress: onLogout
+        }
+      ]
+    );
+  };
+
   if (!profile) {
     return (
       <View style={styles.emptyContainer}>
@@ -70,9 +90,11 @@ const ProfileOverview = ({ profile, onUpdateProfile }) => {
               <View key={entry.id} style={styles.entryItem}>
                 <Text style={styles.entryTitle}>{entry.title}</Text>
                 {entry.description && (
-                  <Text style={styles.entryDescription} numberOfLines={2}>
-                    {entry.description}
-                  </Text>
+                  <MarkdownRenderer 
+                    content={entry.description}
+                    style={styles.entryDescription}
+                    numberOfLines={2}
+                  />
                 )}
               </View>
             ))}
@@ -88,6 +110,14 @@ const ProfileOverview = ({ profile, onUpdateProfile }) => {
 
   return (
     <View style={styles.container}>
+      {/* Top Bar with Logout */}
+      <View style={styles.topBar}>
+        <Text style={styles.appTitle}>Manylla</Text>
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Text style={styles.logoutText}>Sign Out</Text>
+        </TouchableOpacity>
+      </View>
+      
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Profile Header */}
         <View style={styles.profileHeader}>
@@ -144,6 +174,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5F5F5',
+  },
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#8B7355',
+    paddingTop: 50, // Account for status bar
+    paddingBottom: 15,
+    paddingHorizontal: 20,
+  },
+  appTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  logoutButton: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 6,
+  },
+  logoutText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '500',
   },
   emptyContainer: {
     flex: 1,

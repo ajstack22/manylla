@@ -14,41 +14,39 @@ import {
   Platform,
 } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
-
-// Platform-specific icon handling
-let Icon = null;
-if (Platform.OS === 'web') {
-  // For web, use Material Icons from @mui
-  try {
-    const MuiIcons = require('@mui/icons-material');
-    Icon = ({ name, size, color }) => {
-      const IconComponent = MuiIcons[name] || MuiIcons.HelpOutline;
-      return <IconComponent style={{ fontSize: size, color }} />;
-    };
-  } catch (e) {
-    // Fallback to text if MUI not available
-    Icon = ({ name }) => <Text>{name}</Text>;
-  }
-} else {
-  // For mobile, use react-native-vector-icons
-  try {
-    Icon = require('react-native-vector-icons/MaterialIcons').default;
-  } catch (e) {
-    // Fallback to text if vector icons not available
-    Icon = ({ name }) => <Text>{name}</Text>;
-  }
-}
+import { 
+  AddIcon, 
+  PersonIcon, 
+  ShareIcon, 
+  MenuIcon,
+  CloseIcon
+} from '../Common';
 
 export const OnboardingWizard = ({ onComplete }) => {
+  const [step, setStep] = useState(0);
   const [accessCode, setAccessCode] = useState('');
+  const [childName, setChildName] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [photo, setPhoto] = useState('');
   const { colors } = useTheme();
 
   const handleStartFresh = () => {
-    // For now, use default name - in production, add name input screen
+    setStep(1); // Go to child info page
+  };
+
+  const handleChildInfoSubmit = () => {
+    if (!childName.trim()) {
+      if (Platform.OS === 'web') {
+        alert('Please enter the child\'s name');
+      }
+      return;
+    }
+    
     onComplete({
       mode: 'fresh',
-      childName: 'My Child',
-      dateOfBirth: new Date(),
+      childName: childName.trim(),
+      dateOfBirth: dateOfBirth || undefined,
+      photo: photo || undefined,
     });
   };
 
@@ -176,15 +174,143 @@ export const OnboardingWizard = ({ onComplete }) => {
       backgroundColor: colors.background.secondary,
       marginBottom: 10,
     },
+    // Child info step styles
+    stepHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      width: '100%',
+      maxWidth: 400,
+      marginBottom: 20,
+    },
+    backButton: {
+      padding: 10,
+    },
+    backText: {
+      fontSize: 24,
+      color: colors.text.primary,
+    },
+    stepTitle: {
+      fontSize: 20,
+      fontWeight: '600',
+      color: colors.text.primary,
+    },
+    photoSection: {
+      alignItems: 'center',
+      marginBottom: 30,
+    },
+    photoButton: {
+      width: 100,
+      height: 100,
+      borderRadius: 50,
+      backgroundColor: colors.background.secondary,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 2,
+      borderStyle: 'dashed',
+      borderColor: colors.border,
+      marginBottom: 10,
+    },
+    photoIcon: {
+      fontSize: 40,
+    },
+    photoLabel: {
+      fontSize: 14,
+      color: colors.text.secondary,
+    },
+    formSection: {
+      width: '100%',
+      maxWidth: 400,
+    },
+    label: {
+      fontSize: 14,
+      fontWeight: '600',
+      color: colors.text.primary,
+      marginBottom: 8,
+    },
+    helpText: {
+      fontSize: 12,
+      color: colors.text.secondary,
+      fontStyle: 'italic',
+      textAlign: 'center',
+      marginTop: 10,
+      marginBottom: 20,
+    },
   });
 
   const ScrollComponent = Platform.OS === 'web' ? View : ScrollView;
 
+  // Render child info step
+  if (step === 1) {
+    return (
+      <ScrollComponent style={styles.container}>
+        <View style={styles.scrollContent}>
+          <View style={styles.stepHeader}>
+            <TouchableOpacity style={styles.backButton} onPress={() => setStep(0)}>
+              <CloseIcon size={24} color={colors.text.primary} />
+            </TouchableOpacity>
+            <Text style={styles.stepTitle}>Child Information</Text>
+            <View style={{ width: 40 }} />
+          </View>
+
+          <Text style={styles.subtitle}>
+            Let's set up a profile for your child
+          </Text>
+
+          <View style={styles.photoSection}>
+            <TouchableOpacity 
+              style={styles.photoButton}
+              onPress={() => setPhoto('default')}
+            >
+              <PersonIcon size={40} color={colors.text.secondary} />
+            </TouchableOpacity>
+            <Text style={styles.photoLabel}>Tap to add photo</Text>
+          </View>
+
+          <View style={styles.formSection}>
+            <Text style={styles.label}>Child's Name *</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter name"
+              placeholderTextColor={colors.text.disabled}
+              value={childName}
+              onChangeText={setChildName}
+              autoFocus={Platform.OS === 'web'}
+            />
+
+            <Text style={styles.label}>Date of Birth</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="MM/DD/YYYY"
+              placeholderTextColor={colors.text.disabled}
+              value={dateOfBirth}
+              onChangeText={setDateOfBirth}
+            />
+
+            <Text style={styles.helpText}>
+              You can always add more details later
+            </Text>
+
+            <TouchableOpacity
+              style={[styles.button, !childName.trim() && { opacity: 0.5 }]}
+              onPress={handleChildInfoSubmit}
+              disabled={!childName.trim()}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.buttonText}>Continue</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollComponent>
+    );
+  }
+
+  // Render welcome step (step 0)
   return (
     <ScrollComponent style={styles.container}>
       <View style={styles.scrollContent}>
         <View style={styles.logo}>
-          {Icon && <Icon name="FolderSpecial" size={60} color={colors.primary} />}
+          <MenuIcon size={60} color={colors.primary} />
         </View>
 
         <Text style={styles.title}>Welcome to manylla</Text>
@@ -207,7 +333,7 @@ export const OnboardingWizard = ({ onComplete }) => {
           onPress={handleStartFresh}
           activeOpacity={0.8}
         >
-          {Icon && <Icon name="Add" size={24} color="#FFFFFF" />}
+          <AddIcon size={24} color="#FFFFFF" />
           <Text style={styles.buttonText}>Start Fresh</Text>
         </TouchableOpacity>
 
@@ -216,7 +342,7 @@ export const OnboardingWizard = ({ onComplete }) => {
           onPress={handleDemoMode}
           activeOpacity={0.8}
         >
-          {Icon && <Icon name="PlayCircleOutline" size={24} color={colors.primary} />}
+          <MenuIcon size={24} color={colors.primary} />
           <Text style={[styles.buttonText, styles.buttonTextOutline]}>
             Try Demo Mode
           </Text>
@@ -244,7 +370,7 @@ export const OnboardingWizard = ({ onComplete }) => {
             disabled={!accessCode}
             activeOpacity={0.8}
           >
-            {Icon && <Icon name="Share" size={24} color="#FFFFFF" />}
+            <ShareIcon size={24} color="#FFFFFF" />
             <Text style={styles.buttonText}>Join with Access Code</Text>
           </TouchableOpacity>
         </View>

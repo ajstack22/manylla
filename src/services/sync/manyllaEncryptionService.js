@@ -20,7 +20,7 @@ let encodeUTF8;
 let decodeUTF8;
 
 // Always use manual implementation like StackMap does
-console.log('[ManyllaEncryption] Using manual UTF-8 implementation for all platforms');
+// console.log('[ManyllaEncryption] Using manual UTF-8 implementation for all platforms');
 
 // Manual UTF-8 encoding that works reliably on all platforms
 encodeUTF8 = (str) => {

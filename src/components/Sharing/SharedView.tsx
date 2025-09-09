@@ -56,7 +56,7 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
         }
         
         const [token, encryptionKey] = shareCode.split('#');
-        console.log('[SharedView] Loading share from API:', { token, hasKey: !!encryptionKey });
+        // console.log('[SharedView] Loading share from API:', { token, hasKey: !!encryptionKey });
         
         if (!encryptionKey) {
           setError('Missing decryption key in URL');

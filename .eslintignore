@@ -1,0 +1,35 @@
+# Build directories
+build/
+web/build/
+ios/build/
+android/build/
+android/app/build/
+
+# Node modules
+node_modules/
+
+# iOS Pods
+ios/Pods/
+
+# Android 
+android/.gradle/
+
+# Metro
+.metro-health-check-local
+
+# Temp directories
+.tmp/
+temp/
+tmp/
+
+# Minified/compiled files
+*.min.js
+*.min.css
+bundle.*.js
+
+# Service worker generated files
+service-worker.js
+workbox-*.js
+
+# Coverage reports
+coverage/

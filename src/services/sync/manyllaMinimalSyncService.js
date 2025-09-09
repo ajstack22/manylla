@@ -10,8 +10,8 @@ import { API_ENDPOINTS } from '../../config/api';
 
 class ManyllaMinimalSyncService {
   constructor() {
-    console.log('[ManyllaSync] Constructor start');
-    console.log('[ManyllaSync] Platform:', Platform.OS);
+    // console.log('[ManyllaSync] Constructor start');
+    // console.log('[ManyllaSync] Platform:', Platform.OS);
     
     this.isEnabled = false;
     this.syncId = null;
@@ -62,7 +62,7 @@ class ManyllaMinimalSyncService {
     if (typeof document !== 'undefined') {
       document.addEventListener('visibilitychange', () => {
         if (!document.hidden && this.isEnabled) {
-          console.log('[ManyllaSync] App became visible, pulling data');
+          // console.log('[ManyllaSync] App became visible, pulling data');
           this.pullData();
         }
       });
@@ -71,7 +71,7 @@ class ManyllaMinimalSyncService {
       const { AppState } = require('react-native');
       AppState.addEventListener('change', (nextAppState) => {
         if (nextAppState === 'active' && this.isEnabled) {
-          console.log('[ManyllaSync] App became active, pulling data');
+          // console.log('[ManyllaSync] App became active, pulling data');
           this.pullData();
         }
       });
@@ -97,7 +97,7 @@ class ManyllaMinimalSyncService {
     
     if (timeSinceLastRequest < this.MIN_REQUEST_INTERVAL) {
       const waitTime = this.MIN_REQUEST_INTERVAL - timeSinceLastRequest;
-      console.log(`[ManyllaSync] Rate limiting: waiting ${waitTime}ms`);
+      // console.log(`[ManyllaSync] Rate limiting: waiting ${waitTime}ms`);
       await new Promise(resolve => setTimeout(resolve, waitTime));
     }
     
@@ -187,7 +187,7 @@ class ManyllaMinimalSyncService {
    * Initialize device ID asynchronously
    */
   async initDeviceId() {
-    console.log('[ManyllaSync] Initializing device ID...');
+    // console.log('[ManyllaSync] Initializing device ID...');
     try {
       this.deviceId = await AsyncStorage.getItem('manylla_device_id');
       if (!this.deviceId) {
@@ -198,9 +198,9 @@ class ManyllaMinimalSyncService {
           .join('');
         await AsyncStorage.setItem('manylla_device_id', this.deviceId);
       }
-      console.log('[ManyllaSync] Device ID:', this.deviceId);
+      // console.log('[ManyllaSync] Device ID:', this.deviceId);
     } catch (error) {
-      console.log('[ManyllaSync] Error initializing device ID:', error);
+      // console.log('[ManyllaSync] Error initializing device ID:', error);
       // Generate one for this session
       const bytes = nacl.randomBytes(8);
       this.deviceId = Array.from(bytes)
@@ -216,7 +216,7 @@ class ManyllaMinimalSyncService {
    */
   async enableSync(recoveryPhrase, isNewSync = false) {
     try {
-      console.log('[ManyllaSync] Enabling sync...');
+      // console.log('[ManyllaSync] Enabling sync...');
       
       // Validate recovery phrase format
       if (!recoveryPhrase || !recoveryPhrase.match(/^[a-f0-9]{32}$/)) {
@@ -247,7 +247,7 @@ class ManyllaMinimalSyncService {
         await this.pullData(true);
       }
       
-      console.log('[ManyllaSync] Sync enabled successfully');
+      // console.log('[ManyllaSync] Sync enabled successfully');
       return true;
     } catch (error) {
       console.error('[ManyllaSync] Failed to enable sync:', error);
@@ -260,7 +260,7 @@ class ManyllaMinimalSyncService {
    * Disable sync and clear data
    */
   async disableSync() {
-    console.log('[ManyllaSync] Disabling sync...');
+    // console.log('[ManyllaSync] Disabling sync...');
     
     this.stopPullInterval();
     this.isEnabled = false;
@@ -274,14 +274,14 @@ class ManyllaMinimalSyncService {
     await AsyncStorage.removeItem('manylla_sync_enabled');
     await AsyncStorage.removeItem('manylla_last_pull');
     
-    console.log('[ManyllaSync] Sync disabled');
+    // console.log('[ManyllaSync] Sync disabled');
   }
 
   /**
    * Create a new sync group via API
    */
   async createSync() {
-    console.log('[ManyllaSync] Creating new sync group...');
+    // console.log('[ManyllaSync] Creating new sync group...');
     
     const response = await fetch(API_ENDPOINTS.sync.create, {
       method: 'POST',
@@ -298,7 +298,7 @@ class ManyllaMinimalSyncService {
     }
     
     const result = await response.json();
-    console.log('[ManyllaSync] Sync group created successfully', result);
+    // console.log('[ManyllaSync] Sync group created successfully', result);
     
     await AsyncStorage.setItem('manylla_sync_enabled', 'true');
   }
@@ -307,7 +307,7 @@ class ManyllaMinimalSyncService {
    * Join an existing sync group via API
    */
   async joinSync() {
-    console.log('[ManyllaSync] Joining existing sync group...');
+    // console.log('[ManyllaSync] Joining existing sync group...');
     
     const response = await fetch(API_ENDPOINTS.sync.join, {
       method: 'POST',
@@ -324,7 +324,7 @@ class ManyllaMinimalSyncService {
     }
     
     const result = await response.json();
-    console.log('[ManyllaSync] Joined sync group successfully', result);
+    // console.log('[ManyllaSync] Joined sync group successfully', result);
     
     await AsyncStorage.setItem('manylla_sync_enabled', 'true');
   }
@@ -335,7 +335,7 @@ class ManyllaMinimalSyncService {
    */
   async pushData(profile) {
     if (!this.isEnabled) {
-      console.log('[ManyllaSync] Sync not enabled, skipping push');
+      // console.log('[ManyllaSync] Sync not enabled, skipping push');
       return;
     }
     
@@ -347,7 +347,7 @@ class ManyllaMinimalSyncService {
     // Use rate-limited request wrapper
     return this.makeRequest(async () => {
       try {
-        console.log('[ManyllaSync] Pushing data...', { deviceId: this.deviceId });
+        // console.log('[ManyllaSync] Pushing data...', { deviceId: this.deviceId });
         
         const timestamp = Date.now();
       
@@ -397,9 +397,9 @@ class ManyllaMinimalSyncService {
       }
       
       const result = await response.json();
-      console.log('[ManyllaSync] Data pushed to cloud successfully', result);
+      // console.log('[ManyllaSync] Data pushed to cloud successfully', result);
       
-      console.log('[ManyllaSync] Data pushed successfully', { timestamp });
+      // console.log('[ManyllaSync] Data pushed successfully', { timestamp });
       } catch (error) {
         console.error('[ManyllaSync] Failed to push data:', error);
         this.emitError('push', error.message);
@@ -414,7 +414,7 @@ class ManyllaMinimalSyncService {
    */
   async pullData(forceFullPull = false) {
     if (!this.isEnabled) {
-      console.log('[ManyllaSync] Sync not enabled, skipping pull');
+      // console.log('[ManyllaSync] Sync not enabled, skipping pull');
       return;
     }
     
@@ -429,7 +429,7 @@ class ManyllaMinimalSyncService {
     // Use rate-limited request wrapper
     return this.makeRequest(async () => {
       try {
-        console.log('[ManyllaSync] Pulling data...', { forceFullPull, lastPull: this.lastPullTimestamp });
+        // console.log('[ManyllaSync] Pulling data...', { forceFullPull, lastPull: this.lastPullTimestamp });
       
       const since = forceFullPull ? 0 : this.lastPullTimestamp;
       
@@ -447,7 +447,7 @@ class ManyllaMinimalSyncService {
       const result = await response.json();
       
       if (!result.encrypted_blob) {
-        console.log('[ManyllaSync] No new data to pull from cloud');
+        // console.log('[ManyllaSync] No new data to pull from cloud');
         return;
       }
       
@@ -456,7 +456,7 @@ class ManyllaMinimalSyncService {
         timestamp: result.timestamp
       };
       
-      console.log('[ManyllaSync] Pulled data from cloud', { version: result.version, hash: result.blob_hash });
+      // console.log('[ManyllaSync] Pulled data from cloud', { version: result.version, hash: result.blob_hash });
       
       // Decrypt the data
       let decryptedData;
@@ -473,7 +473,7 @@ class ManyllaMinimalSyncService {
       // Resolve conflicts if we have local data
       let finalProfile;
       if (localProfile && decryptedData.profile) {
-        console.log('[ManyllaSync] Resolving conflicts between local and remote data');
+        // console.log('[ManyllaSync] Resolving conflicts between local and remote data');
         finalProfile = conflictResolver.mergeProfiles(localProfile, decryptedData.profile);
         
         // Validate merged data
@@ -491,11 +491,11 @@ class ManyllaMinimalSyncService {
       
       // Notify callback if set
       if (this.dataCallback && finalProfile) {
-        console.log('[ManyllaSync] Notifying data callback with merged profile');
+        // console.log('[ManyllaSync] Notifying data callback with merged profile');
         this.dataCallback(finalProfile);
       }
       
-      console.log('[ManyllaSync] Data pulled and merged successfully');
+      // console.log('[ManyllaSync] Data pulled and merged successfully');
       
       // Future: GET from /api/sync/pull_timestamp.php
       } catch (error) {
@@ -515,7 +515,7 @@ class ManyllaMinimalSyncService {
       clearInterval(this.pullInterval);
     }
     
-    console.log(`[ManyllaSync] Starting pull interval (${this.PULL_INTERVAL}ms)`);
+    // console.log(`[ManyllaSync] Starting pull interval (${this.PULL_INTERVAL}ms)`);
     
     this.pullInterval = setInterval(() => {
       this.pullData();
@@ -527,7 +527,7 @@ class ManyllaMinimalSyncService {
    */
   stopPullInterval() {
     if (this.pullInterval) {
-      console.log('[ManyllaSync] Stopping pull interval');
+      // console.log('[ManyllaSync] Stopping pull interval');
       clearInterval(this.pullInterval);
       this.pullInterval = null;
     }
@@ -546,16 +546,16 @@ class ManyllaMinimalSyncService {
    */
   async testSyncConnection() {
     try {
-      console.log('[ManyllaSync] Testing sync connection...');
+      // console.log('[ManyllaSync] Testing sync connection...');
       
       // For now, just check localStorage
       const syncExists = await AsyncStorage.getItem(`manylla_sync_${this.syncId}`);
       
       if (syncExists) {
-        console.log('[ManyllaSync] Sync connection test successful');
+        // console.log('[ManyllaSync] Sync connection test successful');
         return true;
       } else {
-        console.log('[ManyllaSync] No sync data found');
+        // console.log('[ManyllaSync] No sync data found');
         return false;
       }
       

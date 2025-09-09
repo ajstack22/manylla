@@ -95,7 +95,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
       ...formData,
       category: selectedCategory,
       date: new Date(),
-      visibility: selectedVisibility,
+      visibility: ['private'], // Always private - sharing is handled separately
     });
     onClose();
   };
@@ -232,66 +232,6 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                   rows={4}
                 />
               </Stack>
-            </Paper>
-            
-            <Paper 
-              elevation={0}
-              sx={{ 
-                p: 2, 
-                border: '1px solid',
-                borderColor: 'divider',
-                borderRadius: 2,
-              }}
-            >
-              <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 600 }}>
-                Who can see this?
-              </Typography>
-              <FormGroup row>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={selectedVisibility.includes('private')}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          // When checking Private, uncheck all others
-                          setSelectedVisibility(['private']);
-                        } else {
-                          // When unchecking Private with nothing else selected, keep it checked
-                          if (selectedVisibility.length === 1) {
-                            setSelectedVisibility(['private']);
-                          }
-                        }
-                      }}
-                    />
-                  }
-                  label="Private (Only me)"
-                />
-                {visibilityOptions.map(option => (
-                  <FormControlLabel
-                    key={option.value}
-                    control={
-                      <Checkbox
-                        checked={selectedVisibility.includes(option.value)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            // When checking a non-private option, remove 'private' and add this option
-                            setSelectedVisibility(
-                              selectedVisibility.filter(v => v !== 'private').concat(option.value)
-                            );
-                          } else {
-                            // When unchecking, remove this option
-                            const newVis = selectedVisibility.filter(v => v !== option.value);
-                            // If nothing is selected, default back to private
-                            setSelectedVisibility(newVis.length > 0 ? newVis : ['private']);
-                          }
-                        }}
-                        // Don't disable - allow selection even when private is checked
-                      />
-                    }
-                    label={option.label}
-                  />
-                ))}
-              </FormGroup>
             </Paper>
           </Stack>
         </DialogContent>

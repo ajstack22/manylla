@@ -1,4 +1,5 @@
 import React from 'react';
+import { Platform } from 'react-native';
 import { Backdrop, CircularProgress, Typography, Box } from '@mui/material';
 
 interface LoadingOverlayProps {
@@ -10,6 +11,11 @@ export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
   open, 
   message = 'Loading...' 
 }) => {
+  // Only render on web - React Native components should import the .native version
+  if (Platform.OS === 'ios' || Platform.OS === 'android') {
+    return null;
+  }
+
   return (
     <Backdrop
       sx={{

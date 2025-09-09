@@ -60,7 +60,7 @@ class ManyllaMinimalSyncService {
           .join('');
         
         await AsyncStorage.setItem('manylla_device_id', deviceId);
-        console.log('[ManyllaSync] Generated device ID:', deviceId);
+        // console.log('[ManyllaSync] Generated device ID:', deviceId);
       }
       return deviceId;
     } catch (error) {
@@ -77,7 +77,7 @@ class ManyllaMinimalSyncService {
    */
   async enableSync(recoveryPhrase, isNewSync = false) {
     try {
-      console.log('[ManyllaSync] Enabling sync...');
+      // console.log('[ManyllaSync] Enabling sync...');
       
       // Validate recovery phrase format
       if (!recoveryPhrase || !recoveryPhrase.match(/^[a-f0-9]{32}$/)) {
@@ -104,7 +104,7 @@ class ManyllaMinimalSyncService {
         await this.pull();
       }
       
-      console.log('[ManyllaSync] Sync enabled successfully');
+      // console.log('[ManyllaSync] Sync enabled successfully');
       return { success: true, syncId: this.syncId };
     } catch (error) {
       console.error('[ManyllaSync] Error enabling sync:', error);
@@ -116,7 +116,7 @@ class ManyllaMinimalSyncService {
    * Disable sync
    */
   async disableSync() {
-    console.log('[ManyllaSync] Disabling sync...');
+    // console.log('[ManyllaSync] Disabling sync...');
     
     this.stopPullInterval();
     this.isEnabled = false;
@@ -126,7 +126,7 @@ class ManyllaMinimalSyncService {
     await AsyncStorage.removeItem('manylla_sync_enabled');
     await AsyncStorage.removeItem('manylla_recovery_phrase');
     
-    console.log('[ManyllaSync] Sync disabled');
+    // console.log('[ManyllaSync] Sync disabled');
   }
 
   /**
@@ -190,7 +190,7 @@ class ManyllaMinimalSyncService {
     if (!this.isEnabled) return;
     
     try {
-      console.log('[ManyllaSync] Push operation would happen here');
+      // console.log('[ManyllaSync] Push operation would happen here');
       // TODO: Implement actual push to server when API is ready
     } catch (error) {
       console.error('[ManyllaSync] Error pushing data:', error);
@@ -204,7 +204,7 @@ class ManyllaMinimalSyncService {
     if (!this.isEnabled) return;
     
     try {
-      console.log('[ManyllaSync] Pull operation would happen here');
+      // console.log('[ManyllaSync] Pull operation would happen here');
       // TODO: Implement actual pull from server when API is ready
     } catch (error) {
       console.error('[ManyllaSync] Error pulling data:', error);
@@ -223,7 +223,7 @@ class ManyllaMinimalSyncService {
       this.pull();
     }, this.PULL_INTERVAL);
     
-    console.log('[ManyllaSync] Started pull interval');
+    // console.log('[ManyllaSync] Started pull interval');
   }
 
   /**
@@ -233,7 +233,7 @@ class ManyllaMinimalSyncService {
     if (this.pullInterval) {
       clearInterval(this.pullInterval);
       this.pullInterval = null;
-      console.log('[ManyllaSync] Stopped pull interval');
+      // console.log('[ManyllaSync] Stopped pull interval');
     }
   }
 

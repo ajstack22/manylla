@@ -42,7 +42,7 @@ export interface ChildProfile {
   quickInfoPanels: QuickInfoConfig[];
   createdAt: Date;
   updatedAt: Date;
-  themeMode?: 'light' | 'dark';
+  themeMode?: 'light' | 'dark' | 'manylla';
 }
 
 export interface ShareableProfile {

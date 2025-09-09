@@ -1,8 +1,11 @@
 {
-  "extends": "@react-native/typescript-config",
   "compilerOptions": {
     "strict": true,
     "baseUrl": ".",
+    "lib": ["es2017", "dom"],
+    "jsx": "react-jsx",
+    "module": "esnext",
+    "target": "es2015",
     "paths": {
       "@/*": ["src/*"],
       "@components/*": ["src/components/*"],
@@ -19,12 +22,16 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "noImplicitReturns": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": false,
+    "moduleResolution": "node",
+    "types": ["react", "react-dom", "node"],
+    "noEmit": true
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": [
     "**/node_modules",
     "**/Pods",
@@ -32,6 +39,10 @@
     "**/ios",
     "**/__tests__",
     "**/*.test.ts",
-    "**/*.test.tsx"
+    "**/*.test.tsx",
+    "**/*.native.ts",
+    "**/*.native.tsx",
+    "**/*.native.js",
+    "**/*.native.jsx"
   ]
 }

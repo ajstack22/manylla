@@ -1,4 +1,5 @@
 import React from 'react';
+import { Platform } from 'react-native';
 import { Snackbar, Paper, Typography, IconButton, useTheme, alpha } from '@mui/material';
 import { Close as CloseIcon, Palette as PaletteIcon } from '@mui/icons-material';
 import { SlideProps, Slide } from '@mui/material';
@@ -25,6 +26,11 @@ export const ThemedToast: React.FC<ThemedToastProps> = ({
 }) => {
   const theme = useTheme();
   const { themeMode } = useAppTheme();
+
+  // Only render on web - React Native components should import the .native version
+  if (Platform.OS === 'ios' || Platform.OS === 'android') {
+    return null;
+  }
   
   // Determine toast styling based on current theme
   const getToastStyles = () => {

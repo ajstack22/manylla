@@ -11,7 +11,7 @@
 		4F38E6EF1CE9CCC7EA4DBAE9 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		D221A5C7BFC58616B101F672 /* libPods-ManyllaMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 196FEC1721BDC78DD367D14E /* libPods-ManyllaMobile.a */; };
+		C1FBA07E708371C3CDE1776B /* libPods-ManyllaMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 380EFF997C3135555F4EC214 /* libPods-ManyllaMobile.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,12 +19,29 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ManyllaMobile/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ManyllaMobile/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = ManyllaMobile/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		196FEC1721BDC78DD367D14E /* libPods-ManyllaMobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ManyllaMobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		63C61DE4119A3DD45A2AA21B /* Pods-ManyllaMobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ManyllaMobile.debug.xcconfig"; path = "Target Support Files/Pods-ManyllaMobile/Pods-ManyllaMobile.debug.xcconfig"; sourceTree = "<group>"; };
+		184A0D84EA2548969B279253 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
+		380EFF997C3135555F4EC214 /* libPods-ManyllaMobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ManyllaMobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B9E207769D74D5CB37542AE /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
+		604E8970F51AB9551AEDEDB5 /* Pods-ManyllaMobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ManyllaMobile.debug.xcconfig"; path = "Target Support Files/Pods-ManyllaMobile/Pods-ManyllaMobile.debug.xcconfig"; sourceTree = "<group>"; };
+		61A25633A374441F87B8CA94 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		6514D99CE7AA46A8A7B11871 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		6BDFD90849F04ADAADC55C21 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
+		7108A7CFC758434C804D13EF /* FontAwesome6_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome6_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome6_Brands.ttf"; sourceTree = "<group>"; };
+		758FA27DD4EF42C7BC170967 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ManyllaMobile/AppDelegate.swift; sourceTree = "<group>"; };
+		7871F6BB122125CB3D31E5CD /* Pods-ManyllaMobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ManyllaMobile.release.xcconfig"; path = "Target Support Files/Pods-ManyllaMobile/Pods-ManyllaMobile.release.xcconfig"; sourceTree = "<group>"; };
+		7EF00DB6A319486B81CE3117 /* FontAwesome6_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome6_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome6_Solid.ttf"; sourceTree = "<group>"; };
+		7FE9531FB85845B6985DE229 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ManyllaMobile/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		C150B0DE7BE79FAEBC02E64E /* Pods-ManyllaMobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ManyllaMobile.release.xcconfig"; path = "Target Support Files/Pods-ManyllaMobile/Pods-ManyllaMobile.release.xcconfig"; sourceTree = "<group>"; };
+		9DDCC80DF1EA47D7AFDF960D /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
+		B0EEEF895D0548FB8287BBFA /* FontAwesome6_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome6_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome6_Regular.ttf"; sourceTree = "<group>"; };
+		BD92C1189E8F4190BE6A2DA4 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
+		BDB07D18BFBE4C38AC4FF469 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
+		C053C6E10ECD4C6EA8955F7F /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
+		E640028794264610B1B32012 /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
+		E766AA4C1935429A88D7AC20 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		EFE0F80B3B1D4C36B95E8371 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,7 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D221A5C7BFC58616B101F672 /* libPods-ManyllaMobile.a in Frameworks */,
+				C1FBA07E708371C3CDE1776B /* libPods-ManyllaMobile.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,9 +72,34 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				196FEC1721BDC78DD367D14E /* libPods-ManyllaMobile.a */,
+				380EFF997C3135555F4EC214 /* libPods-ManyllaMobile.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		80FBA4A0A4CD4BAFBFA87AF1 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E640028794264610B1B32012 /* AntDesign.ttf */,
+				9DDCC80DF1EA47D7AFDF960D /* Entypo.ttf */,
+				758FA27DD4EF42C7BC170967 /* EvilIcons.ttf */,
+				6BDFD90849F04ADAADC55C21 /* Feather.ttf */,
+				E766AA4C1935429A88D7AC20 /* FontAwesome.ttf */,
+				184A0D84EA2548969B279253 /* FontAwesome5_Brands.ttf */,
+				C053C6E10ECD4C6EA8955F7F /* FontAwesome5_Regular.ttf */,
+				4B9E207769D74D5CB37542AE /* FontAwesome5_Solid.ttf */,
+				7108A7CFC758434C804D13EF /* FontAwesome6_Brands.ttf */,
+				B0EEEF895D0548FB8287BBFA /* FontAwesome6_Regular.ttf */,
+				7EF00DB6A319486B81CE3117 /* FontAwesome6_Solid.ttf */,
+				BDB07D18BFBE4C38AC4FF469 /* Foundation.ttf */,
+				6514D99CE7AA46A8A7B11871 /* Ionicons.ttf */,
+				61A25633A374441F87B8CA94 /* MaterialCommunityIcons.ttf */,
+				EFE0F80B3B1D4C36B95E8371 /* MaterialIcons.ttf */,
+				7FE9531FB85845B6985DE229 /* Octicons.ttf */,
+				BD92C1189E8F4190BE6A2DA4 /* SimpleLineIcons.ttf */,
+			);
+			name = Resources;
+			path = "";
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -75,6 +117,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				80FBA4A0A4CD4BAFBFA87AF1 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -92,8 +135,8 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				63C61DE4119A3DD45A2AA21B /* Pods-ManyllaMobile.debug.xcconfig */,
-				C150B0DE7BE79FAEBC02E64E /* Pods-ManyllaMobile.release.xcconfig */,
+				604E8970F51AB9551AEDEDB5 /* Pods-ManyllaMobile.debug.xcconfig */,
+				7871F6BB122125CB3D31E5CD /* Pods-ManyllaMobile.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -105,13 +148,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "ManyllaMobile" */;
 			buildPhases = (
-				A85EC6276EEDC2FBEEFA17AA /* [CP] Check Pods Manifest.lock */,
+				7DD8C17FC9FD91250B3F0CF1 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				74CE7C7439985B030678AFD9 /* [CP] Embed Pods Frameworks */,
-				E684B6B55E6D93C7163D273F /* [CP] Copy Pods Resources */,
+				94EE64AFB8302E3857E8AAE9 /* [CP] Embed Pods Frameworks */,
+				5918D27B7F2EECD11807AC5D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -183,24 +226,24 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		74CE7C7439985B030678AFD9 /* [CP] Embed Pods Frameworks */ = {
+		5918D27B7F2EECD11807AC5D /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ManyllaMobile/Pods-ManyllaMobile-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-ManyllaMobile/Pods-ManyllaMobile-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ManyllaMobile/Pods-ManyllaMobile-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-ManyllaMobile/Pods-ManyllaMobile-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ManyllaMobile/Pods-ManyllaMobile-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ManyllaMobile/Pods-ManyllaMobile-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A85EC6276EEDC2FBEEFA17AA /* [CP] Check Pods Manifest.lock */ = {
+		7DD8C17FC9FD91250B3F0CF1 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -222,21 +265,21 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E684B6B55E6D93C7163D273F /* [CP] Copy Pods Resources */ = {
+		94EE64AFB8302E3857E8AAE9 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ManyllaMobile/Pods-ManyllaMobile-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-ManyllaMobile/Pods-ManyllaMobile-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Copy Pods Resources";
+			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ManyllaMobile/Pods-ManyllaMobile-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-ManyllaMobile/Pods-ManyllaMobile-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ManyllaMobile/Pods-ManyllaMobile-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ManyllaMobile/Pods-ManyllaMobile-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -255,7 +298,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 63C61DE4119A3DD45A2AA21B /* Pods-ManyllaMobile.debug.xcconfig */;
+			baseConfigurationReference = 604E8970F51AB9551AEDEDB5 /* Pods-ManyllaMobile.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -283,7 +326,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C150B0DE7BE79FAEBC02E64E /* Pods-ManyllaMobile.release.xcconfig */;
+			baseConfigurationReference = 7871F6BB122125CB3D31E5CD /* Pods-ManyllaMobile.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

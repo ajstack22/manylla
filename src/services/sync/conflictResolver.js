@@ -28,7 +28,7 @@ class ConflictResolver {
    * @returns {Object} Merged profile data
    */
   mergeProfiles(local, remote) {
-    console.log('[ConflictResolver] Merging profiles', {
+    // console.log('[ConflictResolver] Merging profiles', {
       localTimestamp: local?.timestamp,
       remoteTimestamp: remote?.timestamp
     });
@@ -40,16 +40,16 @@ class ConflictResolver {
     // If timestamps are within merge window, do field-level merge
     const timeDiff = Math.abs(local.timestamp - remote.timestamp);
     if (timeDiff < this.MERGE_WINDOW) {
-      console.log('[ConflictResolver] Within merge window, doing field-level merge');
+      // console.log('[ConflictResolver] Within merge window, doing field-level merge');
       return this.fieldLevelMerge(local, remote);
     }
     
     // Outside merge window - use last-write-wins
     if (remote.timestamp > local.timestamp) {
-      console.log('[ConflictResolver] Remote is newer, using remote data');
+      // console.log('[ConflictResolver] Remote is newer, using remote data');
       return remote;
     } else {
-      console.log('[ConflictResolver] Local is newer, keeping local data');
+      // console.log('[ConflictResolver] Local is newer, keeping local data');
       return local;
     }
   }

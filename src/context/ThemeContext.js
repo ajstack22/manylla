@@ -14,6 +14,9 @@ const lightTheme = {
   background: {
     primary: '#F5F5F5',
     secondary: '#FFFFFF',
+    default: '#F5F5F5',
+    paper: '#FFFFFF',
+    manila: '#F4E4C1',
   },
   surface: '#FFFFFF',
   text: {
@@ -30,6 +33,9 @@ const darkTheme = {
   background: {
     primary: '#1A1A1A',
     secondary: '#2A2A2A',
+    default: '#1A1A1A',
+    paper: '#2A2A2A',
+    manila: '#3A3528',
   },
   surface: '#2A2A2A',
   text: {
@@ -38,6 +44,25 @@ const darkTheme = {
     disabled: '#666666',
   },
   border: '#404040',
+};
+
+const manyllaTheme = {
+  primary: '#8B7355',
+  secondary: '#6B5D54',
+  background: {
+    primary: '#D4B896',     // Richer manila (between light and dark)
+    secondary: '#E8D4A2',   // Slightly lighter manila for contrast
+    default: '#D4B896',     // Main manila background
+    paper: '#E8D4A2',       // Lighter manila for cards
+    manila: '#C4A66B',      // Darker manila accent
+  },
+  surface: '#E8D4A2',
+  text: {
+    primary: '#3D2F1F',     // Dark brown for good contrast
+    secondary: '#5D4A37',   // Medium brown
+    disabled: '#8B7355',
+  },
+  border: '#A68B5B',
 };
 
 const ThemeContext = createContext(undefined);
@@ -63,7 +88,10 @@ export const ThemeProvider = ({ children, initialThemeMode }) => {
   }, [initialThemeMode]);
 
   const toggleTheme = async () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
+    // Cycle through: light -> dark -> manylla -> light
+    const newTheme = theme === 'light' ? 'dark' : 
+                     theme === 'dark' ? 'manylla' : 
+                     'light';
     setTheme(newTheme);
     try {
       await AsyncStorage.setItem('manylla_theme', newTheme);
@@ -72,12 +100,14 @@ export const ThemeProvider = ({ children, initialThemeMode }) => {
     }
   };
 
-  const colors = theme === 'light' ? lightTheme : darkTheme;
+  const colors = theme === 'light' ? lightTheme : 
+                 theme === 'dark' ? darkTheme : 
+                 manyllaTheme;
 
   // For web, apply Material-UI theme
   const muiTheme = Platform.OS === 'web' ? {
     palette: {
-      mode: theme,
+      mode: theme === 'manylla' ? 'light' : theme, // MUI doesn't have 'manylla' mode, use 'light' as base
       primary: {
         main: colors.primary,
       },
@@ -85,12 +115,19 @@ export const ThemeProvider = ({ children, initialThemeMode }) => {
         main: colors.secondary,
       },
       background: {
-        default: colors.background.primary,
-        paper: colors.background.secondary,
+        default: colors.background.default || colors.background.primary,
+        paper: colors.background.paper || colors.background.secondary,
       },
       text: {
         primary: colors.text.primary,
         secondary: colors.text.secondary,
+      },
+      action: {
+        active: colors.text.primary,
+        hover: 'rgba(0, 0, 0, 0.04)',
+        selected: 'rgba(0, 0, 0, 0.08)',
+        disabled: colors.text.disabled,
+        disabledBackground: 'rgba(0, 0, 0, 0.12)',
       },
     },
   } : null;

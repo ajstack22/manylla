@@ -1,0 +1,24 @@
+REACT_NATIVE_WITH_WEB_WEBPACK
+
+# DO NOT DELETE THIS FILE
+# This file tells AI assistants what type of project this is
+
+Type: React Native + Web (Unified Codebase)
+Web Build Tool: Webpack (NOT Create React App)
+Mobile Build Tool: React Native CLI
+
+Critical Commands:
+- Web Development: npm run web (port 3000)
+- Mobile Development: npm start (Metro bundler)
+- NEVER use: npx react-scripts start (this is NOT a CRA project)
+
+If you see errors about:
+- JSX in node_modules/react-native-* → Wrong build tool, use npm run web
+- Module resolution for .native files → Wrong build tool, use npm run web
+- AsyncStorage not found → This is expected, webpack aliases handle it
+
+Key Files That Prove This:
+- webpack.config.js exists → Webpack for web
+- index.web.js exists → Web entry point
+- *.web.js/tsx files → Platform-specific web implementations
+- NO src/index.js → NOT a Create React App project

@@ -24,7 +24,7 @@ const RootNavigator: React.FC = () => {
     try {
       // Check if user has a profile
       const profileExists = await ProfileStorageService.hasProfile();
-      console.log('Profile exists:', profileExists);
+      // console.log('Profile exists:', profileExists);
       setHasProfile(profileExists);
       
       // TODO: Check if biometric auth is enabled and required

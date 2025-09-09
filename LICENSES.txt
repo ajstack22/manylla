@@ -1,0 +1,181 @@
+================================================================================
+THIRD-PARTY SOFTWARE LICENSES AND ATTRIBUTIONS
+================================================================================
+
+This application uses open source software components. The following is a list
+of these components and their respective licenses and attributions.
+
+================================================================================
+SOFTWARE LICENSED UNDER CC-BY-4.0 (Creative Commons Attribution 4.0)
+================================================================================
+
+caniuse-lite
+Copyright (c) Alexis Deveria and Can I Use contributors
+Repository: https://github.com/browserslist/caniuse-lite
+License: CC-BY-4.0
+
+This package contains browser compatibility data from Can I Use 
+(https://caniuse.com/), which is licensed under CC-BY-4.0. 
+We use this data to ensure cross-browser compatibility of our application.
+
+Full CC-BY-4.0 License: https://creativecommons.org/licenses/by/4.0/
+
+================================================================================
+SOFTWARE LICENSED UNDER APACHE LICENSE 2.0
+================================================================================
+
+The following packages are licensed under the Apache License, Version 2.0:
+
+@humanwhocodes/config-array
+Copyright (c) Human Who Codes LLC
+Repository: https://github.com/humanwhocodes/config-array
+
+@humanwhocodes/module-importer
+Copyright (c) Human Who Codes LLC
+Repository: https://github.com/humanwhocodes/module-importer
+
+@jsonjoy.com/base64
+@jsonjoy.com/buffers
+@jsonjoy.com/codegen
+@jsonjoy.com/json-pack
+@jsonjoy.com/json-pointer
+@jsonjoy.com/util
+Copyright (c) jsonjoy.com contributors
+Repository: https://github.com/jsonjoy-com/
+
+@surma/rollup-plugin-off-main-thread
+Copyright (c) Surma
+Repository: https://github.com/surma/rollup-plugin-off-main-thread
+
+@webassemblyjs/leb128
+Copyright (c) Sven Sauleau
+Repository: https://github.com/xtuc/webassemblyjs
+
+@xtuc/long
+Copyright (c) Daniel Wirtz / dcodeIO
+Repository: https://github.com/dcodeIO/long.js
+
+ansi-html-community
+Copyright (c) Mahdyar Hasanpour
+Repository: https://github.com/mahdyar/ansi-html-community
+
+ansi-html
+Copyright (c) Tjatse
+Repository: https://github.com/Tjatse/ansi-html
+
+aria-query
+Copyright (c) A11yance contributors
+Repository: https://github.com/A11yance/aria-query
+
+axobject-query
+Copyright (c) A11yance contributors
+Repository: https://github.com/A11yance/axobject-query
+
+bser
+Copyright (c) Meta Platforms, Inc. and affiliates
+Repository: https://github.com/facebook/watchman
+
+chrome-launcher
+Copyright (c) Google Inc.
+Repository: https://github.com/GoogleChrome/chrome-launcher
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+================================================================================
+SOFTWARE LICENSED UNDER MPL-2.0 (Mozilla Public License 2.0)
+================================================================================
+
+axe-core
+Copyright (c) Deque Systems, Inc.
+Repository: https://github.com/dequelabs/axe-core
+License: MPL-2.0
+
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+================================================================================
+SOFTWARE LICENSED UNDER MIT LICENSE
+================================================================================
+
+The majority of dependencies in this project are licensed under the MIT License.
+These include but are not limited to:
+
+- React (Copyright (c) Meta Platforms, Inc. and affiliates)
+- React Native (Copyright (c) Meta Platforms, Inc. and affiliates)
+- Material-UI (Copyright (c) MUI)
+- TypeScript (Copyright (c) Microsoft Corporation)
+- Webpack (Copyright (c) JS Foundation and other contributors)
+- Babel (Copyright (c) Sebastian McKenzie)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+================================================================================
+SOFTWARE LICENSED UNDER BSD LICENSES
+================================================================================
+
+Various packages use BSD 2-Clause or BSD 3-Clause licenses, including:
+
+BSD-2-Clause packages:
+- Various utility libraries
+
+BSD-3-Clause packages:
+- Various development tools and libraries
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice,
+   this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its contributors
+   may be used to endorse or promote products derived from this software
+   without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+================================================================================
+END OF THIRD-PARTY SOFTWARE LICENSES AND ATTRIBUTIONS
+================================================================================
+
+For a complete list of all dependencies and their licenses, please refer to
+the license-report.csv file in the project root directory.

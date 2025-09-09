@@ -3,7 +3,7 @@ import { Container } from '@mui/material';
 import { ManyllaThemeProvider } from './context/ThemeContext';
 import { SyncProvider, useSync } from './context/SyncContext';
 import { ToastProvider } from './context/ToastContext';
-import { Header } from './components/Layout/Header';
+import Header from './components/Layout/Header';
 import { LoadingSpinner } from './components/Loading/LoadingSpinner';
 import { LoadingOverlay } from './components/Loading/LoadingOverlay';
 import { StorageService } from './services/storageService';
@@ -129,7 +129,7 @@ function AppContent() {
         // This preserves the hash fragment which contains the encryption key
         if ((window as any).__earlyShareData) {
           const { shareToken, encryptionKey } = (window as any).__earlyShareData;
-          console.log('[App] Using early captured share data:', shareToken);
+          // console.log('[App] Using early captured share data:', shareToken);
           // Combine token and key for SharedView to process
           setShareCode(`${shareToken}#${encryptionKey}`);
           setIsSharedView(true);
@@ -523,7 +523,7 @@ function App() {
 
   // Handle profile updates from sync
   const handleProfileFromSync = useCallback((syncedProfile: ChildProfile) => {
-    console.log('[App] Received profile from sync');
+    // console.log('[App] Received profile from sync');
     setProfileForSync(syncedProfile);
   }, []);
 

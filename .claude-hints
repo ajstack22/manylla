@@ -1,0 +1,29 @@
+# QUICK START GUIDE FOR AI ASSISTANTS
+
+## 🚨 PROJECT TYPE: React Native + Web (Unified)
+**NOT A CREATE REACT APP PROJECT!**
+
+## ✅ CORRECT COMMANDS:
+```bash
+npm run web         # Start web dev server on port 3000
+npm run build:web   # Build for production
+npm run check:type  # If confused, run this
+```
+
+## ❌ NEVER USE:
+- npx react-scripts start
+- npm start (this is for React Native mobile)
+- Any CRA commands
+
+## KEY FILES THAT PROVE THIS:
+- webpack.config.js (web builds use Webpack)
+- index.web.js (web entry point)
+- No src/index.js (CRA would have this)
+
+## IF YOU GET ERRORS ABOUT:
+- JSX in react-native modules → Wrong tool, use `npm run web`
+- AsyncStorage not found → Expected, webpack aliases handle it
+- Module resolution fails → You're using the wrong build tool
+
+## CONFUSED?
+Run: `npm run check:type` for a diagnostic

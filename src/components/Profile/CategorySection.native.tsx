@@ -8,6 +8,7 @@ import {
   Platform,
 } from 'react-native';
 import { Entry } from '../../types/ChildProfile';
+import { MarkdownRenderer } from '../Forms';
 
 interface CategorySectionProps {
   title: string;
@@ -91,9 +92,10 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
                   </View>
                 </View>
 
-                <Text style={styles.cardDescription}>
-                  {renderContent(entry.description)}
-                </Text>
+                <MarkdownRenderer 
+                  content={entry.description}
+                  style={styles.cardDescription}
+                />
 
                 <Text style={styles.cardDate}>
                   {new Date(entry.date).toLocaleDateString()}

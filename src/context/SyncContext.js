@@ -6,8 +6,8 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ManyllaMinimalSyncService } from '../services/sync/manyllaMinimalSyncService';
-import { ManyllaEncryptionService } from '../services/sync/manyllaEncryptionService';
+import ManyllaMinimalSyncService from '../services/sync/manyllaMinimalSyncService';
+import ManyllaEncryptionService from '../services/sync/manyllaEncryptionService';
 
 const SyncContext = createContext(undefined);
 

@@ -484,7 +484,6 @@ export const SyncDialog: React.FC<SyncDialogProps> = ({ open, onClose }) => {
             
             <Paper sx={{ 
               p: 3, 
-              backgroundColor: 'primary.light',
               backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(144, 202, 249, 0.08)' : 'rgba(33, 150, 243, 0.08)',
               mb: 2,
               textAlign: 'center'

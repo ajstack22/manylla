@@ -18,7 +18,26 @@ export const useTheme = () => {
   if (!context) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
-  return context;
+  
+  // Add colors object for compatibility with native version
+  const colors = context.themeMode === 'dark' ? {
+    primary: '#D4B896',
+    background: { default: manyllaColors.darkBackground, paper: manyllaColors.darkPaper },
+    text: { primary: manyllaColors.darkText, secondary: manyllaColors.darkTextSecondary },
+    border: 'rgba(232, 220, 192, 0.12)',
+  } : context.themeMode === 'manylla' ? {
+    primary: manyllaColors.darkBrown,
+    background: { default: manyllaColors.manyllaBackground, paper: manyllaColors.manyllaPaper },
+    text: { primary: manyllaColors.manyllaText, secondary: manyllaColors.manyllaTextSecondary },
+    border: manyllaColors.manyllaBorder,
+  } : {
+    primary: manyllaColors.brown,
+    background: { default: manyllaColors.lightManilaBackground, paper: manyllaColors.lightManilaPaper },
+    text: { primary: '#333333', secondary: '#666666' },
+    border: '#E0E0E0',
+  };
+  
+  return { ...context, colors, theme: context.themeMode };
 };
 
 interface ThemeProviderProps {

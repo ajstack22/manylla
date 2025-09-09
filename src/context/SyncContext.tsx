@@ -38,7 +38,7 @@ export const SyncProvider: React.FC<SyncProviderProps> = ({ children, onProfileR
 
   // Handle profile updates from sync
   const handleProfileReceived = useCallback((profile: ChildProfile) => {
-    console.log('[SyncContext] Received profile from sync');
+    // console.log('[SyncContext] Received profile from sync');
     setLastSyncTime(new Date());
     if (onProfileReceived) {
       onProfileReceived(profile);

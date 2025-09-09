@@ -1,18 +1,48 @@
 /**
  * Manylla - Cross-Platform App
- * Following StackMap's pattern: single codebase with Platform.OS checks
+ * Single codebase following StackMap's architecture pattern
+ * Uses React Native components for both iOS and Web
+ * 
+ * DEPLOYMENT: Use ./scripts/deploy-qual.sh ONLY
+ * DO NOT use npm run deploy:qual or manual deployment
+ * Release notes must be updated before deployment
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   ScrollView,
-  ActivityIndicator,
   StyleSheet,
   Platform,
   StatusBar,
+  Text,
+  TouchableOpacity,
+  Alert,
+  Image,
+  Dimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// Shared imports
+import { ThemeProvider, SyncProvider, useSync, useTheme } from './src/context';
+import { OnboardingWizard } from './src/components/Onboarding';
+import { StorageService } from './src/services/storage/storageService';
+import { unifiedCategories } from './src/utils/unifiedCategories';
+
+// Import unified components
+import { EntryForm, ProfileEditForm, CategoryManager } from './src/components/UnifiedApp';
+
+// Import additional components
+import { ThemedToast } from './src/components/Toast';
+import { LoadingOverlay } from './src/components/Loading';
+import { PrintPreview, QRCodeModal } from './src/components/Sharing';
+import { Header } from './src/components/Layout';
+import { MarkdownRenderer } from './src/components/Forms';
+
+// Import Share and Sync dialogs
+import { ShareDialogOptimized } from './src/components/Sharing';
+import { SyncDialog } from './src/components/Sync';
+
 
 // Platform-specific imports
 let GestureHandlerRootView = View; // Default to View
@@ -35,17 +65,10 @@ if (Platform.OS !== 'web') {
   }
 }
 
-// Shared imports
-import { ThemeProvider } from './src/context/ThemeContext';
-import { SyncProvider, useSync } from './src/context/SyncContext';
-import { OnboardingWizard } from './src/components/Onboarding';
-import { StorageService } from './src/services/storage/storageService';
-import { unifiedCategories } from './src/utils/unifiedCategories';
-
-// Platform-specific ProfileOverview
-const ProfileOverview = Platform.OS === 'web'
-  ? require('./src/components/Profile/ProfileOverview').ProfileOverview
-  : require('./src/components/Profile/ProfileOverview.native').default;
+// Debug check for undefined components
+if (typeof EntryForm === 'undefined') console.error('EntryForm is undefined');
+if (typeof ProfileEditForm === 'undefined') console.error('ProfileEditForm is undefined');
+if (typeof CategoryManager === 'undefined') console.error('CategoryManager is undefined');
 
 // Web-specific early sync data capture (from StackMap pattern)
 if (Platform.OS === 'web' && typeof window !== 'undefined') {
@@ -53,26 +76,274 @@ if (Platform.OS === 'web' && typeof window !== 'undefined') {
   const pathname = window.location.pathname;
   const shareMatch = pathname.match(/\/share\/([a-zA-Z0-9-]+)/);
   
-  if (shareMatch) {
-    const token = shareMatch[1];
-    const hash = window.location.hash.substring(1);
-    window.__earlyShareData = { shareToken: token, encryptionKey: hash };
-  }
-  
-  // Clear fragment to prevent sending to server
-  if (window.location.hash) {
-    window.history.replaceState(null, document.title, window.location.pathname + window.location.search);
+  if (shareMatch && window.__initialHash) {
+    window.shareDataImmediate = {
+      shareId: shareMatch[1],
+      encryptionKey: window.__initialHash.substring(1)
+    };
+    console.log('[App] Captured share data:', { shareId: shareMatch[1] });
   }
 }
 
+// Default color constants (will be overridden by theme)
+const defaultColors = {
+  primary: '#8B7355',
+  secondary: '#6B5D54',
+  background: {
+    default: '#FDFBF7',
+    paper: '#FFFFFF',
+    manila: '#F4E4C1',
+  },
+  text: {
+    primary: '#333333',
+    secondary: '#666666',
+    disabled: '#999999',
+  },
+  border: '#E0E0E0',
+  success: '#4CAF50',
+  error: '#F44336',
+  warning: '#FF9800',
+  info: '#2196F3',
+};
+
+
+// Profile Overview Component
+const ProfileOverview = ({ 
+  profile, 
+  onAddEntry, 
+  onEditEntry, 
+  onDeleteEntry, 
+  onUpdateProfile,
+  onShare,
+  onEditProfile,
+  onManageCategories,
+  styles,
+  colors
+}) => {
+  
+  if (!profile) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>No profile loaded</Text>
+      </View>
+    );
+  }
+
+  const calculateAge = (dob) => {
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    
+    return age;
+  };
+
+  const getEntriesByCategory = (categoryName) => {
+    return profile.entries.filter(entry => entry.category === categoryName);
+  };
+
+  // Separate QuickInfo panels from regular categories
+  const quickInfoCategories = profile.categories
+    .filter(cat => cat.isQuickInfo && cat.isVisible)
+    .sort((a, b) => a.order - b.order);
+  
+  const regularCategories = profile.categories
+    .filter(cat => !cat.isQuickInfo && cat.isVisible && getEntriesByCategory(cat.name).length > 0)
+    .sort((a, b) => a.order - b.order);
+  
+  const visibleCategories = [...quickInfoCategories, ...regularCategories];
+
+  const screenWidth = Dimensions.get('window').width;
+  const isDesktop = screenWidth > 1024;
+
+  return (
+    <View style={{ flex: 1, position: 'relative' }}>
+      <ScrollView style={styles.profileContainer}>
+        <View style={styles.contentContainer}>
+        {/* Desktop: Side-by-side layout, Mobile: Stacked layout */}
+        <View style={isDesktop ? styles.desktopHeader : null}>
+        {/* Profile Header Card */}
+        <View style={[styles.profileCard, isDesktop && styles.profileCardDesktop]}>
+          <TouchableOpacity onPress={() => onEditProfile && onEditProfile()}>
+            <View style={styles.avatarContainer}>
+              {profile.photo ? (
+                <Image source={{ uri: profile.photo }} style={styles.avatar} />
+              ) : (
+                <View style={[styles.avatar, styles.avatarPlaceholder]}>
+                  <Text style={styles.avatarText}>{profile.name.charAt(0)}</Text>
+                </View>
+              )}
+            </View>
+          </TouchableOpacity>
+          <Text style={styles.profileName}>{profile.preferredName || profile.name}</Text>
+          <Text style={styles.profileAge}>Age: {calculateAge(profile.dateOfBirth)} years</Text>
+        </View>
+
+        {/* Quick Info - Beside profile on desktop, below on mobile */}
+        {(() => {
+          const quickInfoEntries = getEntriesByCategory('quick-info');
+          // Show Quick Info if it has entries or if it's visible in categories
+          const quickInfoCategory = visibleCategories.find(cat => cat.name === 'quick-info');
+          if (quickInfoCategory || quickInfoEntries.length > 0) {
+            return (
+              <View style={isDesktop ? styles.quickInfoDesktop : [styles.categorySection, styles.quickInfoSection]}>
+                <View style={styles.categoryHeader}>
+                  <View style={[styles.categoryColorStrip, { backgroundColor: quickInfoCategory?.color || '#9B59B6' }]} />
+                  <Text style={styles.categoryTitle}>Quick Info</Text>
+                  <TouchableOpacity 
+                    onPress={() => onAddEntry('quick-info')}
+                    style={styles.addButton}
+                  >
+                    <Text style={styles.addButtonText}>+</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={[styles.categoryContent, isDesktop && styles.quickInfoContentDesktop]}>
+                  {quickInfoEntries.length === 0 ? (
+                    <Text style={styles.emptyCategory}>No quick info yet</Text>
+                  ) : (
+                    quickInfoEntries.map((entry) => (
+                      <TouchableOpacity
+                        key={entry.id}
+                        style={styles.entryItem}
+                        onPress={() => onEditEntry(entry)}
+                        onLongPress={() => {
+                          if (Platform.OS === 'web') {
+                            if (window.confirm('Delete this entry?')) {
+                              onDeleteEntry(entry.id);
+                            }
+                          } else {
+                            Alert.alert(
+                              'Delete Entry',
+                              'Are you sure you want to delete this entry?',
+                              [
+                                { text: 'Cancel', style: 'cancel' },
+                                { text: 'Delete', style: 'destructive', onPress: () => onDeleteEntry(entry.id) }
+                              ]
+                            );
+                          }
+                        }}
+                      >
+                        <Text style={styles.entryTitle}>{entry.title}</Text>
+                        {entry.description && (
+                          <Text style={styles.entryDescription} numberOfLines={2}>
+                            {entry.description.replace(/<[^>]*>/g, '')}
+                          </Text>
+                        )}
+                      </TouchableOpacity>
+                    ))
+                  )}
+                </View>
+              </View>
+            );
+          }
+          return null;
+        })()}
+      </View>
+
+      {/* Categories Grid */}
+      <View style={styles.categoriesContainer}>
+        
+        <View style={styles.categoriesGrid}>
+          {visibleCategories.filter(cat => cat.name !== 'quick-info').map((category) => {
+            const entries = getEntriesByCategory(category.name);
+            
+            return (
+              <View key={category.id} style={styles.categorySection}>
+              <View style={styles.categoryHeader}>
+                <View style={[styles.categoryColorStrip, { backgroundColor: category.color }]} />
+                <Text style={styles.categoryTitle}>{category.displayName}</Text>
+                <TouchableOpacity 
+                  onPress={() => onAddEntry(category.name)}
+                  style={styles.addButton}
+                >
+                  <Text style={styles.addButtonText}>+</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.categoryContent}>
+                {entries.length === 0 ? (
+                  <Text style={styles.emptyCategory}>No entries yet</Text>
+                ) : (
+                  entries.map((entry) => (
+                    <TouchableOpacity
+                      key={entry.id}
+                      style={styles.entryItem}
+                      onPress={() => onEditEntry(entry)}
+                      onLongPress={() => {
+                        if (Platform.OS === 'web') {
+                          if (window.confirm('Delete this entry?')) {
+                            onDeleteEntry(entry.id);
+                          }
+                        } else {
+                          Alert.alert(
+                            'Delete Entry',
+                            'Are you sure you want to delete this entry?',
+                            [
+                              { text: 'Cancel', style: 'cancel' },
+                              { text: 'Delete', style: 'destructive', onPress: () => onDeleteEntry(entry.id) }
+                            ]
+                          );
+                        }
+                      }}
+                    >
+                      <Text style={styles.entryTitle}>{entry.title}</Text>
+                      {entry.description && (
+                        <Text style={styles.entryDescription} numberOfLines={2}>
+                          {entry.description.replace(/<[^>]*>/g, '')}
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                  ))
+                )}
+              </View>
+            </View>
+            );
+          })}
+        </View>
+      </View>
+
+        </View>
+      </ScrollView>
+      
+      {/* Floating Action Button */}
+      <TouchableOpacity 
+        style={styles.fab}
+        onPress={() => onAddEntry('')}
+        activeOpacity={0.8}
+      >
+        <Text style={styles.fabText}>+</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 // Main App content
 function AppContent() {
-  // const { pushProfile, syncStatus } = useSync(); // TEMPORARILY DISABLED
-  const pushProfile = () => {}; // Dummy function
-  const syncStatus = 'idle'; // Dummy status
+  const { pushSync, syncStatus } = useSync();
+  const { colors, theme, toggleTheme } = useTheme();
+  
+  // Create styles based on current theme colors
+  const styles = createStyles(colors);
+  
   const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(true);
+  const [entryFormOpen, setEntryFormOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [editingEntry, setEditingEntry] = useState(null);
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [syncDialogOpen, setSyncDialogOpen] = useState(false);
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [profileEditOpen, setProfileEditOpen] = useState(false);
+  const [printPreviewOpen, setPrintPreviewOpen] = useState(false);
+  const [qrCodeOpen, setQRCodeOpen] = useState(false);
+  const [shareLink, setShareLink] = useState('');
+  const [toast, setToast] = useState({ open: false, message: '', severity: 'success' });
+  const [operationLoading, setOperationLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('');
 
   // Load initial data
   useEffect(() => {
@@ -94,12 +365,12 @@ function AppContent() {
           setShowOnboarding(true);
           // Clear invalid data
           if (!storedProfile?.name) {
-            await AsyncStorage.removeItem('manylla_profile');
-            await AsyncStorage.removeItem('manylla_onboarding_completed');
+            await StorageService.clearProfile();
           }
         }
       } catch (error) {
-        console.error('Failed to load initial data:', error);
+        console.error('Failed to load profile:', error);
+        setShowOnboarding(true);
       } finally {
         setIsLoading(false);
       }
@@ -108,95 +379,324 @@ function AppContent() {
     loadInitialData();
   }, []);
 
+  // Update document title on web
+  useEffect(() => {
+    if (Platform.OS === 'web' && profile) {
+      document.title = `manylla - ${profile.preferredName || profile.name}`;
+    }
+  }, [profile]);
+
   // Push profile changes to sync
   useEffect(() => {
-    if (profile && !isLoading) {
-      pushProfile(profile);
+    if (profile && !isLoading && pushSync) {
+      // Only push if we have a sync function available
+      pushSync(profile).catch(error => {
+        console.log('Sync not configured yet:', error.message);
+      });
     }
-  }, [profile, isLoading, pushProfile]);
+  }, [profile, isLoading, pushSync]);
+
+  // Toast notification helper
+  const showToast = (message, severity = 'success') => {
+    setToast({ open: true, message, severity });
+    setTimeout(() => {
+      setToast(prev => ({ ...prev, open: false }));
+    }, 3000);
+  };
+
+  // Loading helper
+  const withLoading = async (message, operation) => {
+    setOperationLoading(true);
+    setLoadingMessage(message);
+    try {
+      const result = await operation();
+      setOperationLoading(false);
+      return result;
+    } catch (error) {
+      setOperationLoading(false);
+      showToast('Operation failed', 'error');
+      throw error;
+    }
+  };
 
   const handleOnboardingComplete = async (data) => {
     if (data.mode === 'demo') {
-      // Create demo profile
+      // Create demo profile - Ellie's comprehensive example data
       const demoProfile = {
         id: '1',
-        name: 'Alex Johnson',
-        preferredName: 'Alex',
+        name: 'Ellie',
+        preferredName: 'Ellie',
         dateOfBirth: new Date('2018-06-15'),
-        pronouns: 'they/them',
+        pronouns: 'she/her',
         photo: '',
         categories: unifiedCategories,
         themeMode: 'manylla',
         quickInfoPanels: [],
         entries: [
+          // Quick Info entries
+          {
+            id: 'qi-demo-1',
+            category: 'quick-info',
+            title: 'Communication',
+            description: 'Uses 2-3 word phrases. Understands more than she can express. Working with speech therapist weekly.',
+            date: new Date(),
+            visibility: ['private']
+          },
+          {
+            id: 'qi-demo-2',
+            category: 'quick-info',
+            title: 'Sensory',
+            description: 'Sensitive to loud/sudden noises. Loves soft textures and weighted blankets. Prefers dim lighting.',
+            date: new Date(),
+            visibility: ['private']
+          },
+          {
+            id: 'qi-demo-3',
+            category: 'quick-info',
+            title: 'Medical',
+            description: 'Allergies: Peanuts (EpiPen required). Medications: Melatonin 3mg at bedtime.',
+            date: new Date(),
+            visibility: ['private']
+          },
+          {
+            id: 'qi-demo-4',
+            category: 'quick-info',
+            title: 'Emergency Contacts',
+            description: 'Mom: Sarah (555) 123-4567\nDad: Mike (555) 123-4568\nDr. Emily Chen: (555) 555-1234',
+            date: new Date(),
+            visibility: ['private']
+          },
+          {
+            id: 'qi-demo-5',
+            category: 'quick-info',
+            title: 'Calming Strategies',
+            description: 'Deep pressure hugs, quiet corner with books, classical music, fidget toys.',
+            date: new Date(),
+            visibility: ['private']
+          },
+          // Goals
           {
             id: '1',
-            category: 'medical',
-            title: 'Daily Medications',
-            description: 'Melatonin 3mg at bedtime for sleep',
-            date: new Date(),
-            visibility: ['private'],
+            category: 'goals',
+            title: 'Improve Communication Skills',
+            description: 'Working on using full sentences instead of single words. Practice asking for help with "Can you help me?" instead of just "help".',
+            date: new Date('2024-01-15'),
+            visibility: ['family', 'medical', 'education']
           },
+          // Successes  
           {
             id: '2',
-            category: 'sensory',
-            title: 'Sensitivities',
-            description: 'Avoid fluorescent lights, prefers dim lighting',
-            date: new Date(),
-            visibility: ['private'],
+            category: 'successes',
+            title: 'First Full Day at School',
+            description: 'Ellie completed her first full day at school without needing to come home early! She participated in circle time and even raised her hand once.',
+            date: new Date('2024-01-10'),
+            visibility: ['family']
           },
+          // Education
+          {
+            id: '3',
+            category: 'education',
+            title: 'Visual Learning',
+            description: 'Ellie learns best with visual aids. Picture cards, visual schedules, and demonstrations work much better than verbal instructions alone.',
+            date: new Date('2024-01-08'),
+            visibility: ['education']
+          },
+          // Behaviors
+          {
+            id: '4',
+            category: 'behaviors',
+            title: 'Loud Noises',
+            description: 'Sudden loud noises (fire alarms, hand dryers) cause significant distress. Always warn beforehand when possible. Noise-canceling headphones help.',
+            date: new Date('2024-01-05'),
+            visibility: ['family', 'medical', 'education']
+          },
+          // Medical
+          {
+            id: '5',
+            category: 'medical',
+            title: 'Autism Diagnosis',
+            description: 'Diagnosed with Autism Spectrum Disorder at age 3. Evaluation done by Dr. Smith at Children\'s Hospital.',
+            date: new Date('2021-08-20'),
+            visibility: ['medical']
+          },
+          // Tips & Tricks
+          {
+            id: '6',
+            category: 'tips-tricks',
+            title: 'Transition Warnings',
+            description: 'Give 5 and 2 minute warnings before transitions. Use visual timer. "In 5 minutes, we\'ll clean up and get ready for lunch."',
+            date: new Date('2024-01-12'),
+            visibility: ['family', 'medical', 'education']
+          }
         ],
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
       
-      setProfile(demoProfile);
+      console.log('Demo profile created:', demoProfile);
+      console.log('Number of entries:', demoProfile.entries.length);
       await StorageService.saveProfile(demoProfile);
       await AsyncStorage.setItem('manylla_onboarding_completed', 'true');
+      setProfile(demoProfile);
       setShowOnboarding(false);
-    } else if (data.mode === 'fresh') {
+    } else if (data.mode === 'fresh' && data.childName) {
       // Create new profile
-      if (!data.childName || !data.childName.trim()) {
-        console.error('Cannot create profile without child name');
-        return;
-      }
-      
       const newProfile = {
         id: Date.now().toString(),
         name: data.childName.trim(),
         preferredName: data.childName.trim(),
-        dateOfBirth: data.dateOfBirth || new Date(),
+        dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : new Date(),
         pronouns: '',
         photo: data.photo || '',
         categories: unifiedCategories,
         themeMode: 'manylla',
         quickInfoPanels: [],
-        entries: [],
+        entries: [
+          // Quick Info entries
+          {
+            id: 'qi-1',
+            category: 'quick-info',
+            title: 'Communication',
+            description: 'Uses 2-3 word phrases. Understands more than she can express.',
+            date: new Date(),
+            visibility: ['private']
+          },
+          {
+            id: 'qi-2',
+            category: 'quick-info',
+            title: 'Sensory',
+            description: 'Sensitive to loud noises and bright lights. Loves soft textures.',
+            date: new Date(),
+            visibility: ['private']
+          },
+          {
+            id: 'qi-3',
+            category: 'quick-info',
+            title: 'Medical',
+            description: 'No allergies. Takes melatonin for sleep (prescribed).',
+            date: new Date(),
+            visibility: ['private']
+          },
+          {
+            id: 'qi-4',
+            category: 'quick-info',
+            title: 'Dietary',
+            description: 'Gluten-free diet. Prefers crunchy foods. No nuts.',
+            date: new Date(),
+            visibility: ['private']
+          },
+          {
+            id: 'qi-5',
+            category: 'quick-info',
+            title: 'Emergency Contacts',
+            description: 'Mom: 555-0123, Dad: 555-0124. Dr. Smith: 555-0199',
+            date: new Date(),
+            visibility: ['private']
+          }
+        ],
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
       
-      setProfile(newProfile);
       await StorageService.saveProfile(newProfile);
       await AsyncStorage.setItem('manylla_onboarding_completed', 'true');
+      setProfile(newProfile);
       setShowOnboarding(false);
     } else if (data.mode === 'join' && data.accessCode) {
+      // Join with access code (sync)
+      // TODO: Implement sync join
       console.log('Join with code:', data.accessCode);
     }
   };
 
   const handleUpdateProfile = async (updates) => {
-    const updatedProfile = { ...profile, ...updates, updatedAt: new Date() };
-    setProfile(updatedProfile);
+    if (!profile) return;
+    
+    const updatedProfile = {
+      ...profile,
+      ...updates,
+      updatedAt: new Date()
+    };
+    
     await StorageService.saveProfile(updatedProfile);
+    setProfile(updatedProfile);
+  };
+
+  const handleAddEntry = (category) => {
+    setSelectedCategory(category);
+    setEditingEntry(null);
+    setEntryFormOpen(true);
+  };
+
+  const handleEditEntry = (entry) => {
+    setEditingEntry(entry);
+    setSelectedCategory(entry.category);
+    setEntryFormOpen(true);
+  };
+
+  const handleSaveEntry = async (entry) => {
+    await withLoading('Saving entry...', async () => {
+      const newEntry = {
+      ...entry,
+      id: editingEntry?.id || Date.now().toString(),
+      date: new Date(),
+    };
+    
+    let updatedEntries;
+    if (editingEntry) {
+      // Update existing entry
+      updatedEntries = profile.entries.map(e => 
+        e.id === editingEntry.id ? newEntry : e
+      );
+    } else {
+      // Add new entry
+      updatedEntries = [...(profile.entries || []), newEntry];
+    }
+    
+    const updatedProfile = {
+      ...profile,
+      entries: updatedEntries,
+      updatedAt: new Date(),
+    };
+    
+      setProfile(updatedProfile);
+      await StorageService.saveProfile(updatedProfile);
+      setEntryFormOpen(false);
+      setEditingEntry(null);
+      setSelectedCategory('');
+      showToast(editingEntry ? 'Entry updated successfully' : 'Entry added successfully');
+    });
+  };
+
+  const handleDeleteEntry = async (entryId) => {
+    if (!profile) return;
+    
+    await withLoading('Deleting entry...', async () => {
+      const updatedProfile = {
+      ...profile,
+      entries: profile.entries.filter(e => e.id !== entryId),
+      updatedAt: new Date()
+    };
+    
+      await StorageService.saveProfile(updatedProfile);
+      setProfile(updatedProfile);
+      showToast('Entry deleted successfully');
+    });
+  };
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('manylla_onboarding_completed');
+    setProfile(null);
+    setShowOnboarding(true);
   };
 
   // Show loading spinner
   if (isLoading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#8B7355" />
-      </View>
+      <LoadingOverlay 
+        visible={true}
+        message="Loading your profile..."
+      />
     );
   }
 
@@ -207,57 +707,514 @@ function AppContent() {
 
   // Main app view
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
+      <Header
+        onSyncClick={() => setSyncDialogOpen(true)}
+        onCloseProfile={handleLogout}
+        onShare={() => setShareDialogOpen(true)}
+        onCategoriesClick={() => setCategoriesOpen(true)}
+        // onQuickInfoClick={() => setQuickInfoOpen(true)} // TODO: Implement quick info dialog
+        onPrintClick={() => setPrintPreviewOpen(true)}
+        syncStatus={syncStatus}
+        onThemeToggle={toggleTheme}
+        theme={theme}
+        colors={colors}
+        showToast={showToast}
+      />
       <ProfileOverview
         profile={profile}
+        onAddEntry={handleAddEntry}
+        onEditEntry={handleEditEntry}
+        onDeleteEntry={handleDeleteEntry}
         onUpdateProfile={handleUpdateProfile}
+        onShare={() => setShareDialogOpen(true)}
+        onEditProfile={() => setProfileEditOpen(true)}
+        onManageCategories={() => setCategoriesOpen(true)}
+        styles={styles}
+        colors={colors}
       />
-    </ScrollView>
+      
+      {/* Entry Form Modal */}
+      <EntryForm
+        visible={entryFormOpen}
+        onClose={() => {
+          setEntryFormOpen(false);
+          setEditingEntry(null);
+          setSelectedCategory('');
+        }}
+        onSave={handleSaveEntry}
+        category={selectedCategory}
+        entry={editingEntry}
+        categories={unifiedCategories.filter(cat => !cat.isQuickInfo && cat.isVisible)}
+      />
+
+      {/* Profile Edit Modal */}
+      <ProfileEditForm
+        visible={profileEditOpen}
+        onClose={() => setProfileEditOpen(false)}
+        onSave={handleUpdateProfile}
+        profile={profile}
+      />
+
+      {/* Category Manager Modal */}
+      <CategoryManager
+        visible={categoriesOpen}
+        onClose={() => setCategoriesOpen(false)}
+        onSave={async (updatedCategories) => {
+          const updatedProfile = {
+            ...profile,
+            categoryConfigs: updatedCategories,
+            updatedAt: new Date(),
+          };
+          
+          setProfile(updatedProfile);
+          await StorageService.saveProfile(updatedProfile);
+          setCategoriesOpen(false);
+        }}
+        categories={profile?.categoryConfigs || unifiedCategories}
+      />
+
+      {/* Share Dialog */}
+      {shareDialogOpen && (
+        <ShareDialogOptimized
+          open={shareDialogOpen}
+          onClose={() => setShareDialogOpen(false)}
+          profile={profile}
+          onShareLinkGenerated={setShareLink}
+          onShowQR={() => {
+            setShareDialogOpen(false);
+            setQRCodeOpen(true);
+          }}
+        />
+      )}
+
+      {/* Sync Dialog */}
+      {syncDialogOpen && (
+        <SyncDialog
+          open={syncDialogOpen}
+          onClose={() => setSyncDialogOpen(false)}
+          profile={profile}
+        />
+      )}
+
+      {/* Print Preview */}
+      {printPreviewOpen && (
+        <PrintPreview
+          visible={printPreviewOpen}
+          onClose={() => setPrintPreviewOpen(false)}
+          profile={profile}
+          categories={unifiedCategories}
+          entries={profile?.entries || []}
+        />
+      )}
+
+      {/* QR Code Modal */}
+      {qrCodeOpen && (
+        <QRCodeModal
+          visible={qrCodeOpen}
+          onClose={() => setQRCodeOpen(false)}
+          data={shareLink || ''}
+          title="Scan to View Profile"
+        />
+      )}
+
+      {/* Toast Notification */}
+      <ThemedToast
+        open={toast.open}
+        message={toast.message}
+        severity={toast.severity}
+        onClose={() => setToast(prev => ({ ...prev, open: false }))}
+      />
+      
+      {/* Operation Loading Overlay */}
+      {operationLoading && (
+        <LoadingOverlay 
+          visible={operationLoading}
+          message={loadingMessage}
+        />
+      )}
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
+// Create styles function that accepts colors
+const createStyles = (colors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: colors.background.default,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: colors.background.default,
+  },
+  loadingText: {
+    marginTop: 16,
+    color: colors.text.secondary,
+    fontSize: 16,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  emptyText: {
+    color: colors.text.secondary,
+    fontSize: 16,
+  },
+  profileContainer: {
+    flex: 1,
+  },
+  contentContainer: {
+    maxWidth: 1400, // Maximum width for content
+    width: '100%',
+    alignSelf: 'center', // Center the container
+    paddingHorizontal: Platform.select({
+      web: (() => {
+        const screenWidth = Dimensions.get('window').width;
+        // Add more padding on very wide screens
+        if (screenWidth > 1600) return 48;
+        if (screenWidth > 1400) return 32;
+        if (screenWidth > 1200) return 24;
+        return 16;
+      })(),
+      default: 16
+    }),
+  },
+  desktopHeader: {
+    flexDirection: 'row',
+    alignItems: 'stretch', // This ensures both panels have same height
+    marginTop: 16,
+    marginBottom: 12,
+  },
+  profileCard: {
+    backgroundColor: colors.background.paper,
+    margin: 16,
+    padding: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    ...Platform.select({
+      web: {
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      },
+      default: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+      },
+    }),
+  },
+  profileCardDesktop: {
+    margin: 0,
+    marginRight: Platform.OS === 'web' ? 6 : '1%',
+    flex: 0,
+    // 1/3 width for photo panel, accounting for gap
+    width: Platform.OS === 'web' ? 'calc(33.333% - 8px)' : '32%',
+    minWidth: 280,
+    justifyContent: 'center',
+    alignSelf: 'stretch', // Match height of Quick Info
+    // Match categorySection styling for consistency
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.border,
+    boxShadow: 'none',
+    padding: 24,
+  },
+  avatarContainer: {
+    marginBottom: 16,
+  },
+  avatar: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+  },
+  avatarPlaceholder: {
+    backgroundColor: colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatarText: {
+    color: '#FFFFFF',
+    fontSize: 48,
+    fontWeight: 'bold',
+  },
+  profileName: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: colors.text.primary,
+    marginBottom: 8,
+  },
+  profileAge: {
+    fontSize: 16,
+    color: colors.text.secondary,
+    marginBottom: 8,
+  },
+  pronounChip: {
+    backgroundColor: colors.background.manila,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    marginTop: 8,
+  },
+  pronounText: {
+    color: colors.text.primary,
+    fontSize: 14,
+  },
+  categoriesContainer: {
+    paddingTop: 16,
+    paddingBottom: 100, // Space for FAB
+  },
+  categoriesGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginHorizontal: -6, // Negative margin for gap compensation
+  },
+  categorySection: {
+    backgroundColor: colors.background.paper,
+    borderRadius: 8,
+    marginBottom: 12,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: colors.border,
+    // Responsive column layout - 2 columns on desktop
+    ...(() => {
+      const screenWidth = Dimensions.get('window').width;
+      // 2 columns on large screens (>1024px)
+      if (screenWidth > 1024) {
+        return {
+          width: Platform.OS === 'web' ? 'calc(50% - 12px)' : '48%',
+          marginHorizontal: Platform.OS === 'web' ? 6 : '1%',
+        };
+      }
+      // 2 columns on tablets (768-1024px)
+      if (screenWidth > 768) {
+        return {
+          width: Platform.OS === 'web' ? 'calc(50% - 12px)' : '48%',
+          marginHorizontal: Platform.OS === 'web' ? 6 : '1%',
+        };
+      }
+      // 1 column on phones (<768px)
+      return {
+        width: '100%',
+        marginHorizontal: 0,
+      };
+    })(),
+  },
+  quickInfoSection: {
+    width: '100%',
+    marginHorizontal: 0,
+    marginTop: 12,
+  },
+  quickInfoDesktop: {
+    // Standalone styles for desktop Quick Info (not inheriting from categorySection)
+    flex: 1,
+    marginLeft: Platform.OS === 'web' ? 6 : '1%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignSelf: 'stretch', // Match height of profile card
+    backgroundColor: colors.background.paper,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.border,
+    overflow: 'hidden', // For proper border radius clipping
+    paddingVertical: 6, // Add 12px total to match height difference
+  },
+  quickInfoContentDesktop: {
+    flex: 1,
+    justifyContent: 'flex-start', // Align content to top
+    display: 'flex',
+    flexDirection: 'column',
+    padding: 16, // Regular content padding
+    paddingTop: 22, // Extra padding to match profile card height
+    paddingBottom: 22, // Extra padding to match profile card height
+  },
+  categoryHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: colors.background.secondary,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  categoryColorStrip: {
+    width: 4,
+    height: 24,
+    borderRadius: 2,
+    marginRight: 12,
+  },
+  categoryTitle: {
+    flex: 1,
+    color: colors.text.primary,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  addButton: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    borderColor: colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addButtonText: {
+    color: colors.primary,
+    fontSize: 18,
+    fontWeight: '400',
+    lineHeight: 18,
+  },
+  categoryContent: {
+    padding: 16,
+  },
+  emptyCategory: {
+    color: colors.text.disabled,
+    fontStyle: 'italic',
+  },
+  entryItem: {
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  entryTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.text.primary,
+    marginBottom: 4,
+  },
+  entryDescription: {
+    fontSize: 14,
+    color: colors.text.secondary,
+    lineHeight: 20,
+  },
+  quickInfoPanel: {
+    marginBottom: 16,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  quickInfoTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.primary,
+    marginBottom: 6,
+  },
+  quickInfoValue: {
+    fontSize: 14,
+    color: colors.text.primary,
+    lineHeight: 20,
+  },
+  fab: {
+    position: Platform.OS === 'web' ? 'fixed' : 'absolute',
+    bottom: 24,
+    right: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+    ...Platform.select({
+      web: {
+        boxShadow: '0 3px 5px -1px rgba(0,0,0,0.2), 0 6px 10px 0 rgba(0,0,0,0.14), 0 1px 18px 0 rgba(0,0,0,0.12)',
+        cursor: 'pointer',
+        position: 'fixed', // Ensure fixed positioning on web
+      },
+      default: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.37,
+        shadowRadius: 7.49,
+        elevation: 12,
+      },
+    }),
+  },
+  fabPressed: {
+    ...Platform.select({
+      web: {
+        transform: 'scale(0.95)',
+      },
+      default: {
+        elevation: 6,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+      },
+    }),
+  },
+  fabIcon: {
+    color: '#FFFFFF',
+    fontSize: 24,
+  },
+  fabText: {
+    color: '#FFFFFF',
+    fontSize: 28,
+    fontWeight: '300',
+    lineHeight: 28,
+  },
+  modalOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: colors.background.paper,
+    borderRadius: 12,
+    padding: 24,
+    width: '90%',
+    maxWidth: 500,
+    maxHeight: '80%',
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: colors.text.primary,
+    marginBottom: 16,
+  },
+  modalCloseButton: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    width: 32,
+    height: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalCloseText: {
+    fontSize: 28,
+    color: colors.text.secondary,
   },
 });
 
+// Default styles using default colors (for initial render)
+let styles = createStyles(defaultColors);
+
 // Main App wrapper
 function App() {
-  const [profileForSync, setProfileForSync] = useState(null);
-
-  const handleProfileFromSync = useCallback((syncedProfile) => {
-    console.log('[App] Received profile from sync');
-    setProfileForSync(syncedProfile);
-  }, []);
-
-  // Root wrapper varies by platform
-  const RootWrapper = Platform.OS === 'web' ? View : GestureHandlerRootView;
+  const RootView = Platform.OS === 'web' ? View : GestureHandlerRootView;
+  const AppWrapper = Platform.OS === 'web' ? View : SafeAreaProvider;
 
   return (
-    <RootWrapper style={{ flex: 1 }}>
-      <SafeAreaProvider>
+    <AppWrapper>
+      <RootView style={{ flex: 1 }}>
         <ThemeProvider>
-          <SyncProvider onProfileReceived={handleProfileFromSync}>
-            {Platform.OS !== 'web' && (
-              <StatusBar 
-                barStyle="dark-content" 
-                backgroundColor="transparent"
-                translucent
-              />
-            )}
+          <SyncProvider>
             <AppContent />
           </SyncProvider>
         </ThemeProvider>
-      </SafeAreaProvider>
-    </RootWrapper>
+      </RootView>
+    </AppWrapper>
   );
 }
 

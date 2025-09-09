@@ -13,24 +13,24 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Test 1: Basic imports
-console.log('✅ Basic imports successful');
-
 // Test 2: Context imports
 import { ThemeProvider } from './src/context/ThemeContext';
 import { SyncProvider } from './src/context/SyncContext';
-console.log('✅ Context imports successful');
 
 // Test 3: Storage Service
 import { StorageService } from './src/services/storage/storageService';
-console.log('✅ StorageService import successful');
 
 // Test 4: Categories
 import { unifiedCategories } from './src/utils/unifiedCategories';
-console.log('✅ unifiedCategories import successful');
 
 // Test 5: Onboarding Component
 import { OnboardingWizard } from './src/components/Onboarding';
+
+// Test 1: Basic imports
+console.log('✅ Basic imports successful');
+console.log('✅ Context imports successful');
+console.log('✅ StorageService import successful');
+console.log('✅ unifiedCategories import successful');
 console.log('✅ OnboardingWizard import successful');
 
 // Test 6: ProfileOverview - Platform specific
