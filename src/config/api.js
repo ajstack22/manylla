@@ -6,30 +6,30 @@
 // Determine the API base URL based on environment
 const getApiBaseUrl = () => {
   // Check for development environment
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === "development") {
     // Use local API during development
-    return 'http://localhost:3000/api';
+    return "http://localhost:3000/api";
   }
-  
+
   // Production/staging detection based on hostname
   const hostname = window.location.hostname;
-  
-  if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    return '/api';
-  } else if (hostname.includes('manylla.com')) {
+
+  if (hostname === "localhost" || hostname === "127.0.0.1") {
+    return "/api";
+  } else if (hostname.includes("manylla.com")) {
     // Check if we're on qual/staging
-    if (window.location.pathname.startsWith('/qual')) {
-      return '/qual/api';
+    if (window.location.pathname.startsWith("/qual")) {
+      return "/qual/api";
     }
     // Production
-    return '/api';
-  } else if (hostname.includes('stackmap.app')) {
+    return "/api";
+  } else if (hostname.includes("stackmap.app")) {
     // Deployed to StackMap domain
-    return '/manylla/api';
+    return "/manylla/api";
   }
-  
+
   // Default fallback
-  return '/api';
+  return "/api";
 };
 
 export const API_BASE_URL = getApiBaseUrl();
@@ -47,18 +47,18 @@ export const API_ENDPOINTS = {
     createInvite: `${API_BASE_URL}/sync_create_invite.php`,
     validateInvite: `${API_BASE_URL}/sync_validate_invite.php`,
     useInvite: `${API_BASE_URL}/sync_use_invite.php`,
-    health: `${API_BASE_URL}/sync_health.php`
+    health: `${API_BASE_URL}/sync_health.php`,
   },
-  
+
   // Share endpoints (Phase 3)
   share: {
     create: `${API_BASE_URL}/share_create.php`,
-    access: `${API_BASE_URL}/share_access.php`
-  }
+    access: `${API_BASE_URL}/share_access.php`,
+  },
 };
 
 // Export for debugging
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === "development") {
   // console.log('[API] Configuration:', {
   //   baseUrl: API_BASE_URL,
   //   endpoints: API_ENDPOINTS
@@ -67,5 +67,5 @@ if (process.env.NODE_ENV === 'development') {
 
 export default {
   API_BASE_URL,
-  API_ENDPOINTS
+  API_ENDPOINTS,
 };

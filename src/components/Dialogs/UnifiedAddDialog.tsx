@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -19,41 +19,50 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-} from '@mui/material';
-import { Close as CloseIcon } from '@mui/icons-material';
+} from "@mui/material";
+import { Close as CloseIcon } from "@mui/icons-material";
 // Removed react-colorful import - using built-in color input instead
-import { QuickInfoConfig, CategoryConfig } from '../../types/ChildProfile';
-import { useMobileDialog } from '../../hooks/useMobileDialog';
-import { MarkdownField } from '../Forms/MarkdownField';
+import { QuickInfoConfig, CategoryConfig } from "../../types/ChildProfile";
+import { useMobileDialog } from "../../hooks/useMobileDialog";
+import { MarkdownField } from "../Forms/MarkdownField";
 
 interface UnifiedAddDialogProps {
   open: boolean;
   onClose: () => void;
-  mode: 'quickInfo' | 'category';
+  mode: "quickInfo" | "category";
   onAdd: (data: Partial<QuickInfoConfig> | Partial<CategoryConfig>) => void;
   existingItems?: QuickInfoConfig[] | CategoryConfig[];
 }
 
 const predefinedQuickInfoOptions = [
-  'Communication',
-  'Sensory',
-  'Medical',
-  'Dietary',
-  'Emergency',
-  'Medications',
-  'Allergies',
-  'Behaviors',
-  'Triggers',
-  'Calming Strategies',
-  'Sleep',
-  'Daily Routine',
-  'Custom...'
+  "Communication",
+  "Sensory",
+  "Medical",
+  "Dietary",
+  "Emergency",
+  "Medications",
+  "Allergies",
+  "Behaviors",
+  "Triggers",
+  "Calming Strategies",
+  "Sleep",
+  "Daily Routine",
+  "Custom...",
 ];
 
 const defaultColors = [
-  '#E74C3C', '#3498DB', '#2ECC71', '#F39C12',
-  '#9B59B6', '#1ABC9C', '#E67E22', '#34495E',
-  '#16A085', '#27AE60', '#8E44AD', '#2980B9'
+  "#E74C3C",
+  "#3498DB",
+  "#2ECC71",
+  "#F39C12",
+  "#9B59B6",
+  "#1ABC9C",
+  "#E67E22",
+  "#34495E",
+  "#16A085",
+  "#27AE60",
+  "#8E44AD",
+  "#2980B9",
 ];
 
 export const UnifiedAddDialog: React.FC<UnifiedAddDialogProps> = ({
@@ -65,23 +74,23 @@ export const UnifiedAddDialog: React.FC<UnifiedAddDialogProps> = ({
 }) => {
   const { mobileDialogProps, isMobile } = useMobileDialog();
   // Quick Info state
-  const [selectedOption, setSelectedOption] = useState<string>('');
-  const [customName, setCustomName] = useState('');
-  const [value, setValue] = useState('');
-  const [privacyLevel, setPrivacyLevel] = useState<string>('all');
+  const [selectedOption, setSelectedOption] = useState<string>("");
+  const [customName, setCustomName] = useState("");
+  const [value, setValue] = useState("");
+  const [privacyLevel, setPrivacyLevel] = useState<string>("all");
 
   // Category state
-  const [categoryName, setCategoryName] = useState('');
-  const [categoryColor, setCategoryColor] = useState('#3498DB');
+  const [categoryName, setCategoryName] = useState("");
+  const [categoryColor, setCategoryColor] = useState("#3498DB");
   const [showColorPicker, setShowColorPicker] = useState(false);
 
   const handleReset = () => {
-    setSelectedOption('');
-    setCustomName('');
-    setValue('');
-    setPrivacyLevel('all');
-    setCategoryName('');
-    setCategoryColor('#3498DB');
+    setSelectedOption("");
+    setCustomName("");
+    setValue("");
+    setPrivacyLevel("all");
+    setCategoryName("");
+    setCategoryColor("#3498DB");
     setShowColorPicker(false);
   };
 
@@ -91,10 +100,11 @@ export const UnifiedAddDialog: React.FC<UnifiedAddDialogProps> = ({
   };
 
   const handleAdd = () => {
-    if (mode === 'quickInfo') {
-      const displayName = selectedOption === 'Custom...' ? customName : selectedOption;
-      const name = displayName.toLowerCase().replace(/\s+/g, '-');
-      
+    if (mode === "quickInfo") {
+      const displayName =
+        selectedOption === "Custom..." ? customName : selectedOption;
+      const name = displayName.toLowerCase().replace(/\s+/g, "-");
+
       if (displayName && value) {
         onAdd({
           id: `custom-${Date.now()}`,
@@ -111,7 +121,7 @@ export const UnifiedAddDialog: React.FC<UnifiedAddDialogProps> = ({
       if (categoryName && categoryColor) {
         onAdd({
           id: `custom-${Date.now()}`,
-          name: categoryName.toLowerCase().replace(/\s+/g, '-'),
+          name: categoryName.toLowerCase().replace(/\s+/g, "-"),
           displayName: categoryName,
           color: categoryColor,
           order: existingItems.length + 1,
@@ -123,9 +133,12 @@ export const UnifiedAddDialog: React.FC<UnifiedAddDialogProps> = ({
     }
   };
 
-  const isValid = mode === 'quickInfo' 
-    ? (selectedOption && (selectedOption !== 'Custom...' || customName) && value)
-    : (categoryName && categoryColor);
+  const isValid =
+    mode === "quickInfo"
+      ? selectedOption &&
+        (selectedOption !== "Custom..." || customName) &&
+        value
+      : categoryName && categoryColor;
 
   return (
     <Dialog open={open} onClose={handleClose} {...mobileDialogProps}>
@@ -133,7 +146,7 @@ export const UnifiedAddDialog: React.FC<UnifiedAddDialogProps> = ({
         <AppBar position="sticky" color="default" elevation={0}>
           <Toolbar>
             <Typography variant="h6" sx={{ flexGrow: 1 }}>
-              Add {mode === 'quickInfo' ? 'Quick Info' : 'Category'}
+              Add {mode === "quickInfo" ? "Quick Info" : "Category"}
             </Typography>
             <IconButton edge="end" onClick={handleClose}>
               <CloseIcon />
@@ -142,32 +155,35 @@ export const UnifiedAddDialog: React.FC<UnifiedAddDialogProps> = ({
         </AppBar>
       ) : (
         <DialogTitle>
-          Add New {mode === 'quickInfo' ? 'Quick Info' : 'Category'}
+          Add New {mode === "quickInfo" ? "Quick Info" : "Category"}
         </DialogTitle>
       )}
       <DialogContent sx={{ pt: isMobile ? 2 : 3 }}>
         <Box sx={{ pt: 2 }}>
-          {mode === 'quickInfo' ? (
+          {mode === "quickInfo" ? (
             <Stack spacing={3}>
               <FormControl fullWidth>
                 <Autocomplete
                   value={selectedOption}
-                  onChange={(_, newValue) => setSelectedOption(newValue || '')}
+                  onChange={(_, newValue) => setSelectedOption(newValue || "")}
                   options={predefinedQuickInfoOptions}
                   renderInput={(params) => (
                     <TextField {...params} label="Select or create type" />
                   )}
                   freeSolo
                   onInputChange={(_, newInputValue) => {
-                    if (!predefinedQuickInfoOptions.includes(newInputValue) && newInputValue !== '') {
-                      setSelectedOption('Custom...');
+                    if (
+                      !predefinedQuickInfoOptions.includes(newInputValue) &&
+                      newInputValue !== ""
+                    ) {
+                      setSelectedOption("Custom...");
                       setCustomName(newInputValue);
                     }
                   }}
                 />
               </FormControl>
 
-              {selectedOption === 'Custom...' && (
+              {selectedOption === "Custom..." && (
                 <TextField
                   label="Custom panel name"
                   value={customName}
@@ -192,7 +208,9 @@ export const UnifiedAddDialog: React.FC<UnifiedAddDialogProps> = ({
                 <ToggleButtonGroup
                   value={privacyLevel}
                   exclusive
-                  onChange={(_, newValue) => newValue && setPrivacyLevel(newValue)}
+                  onChange={(_, newValue) =>
+                    newValue && setPrivacyLevel(newValue)
+                  }
                   fullWidth
                   size="small"
                 >
@@ -218,7 +236,7 @@ export const UnifiedAddDialog: React.FC<UnifiedAddDialogProps> = ({
                 <Typography variant="subtitle2" gutterBottom>
                   Category Color
                 </Typography>
-                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
+                <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 2 }}>
                   {defaultColors.map((color) => (
                     <Box
                       key={color}
@@ -228,11 +246,14 @@ export const UnifiedAddDialog: React.FC<UnifiedAddDialogProps> = ({
                         height: 40,
                         backgroundColor: color,
                         borderRadius: 1,
-                        cursor: 'pointer',
-                        border: categoryColor === color ? '3px solid #000' : '1px solid #ddd',
-                        transition: 'all 0.2s',
-                        '&:hover': {
-                          transform: 'scale(1.1)',
+                        cursor: "pointer",
+                        border:
+                          categoryColor === color
+                            ? "3px solid #000"
+                            : "1px solid #ddd",
+                        transition: "all 0.2s",
+                        "&:hover": {
+                          transform: "scale(1.1)",
                         },
                       }}
                     />
@@ -242,37 +263,48 @@ export const UnifiedAddDialog: React.FC<UnifiedAddDialogProps> = ({
                     sx={{
                       width: 40,
                       height: 40,
-                      background: 'linear-gradient(45deg, #ff0000, #00ff00, #0000ff)',
+                      background:
+                        "linear-gradient(45deg, #ff0000, #00ff00, #0000ff)",
                       borderRadius: 1,
-                      cursor: 'pointer',
-                      border: '1px solid #ddd',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      transition: 'all 0.2s',
-                      '&:hover': {
-                        transform: 'scale(1.1)',
+                      cursor: "pointer",
+                      border: "1px solid #ddd",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      transition: "all 0.2s",
+                      "&:hover": {
+                        transform: "scale(1.1)",
                       },
                     }}
                   >
-                    <Typography variant="caption" sx={{ color: 'white', fontWeight: 'bold' }}>
+                    <Typography
+                      variant="caption"
+                      sx={{ color: "white", fontWeight: "bold" }}
+                    >
                       +
                     </Typography>
                   </Box>
                 </Box>
 
                 {showColorPicker && (
-                  <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Box
+                    sx={{
+                      mt: 2,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 2,
+                    }}
+                  >
                     <input
                       type="color"
                       value={categoryColor}
                       onChange={(e) => setCategoryColor(e.target.value)}
-                      style={{ 
-                        width: '60px', 
-                        height: '40px',
-                        border: '1px solid #ddd',
-                        borderRadius: '4px',
-                        cursor: 'pointer'
+                      style={{
+                        width: "60px",
+                        height: "40px",
+                        border: "1px solid #ddd",
+                        borderRadius: "4px",
+                        cursor: "pointer",
                       }}
                     />
                     <TextField
@@ -290,13 +322,13 @@ export const UnifiedAddDialog: React.FC<UnifiedAddDialogProps> = ({
                     p: 2,
                     borderRadius: 1,
                     backgroundColor: categoryColor,
-                    color: 'white',
-                    textAlign: 'center',
+                    color: "white",
+                    textAlign: "center",
                     mt: 2,
                   }}
                 >
                   <Typography variant="body2">
-                    Preview: {categoryName || 'Category Name'}
+                    Preview: {categoryName || "Category Name"}
                   </Typography>
                 </Box>
               </Box>
@@ -307,7 +339,7 @@ export const UnifiedAddDialog: React.FC<UnifiedAddDialogProps> = ({
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
         <Button variant="contained" onClick={handleAdd} disabled={!isValid}>
-          Add {mode === 'quickInfo' ? 'Quick Info' : 'Category'}
+          Add {mode === "quickInfo" ? "Quick Info" : "Category"}
         </Button>
       </DialogActions>
     </Dialog>

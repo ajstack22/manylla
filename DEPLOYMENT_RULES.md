@@ -16,19 +16,25 @@
 7. **DO NOT** bypass lint, TypeScript, or security errors
 8. **DO NOT** attempt workarounds when deployment fails
 
-## ✅ DEPLOYMENT CHECKLIST
+## ✅ ENHANCED PRE-COMMIT VALIDATION
 
-Before running `./scripts/deploy-qual.sh`, ensure:
+The deployment script now performs ALL validation BEFORE any commits:
 
-- [ ] All code changes are complete
+### Phase 1: Pre-Commit Validation (ALL must pass)
 - [ ] No uncommitted changes (`git status` is clean)
 - [ ] Release notes updated in `docs/RELEASE_NOTES.md`
-- [ ] Version entry matches what will be deployed (YYYY.MM.DD.BUILD format)
-- [ ] ESLint has no errors (`npm run lint`)
-- [ ] TypeScript has no errors (`npm run typecheck`)
+- [ ] Code formatting check (Prettier)
+- [ ] License compliance check
 - [ ] No critical security vulnerabilities (`npm audit`)
+- [ ] ESLint has no errors
+- [ ] TypeScript has no errors
 - [ ] Less than 20 TODOs in src/
 - [ ] Less than 5 console.logs in src/
+- [ ] No debugger statements
+- [ ] No hardcoded secrets
+- [ ] Unused dependencies check
+- [ ] Circular dependencies check
+- [ ] Bundle size analysis
 
 ## WHEN DEPLOYMENT FAILS
 
@@ -48,25 +54,39 @@ If the deployment script fails:
 4. **Consistency**: Same process every time prevents mistakes
 5. **Auditability**: Git history shows what was deployed when
 
-## DEPLOYMENT SCRIPT FEATURES
+## DEPLOYMENT SCRIPT PHASES
 
-The `deploy-qual.sh` script performs these steps in order:
+The enhanced `deploy-qual.sh` script now has 4 distinct phases:
 
+### Phase 1: Pre-Commit Validation (BEFORE any commits)
 1. Check for uncommitted changes
-2. Validate release notes are updated
-3. Run ESLint (no errors allowed)
-4. Run TypeScript checks
-5. Run security audit
-6. Check TODO and console.log counts
-7. Build the project
-8. Commit with release notes title
-9. Push to GitHub
-10. Clean QUAL directory
-11. Deploy via rsync
-12. Deploy API with permissions
-13. Run health checks
+2. Validate release notes
+3. Code formatting check (Prettier)
+4. License compliance check
+5. Security vulnerability scan
+6. ESLint check
+7. TypeScript check
+8. Code quality metrics (TODOs, console.logs, debugger)
+9. Dependency analysis (unused, circular, duplicates)
+10. Bundle size pre-check
 
-**Every step must pass. There are no shortcuts.**
+### Phase 2: Version & Commit (ONLY if all validation passes)
+1. Update version in package.json
+2. Commit changes with release notes title
+3. Push to GitHub
+
+### Phase 3: Web Deployment (FASTEST - happens first)
+1. Build web application
+2. Deploy to qual server
+3. Run health checks
+4. Immediate validation available
+
+### Phase 4: Mobile Deployment (OPTIONAL)
+1. Deploy to running iOS simulators
+2. Deploy to connected Android devices
+3. Open qual URL in simulator Safari
+
+**Every validation must pass BEFORE code reaches GitHub. There are no shortcuts.**
 
 ## FOR AI ASSISTANTS
 

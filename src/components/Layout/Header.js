@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   Dimensions,
   Modal,
   SafeAreaView,
-} from 'react-native';
+} from "react-native";
 import {
   MenuIcon,
   ShareIcon,
@@ -20,92 +20,93 @@ import {
   DarkModeIcon,
   LightModeIcon,
   PaletteIcon,
-} from '../Common';
+} from "../Common";
 
-const Header = ({ 
-  onSyncClick, 
-  onCloseProfile, 
-  onShare, 
+const Header = ({
+  onSyncClick,
+  onCloseProfile,
+  onShare,
   onCategoriesClick,
   onQuickInfoClick,
-  onPrintClick, 
-  syncStatus, 
-  onThemeToggle, 
-  theme, 
+  onPrintClick,
+  syncStatus,
+  onThemeToggle,
+  theme,
   colors,
-  showToast 
+  showToast,
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(Dimensions.get('window').width);
-  
+  const [windowWidth, setWindowWidth] = useState(
+    Dimensions.get("window").width,
+  );
+
   useEffect(() => {
-    const subscription = Dimensions.addEventListener('change', ({ window }) => {
+    const subscription = Dimensions.addEventListener("change", ({ window }) => {
       setWindowWidth(window.width);
     });
-    
+
     return () => subscription?.remove();
   }, []);
 
   // Determine if we should show hamburger menu
   // On mobile (native) always show hamburger
   // On web, show hamburger when width < 768px (tablet breakpoint)
-  const showHamburger = Platform.OS !== 'web' || windowWidth < 768;
+  const showHamburger = Platform.OS !== "web" || windowWidth < 768;
 
   const menuItems = [
     {
-      label: 'Share',
+      label: "Share",
       icon: ShareIcon,
       onPress: () => {
         onShare();
         setMenuOpen(false);
-      }
+      },
     },
     {
-      label: 'Print',
+      label: "Print",
       icon: PrintIcon,
       onPress: () => {
         onPrintClick && onPrintClick();
         setMenuOpen(false);
-      }
+      },
     },
     {
-      label: 'Sync',
+      label: "Sync",
       icon: CloudIcon,
       onPress: () => {
         onSyncClick();
         setMenuOpen(false);
-      }
+      },
     },
     {
-      label: 'Categories',
+      label: "Categories",
       icon: LabelIcon,
       onPress: () => {
         onCategoriesClick();
         setMenuOpen(false);
-      }
+      },
     },
     {
-      label: 'Theme',
+      label: "Theme",
       icon: PaletteIcon,
       onPress: () => {
         onThemeToggle();
         // Show toast with new theme name
-        const nextTheme = theme === 'light' ? 'Dark' : 
-                         theme === 'dark' ? 'Manylla' : 
-                         'Light';
+        const nextTheme =
+          theme === "light" ? "Dark" : theme === "dark" ? "Manylla" : "Light";
         if (showToast) {
-          showToast(`${nextTheme} mode activated`, 'info');
+          showToast(`${nextTheme} mode activated`, "info");
         }
         setMenuOpen(false);
-      }
+      },
     },
     {
-      label: 'Sign Out',
+      label: "Sign Out",
       icon: LogoutIcon,
       onPress: () => {
         onCloseProfile();
         setMenuOpen(false);
-      }
+      },
     },
   ];
 
@@ -114,9 +115,9 @@ const Header = ({
   const renderDesktopMenu = () => (
     <View style={styles.headerActions}>
       {menuItems.map((item, index) => (
-        <TouchableOpacity 
+        <TouchableOpacity
           key={index}
-          onPress={item.onPress} 
+          onPress={item.onPress}
           style={styles.headerButton}
         >
           <item.icon size={24} color={colors.text.primary} />
@@ -127,8 +128,8 @@ const Header = ({
 
   const renderMobileMenu = () => (
     <>
-      <TouchableOpacity 
-        onPress={() => setMenuOpen(true)} 
+      <TouchableOpacity
+        onPress={() => setMenuOpen(true)}
         style={styles.menuButton}
       >
         <MenuIcon size={24} color={colors.text.primary} />
@@ -144,14 +145,14 @@ const Header = ({
           <View style={styles.menuContainer}>
             <View style={styles.menuHeader}>
               <Text style={styles.menuTitle}>Menu</Text>
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => setMenuOpen(false)}
                 style={styles.closeButton}
               >
                 <CloseIcon size={24} color={colors.text.primary} />
               </TouchableOpacity>
             </View>
-            
+
             <View style={styles.menuItems}>
               {menuItems.map((item, index) => (
                 <TouchableOpacity
@@ -182,92 +183,93 @@ const Header = ({
   );
 };
 
-const createStyles = (colors) => StyleSheet.create({
-  header: {
-    backgroundColor: colors.background.paper || '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border || '#E0E0E0',
-    ...Platform.select({
-      ios: {
-        paddingTop: 50,
-      },
-      android: {
-        paddingTop: 24,
-      },
-      web: {
-        paddingTop: 0,
-      },
-    }),
-  },
-  headerContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-  },
-  headerTitle: {
-    fontSize: 34,
-    fontWeight: 'bold',
-    color: colors.primary || '#8B7355',
-  },
-  headerActions: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  headerButton: {
-    padding: 8,
-  },
-  menuButton: {
-    padding: 8,
-  },
-  menuIconText: {
-    fontSize: 24,
-    color: colors.text.primary || '#333333',
-  },
-  // Mobile menu styles
-  menuOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
-  },
-  menuContainer: {
-    backgroundColor: colors.background.paper || '#FFFFFF',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingBottom: Platform.OS === 'ios' ? 20 : 0,
-  },
-  menuHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border || '#E0E0E0',
-  },
-  menuTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: colors.text.primary || '#333333',
-  },
-  closeButton: {
-    padding: 4,
-  },
-  menuItems: {
-    paddingVertical: 10,
-  },
-  menuItem: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-  menuItemContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-  },
-  menuItemText: {
-    fontSize: 16,
-    color: colors.text.primary || '#333333',
-  },
-});
+const createStyles = (colors) =>
+  StyleSheet.create({
+    header: {
+      backgroundColor: colors.background.paper || "#FFFFFF",
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border || "#E0E0E0",
+      ...Platform.select({
+        ios: {
+          paddingTop: 50,
+        },
+        android: {
+          paddingTop: 24,
+        },
+        web: {
+          paddingTop: 0,
+        },
+      }),
+    },
+    headerContent: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: 16,
+    },
+    headerTitle: {
+      fontSize: 34,
+      fontWeight: "bold",
+      color: colors.primary || "#8B7355",
+    },
+    headerActions: {
+      flexDirection: "row",
+      gap: 12,
+    },
+    headerButton: {
+      padding: 8,
+    },
+    menuButton: {
+      padding: 8,
+    },
+    menuIconText: {
+      fontSize: 24,
+      color: colors.text.primary || "#333333",
+    },
+    // Mobile menu styles
+    menuOverlay: {
+      flex: 1,
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      justifyContent: "flex-end",
+    },
+    menuContainer: {
+      backgroundColor: colors.background.paper || "#FFFFFF",
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+      paddingBottom: Platform.OS === "ios" ? 20 : 0,
+    },
+    menuHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: 20,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border || "#E0E0E0",
+    },
+    menuTitle: {
+      fontSize: 20,
+      fontWeight: "600",
+      color: colors.text.primary || "#333333",
+    },
+    closeButton: {
+      padding: 4,
+    },
+    menuItems: {
+      paddingVertical: 10,
+    },
+    menuItem: {
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+    },
+    menuItemContent: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 16,
+    },
+    menuItemText: {
+      fontSize: 16,
+      color: colors.text.primary || "#333333",
+    },
+  });
 
 export default Header;

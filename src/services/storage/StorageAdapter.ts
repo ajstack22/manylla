@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export class StorageAdapter {
   static async getItem(key: string): Promise<string | null> {
@@ -32,7 +32,7 @@ export class StorageAdapter {
     try {
       await AsyncStorage.clear();
     } catch (error) {
-      console.error('Error clearing storage:', error);
+      console.error("Error clearing storage:", error);
       throw error;
     }
   }
@@ -42,7 +42,7 @@ export class StorageAdapter {
       const keys = await AsyncStorage.getAllKeys();
       return keys as string[];
     } catch (error) {
-      console.error('Error getting all keys:', error);
+      console.error("Error getting all keys:", error);
       return [];
     }
   }
@@ -52,8 +52,8 @@ export class StorageAdapter {
       const results = await AsyncStorage.multiGet(keys);
       return results as [string, string | null][];
     } catch (error) {
-      console.error('Error getting multiple items:', error);
-      return keys.map(key => [key, null]);
+      console.error("Error getting multiple items:", error);
+      return keys.map((key) => [key, null]);
     }
   }
 
@@ -61,7 +61,7 @@ export class StorageAdapter {
     try {
       await AsyncStorage.multiSet(keyValuePairs);
     } catch (error) {
-      console.error('Error setting multiple items:', error);
+      console.error("Error setting multiple items:", error);
       throw error;
     }
   }
@@ -70,7 +70,7 @@ export class StorageAdapter {
     try {
       await AsyncStorage.multiRemove(keys);
     } catch (error) {
-      console.error('Error removing multiple items:', error);
+      console.error("Error removing multiple items:", error);
       throw error;
     }
   }

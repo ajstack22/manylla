@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -10,8 +10,8 @@ import {
   Dimensions,
   Alert,
   Platform,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 interface MarkdownFieldProps {
   label: string;
@@ -26,30 +26,33 @@ interface MarkdownFieldProps {
 interface MarkdownCommand {
   icon: string;
   label: string;
-  action: (text: string, selection: { start: number; end: number }) => {
+  action: (
+    text: string,
+    selection: { start: number; end: number },
+  ) => {
     text: string;
     selection: { start: number; end: number };
   };
 }
 
 const colors = {
-  primary: '#8B7355',
-  secondary: '#A0937D',
-  background: '#FDFBF7',
-  surface: '#F4E4C1',
-  text: '#4A4A4A',
-  textSecondary: '#666666',
-  border: '#E0E0E0',
-  white: '#FFFFFF',
-  error: '#D32F2F',
-  success: '#2E7D32',
-  hover: '#F5F5F5',
+  primary: "#8B7355",
+  secondary: "#A0937D",
+  background: "#FDFBF7",
+  surface: "#F4E4C1",
+  text: "#4A4A4A",
+  textSecondary: "#666666",
+  border: "#E0E0E0",
+  white: "#FFFFFF",
+  error: "#D32F2F",
+  success: "#2E7D32",
+  hover: "#F5F5F5",
 };
 
 const markdownCommands: MarkdownCommand[] = [
   {
-    icon: 'format-bold',
-    label: 'Bold',
+    icon: "format-bold",
+    label: "Bold",
     action: (text, selection) => {
       const selectedText = text.substring(selection.start, selection.end);
       if (selectedText) {
@@ -72,8 +75,8 @@ const markdownCommands: MarkdownCommand[] = [
     },
   },
   {
-    icon: 'format-italic',
-    label: 'Italic',
+    icon: "format-italic",
+    label: "Italic",
     action: (text, selection) => {
       const selectedText = text.substring(selection.start, selection.end);
       if (selectedText) {
@@ -96,8 +99,8 @@ const markdownCommands: MarkdownCommand[] = [
     },
   },
   {
-    icon: 'format-strikethrough',
-    label: 'Strikethrough',
+    icon: "format-strikethrough",
+    label: "Strikethrough",
     action: (text, selection) => {
       const selectedText = text.substring(selection.start, selection.end);
       if (selectedText) {
@@ -120,13 +123,13 @@ const markdownCommands: MarkdownCommand[] = [
     },
   },
   {
-    icon: 'format-list-bulleted',
-    label: 'Bullet List',
+    icon: "format-list-bulleted",
+    label: "Bullet List",
     action: (text, selection) => {
-      const lines = text.split('\n');
+      const lines = text.split("\n");
       let currentLine = 0;
       let currentPos = 0;
-      
+
       // Find which line the cursor is on
       for (let i = 0; i < lines.length; i++) {
         if (currentPos + lines[i].length >= selection.start) {
@@ -135,13 +138,13 @@ const markdownCommands: MarkdownCommand[] = [
         }
         currentPos += lines[i].length + 1; // +1 for newline
       }
-      
+
       // Add bullet point to current line
-      if (!lines[currentLine].trim().startsWith('- ')) {
-        lines[currentLine] = '- ' + lines[currentLine];
+      if (!lines[currentLine].trim().startsWith("- ")) {
+        lines[currentLine] = "- " + lines[currentLine];
       }
-      
-      const newText = lines.join('\n');
+
+      const newText = lines.join("\n");
       return {
         text: newText,
         selection: { start: selection.start + 2, end: selection.end + 2 },
@@ -149,13 +152,13 @@ const markdownCommands: MarkdownCommand[] = [
     },
   },
   {
-    icon: 'format-list-numbered',
-    label: 'Numbered List',
+    icon: "format-list-numbered",
+    label: "Numbered List",
     action: (text, selection) => {
-      const lines = text.split('\n');
+      const lines = text.split("\n");
       let currentLine = 0;
       let currentPos = 0;
-      
+
       // Find which line the cursor is on
       for (let i = 0; i < lines.length; i++) {
         if (currentPos + lines[i].length >= selection.start) {
@@ -164,13 +167,13 @@ const markdownCommands: MarkdownCommand[] = [
         }
         currentPos += lines[i].length + 1; // +1 for newline
       }
-      
+
       // Add numbered point to current line
       if (!lines[currentLine].trim().match(/^\d+\.\s/)) {
-        lines[currentLine] = '1. ' + lines[currentLine];
+        lines[currentLine] = "1. " + lines[currentLine];
       }
-      
-      const newText = lines.join('\n');
+
+      const newText = lines.join("\n");
       return {
         text: newText,
         selection: { start: selection.start + 3, end: selection.end + 3 },
@@ -178,26 +181,26 @@ const markdownCommands: MarkdownCommand[] = [
     },
   },
   {
-    icon: 'link',
-    label: 'Link',
+    icon: "link",
+    label: "Link",
     action: (text, selection) => {
       const selectedText = text.substring(selection.start, selection.end);
-      const linkText = selectedText || 'link text';
+      const linkText = selectedText || "link text";
       const before = text.substring(0, selection.start);
       const after = text.substring(selection.end);
       const formattedText = `${before}[${linkText}](url)${after}`;
       return {
         text: formattedText,
-        selection: { 
-          start: selection.start + linkText.length + 3, 
-          end: selection.start + linkText.length + 6 
+        selection: {
+          start: selection.start + linkText.length + 3,
+          end: selection.start + linkText.length + 6,
         },
       };
     },
   },
   {
-    icon: 'code',
-    label: 'Code',
+    icon: "code",
+    label: "Code",
     action: (text, selection) => {
       const selectedText = text.substring(selection.start, selection.end);
       if (selectedText) {
@@ -249,40 +252,53 @@ export const MarkdownField: React.FC<MarkdownFieldProps> = ({
 
   // Simple markdown preview renderer
   const renderPreview = (text: string) => {
-    if (!text) return 'Preview will appear here...';
-    
+    if (!text) return "Preview will appear here...";
+
     // Basic markdown parsing for display
     return text
-      .replace(/\*\*(.*?)\*\*/g, '[$1]') // Bold
-      .replace(/_(.*?)_/g, '/$1/') // Italic
-      .replace(/~~(.*?)~~/g, '-$1-') // Strikethrough
+      .replace(/\*\*(.*?)\*\*/g, "[$1]") // Bold
+      .replace(/_(.*?)_/g, "/$1/") // Italic
+      .replace(/~~(.*?)~~/g, "-$1-") // Strikethrough
       .replace(/`(.*?)`/g, '"$1"') // Code
-      .replace(/\[(.*?)\]\((.*?)\)/g, '$1 ($2)') // Links
-      .replace(/^- (.+)$/gm, '• $1') // Bullet points
-      .replace(/^(\d+)\. (.+)$/gm, '$1. $2'); // Numbered lists
+      .replace(/\[(.*?)\]\((.*?)\)/g, "$1 ($2)") // Links
+      .replace(/^- (.+)$/gm, "• $1") // Bullet points
+      .replace(/^(\d+)\. (.+)$/gm, "$1. $2"); // Numbered lists
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
-        <Text style={[styles.label, { color: isFocused ? colors.primary : colors.text }]}>
+        <Text
+          style={[
+            styles.label,
+            { color: isFocused ? colors.primary : colors.text },
+          ]}
+        >
           {label}
           {required && <Text style={styles.required}> *</Text>}
         </Text>
-        
+
         <View style={styles.headerButtons}>
           <TouchableOpacity
             style={[styles.headerButton, showToolbar && styles.activeButton]}
             onPress={() => setShowToolbar(!showToolbar)}
           >
-            <Icon name="format-size" size={18} color={showToolbar ? colors.white : colors.primary} />
+            <Icon
+              name="format-size"
+              size={18}
+              color={showToolbar ? colors.white : colors.primary}
+            />
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             style={[styles.headerButton, showPreview && styles.activeButton]}
             onPress={() => setShowPreview(!showPreview)}
           >
-            <Icon name="visibility" size={18} color={showPreview ? colors.white : colors.primary} />
+            <Icon
+              name="visibility"
+              size={18}
+              color={showPreview ? colors.white : colors.primary}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -311,11 +327,13 @@ export const MarkdownField: React.FC<MarkdownFieldProps> = ({
 
       <View style={styles.editorContainer}>
         {/* Editor */}
-        <View style={[
-          styles.editorPanel,
-          { display: showPreview ? 'none' : 'flex' },
-          { borderColor: isFocused ? colors.primary : colors.border }
-        ]}>
+        <View
+          style={[
+            styles.editorPanel,
+            { display: showPreview ? "none" : "flex" },
+            { borderColor: isFocused ? colors.primary : colors.border },
+          ]}
+        >
           <TextInput
             style={[styles.textInput, { height }]}
             value={value}
@@ -335,9 +353,7 @@ export const MarkdownField: React.FC<MarkdownFieldProps> = ({
         {showPreview && (
           <View style={[styles.previewPanel, { height }]}>
             <ScrollView style={styles.previewScroll}>
-              <Text style={styles.previewText}>
-                {renderPreview(value)}
-              </Text>
+              <Text style={styles.previewText}>{renderPreview(value)}</Text>
             </ScrollView>
           </View>
         )}
@@ -345,30 +361,22 @@ export const MarkdownField: React.FC<MarkdownFieldProps> = ({
 
       {/* Helper Text */}
       {helperText && (
-        <Text style={styles.helperText}>
-          Example: {helperText}
-        </Text>
+        <Text style={styles.helperText}>Example: {helperText}</Text>
       )}
 
       {/* Help Modal */}
-      <Modal
-        visible={false}
-        transparent
-        animationType="fade"
-      >
+      <Modal visible={false} transparent animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={styles.helpModal}>
             <Text style={styles.helpTitle}>Markdown Help</Text>
             <ScrollView style={styles.helpContent}>
               <Text style={styles.helpText}>
-                **Bold** or __Bold__{'\n'}
-                *Italic* or _Italic_{'\n'}
-                ~~Strikethrough~~{'\n'}
-                `Code`{'\n'}
-                [Link](url){'\n'}
-                - Bullet list{'\n'}
-                1. Numbered list{'\n'}
-                # Heading
+                **Bold** or __Bold__{"\n"}
+                *Italic* or _Italic_{"\n"}
+                ~~Strikethrough~~{"\n"}
+                `Code`{"\n"}
+                [Link](url){"\n"}- Bullet list{"\n"}
+                1. Numbered list{"\n"}# Heading
               </Text>
             </ScrollView>
           </View>
@@ -383,20 +391,20 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 8,
   },
   label: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   required: {
     color: colors.error,
   },
   headerButtons: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 8,
   },
   headerButton: {
@@ -420,7 +428,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   toolbarButton: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingHorizontal: 12,
     paddingVertical: 8,
     marginHorizontal: 4,
@@ -431,11 +439,11 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: colors.text,
     marginTop: 2,
-    textAlign: 'center',
+    textAlign: "center",
   },
   editorContainer: {
     borderRadius: 8,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   editorPanel: {
     borderWidth: 1,
@@ -476,26 +484,26 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.textSecondary,
     marginTop: 4,
-    fontStyle: 'italic',
+    fontStyle: "italic",
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   helpModal: {
     backgroundColor: colors.white,
     borderRadius: 12,
     margin: 20,
-    maxWidth: Dimensions.get('window').width - 40,
-    maxHeight: Dimensions.get('window').height * 0.6,
+    maxWidth: Dimensions.get("window").width - 40,
+    maxHeight: Dimensions.get("window").height * 0.6,
   },
   helpTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.text,
-    textAlign: 'center',
+    textAlign: "center",
     paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,

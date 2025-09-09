@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Modal,
   View,
@@ -11,10 +11,13 @@ import {
   StyleSheet,
   Platform,
   Alert,
-} from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { launchImageLibrary, ImagePickerResponse } from 'react-native-image-picker';
-import { ChildProfile } from '../../types/ChildProfile';
+} from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import {
+  launchImageLibrary,
+  ImagePickerResponse,
+} from "react-native-image-picker";
+import { ChildProfile } from "../../types/ChildProfile";
 
 interface ProfileEditDialogProps {
   open: boolean;
@@ -36,13 +39,13 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
     pronouns: profile.pronouns,
     photo: profile.photo,
   });
-  
-  const [photoPreview, setPhotoPreview] = useState<string>(profile.photo || '');
+
+  const [photoPreview, setPhotoPreview] = useState<string>(profile.photo || "");
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handlePhotoChange = () => {
     const options = {
-      mediaType: 'photo' as const,
+      mediaType: "photo" as const,
       includeBase64: true,
       maxWidth: 500,
       maxHeight: 500,
@@ -63,28 +66,28 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
 
   const handleRemovePhoto = () => {
     Alert.alert(
-      'Remove Photo',
-      'Are you sure you want to remove the profile photo?',
+      "Remove Photo",
+      "Are you sure you want to remove the profile photo?",
       [
-        { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Remove', 
-          style: 'destructive',
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Remove",
+          style: "destructive",
           onPress: () => {
-            setPhotoPreview('');
-            setFormData({ ...formData, photo: '' });
-          }
+            setPhotoPreview("");
+            setFormData({ ...formData, photo: "" });
+          },
         },
-      ]
+      ],
     );
   };
 
   const handleSave = () => {
     if (!formData.name.trim()) {
-      Alert.alert('Error', 'Full name is required');
+      Alert.alert("Error", "Full name is required");
       return;
     }
-    
+
     onSave({
       ...formData,
       updatedAt: new Date(),
@@ -97,18 +100,21 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
     const birthDate = new Date(dob);
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
       age--;
     }
-    
+
     return age;
   };
 
   const formatDate = (date: Date) => {
     const d = new Date(date);
-    const month = (d.getMonth() + 1).toString().padStart(2, '0');
-    const day = d.getDate().toString().padStart(2, '0');
+    const month = (d.getMonth() + 1).toString().padStart(2, "0");
+    const day = d.getDate().toString().padStart(2, "0");
     const year = d.getFullYear();
     return `${month}/${day}/${year}`;
   };
@@ -130,8 +136,11 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
             <Text style={styles.saveButtonText}>Save</Text>
           </TouchableOpacity>
         </View>
-        
-        <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+
+        <ScrollView
+          style={styles.scrollView}
+          showsVerticalScrollIndicator={false}
+        >
           {/* Profile Photo */}
           <View style={styles.photoSection}>
             <View style={styles.avatarContainer}>
@@ -151,7 +160,7 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
                 onPress={handlePhotoChange}
               >
                 <Text style={styles.photoButtonText}>
-                  {photoPreview ? 'Change Photo' : 'Add Photo'}
+                  {photoPreview ? "Change Photo" : "Add Photo"}
                 </Text>
               </TouchableOpacity>
               {photoPreview && (
@@ -168,24 +177,28 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
           {/* Basic Information */}
           <View style={styles.formSection}>
             <Text style={styles.sectionTitle}>Basic Information</Text>
-            
+
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Full Name *</Text>
               <TextInput
                 style={styles.input}
                 value={formData.name}
-                onChangeText={(text) => setFormData({ ...formData, name: text })}
+                onChangeText={(text) =>
+                  setFormData({ ...formData, name: text })
+                }
                 placeholder="Enter full name"
                 placeholderTextColor="#999"
               />
             </View>
-            
+
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Preferred Name</Text>
               <TextInput
                 style={styles.input}
                 value={formData.preferredName}
-                onChangeText={(text) => setFormData({ ...formData, preferredName: text })}
+                onChangeText={(text) =>
+                  setFormData({ ...formData, preferredName: text })
+                }
                 placeholder="What they like to be called"
                 placeholderTextColor="#999"
               />
@@ -212,7 +225,9 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
               <TextInput
                 style={styles.input}
                 value={formData.pronouns}
-                onChangeText={(text) => setFormData({ ...formData, pronouns: text })}
+                onChangeText={(text) =>
+                  setFormData({ ...formData, pronouns: text })
+                }
                 placeholder="e.g., she/her, he/him, they/them"
                 placeholderTextColor="#999"
               />
@@ -224,9 +239,9 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
           <DateTimePicker
             value={formData.dateOfBirth}
             mode="date"
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+            display={Platform.OS === "ios" ? "spinner" : "default"}
             onChange={(event, selectedDate) => {
-              setShowDatePicker(Platform.OS === 'android');
+              setShowDatePicker(Platform.OS === "android");
               if (selectedDate) {
                 setFormData({ ...formData, dateOfBirth: selectedDate });
               }
@@ -242,20 +257,20 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#FFFFFF",
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    borderBottomColor: "#E0E0E0",
     ...Platform.select({
       ios: {
-        shadowColor: '#000',
+        shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
@@ -267,33 +282,33 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: "600",
+    color: "#333",
   },
   closeButton: {
     padding: 8,
   },
   closeButtonText: {
     fontSize: 16,
-    color: '#666',
+    color: "#666",
   },
   saveButton: {
     padding: 8,
   },
   saveButtonText: {
     fontSize: 16,
-    color: '#8B7355',
-    fontWeight: '600',
+    color: "#8B7355",
+    fontWeight: "600",
   },
   scrollView: {
     flex: 1,
   },
   photoSection: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     padding: 24,
-    alignItems: 'center',
+    alignItems: "center",
     borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    borderBottomColor: "#E0E0E0",
   },
   avatarContainer: {
     marginBottom: 16,
@@ -304,49 +319,49 @@ const styles = StyleSheet.create({
     borderRadius: 60,
   },
   avatarPlaceholder: {
-    backgroundColor: '#8B7355',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#8B7355",
+    justifyContent: "center",
+    alignItems: "center",
   },
   avatarText: {
     fontSize: 48,
-    color: '#FFFFFF',
-    fontWeight: '600',
+    color: "#FFFFFF",
+    fontWeight: "600",
   },
   photoButtons: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 12,
   },
   photoButton: {
     paddingHorizontal: 20,
     paddingVertical: 10,
-    backgroundColor: '#8B7355',
+    backgroundColor: "#8B7355",
     borderRadius: 8,
   },
   photoButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   removePhotoButton: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderWidth: 1,
-    borderColor: '#D32F2F',
+    borderColor: "#D32F2F",
   },
   removePhotoButtonText: {
-    color: '#D32F2F',
+    color: "#D32F2F",
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   formSection: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     padding: 20,
     marginTop: 12,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: "600",
+    color: "#333",
     marginBottom: 20,
   },
   inputGroup: {
@@ -354,41 +369,41 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: 14,
-    fontWeight: '500',
-    color: '#333',
+    fontWeight: "500",
+    color: "#333",
     marginBottom: 8,
   },
   input: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: "#E0E0E0",
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 12,
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
   dateInput: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: "#E0E0E0",
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   dateText: {
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
   dateIcon: {
     fontSize: 18,
   },
   helperText: {
     fontSize: 12,
-    color: '#666',
+    color: "#666",
     marginTop: 6,
   },
 });

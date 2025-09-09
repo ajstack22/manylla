@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -20,30 +20,35 @@ import {
   Checkbox,
   FormLabel,
   Paper,
-} from '@mui/material';
-import { 
-  Close as CloseIcon, 
+} from "@mui/material";
+import {
+  Close as CloseIcon,
   AddCircle as AddCircleIcon,
-} from '@mui/icons-material';
-import { Entry } from '../../types/ChildProfile';
-import { useMobileDialog } from '../../hooks/useMobileDialog';
-import { useMobileKeyboard } from '../../hooks/useMobileKeyboard';
-import { RichTextInput } from './RichTextInput';
-import { getPlaceholder, getRandomExample } from '../../utils/placeholders';
+} from "@mui/icons-material";
+import { Entry } from "../../types/ChildProfile";
+import { useMobileDialog } from "../../hooks/useMobileDialog";
+import { useMobileKeyboard } from "../../hooks/useMobileKeyboard";
+import { RichTextInput } from "./RichTextInput";
+import { getPlaceholder, getRandomExample } from "../../utils/placeholders";
 
 interface EntryFormProps {
   open: boolean;
   onClose: () => void;
-  onSave: (entry: Omit<Entry, 'id'>) => void;
+  onSave: (entry: Omit<Entry, "id">) => void;
   category: string;
   entry?: Entry;
-  categories?: Array<{ id: string; name: string; displayName: string; color: string }>;
+  categories?: Array<{
+    id: string;
+    name: string;
+    displayName: string;
+    color: string;
+  }>;
 }
 
 const visibilityOptions = [
-  { value: 'family', label: 'Family' },
-  { value: 'medical', label: 'Medical Team' },
-  { value: 'education', label: 'Education Team' },
+  { value: "family", label: "Family" },
+  { value: "medical", label: "Medical Team" },
+  { value: "education", label: "Education Team" },
 ];
 
 export const EntryForm: React.FC<EntryFormProps> = ({
@@ -56,31 +61,31 @@ export const EntryForm: React.FC<EntryFormProps> = ({
 }) => {
   const { mobileDialogProps, isMobile } = useMobileDialog();
   const { keyboardPadding, isKeyboardVisible } = useMobileKeyboard();
-  const [selectedCategory, setSelectedCategory] = useState(category || '');
+  const [selectedCategory, setSelectedCategory] = useState(category || "");
   const [selectedVisibility, setSelectedVisibility] = useState<string[]>(
-    entry?.visibility || ['private']
+    entry?.visibility || ["private"],
   );
   const [formData, setFormData] = useState({
-    title: entry?.title || '',
-    description: entry?.description || '',
+    title: entry?.title || "",
+    description: entry?.description || "",
   });
 
   // Reset form data when modal opens/closes or entry changes
   useEffect(() => {
     if (open) {
-      setSelectedCategory(entry?.category || category || '');
-      setSelectedVisibility(entry?.visibility || ['private']);
+      setSelectedCategory(entry?.category || category || "");
+      setSelectedVisibility(entry?.visibility || ["private"]);
       setFormData({
-        title: entry?.title || '',
-        description: entry?.description || '',
+        title: entry?.title || "",
+        description: entry?.description || "",
       });
     } else {
       // Clear form data when modal closes
-      setSelectedCategory('');
-      setSelectedVisibility(['private']);
+      setSelectedCategory("");
+      setSelectedVisibility(["private"]);
       setFormData({
-        title: '',
-        description: '',
+        title: "",
+        description: "",
       });
     }
   }, [open, entry, category]);
@@ -95,38 +100,37 @@ export const EntryForm: React.FC<EntryFormProps> = ({
       ...formData,
       category: selectedCategory,
       date: new Date(),
-      visibility: ['private'], // Always private - sharing is handled separately
+      visibility: ["private"], // Always private - sharing is handled separately
     });
     onClose();
   };
 
-
   const getCategoryTitle = () => {
-    if (!selectedCategory && !category) return 'Entry';
+    if (!selectedCategory && !category) return "Entry";
     const catName = selectedCategory || category;
     // Convert category name to title case
     return catName
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   };
 
   return (
     <Dialog open={open} onClose={onClose} {...mobileDialogProps}>
       {isMobile ? (
-        <AppBar 
-          position="sticky" 
-          color="default" 
+        <AppBar
+          position="sticky"
+          color="default"
           elevation={0}
           sx={{
             // Keep header visible above keyboard
-            zIndex: isKeyboardVisible ? 1100 : 'auto',
+            zIndex: isKeyboardVisible ? 1100 : "auto",
           }}
         >
           <Toolbar>
             <AddCircleIcon sx={{ mr: 1 }} />
             <Typography variant="h6" sx={{ flexGrow: 1 }}>
-              {entry ? 'Edit' : 'Add'} {getCategoryTitle()}
+              {entry ? "Edit" : "Add"} {getCategoryTitle()}
             </Typography>
             <IconButton edge="end" onClick={onClose}>
               <CloseIcon />
@@ -135,9 +139,9 @@ export const EntryForm: React.FC<EntryFormProps> = ({
         </AppBar>
       ) : (
         <DialogTitle>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <AddCircleIcon sx={{ mr: 1 }} />
-            {entry ? 'Edit' : 'Add'} {getCategoryTitle()}
+            {entry ? "Edit" : "Add"} {getCategoryTitle()}
             <Box sx={{ flexGrow: 1 }} />
             <IconButton onClick={onClose}>
               <CloseIcon />
@@ -146,32 +150,36 @@ export const EntryForm: React.FC<EntryFormProps> = ({
         </DialogTitle>
       )}
       <form onSubmit={handleSubmit}>
-        <DialogContent 
-          sx={{ 
+        <DialogContent
+          sx={{
             pt: isMobile ? 2 : 3,
             pb: isMobile && isKeyboardVisible ? `${keyboardPadding + 80}px` : 3,
           }}
         >
           {!isMobile && (
-            <Box sx={{ textAlign: 'center', mb: 4 }}>
-              <AddCircleIcon sx={{ fontSize: 64, color: 'primary.main', mb: 2 }} />
+            <Box sx={{ textAlign: "center", mb: 4 }}>
+              <AddCircleIcon
+                sx={{ fontSize: 64, color: "primary.main", mb: 2 }}
+              />
               <Typography variant="h4" gutterBottom fontWeight="bold">
-                {entry ? 'Edit' : 'Add'} {getCategoryTitle()}
+                {entry ? "Edit" : "Add"} {getCategoryTitle()}
               </Typography>
               <Typography variant="body1" color="text.secondary">
-                {entry ? 'Update the details for this entry' : 'Create a new entry to track important information'}
+                {entry
+                  ? "Update the details for this entry"
+                  : "Create a new entry to track important information"}
               </Typography>
             </Box>
           )}
           <Stack spacing={2}>
             {/* Category selector - only show if we have categories list and not editing */}
             {categories.length > 0 && !entry && (
-              <Paper 
+              <Paper
                 elevation={0}
-                sx={{ 
-                  p: 2, 
-                  border: '1px solid',
-                  borderColor: 'divider',
+                sx={{
+                  p: 2,
+                  border: "1px solid",
+                  borderColor: "divider",
                   borderRadius: 2,
                 }}
               >
@@ -182,14 +190,16 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                     onChange={(e) => setSelectedCategory(e.target.value)}
                     label="Category"
                   >
-                    {categories.map(cat => (
+                    {categories.map((cat) => (
                       <MenuItem key={cat.id} value={cat.name}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                        >
                           <Box
                             sx={{
                               width: 16,
                               height: 16,
-                              borderRadius: '50%',
+                              borderRadius: "50%",
                               backgroundColor: cat.color,
                             }}
                           />
@@ -201,13 +211,13 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                 </FormControl>
               </Paper>
             )}
-            
-            <Paper 
+
+            <Paper
               elevation={0}
-              sx={{ 
-                p: 2, 
-                border: '1px solid',
-                borderColor: 'divider',
+              sx={{
+                p: 2,
+                border: "1px solid",
+                borderColor: "divider",
                 borderRadius: 2,
               }}
             >
@@ -215,20 +225,24 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                 <RichTextInput
                   label="Title"
                   value={formData.title}
-                  onChange={(value) => setFormData({ ...formData, title: value })}
+                  onChange={(value) =>
+                    setFormData({ ...formData, title: value })
+                  }
                   required
-                  placeholder={getPlaceholder(category, 'title')}
+                  placeholder={getPlaceholder(category, "title")}
                   multiline={false}
                   autoFocus={!entry}
                 />
-                
+
                 <RichTextInput
                   label="Description"
                   value={formData.description}
-                  onChange={(value) => setFormData({ ...formData, description: value })}
+                  onChange={(value) =>
+                    setFormData({ ...formData, description: value })
+                  }
                   required
-                  placeholder={getPlaceholder(category, 'description')}
-                  helperText={`Example: ${getRandomExample(category) || 'Add details here'}`}
+                  placeholder={getPlaceholder(category, "description")}
+                  helperText={`Example: ${getRandomExample(category) || "Add details here"}`}
                   rows={4}
                 />
               </Stack>
@@ -236,26 +250,26 @@ export const EntryForm: React.FC<EntryFormProps> = ({
           </Stack>
         </DialogContent>
         <DialogActions sx={{ px: 2, py: 2 }}>
-          <Button 
+          <Button
             onClick={onClose}
-            sx={{ 
+            sx={{
               minHeight: 44,
               minWidth: 80,
-              fontSize: '16px'
+              fontSize: "16px",
             }}
           >
             Cancel
           </Button>
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             variant="contained"
-            sx={{ 
+            sx={{
               minHeight: 44,
               minWidth: 100,
-              fontSize: '16px'
+              fontSize: "16px",
             }}
           >
-            {entry ? 'Update' : 'Save'}
+            {entry ? "Update" : "Save"}
           </Button>
         </DialogActions>
       </form>

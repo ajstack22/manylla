@@ -1,7 +1,10 @@
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Entry, CategoryConfig } from '../types/ChildProfile';
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import {
+  CompositeScreenProps,
+  NavigatorScreenParams,
+} from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Entry, CategoryConfig } from "../types/ChildProfile";
 
 // Root Stack Navigator
 export type RootStackParamList = {
@@ -65,25 +68,25 @@ export type MainTabScreenProps<T extends keyof MainTabParamList> =
 export type HomeStackScreenProps<T extends keyof HomeStackParamList> =
   CompositeScreenProps<
     NativeStackScreenProps<HomeStackParamList, T>,
-    MainTabScreenProps<'Home'>
+    MainTabScreenProps<"Home">
   >;
 
 export type EntriesStackScreenProps<T extends keyof EntriesStackParamList> =
   CompositeScreenProps<
     NativeStackScreenProps<EntriesStackParamList, T>,
-    MainTabScreenProps<'Entries'>
+    MainTabScreenProps<"Entries">
   >;
 
 export type SettingsStackScreenProps<T extends keyof SettingsStackParamList> =
   CompositeScreenProps<
     NativeStackScreenProps<SettingsStackParamList, T>,
-    MainTabScreenProps<'Settings'>
+    MainTabScreenProps<"Settings">
   >;
 
 export type ShareStackScreenProps<T extends keyof ShareStackParamList> =
   CompositeScreenProps<
     NativeStackScreenProps<ShareStackParamList, T>,
-    MainTabScreenProps<'Share'>
+    MainTabScreenProps<"Share">
   >;
 
 declare global {

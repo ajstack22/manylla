@@ -1,0 +1,303 @@
+# Manylla Release Notes
+
+## Version 2025.09.09.3
+Category Simplification - Improved User Experience
+
+### 🎯 UX Improvements
+- **Simplified Categories**: Reduced from 13 to 6 core categories for better usability
+  - Quick Info (pinned, special display)
+  - Daily Support (communication, routines, sensory, dietary)
+  - Medical (health records, medications, allergies)
+  - Development (education, goals, achievements)
+  - Health (wellness, physical activity, sleep)
+  - Other (catch-all for miscellaneous items)
+- **Better Organization**: Categories now have clearer, more intuitive purposes
+- **Reduced Overwhelm**: Simpler category selection in Add/Edit Entry forms
+
+### 🐛 Bug Fixes
+- **Demo Data**: Fixed demo profile entries to use correct category names
+- **Category Matching**: Resolved issue where entries weren't displaying due to category name mismatches
+- **App.js Updates**: Synchronized old App.js with new category structure
+
+### 🔧 Technical
+- Updated all sample data and demo profiles to use new 6-category system
+- Fixed TypeScript errors related to category refactoring
+- Added clear-storage utility page for testing
+
+## Version 2025.09.09.2
+Build System Fix - React Native + Web Deployment
+
+### 🔧 Infrastructure
+- **Fixed deployment script**: Updated build command to use `build:web` for React Native + Web project
+- **Resolved grep pipeline issue**: Fixed console.log check that was causing silent script exits
+- Deployment process now fully operational for unified codebase
+
+## Version 2025.09.09.1
+QuickInfo Architecture Refactoring - Unified Category System
+
+### 🏗️ Architecture Changes
+- **QuickInfo Unification**: Converted QuickInfo from separate data structure to regular categories
+  - Removed `quickInfoPanels` field from ChildProfile type
+  - QuickInfo now uses standard CategoryConfig with `isQuickInfo: true` flag
+  - Consistent data model across all content types
+
+### 🔧 TypeScript Improvements
+- **Type Safety**: Fixed 17 TypeScript errors related to QuickInfo conversion
+  - Fixed navigation imports in React Native screens
+  - Added missing color and displayName fields to categories
+  - Resolved theme mode type issues
+  - Fixed AsyncStorage adapter types
+
+### 📱 React Native Updates
+- **Onboarding Screen**: Updated to use unified category structure
+  - QuickInfo entries now properly initialized as categories
+  - Demo mode data follows new category pattern
+  - Consistent with web implementation
+
+### 🧹 Code Cleanup
+- **Removed Legacy Fields**: Eliminated unused quickInfoPanels from all components
+- **Import Paths**: Fixed relative imports to use @components aliases
+- **Storage Service**: Added proper type annotations for AsyncStorage operations
+
+### 🚀 Deployment Improvements
+- **Script Reorganization**: Moved git commit after all validation checks
+- **TypeScript Output**: Suppressed verbose output while maintaining error checking
+- **Script Directory**: Resolved symlink issues with deployment scripts
+
+## Version 2025.09.08.1
+Improved project type identification and development workflow
+
+### 🛠️ Developer Experience
+- **Project Type Identification**: Added multiple safeguards to prevent React Native/Web confusion
+  - Created PROJECT_TYPE file for clear identification
+  - Added .claude-hints file with quick reference
+  - Implemented npm run check:type diagnostic command
+  - Enhanced npm scripts with helpful echo messages
+
+### 🐛 Bug Fixes
+- **ESLint Configuration**: Fixed build directory linting issues (15,000+ false errors)
+  - Added .eslintignore to exclude build artifacts
+  - Fixed undefined setQuickInfoOpen callback reference
+- **Console Logging**: Commented out all console.log statements for production readiness
+
+### 📚 Documentation
+- **CLAUDE.md Updates**: Restructured with project type prominently displayed
+- **Command Clarifications**: Clearly distinguished web (npm run web) vs mobile (npm start) commands
+- **Deployment Rules**: Maintained strict qual deployment requirements
+
+## Version 2025.09.08.2
+React Native Phase 1 Complete - Unified Cross-Platform Architecture
+
+### 🎯 Major Milestone: Single App.js Architecture
+- **Unified Codebase**: Implemented StackMap pattern with single App.js file (~1200 lines)
+- **95% Code Sharing**: Achieved near-complete code reuse across iOS, Android, and Web
+- **Platform Parity**: All core features working identically on all platforms
+- **Performance**: 60fps animations maintained across all platforms
+
+### 🎨 UI/UX Refinements
+- **Subtle Category Theming**: Replaced full colored headers with elegant 4px color strips
+- **Responsive Grid Layout**: 
+  - Desktop: 3 columns for optimal use of screen space
+  - Tablet: 2 columns for comfortable touch targets
+  - Mobile: Single column for easy scrolling
+- **Quick Info Section**: Always displays in dedicated full-width row at bottom
+- **Minimalist Header**: Removed box styling, icon-only buttons (24px size)
+- **Settings Cleanup**: Removed unused settings icon from header
+
+### 📱 Platform-Specific Fixes
+- **iOS Issues Resolved**:
+  - Fixed font loading errors with Material Icons
+  - Resolved duplicate font file conflicts in Xcode
+  - Implemented fallback icons using circle symbols
+- **Android Optimizations**:
+  - Build configurations properly set up
+  - Bundle size optimized for mobile deployment
+- **Web Improvements**:
+  - Reduced bundle size to ~350KB
+  - Improved initial load performance
+
+### 🎭 Demo Mode Implementation
+- **Real Production Data**: Integrated actual Ellie demo data from qual deployment
+- **Quick Info Panels**: Fixed display logic to properly show panels
+- **Complete Sample Profile**: Includes all category entries from production
+- **Demo Data Categories**:
+  - 5 Quick Info panels (Communication, Sensory, Medical, Dietary, Emergency)
+  - 6 category entries (Goals, Successes, Education, Behaviors, Medical, Tips)
+
+### 🏗️ Architecture Improvements
+- **Component Consolidation**: Merged platform-specific components into unified approach
+- **State Management**: Simplified with single source of truth in App.js
+- **Theme System**: Three modes (light, dark, manylla) working consistently
+- **Icon Provider**: Unified icon system with platform-specific fallbacks
+
+### 📁 Documentation Updates
+- **Moved to Archive**: Phase 1 prompt templates (completed)
+- **Updated README**: Current status, architecture, and development commands
+- **Release Notes**: Comprehensive tracking of all recent changes
+- **Cleaned Structure**: Removed outdated migration guides
+
+### 🔧 Development Experience
+- **Simplified Commands**: `npm start`, `npm run ios`, `npm run android`
+- **Hot Reload**: Working on all platforms for rapid development
+- **Debug Tools**: React DevTools integration maintained
+
+### 🐛 Bug Fixes
+- Fixed Quick Info entries not displaying in demo mode
+- Resolved category display issues on mobile devices
+- Fixed theme consistency across different screen sizes
+- Corrected responsive breakpoints for grid layout
+
+### ✅ Testing Status
+- **iOS**: Fully tested on iPhone simulators
+- **Android**: Basic testing completed
+- **Web**: Production-ready and deployed to qual
+- **Cross-Browser**: Chrome, Safari, Firefox verified
+
+---
+
+## Version 2025.09.08.1
+Hardened deployment script with full validation
+
+### 🔒 Deployment Security Enhancements
+- **No Shortcuts Mode**: Removed all partial deployment options and skip flags
+- **Release Notes Enforcement**: Deployment requires updated release notes for version tracking
+- **Full Validation Pipeline**: All checks must pass before deployment proceeds
+- **LLM-Resistant Messages**: Error messages explicitly prevent automated bypass attempts
+
+### ✅ Required Validation Checks
+- **Uncommitted Changes**: Blocks deployment if working directory is not clean
+- **ESLint**: No errors allowed (warnings acceptable)
+- **TypeScript**: All type errors must be resolved
+- **Security Audit**: No critical vulnerabilities permitted
+- **Code Quality**: Maximum 20 TODOs and 5 console.logs in src/
+- **Build Success**: Project must build successfully before deployment
+
+### 🧹 Deployment Improvements
+- **Directory Cleanup**: QUAL directory cleaned before each deployment (preserves configs)
+- **Post-Deployment Verification**: Health checks for both main site and API
+- **Git Integration**: Automatic commit with release notes title and push to GitHub
+- **Build Size Monitoring**: Warns if build exceeds 10MB
+
+### 📝 Process Changes
+- Deployment now follows strict 10-step validation process
+- Release notes must be updated before each deployment
+- All deployments are fully traceable with version history
+
+---
+
+## Version 2.2.0 - September 7, 2025
+
+### 📱 React Native Migration (Phase 1 Complete)
+
+#### Cross-Platform Architecture
+- **95% Code Sharing**: Implemented StackMap's proven cross-platform pattern
+- **Platform Selectors**: Created index.tsx files for automatic platform routing
+- **Unified Codebase**: Single repository for iOS, Android, and Web platforms
+
+#### Priority 1 Components Completed
+- **UnifiedAddDialog.native.tsx**: Full modal for adding/editing entries with native pickers
+- **CategorySection.native.tsx**: Native card-based category display with edit/delete actions
+- **Header.native.tsx**: App header with theme toggle, sync status, and native menu
+- **Platform Integration**: All components follow Material Design on Android, iOS Human Interface on iOS
+
+#### Mobile Features
+- **Onboarding Wizard**: Fully functional with demo mode and sync setup
+- **Profile Overview**: Native implementation with categories and entries
+- **Theme Support**: Light/Dark/Manylla themes working across platforms
+- **Storage**: AsyncStorage integration for persistent data
+
+#### Development Improvements
+- **Multi-Platform Deploy Script**: Updated deploy-qual.sh to support:
+  - Web deployment to https://manylla.com/qual
+  - iOS Simulator deployment with rebuild or quick reload options
+  - Android Emulator support (when available)
+  - Version synchronization across platforms
+
+### 🎯 Next Phase Components
+- **Priority 2**: ProfileEditDialog, UnifiedCategoryManager (Profile Management)
+- **Priority 3**: SyncDialog, ShareDialog (Sync & Share features)
+- **Priority 4**: SmartTextInput, MarkdownField (Rich text editing)
+
+### 🔧 Technical Stack
+- React Native 0.81 with React 19
+- TypeScript for type safety
+- TweetNaCl.js for cross-platform encryption
+- AsyncStorage for native persistence
+- Zero-knowledge architecture maintained
+
+---
+
+## Version 2.1.0 - September 6, 2025
+
+### 🔒 Security Enhancements (Phase 2 Complete)
+
+#### Enhanced Security Features
+- **URL Fragment Security**: Fragments now captured before React loads and cleared from memory after 10 seconds
+- **Database Security**: Verified real prepared statements, created comprehensive schema with constraints
+- **Error Handling**: Implemented secure error handling that never exposes sensitive information
+- **CORS Headers**: Enhanced security headers including CSP, X-Frame-Options, and more
+
+#### Removed Backward Compatibility
+- **No V1 Support**: Removed all backward compatibility code for cleaner, more secure codebase
+- **Share Format**: Only V2 encrypted format supported (`manylla_shares_v2`)
+- **Encryption**: HMAC now required for all encrypted data
+- **Removed Files**: Deleted old ShareDialog.tsx and ShareDialogNew.tsx (V1 format files)
+
+### 🎨 UI/UX Improvements
+
+#### Dark Mode Fixes
+- **Sync Dialog**: Fixed dark mode rendering for recovery phrase display
+- **Paper Components**: Proper dark mode background colors with semi-transparent overlays
+- **Typography**: Explicit text colors for better contrast in both themes
+
+#### Onboarding Flow
+- **Fixed Blank Step**: Resolved issue where step 3 was blank when joining with sync code
+- **Streamlined Join Flow**: Join mode now correctly shows 4 steps instead of 5
+- **Step Counter**: Accurate step counting for all onboarding modes (fresh, demo, join)
+
+### 🔧 Technical Improvements
+
+#### Code Quality
+- **Cleaner Codebase**: Removed all legacy code and backward compatibility layers
+- **Type Safety**: Removed unnecessary isDarkMode from ThemeContext
+- **Sync Service**: Removed fallback hash reading mechanisms
+
+#### Database Schema
+- Created comprehensive `schema.sql` with:
+  - Proper foreign key constraints
+  - Indexes for performance
+  - Audit log table structure
+  - Rate limiting table
+  - Automatic cleanup events for expired data
+
+### 📝 Documentation Updates
+- Updated `IMPLEMENTATION_CONTEXT.md` with Phase 2 completion
+- Added breaking changes documentation
+- Updated security checklist with Phase 2 items
+
+### 🐛 Bug Fixes
+- Fixed onboarding wizard showing blank step 3 when joining with code
+- Fixed dark mode issues in sync dialog below recovery phrase
+- Removed duplicate backgroundColor declarations
+
+### ⚠️ Breaking Changes
+1. Only `manylla_shares_v2` localStorage format supported
+2. HMAC required for all encrypted data (no string format)
+3. Removed ShareDialog.tsx and ShareDialogNew.tsx files
+4. No backward compatibility with V1 share format
+
+### 🚀 Deployment Notes
+- Ready for deployment to qual environment
+- All security vulnerabilities addressed
+- No migration needed (no existing users)
+
+---
+
+## Previous Releases
+
+### Version 2.0.0 - September 6, 2025 (Phase 1)
+- Initial security hardening implementation
+- V2 encrypted share format
+- Input validation on all API endpoints
+- Rate limiting (client and server)
+- URL routing with hash fragment preservation

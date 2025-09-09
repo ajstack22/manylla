@@ -1,20 +1,20 @@
-import React, { useEffect } from 'react';
-import Toast from 'react-native-toast-message';
+import React, { useEffect } from "react";
+import Toast from "react-native-toast-message";
 
 interface ThemedToastProps {
   open: boolean;
   message: string;
   onClose: () => void;
   duration?: number;
-  type?: 'success' | 'error' | 'info';
+  type?: "success" | "error" | "info";
 }
 
-export const ThemedToast: React.FC<ThemedToastProps> = ({ 
-  open, 
-  message, 
-  onClose, 
+export const ThemedToast: React.FC<ThemedToastProps> = ({
+  open,
+  message,
+  onClose,
   duration = 3000,
-  type = 'info'
+  type = "info",
 }) => {
   useEffect(() => {
     if (open && message) {
@@ -23,7 +23,7 @@ export const ThemedToast: React.FC<ThemedToastProps> = ({
         text1: message,
         visibilityTime: duration,
         onHide: onClose,
-        position: 'bottom',
+        position: "bottom",
         bottomOffset: 100,
       });
     }
@@ -34,11 +34,14 @@ export const ThemedToast: React.FC<ThemedToastProps> = ({
 };
 
 // Export a helper function to show toasts directly
-export const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
+export const showToast = (
+  message: string,
+  type: "success" | "error" | "info" = "info",
+) => {
   Toast.show({
     type,
     text1: message,
-    position: 'bottom',
+    position: "bottom",
     bottomOffset: 100,
   });
 };

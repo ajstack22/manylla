@@ -1,6 +1,12 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ChildProfile } from '../types/ChildProfile';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ChildProfile } from "../types/ChildProfile";
 
 interface ProfileContextType {
   profiles: ChildProfile[];
@@ -15,9 +21,13 @@ interface ProfileContextType {
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
-export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [profiles, setProfiles] = useState<ChildProfile[]>([]);
-  const [currentProfile, setCurrentProfile] = useState<ChildProfile | null>(null);
+  const [currentProfile, setCurrentProfile] = useState<ChildProfile | null>(
+    null,
+  );
 
   useEffect(() => {
     loadProfiles();
@@ -25,7 +35,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const loadProfiles = async () => {
     try {
-      const storedProfiles = await AsyncStorage.getItem('profiles');
+      const storedProfiles = await AsyncStorage.getItem("profiles");
       if (storedProfiles) {
         const parsedProfiles = JSON.parse(storedProfiles);
         setProfiles(parsedProfiles);
@@ -34,16 +44,16 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
         }
       }
     } catch (error) {
-      console.error('Error loading profiles:', error);
+      console.error("Error loading profiles:", error);
     }
   };
 
   const saveProfiles = async (newProfiles: ChildProfile[]) => {
     try {
-      await AsyncStorage.setItem('profiles', JSON.stringify(newProfiles));
+      await AsyncStorage.setItem("profiles", JSON.stringify(newProfiles));
       setProfiles(newProfiles);
     } catch (error) {
-      console.error('Error saving profiles:', error);
+      console.error("Error saving profiles:", error);
       throw error;
     }
   };
@@ -57,8 +67,8 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   const updateProfile = async (updatedProfile: ChildProfile) => {
-    const newProfiles = profiles.map(p => 
-      p.id === updatedProfile.id ? updatedProfile : p
+    const newProfiles = profiles.map((p) =>
+      p.id === updatedProfile.id ? updatedProfile : p,
     );
     await saveProfiles(newProfiles);
     if (currentProfile?.id === updatedProfile.id) {
@@ -67,7 +77,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   const deleteProfile = async (id: string) => {
-    const newProfiles = profiles.filter(p => p.id !== id);
+    const newProfiles = profiles.filter((p) => p.id !== id);
     await saveProfiles(newProfiles);
     if (currentProfile?.id === id) {
       setCurrentProfile(newProfiles.length > 0 ? newProfiles[0] : null);
@@ -95,7 +105,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({ children })
 export const useProfiles = () => {
   const context = useContext(ProfileContext);
   if (context === undefined) {
-    throw new Error('useProfiles must be used within a ProfileProvider');
+    throw new Error("useProfiles must be used within a ProfileProvider");
   }
   return context;
 };

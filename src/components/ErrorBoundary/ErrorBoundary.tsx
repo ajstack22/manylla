@@ -1,6 +1,6 @@
-import React, { Component, ReactNode } from 'react';
-import { Box, Typography, Button, Paper } from '@mui/material';
-import { Warning as WarningIcon } from '@mui/icons-material';
+import React, { Component, ReactNode } from "react";
+import { Box, Typography, Button, Paper } from "@mui/material";
+import { Warning as WarningIcon } from "@mui/icons-material";
 
 interface Props {
   children: ReactNode;
@@ -23,7 +23,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: any) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    console.error("ErrorBoundary caught an error:", error, errorInfo);
     // In production, send to error reporting service
   }
 
@@ -44,13 +44,13 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '100vh',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "100vh",
             p: 3,
-            bgcolor: 'background.default'
+            bgcolor: "background.default",
           }}
         >
           <Paper
@@ -58,49 +58,46 @@ export class ErrorBoundary extends Component<Props, State> {
             sx={{
               p: 4,
               maxWidth: 500,
-              textAlign: 'center',
-              borderRadius: 2
+              textAlign: "center",
+              borderRadius: 2,
             }}
           >
-            <WarningIcon 
-              sx={{ 
-                fontSize: 64, 
-                color: 'warning.main',
-                mb: 2 
-              }} 
+            <WarningIcon
+              sx={{
+                fontSize: 64,
+                color: "warning.main",
+                mb: 2,
+              }}
             />
             <Typography variant="h5" gutterBottom>
               Oops! Something went wrong
             </Typography>
-            <Typography 
-              variant="body2" 
-              color="text.secondary" 
-              sx={{ mb: 3 }}
-            >
-              We encountered an unexpected error. Your data is safe in your browser's storage.
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              We encountered an unexpected error. Your data is safe in your
+              browser's storage.
             </Typography>
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {process.env.NODE_ENV === "development" && this.state.error && (
               <Paper
                 sx={{
                   p: 2,
                   mb: 2,
-                  bgcolor: 'grey.100',
+                  bgcolor: "grey.100",
                   maxHeight: 200,
-                  overflow: 'auto'
+                  overflow: "auto",
                 }}
               >
                 <Typography
                   variant="caption"
                   component="pre"
                   sx={{
-                    textAlign: 'left',
-                    fontFamily: 'monospace',
-                    whiteSpace: 'pre-wrap',
-                    wordBreak: 'break-word'
+                    textAlign: "left",
+                    fontFamily: "monospace",
+                    whiteSpace: "pre-wrap",
+                    wordBreak: "break-word",
                   }}
                 >
                   {this.state.error.message}
-                  {'\n\n'}
+                  {"\n\n"}
                   {this.state.error.stack}
                 </Typography>
               </Paper>

@@ -1,17 +1,17 @@
-import { ChildProfile } from '../types/ChildProfile';
-import { ProfileValidator } from '../utils/validation';
+import { ChildProfile } from "../types/ChildProfile";
+import { ProfileValidator } from "../utils/validation";
 
 export class StorageService {
-  private static readonly PROFILE_KEY = 'manylla_profile';
-  private static readonly SYNC_TIME_KEY = 'manylla_last_sync';
-  private static readonly VERSION_KEY = 'manylla_version';
+  private static readonly PROFILE_KEY = "manylla_profile";
+  private static readonly SYNC_TIME_KEY = "manylla_last_sync";
+  private static readonly VERSION_KEY = "manylla_version";
 
   // Profile operations
   static getProfile(): ChildProfile | null {
     try {
       const stored = localStorage.getItem(this.PROFILE_KEY);
       if (!stored) return null;
-      
+
       const parsed = JSON.parse(stored);
       // Convert date strings back to Date objects
       parsed.dateOfBirth = new Date(parsed.dateOfBirth);
@@ -19,12 +19,12 @@ export class StorageService {
       parsed.updatedAt = new Date(parsed.updatedAt);
       parsed.entries = parsed.entries.map((e: any) => ({
         ...e,
-        date: new Date(e.date)
+        date: new Date(e.date),
       }));
-      
+
       return parsed;
     } catch (error) {
-      console.error('Failed to load profile:', error);
+      console.error("Failed to load profile:", error);
       return null;
     }
   }
@@ -34,24 +34,27 @@ export class StorageService {
       // Validate before saving
       const validation = ProfileValidator.validateProfile(profile);
       if (!validation.valid) {
-        console.error('Profile validation failed:', validation.errors);
+        console.error("Profile validation failed:", validation.errors);
         return false;
       }
-      
+
       // Sanitize data
       const sanitized = ProfileValidator.sanitizeProfile(profile);
-      
+
       // Add version for future sync
       const profileWithVersion = {
         ...sanitized,
         version: Date.now(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
-      
-      localStorage.setItem(this.PROFILE_KEY, JSON.stringify(profileWithVersion));
+
+      localStorage.setItem(
+        this.PROFILE_KEY,
+        JSON.stringify(profileWithVersion),
+      );
       return true;
     } catch (error) {
-      console.error('Failed to save profile:', error);
+      console.error("Failed to save profile:", error);
       return false;
     }
   }
@@ -63,7 +66,7 @@ export class StorageService {
       localStorage.removeItem(this.VERSION_KEY);
       return true;
     } catch (error) {
-      console.error('Failed to clear profile:', error);
+      console.error("Failed to clear profile:", error);
       return false;
     }
   }
@@ -99,7 +102,7 @@ export class StorageService {
   static exportProfile(): string | null {
     const profile = this.getProfile();
     if (!profile) return null;
-    
+
     return JSON.stringify(profile, null, 2);
   }
 
@@ -108,21 +111,21 @@ export class StorageService {
       const profile = JSON.parse(jsonString);
       // Validate basic structure
       if (!profile.id || !profile.name || !profile.entries) {
-        throw new Error('Invalid profile structure');
+        throw new Error("Invalid profile structure");
       }
-      
+
       // Convert dates
       profile.dateOfBirth = new Date(profile.dateOfBirth);
       profile.createdAt = new Date(profile.createdAt);
       profile.updatedAt = new Date(profile.updatedAt);
       profile.entries = profile.entries.map((e: any) => ({
         ...e,
-        date: new Date(e.date)
+        date: new Date(e.date),
       }));
-      
+
       return this.saveProfile(profile);
     } catch (error) {
-      console.error('Failed to import profile:', error);
+      console.error("Failed to import profile:", error);
       return false;
     }
   }

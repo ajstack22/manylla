@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,8 +9,8 @@ import {
   Dimensions,
   Modal,
   Platform,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 interface SmartTextInputProps {
   label: string;
@@ -33,44 +33,44 @@ interface FormatButton {
 
 const formatButtons: FormatButton[] = [
   {
-    icon: 'format-bold',
-    tooltip: 'Bold',
-    markdown: { prefix: '**', suffix: '**' },
+    icon: "format-bold",
+    tooltip: "Bold",
+    markdown: { prefix: "**", suffix: "**" },
   },
   {
-    icon: 'format-italic',
-    tooltip: 'Italic',
-    markdown: { prefix: '_', suffix: '_' },
+    icon: "format-italic",
+    tooltip: "Italic",
+    markdown: { prefix: "_", suffix: "_" },
   },
   {
-    icon: 'format-list-bulleted',
-    tooltip: 'Bullet List',
-    markdown: { prefix: '- ', suffix: '' },
+    icon: "format-list-bulleted",
+    tooltip: "Bullet List",
+    markdown: { prefix: "- ", suffix: "" },
   },
   {
-    icon: 'link',
-    tooltip: 'Link',
-    markdown: { prefix: '[', suffix: '](url)' },
+    icon: "link",
+    tooltip: "Link",
+    markdown: { prefix: "[", suffix: "](url)" },
   },
   {
-    icon: 'code',
-    tooltip: 'Code',
-    markdown: { prefix: '`', suffix: '`' },
+    icon: "code",
+    tooltip: "Code",
+    markdown: { prefix: "`", suffix: "`" },
   },
 ];
 
 const colors = {
-  primary: '#8B7355',
-  secondary: '#A0937D',
-  background: '#FDFBF7',
-  surface: '#F4E4C1',
-  text: '#4A4A4A',
-  textSecondary: '#666666',
-  border: '#E0E0E0',
-  white: '#FFFFFF',
-  error: '#D32F2F',
-  success: '#2E7D32',
-  hover: '#F5F5F5',
+  primary: "#8B7355",
+  secondary: "#A0937D",
+  background: "#FDFBF7",
+  surface: "#F4E4C1",
+  text: "#4A4A4A",
+  textSecondary: "#666666",
+  border: "#E0E0E0",
+  white: "#FFFFFF",
+  error: "#D32F2F",
+  success: "#2E7D32",
+  hover: "#F5F5F5",
 };
 
 export const SmartTextInput: React.FC<SmartTextInputProps> = ({
@@ -100,9 +100,9 @@ export const SmartTextInput: React.FC<SmartTextInputProps> = ({
 
   const handleChange = (newValue: string) => {
     // Check for auto-formatting triggers
-    if (newValue.endsWith('  ')) {
+    if (newValue.endsWith("  ")) {
       // Double space triggers new paragraph
-      const formattedValue = newValue.trim() + '\n\n';
+      const formattedValue = newValue.trim() + "\n\n";
       onChange(formattedValue);
     } else {
       onChange(newValue);
@@ -122,59 +122,62 @@ export const SmartTextInput: React.FC<SmartTextInputProps> = ({
     const start = selectionStart;
     const end = selectionEnd;
     const selectedText = value.substring(start, end);
-    
+
     if (selectedText) {
       const before = value.substring(0, start);
       const formatted = `${format.markdown.prefix}${selectedText}${format.markdown.suffix}`;
-      
+
       const newValue = before + formatted + value.substring(end);
       onChange(newValue);
-      
+
       // Reset selection
       setTimeout(() => {
         if (textInputRef.current) {
           const newCursorPos = start + formatted.length;
           textInputRef.current.setNativeProps({
-            selection: { start: newCursorPos, end: newCursorPos }
+            selection: { start: newCursorPos, end: newCursorPos },
           });
         }
       }, 100);
-    } else if (format.markdown.prefix === '- ') {
+    } else if (format.markdown.prefix === "- ") {
       // For list, add at start of current line
       const before = value.substring(0, start);
       const after = value.substring(start);
-      const lastNewline = before.lastIndexOf('\n');
+      const lastNewline = before.lastIndexOf("\n");
       const lineStart = lastNewline === -1 ? 0 : lastNewline + 1;
-      
-      const newValue = 
-        value.substring(0, lineStart) + 
-        '- ' + 
-        value.substring(lineStart);
-      
+
+      const newValue =
+        value.substring(0, lineStart) + "- " + value.substring(lineStart);
+
       onChange(newValue);
     }
-    
+
     setShowFormatting(false);
   };
 
   // Parse markdown-like syntax for preview
   const parseFormatting = (text: string): string => {
     if (!text) return text;
-    
+
     // Simple text-only parsing for preview
     return text
-      .replace(/\*\*(.*?)\*\*/g, '[$1]') // Bold
-      .replace(/_(.*?)_/g, '/$1/') // Italic
+      .replace(/\*\*(.*?)\*\*/g, "[$1]") // Bold
+      .replace(/_(.*?)_/g, "/$1/") // Italic
       .replace(/`(.*?)`/g, '"$1"') // Code
-      .replace(/\[(.*?)\]\((.*?)\)/g, '$1 ($2)'); // Links
+      .replace(/\[(.*?)\]\((.*?)\)/g, "$1 ($2)"); // Links
   };
 
-  const minHeight = multiline ? (rows * 20 + 20) : 50;
-  const maxHeight = multiline ? (maxRows * 20 + 20) : 50;
+  const minHeight = multiline ? rows * 20 + 20 : 50;
+  const maxHeight = multiline ? maxRows * 20 + 20 : 50;
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.label, { color: isFocused ? colors.primary : colors.text }]}>
+      <Text
+        style={[
+          styles.label,
+          { color: isFocused ? colors.primary : colors.text },
+        ]}
+      >
         {label}
         {required && <Text style={styles.required}> *</Text>}
       </Text>
@@ -183,14 +186,17 @@ export const SmartTextInput: React.FC<SmartTextInputProps> = ({
       {showPreview && (
         <View style={styles.previewContainer}>
           <Text style={styles.previewLabel}>Preview:</Text>
-          <Text style={styles.previewText}>
-            {parseFormatting(value)}
-          </Text>
+          <Text style={styles.previewText}>{parseFormatting(value)}</Text>
         </View>
       )}
 
       {/* Text Input */}
-      <View style={[styles.inputContainer, { borderColor: isFocused ? colors.primary : colors.border }]}>
+      <View
+        style={[
+          styles.inputContainer,
+          { borderColor: isFocused ? colors.primary : colors.border },
+        ]}
+      >
         <TextInput
           ref={textInputRef}
           style={[
@@ -198,8 +204,8 @@ export const SmartTextInput: React.FC<SmartTextInputProps> = ({
             {
               minHeight,
               maxHeight: multiline ? maxHeight : minHeight,
-              textAlignVertical: multiline ? 'top' : 'center',
-            }
+              textAlignVertical: multiline ? "top" : "center",
+            },
           ]}
           value={value}
           onChangeText={handleChange}
@@ -226,9 +232,7 @@ export const SmartTextInput: React.FC<SmartTextInputProps> = ({
       </View>
 
       {/* Helper Text */}
-      {helperText && (
-        <Text style={styles.helperText}>{helperText}</Text>
-      )}
+      {helperText && <Text style={styles.helperText}>{helperText}</Text>}
 
       {/* Tips */}
       {value.length === 0 && !isFocused && (
@@ -285,7 +289,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
   },
   required: {
@@ -303,7 +307,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.textSecondary,
     marginBottom: 4,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
   previewText: {
     fontSize: 14,
@@ -314,7 +318,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     backgroundColor: colors.white,
-    position: 'relative',
+    position: "relative",
   },
   textInput: {
     fontSize: 16,
@@ -332,15 +336,15 @@ const styles = StyleSheet.create({
     }),
   },
   formatToggle: {
-    position: 'absolute',
+    position: "absolute",
     top: 8,
     right: 8,
     backgroundColor: colors.surface,
     borderRadius: 16,
     width: 32,
     height: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   helperText: {
     fontSize: 14,
@@ -351,42 +355,42 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.textSecondary,
     marginTop: 4,
-    fontStyle: 'italic',
+    fontStyle: "italic",
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   formatToolbar: {
     backgroundColor: colors.white,
     borderRadius: 12,
     margin: 20,
-    maxWidth: Dimensions.get('window').width - 40,
+    maxWidth: Dimensions.get("window").width - 40,
     elevation: 8,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 8,
   },
   toolbarTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.text,
-    textAlign: 'center',
+    textAlign: "center",
     paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
   formatButtons: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
   formatButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingHorizontal: 12,
     paddingVertical: 8,
     marginHorizontal: 4,
@@ -397,10 +401,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.text,
     marginTop: 4,
-    textAlign: 'center',
+    textAlign: "center",
   },
   closeFormatting: {
-    alignSelf: 'center',
+    alignSelf: "center",
     padding: 16,
   },
 });

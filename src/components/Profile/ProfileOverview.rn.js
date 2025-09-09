@@ -3,7 +3,7 @@
  * Works on iOS, Android, and Web
  */
 
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -11,8 +11,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   Platform,
-} from 'react-native';
-import { useTheme } from '../../context/ThemeContext';
+} from "react-native";
+import { useTheme } from "../../context/ThemeContext";
 
 export const ProfileOverview = ({ profile, onUpdateProfile }) => {
   const { colors } = useTheme();
@@ -29,21 +29,35 @@ export const ProfileOverview = ({ profile, onUpdateProfile }) => {
 
   const renderCategory = (title, entries, categoryColor) => {
     if (!entries || entries.length === 0) return null;
-    
+
     return (
-      <View style={[styles.categorySection, { backgroundColor: colors.surface }]} key={title}>
-        <View style={[styles.categoryHeader, { backgroundColor: categoryColor }]}>
+      <View
+        style={[styles.categorySection, { backgroundColor: colors.surface }]}
+        key={title}
+      >
+        <View
+          style={[styles.categoryHeader, { backgroundColor: categoryColor }]}
+        >
           <Text style={styles.categoryTitle}>{title}</Text>
           <Text style={styles.categoryCount}>{entries.length} items</Text>
         </View>
         <View style={styles.categoryContent}>
           {entries.map((entry, index) => (
-            <View key={index} style={[styles.entryItem, { borderBottomColor: colors.border }]}>
+            <View
+              key={index}
+              style={[styles.entryItem, { borderBottomColor: colors.border }]}
+            >
               <Text style={[styles.entryTitle, { color: colors.text.primary }]}>
                 {entry.title || entry.name}
               </Text>
               {entry.description && (
-                <Text style={[styles.entryDescription, { color: colors.text.secondary }]} numberOfLines={2}>
+                <Text
+                  style={[
+                    styles.entryDescription,
+                    { color: colors.text.secondary },
+                  ]}
+                  numberOfLines={2}
+                >
                   {entry.description}
                 </Text>
               )}
@@ -55,14 +69,14 @@ export const ProfileOverview = ({ profile, onUpdateProfile }) => {
   };
 
   const categories = [
-    { key: 'medical', title: 'Medical Information', color: '#E57373' },
-    { key: 'behavior', title: 'Behavior & Triggers', color: '#FF8A65' },
-    { key: 'sensory', title: 'Sensory Needs', color: '#FFB74D' },
-    { key: 'dietary', title: 'Dietary Restrictions', color: '#FFD54F' },
-    { key: 'communication', title: 'Communication', color: '#81C784' },
-    { key: 'daily', title: 'Daily Living', color: '#4FC3F7' },
-    { key: 'education', title: 'Education', color: '#9575CD' },
-    { key: 'emergency', title: 'Emergency', color: '#F06292' },
+    { key: "medical", title: "Medical Information", color: "#E57373" },
+    { key: "behavior", title: "Behavior & Triggers", color: "#FF8A65" },
+    { key: "sensory", title: "Sensory Needs", color: "#FFB74D" },
+    { key: "dietary", title: "Dietary Restrictions", color: "#FFD54F" },
+    { key: "communication", title: "Communication", color: "#81C784" },
+    { key: "daily", title: "Daily Living", color: "#4FC3F7" },
+    { key: "education", title: "Education", color: "#9575CD" },
+    { key: "emergency", title: "Emergency", color: "#F06292" },
   ];
 
   const styles = StyleSheet.create({
@@ -72,14 +86,15 @@ export const ProfileOverview = ({ profile, onUpdateProfile }) => {
     },
     header: {
       backgroundColor: colors.primary,
-      paddingTop: Platform.OS === 'ios' ? 50 : Platform.OS === 'android' ? 20 : 0,
+      paddingTop:
+        Platform.OS === "ios" ? 50 : Platform.OS === "android" ? 20 : 0,
       paddingBottom: 16,
       paddingHorizontal: 16,
     },
     headerTitle: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
       fontSize: 20,
-      fontWeight: '600',
+      fontWeight: "600",
     },
     content: {
       flex: 1,
@@ -91,7 +106,7 @@ export const ProfileOverview = ({ profile, onUpdateProfile }) => {
       borderRadius: 8,
       ...Platform.select({
         ios: {
-          shadowColor: '#000',
+          shadowColor: "#000",
           shadowOffset: { width: 0, height: 1 },
           shadowOpacity: 0.1,
           shadowRadius: 2,
@@ -100,16 +115,16 @@ export const ProfileOverview = ({ profile, onUpdateProfile }) => {
           elevation: 2,
         },
         web: {
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
         },
       }),
     },
     infoLabel: {
       fontSize: 12,
       color: colors.text.secondary,
-      fontWeight: '600',
+      fontWeight: "600",
       marginBottom: 8,
-      textTransform: 'uppercase',
+      textTransform: "uppercase",
     },
     infoValue: {
       fontSize: 16,
@@ -127,10 +142,10 @@ export const ProfileOverview = ({ profile, onUpdateProfile }) => {
     categorySection: {
       marginBottom: 16,
       borderRadius: 8,
-      overflow: 'hidden',
+      overflow: "hidden",
       ...Platform.select({
         ios: {
-          shadowColor: '#000',
+          shadowColor: "#000",
           shadowOffset: { width: 0, height: 1 },
           shadowOpacity: 0.1,
           shadowRadius: 2,
@@ -139,23 +154,23 @@ export const ProfileOverview = ({ profile, onUpdateProfile }) => {
           elevation: 2,
         },
         web: {
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
         },
       }),
     },
     categoryHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       padding: 12,
     },
     categoryTitle: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
     },
     categoryCount: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
       fontSize: 14,
       opacity: 0.9,
     },
@@ -168,7 +183,7 @@ export const ProfileOverview = ({ profile, onUpdateProfile }) => {
     },
     entryTitle: {
       fontSize: 15,
-      fontWeight: '500',
+      fontWeight: "500",
       marginBottom: 4,
     },
     entryDescription: {
@@ -177,8 +192,8 @@ export const ProfileOverview = ({ profile, onUpdateProfile }) => {
     },
     emptyContainer: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       padding: 20,
     },
     emptyText: {
@@ -201,31 +216,25 @@ export const ProfileOverview = ({ profile, onUpdateProfile }) => {
             <Text style={styles.infoValue}>{profile.diagnosis}</Text>
           </View>
         )}
-        
+
         {profile.quickInfo && profile.quickInfo.length > 0 && (
           <View style={styles.infoCard}>
             <Text style={styles.infoLabel}>Quick Info</Text>
             {profile.quickInfo.map((info, index) => (
-              <Text key={index} style={styles.quickInfoItem}>• {info}</Text>
+              <Text key={index} style={styles.quickInfoItem}>
+                • {info}
+              </Text>
             ))}
           </View>
         )}
 
         <View style={styles.categoriesContainer}>
-          {categories.map(cat => 
-            renderCategory(
-              cat.title, 
-              profile[cat.key], 
-              cat.color
-            )
+          {categories.map((cat) =>
+            renderCategory(cat.title, profile[cat.key], cat.color),
           )}
-          
+
           {profile.customCategories?.map((customCat, index) =>
-            renderCategory(
-              customCat.name,
-              customCat.entries || [],
-              '#B0BEC5'
-            )
+            renderCategory(customCat.name, customCat.entries || [], "#B0BEC5"),
           )}
         </View>
       </ScrollView>

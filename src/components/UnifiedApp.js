@@ -3,7 +3,7 @@
  * Cross-platform components following StackMap patterns
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -19,72 +19,72 @@ import {
   FlatList,
   Dimensions,
   SafeAreaView,
-} from 'react-native';
+} from "react-native";
 // DatePicker handled through platform-specific implementations
 let DateTimePicker = null;
 try {
-  DateTimePicker = require('@react-native-community/datetimepicker').default;
+  DateTimePicker = require("@react-native-community/datetimepicker").default;
 } catch (e) {
   // Fallback - DatePicker not available
 }
 
 // Color constants (manila envelope theme)
 export const colors = {
-  primary: '#8B7355',
-  secondary: '#6B5D54',
+  primary: "#8B7355",
+  secondary: "#6B5D54",
   background: {
-    default: '#FDFBF7',
-    paper: '#FFFFFF',
-    manila: '#F4E4C1',
+    default: "#FDFBF7",
+    paper: "#FFFFFF",
+    manila: "#F4E4C1",
   },
   text: {
-    primary: '#333333',
-    secondary: '#666666',
-    disabled: '#999999',
+    primary: "#333333",
+    secondary: "#666666",
+    disabled: "#999999",
   },
-  border: '#E0E0E0',
-  success: '#4CAF50',
-  error: '#F44336',
-  warning: '#FF9800',
-  info: '#2196F3',
+  border: "#E0E0E0",
+  success: "#4CAF50",
+  error: "#F44336",
+  warning: "#FF9800",
+  info: "#2196F3",
 };
 
 // Entry Form Component
-export const EntryForm = ({ 
-  visible, 
-  onClose, 
-  onSave, 
-  category, 
-  entry, 
-  categories = [] 
+export const EntryForm = ({
+  visible,
+  onClose,
+  onSave,
+  category,
+  entry,
+  categories = [],
 }) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState(category || '');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(category || "");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [visibility, setVisibility] = useState(['private']);
+  const [visibility, setVisibility] = useState(["private"]);
 
   useEffect(() => {
     if (entry) {
-      setTitle(entry.title || '');
-      setDescription(entry.description || '');
-      setSelectedCategory(entry.category || category || '');
+      setTitle(entry.title || "");
+      setDescription(entry.description || "");
+      setSelectedCategory(entry.category || category || "");
       setDate(entry.date ? new Date(entry.date) : new Date());
-      setVisibility(entry.visibility || ['private']);
+      setVisibility(entry.visibility || ["private"]);
     } else {
       // Reset for new entry
-      setTitle('');
-      setDescription('');
-      setSelectedCategory(category || '');
+      setTitle("");
+      setDescription("");
+      setSelectedCategory(category || "");
       setDate(new Date());
-      setVisibility(['private']);
+      setVisibility(["private"]);
     }
   }, [entry, category, visible]);
 
   const handleSubmit = () => {
     if (!title.trim()) {
-      Alert.alert('Error', 'Please enter a title');
+      Alert.alert("Error", "Please enter a title");
       return;
     }
 
@@ -97,23 +97,25 @@ export const EntryForm = ({
     });
 
     // Reset form
-    setTitle('');
-    setDescription('');
+    setTitle("");
+    setDescription("");
     onClose();
   };
 
   const renderContent = () => (
-    <KeyboardAvoidingView 
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
-      <ScrollView style={styles.formContainer} contentContainerStyle={styles.formContentContainer}>
-
+      <ScrollView
+        style={styles.formContainer}
+        contentContainerStyle={styles.formContentContainer}
+      >
         {/* Category Selector */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Category</Text>
-          <ScrollView 
-            horizontal 
+          <ScrollView
+            horizontal
             showsHorizontalScrollIndicator={false}
             style={styles.categoryScroll}
           >
@@ -123,14 +125,22 @@ export const EntryForm = ({
                 style={[
                   styles.categoryChip,
                   selectedCategory === cat.name && styles.categoryChipActive,
-                  { backgroundColor: selectedCategory === cat.name ? cat.color : colors.background.manila }
+                  {
+                    backgroundColor:
+                      selectedCategory === cat.name
+                        ? cat.color
+                        : colors.background.manila,
+                  },
                 ]}
                 onPress={() => setSelectedCategory(cat.name)}
               >
-                <Text style={[
-                  styles.categoryChipText,
-                  selectedCategory === cat.name && styles.categoryChipTextActive
-                ]}>
+                <Text
+                  style={[
+                    styles.categoryChipText,
+                    selectedCategory === cat.name &&
+                      styles.categoryChipTextActive,
+                  ]}
+                >
                   {cat.displayName}
                 </Text>
               </TouchableOpacity>
@@ -168,15 +178,13 @@ export const EntryForm = ({
         {/* Date Picker */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Date</Text>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.dateButton}
             onPress={() => setShowDatePicker(true)}
           >
-            <Text style={styles.dateText}>
-              {date.toLocaleDateString()}
-            </Text>
+            <Text style={styles.dateText}>{date.toLocaleDateString()}</Text>
           </TouchableOpacity>
-          {showDatePicker && Platform.OS !== 'web' && DateTimePicker && (
+          {showDatePicker && Platform.OS !== "web" && DateTimePicker && (
             <DateTimePicker
               value={date}
               mode="date"
@@ -195,25 +203,28 @@ export const EntryForm = ({
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Share With</Text>
           <View style={styles.visibilityOptions}>
-            {['family', 'medical', 'education'].map((option) => (
+            {["family", "medical", "education"].map((option) => (
               <TouchableOpacity
                 key={option}
                 style={[
                   styles.visibilityChip,
-                  visibility.includes(option) && styles.visibilityChipActive
+                  visibility.includes(option) && styles.visibilityChipActive,
                 ]}
                 onPress={() => {
                   if (visibility.includes(option)) {
-                    setVisibility(visibility.filter(v => v !== option));
+                    setVisibility(visibility.filter((v) => v !== option));
                   } else {
                     setVisibility([...visibility, option]);
                   }
                 }}
               >
-                <Text style={[
-                  styles.visibilityChipText,
-                  visibility.includes(option) && styles.visibilityChipTextActive
-                ]}>
+                <Text
+                  style={[
+                    styles.visibilityChipText,
+                    visibility.includes(option) &&
+                      styles.visibilityChipTextActive,
+                  ]}
+                >
                   {option.charAt(0).toUpperCase() + option.slice(1)}
                 </Text>
               </TouchableOpacity>
@@ -223,18 +234,18 @@ export const EntryForm = ({
 
         {/* Action Buttons */}
         <View style={styles.formActions}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.button, styles.buttonCancel]}
             onPress={onClose}
           >
             <Text style={styles.buttonCancelText}>Cancel</Text>
           </TouchableOpacity>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.button, styles.buttonPrimary]}
             onPress={handleSubmit}
           >
             <Text style={styles.buttonPrimaryText}>
-              {entry ? 'Update' : 'Save'}
+              {entry ? "Update" : "Save"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -252,9 +263,11 @@ export const EntryForm = ({
     >
       <SafeAreaView style={styles.modalSafeArea}>
         <View style={styles.modalHeader}>
-          <Text style={styles.modalHeaderTitle}>{entry ? 'Edit Entry' : 'Add Entry'}</Text>
-          <TouchableOpacity 
-            style={styles.modalHeaderCloseButton} 
+          <Text style={styles.modalHeaderTitle}>
+            {entry ? "Edit Entry" : "Add Entry"}
+          </Text>
+          <TouchableOpacity
+            style={styles.modalHeaderCloseButton}
             onPress={onClose}
           >
             <Text style={styles.modalCloseText}>✕</Text>
@@ -267,23 +280,20 @@ export const EntryForm = ({
 };
 
 // Profile Edit Form Component
-export const ProfileEditForm = ({ 
-  visible, 
-  onClose, 
-  onSave, 
-  profile 
-}) => {
-  const [name, setName] = useState(profile?.name || '');
-  const [preferredName, setPreferredName] = useState(profile?.preferredName || '');
-  const [pronouns, setPronouns] = useState(profile?.pronouns || '');
+export const ProfileEditForm = ({ visible, onClose, onSave, profile }) => {
+  const [name, setName] = useState(profile?.name || "");
+  const [preferredName, setPreferredName] = useState(
+    profile?.preferredName || "",
+  );
+  const [pronouns, setPronouns] = useState(profile?.pronouns || "");
   const [dateOfBirth, setDateOfBirth] = useState(
-    profile?.dateOfBirth ? new Date(profile.dateOfBirth) : new Date()
+    profile?.dateOfBirth ? new Date(profile.dateOfBirth) : new Date(),
   );
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleSubmit = () => {
     if (!name.trim()) {
-      Alert.alert('Error', 'Name is required');
+      Alert.alert("Error", "Name is required");
       return;
     }
 
@@ -297,8 +307,10 @@ export const ProfileEditForm = ({
   };
 
   const renderContent = () => (
-    <ScrollView style={styles.formContainer} contentContainerStyle={styles.formContentContainer}>
-
+    <ScrollView
+      style={styles.formContainer}
+      contentContainerStyle={styles.formContentContainer}
+    >
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Name *</Text>
         <TextInput
@@ -334,7 +346,7 @@ export const ProfileEditForm = ({
 
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Date of Birth</Text>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.dateButton}
           onPress={() => setShowDatePicker(true)}
         >
@@ -342,7 +354,7 @@ export const ProfileEditForm = ({
             {dateOfBirth.toLocaleDateString()}
           </Text>
         </TouchableOpacity>
-        {showDatePicker && Platform.OS !== 'web' && DateTimePicker && (
+        {showDatePicker && Platform.OS !== "web" && DateTimePicker && (
           <DateTimePicker
             value={dateOfBirth}
             mode="date"
@@ -358,13 +370,13 @@ export const ProfileEditForm = ({
       </View>
 
       <View style={styles.formActions}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.button, styles.buttonCancel]}
           onPress={onClose}
         >
           <Text style={styles.buttonCancelText}>Cancel</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.button, styles.buttonPrimary]}
           onPress={handleSubmit}
         >
@@ -385,8 +397,8 @@ export const ProfileEditForm = ({
       <SafeAreaView style={styles.modalSafeArea}>
         <View style={styles.modalHeader}>
           <Text style={styles.modalHeaderTitle}>Edit Profile</Text>
-          <TouchableOpacity 
-            style={styles.modalHeaderCloseButton} 
+          <TouchableOpacity
+            style={styles.modalHeaderCloseButton}
             onPress={onClose}
           >
             <Text style={styles.modalCloseText}>✕</Text>
@@ -399,43 +411,38 @@ export const ProfileEditForm = ({
 };
 
 // Category Manager Component
-export const CategoryManager = ({ 
-  visible, 
-  onClose, 
-  categories, 
-  onSave 
-}) => {
+export const CategoryManager = ({ visible, onClose, categories, onSave }) => {
   const [localCategories, setLocalCategories] = useState(categories || []);
 
   const toggleCategory = (categoryId) => {
-    setLocalCategories(prev => 
-      prev.map(cat => 
-        cat.id === categoryId 
-          ? { ...cat, isVisible: !cat.isVisible }
-          : cat
-      )
+    setLocalCategories((prev) =>
+      prev.map((cat) =>
+        cat.id === categoryId ? { ...cat, isVisible: !cat.isVisible } : cat,
+      ),
     );
   };
 
   const moveCategory = (categoryId, direction) => {
-    const index = localCategories.findIndex(cat => cat.id === categoryId);
+    const index = localCategories.findIndex((cat) => cat.id === categoryId);
     if (
-      (direction === 'up' && index === 0) || 
-      (direction === 'down' && index === localCategories.length - 1)
+      (direction === "up" && index === 0) ||
+      (direction === "down" && index === localCategories.length - 1)
     ) {
       return;
     }
 
     const newCategories = [...localCategories];
-    const newIndex = direction === 'up' ? index - 1 : index + 1;
-    [newCategories[index], newCategories[newIndex]] = 
-    [newCategories[newIndex], newCategories[index]];
-    
+    const newIndex = direction === "up" ? index - 1 : index + 1;
+    [newCategories[index], newCategories[newIndex]] = [
+      newCategories[newIndex],
+      newCategories[index],
+    ];
+
     // Update order values
     newCategories.forEach((cat, i) => {
       cat.order = i;
     });
-    
+
     setLocalCategories(newCategories);
   };
 
@@ -448,22 +455,21 @@ export const CategoryManager = ({
 
   const renderContent = () => (
     <View style={[styles.formContainer, { padding: 20 }]}>
-      
       <ScrollView style={styles.categoryList}>
         {localCategories.map((category, index) => (
           <View key={category.id} style={styles.categoryItem}>
             <View style={styles.categoryItemLeft}>
-              <View 
+              <View
                 style={[
-                  styles.categoryColorDot, 
-                  { backgroundColor: category.color }
-                ]} 
+                  styles.categoryColorDot,
+                  { backgroundColor: category.color },
+                ]}
               />
               <Text style={styles.categoryItemName}>
                 {category.displayName}
               </Text>
             </View>
-            
+
             <View style={styles.categoryItemActions}>
               <Switch
                 value={category.isVisible}
@@ -471,25 +477,26 @@ export const CategoryManager = ({
                 trackColor={{ false: colors.border, true: colors.primary }}
                 thumbColor={colors.background.paper}
               />
-              
+
               <View style={styles.categoryMoveButtons}>
                 <TouchableOpacity
-                  onPress={() => moveCategory(category.id, 'up')}
+                  onPress={() => moveCategory(category.id, "up")}
                   disabled={index === 0}
                   style={[
                     styles.moveButton,
-                    index === 0 && styles.moveButtonDisabled
+                    index === 0 && styles.moveButtonDisabled,
                   ]}
                 >
                   <Text style={styles.moveButtonText}>↑</Text>
                 </TouchableOpacity>
-                
+
                 <TouchableOpacity
-                  onPress={() => moveCategory(category.id, 'down')}
+                  onPress={() => moveCategory(category.id, "down")}
                   disabled={index === localCategories.length - 1}
                   style={[
                     styles.moveButton,
-                    index === localCategories.length - 1 && styles.moveButtonDisabled
+                    index === localCategories.length - 1 &&
+                      styles.moveButtonDisabled,
                   ]}
                 >
                   <Text style={styles.moveButtonText}>↓</Text>
@@ -501,13 +508,13 @@ export const CategoryManager = ({
       </ScrollView>
 
       <View style={styles.formActions}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.button, styles.buttonCancel]}
           onPress={onClose}
         >
           <Text style={styles.buttonCancelText}>Cancel</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.button, styles.buttonPrimary]}
           onPress={handleSave}
         >
@@ -528,8 +535,8 @@ export const CategoryManager = ({
       <SafeAreaView style={styles.modalSafeArea}>
         <View style={styles.modalHeader}>
           <Text style={styles.modalHeaderTitle}>Manage Categories</Text>
-          <TouchableOpacity 
-            style={styles.modalHeaderCloseButton} 
+          <TouchableOpacity
+            style={styles.modalHeaderCloseButton}
             onPress={onClose}
           >
             <Text style={styles.modalCloseText}>✕</Text>
@@ -548,9 +555,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background.paper,
   },
   modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
@@ -559,7 +566,7 @@ const styles = StyleSheet.create({
   },
   modalHeaderTitle: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.text.primary,
   },
   modalHeaderCloseButton: {
@@ -567,10 +574,10 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: Platform.OS === 'web' ? 20 : 0,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: Platform.OS === "web" ? 20 : 0,
   },
   modalCloseText: {
     fontSize: 24,
@@ -587,7 +594,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.text.secondary,
     marginBottom: 8,
   },
@@ -603,10 +610,10 @@ const styles = StyleSheet.create({
   },
   textArea: {
     minHeight: 120,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
   categoryScroll: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 8,
   },
   categoryChip: {
@@ -618,15 +625,15 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   categoryChipActive: {
-    borderColor: 'transparent',
+    borderColor: "transparent",
   },
   categoryChipText: {
     fontSize: 14,
     color: colors.text.secondary,
   },
   categoryChipTextActive: {
-    color: 'white',
-    fontWeight: '600',
+    color: "white",
+    fontWeight: "600",
   },
   dateButton: {
     borderWidth: 1,
@@ -641,8 +648,8 @@ const styles = StyleSheet.create({
     color: colors.text.primary,
   },
   visibilityOptions: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 8,
   },
   visibilityChip: {
@@ -664,11 +671,11 @@ const styles = StyleSheet.create({
     color: colors.text.secondary,
   },
   visibilityChipTextActive: {
-    color: 'white',
+    color: "white",
   },
   formActions: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
+    flexDirection: "row",
+    justifyContent: "flex-end",
     marginTop: 24,
     gap: 12,
   },
@@ -677,18 +684,18 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 8,
     minWidth: 100,
-    alignItems: 'center',
+    alignItems: "center",
   },
   buttonPrimary: {
     backgroundColor: colors.primary,
   },
   buttonPrimaryText: {
-    color: 'white',
-    fontWeight: '600',
+    color: "white",
+    fontWeight: "600",
     fontSize: 16,
   },
   buttonCancel: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     borderWidth: 1,
     borderColor: colors.border,
   },
@@ -700,16 +707,16 @@ const styles = StyleSheet.create({
     maxHeight: 400,
   },
   categoryItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
   categoryItemLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
   },
   categoryColorDot: {
@@ -723,19 +730,19 @@ const styles = StyleSheet.create({
     color: colors.text.primary,
   },
   categoryItemActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 12,
   },
   categoryMoveButtons: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 4,
   },
   moveButton: {
     width: 28,
     height: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: colors.background.manila,
     borderRadius: 4,
   },
@@ -745,7 +752,7 @@ const styles = StyleSheet.create({
   moveButtonText: {
     fontSize: 16,
     color: colors.text.primary,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 

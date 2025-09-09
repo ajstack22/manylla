@@ -1,17 +1,19 @@
-import React from 'react';
-import OnboardingWizard from './OnboardingWizard.native';
+import React from "react";
+import OnboardingWizard from "./OnboardingWizard.native";
 
 interface OnboardingWrapperProps {
   onComplete: (data: any) => void;
 }
 
-const OnboardingWrapper: React.FC<OnboardingWrapperProps> = ({ onComplete }) => {
+const OnboardingWrapper: React.FC<OnboardingWrapperProps> = ({
+  onComplete,
+}) => {
   const handleStartFresh = () => {
     // For now, we'll prompt for a name in a simple way
     // In production, you'd want a proper form
-    const childName = 'My Child'; // Default name for testing
+    const childName = "My Child"; // Default name for testing
     onComplete({
-      mode: 'fresh',
+      mode: "fresh",
       childName,
       dateOfBirth: new Date(),
     });
@@ -19,13 +21,13 @@ const OnboardingWrapper: React.FC<OnboardingWrapperProps> = ({ onComplete }) => 
 
   const handleDemoMode = () => {
     onComplete({
-      mode: 'demo',
+      mode: "demo",
     });
   };
 
   const handleJoinWithCode = (accessCode: string) => {
     onComplete({
-      mode: 'join',
+      mode: "join",
       accessCode,
     });
   };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,70 +9,73 @@ import {
   Alert,
   Image,
   Dimensions,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { ChildProfile, Entry } from '../../types/ChildProfile';
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { ChildProfile, Entry } from "../../types/ChildProfile";
 
 interface SharedProfileViewProps {
   isAuthenticated?: boolean;
 }
 
 const colors = {
-  primary: '#8B7355',
-  secondary: '#A0937D',
-  background: '#FDFBF7',
-  surface: '#F4E4C1',
-  text: '#4A4A4A',
-  textSecondary: '#666666',
-  border: '#E0E0E0',
-  white: '#FFFFFF',
-  error: '#D32F2F',
-  warning: '#ED6C02',
-  info: '#0288D1',
-  success: '#2E7D32',
-  hover: '#F5F5F5',
+  primary: "#8B7355",
+  secondary: "#A0937D",
+  background: "#FDFBF7",
+  surface: "#F4E4C1",
+  text: "#4A4A4A",
+  textSecondary: "#666666",
+  border: "#E0E0E0",
+  white: "#FFFFFF",
+  error: "#D32F2F",
+  warning: "#ED6C02",
+  info: "#0288D1",
+  success: "#2E7D32",
+  hover: "#F5F5F5",
 };
 
-export const SharedProfileView: React.FC<SharedProfileViewProps> = ({ 
-  isAuthenticated = false 
+export const SharedProfileView: React.FC<SharedProfileViewProps> = ({
+  isAuthenticated = false,
 }) => {
-  const [accessCode, setAccessCode] = useState('');
+  const [accessCode, setAccessCode] = useState("");
   const [isUnlocked, setIsUnlocked] = useState(isAuthenticated);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleUnlock = () => {
     // Mock validation
-    if (accessCode.toUpperCase() === 'ABC123') {
+    if (accessCode.toUpperCase() === "ABC123") {
       setIsUnlocked(true);
-      setError('');
+      setError("");
     } else {
-      setError('Invalid access code. Please try again.');
+      setError("Invalid access code. Please try again.");
     }
   };
 
   // Mock shared data
   const sharedData = {
-    childName: 'Ellie Thompson',
-    sharedBy: 'Sarah Thompson (Parent)',
-    sharedDate: new Date('2024-01-20'),
-    expiresDate: new Date('2024-01-27'),
-    recipientName: 'Ms. Johnson',
-    note: 'Ellie will be in your class starting Monday. Here\'s some helpful information about her needs and communication style.',
+    childName: "Ellie Thompson",
+    sharedBy: "Sarah Thompson (Parent)",
+    sharedDate: new Date("2024-01-20"),
+    expiresDate: new Date("2024-01-27"),
+    recipientName: "Ms. Johnson",
+    note: "Ellie will be in your class starting Monday. Here's some helpful information about her needs and communication style.",
     quickInfo: {
-      communication: 'Uses 2-3 word phrases. Understands more than she can express.',
-      emergency: 'Mom: 555-0123, Dad: 555-0124',
+      communication:
+        "Uses 2-3 word phrases. Understands more than she can express.",
+      emergency: "Mom: 555-0123, Dad: 555-0124",
     },
     sharedCategories: {
       strengths: [
         {
-          title: 'Visual Learning',
-          description: 'Ellie learns best with visual aids. Picture cards and demonstrations work much better than verbal instructions alone.',
+          title: "Visual Learning",
+          description:
+            "Ellie learns best with visual aids. Picture cards and demonstrations work much better than verbal instructions alone.",
         },
       ],
       challenges: [
         {
-          title: 'Loud Noises',
-          description: 'Sudden loud noises cause significant distress. Always warn beforehand when possible. Noise-canceling headphones help.',
+          title: "Loud Noises",
+          description:
+            "Sudden loud noises cause significant distress. Always warn beforehand when possible. Noise-canceling headphones help.",
         },
       ],
     },
@@ -83,23 +86,36 @@ export const SharedProfileView: React.FC<SharedProfileViewProps> = ({
       <ScrollView style={styles.container}>
         <View style={styles.unlockContainer}>
           <View style={styles.unlockCard}>
-            <Icon name="lock" size={64} color={colors.primary} style={styles.lockIcon} />
-            
+            <Icon
+              name="lock"
+              size={64}
+              color={colors.primary}
+              style={styles.lockIcon}
+            />
+
             <Text style={styles.unlockTitle}>Secure Shared Profile</Text>
-            
+
             <Text style={styles.unlockDescription}>
-              This information has been securely shared with you. 
-              Please enter the access code provided by the parent.
+              This information has been securely shared with you. Please enter
+              the access code provided by the parent.
             </Text>
-            
+
             <View style={styles.inputContainer}>
-              <Icon name="lock" size={20} color={colors.textSecondary} style={styles.inputIcon} />
+              <Icon
+                name="lock"
+                size={20}
+                color={colors.textSecondary}
+                style={styles.inputIcon}
+              />
               <TextInput
-                style={[styles.accessCodeInput, error ? styles.inputError : null]}
+                style={[
+                  styles.accessCodeInput,
+                  error ? styles.inputError : null,
+                ]}
                 value={accessCode}
                 onChangeText={(text) => {
                   setAccessCode(text);
-                  if (error) setError('');
+                  if (error) setError("");
                 }}
                 placeholder="Enter 6-character code"
                 placeholderTextColor={colors.textSecondary}
@@ -107,25 +123,21 @@ export const SharedProfileView: React.FC<SharedProfileViewProps> = ({
                 maxLength={6}
               />
             </View>
-            
-            {error && (
-              <Text style={styles.errorText}>{error}</Text>
-            )}
-            
+
+            {error && <Text style={styles.errorText}>{error}</Text>}
+
             <TouchableOpacity
               style={[
                 styles.unlockButton,
-                accessCode.length < 6 ? styles.buttonDisabled : null
+                accessCode.length < 6 ? styles.buttonDisabled : null,
               ]}
               onPress={handleUnlock}
               disabled={accessCode.length < 6}
             >
               <Text style={styles.unlockButtonText}>Access Profile</Text>
             </TouchableOpacity>
-            
-            <Text style={styles.hint}>
-              Access codes are case-insensitive
-            </Text>
+
+            <Text style={styles.hint}>Access codes are case-insensitive</Text>
           </View>
         </View>
       </ScrollView>
@@ -153,8 +165,9 @@ export const SharedProfileView: React.FC<SharedProfileViewProps> = ({
           <Icon name="person" size={20} color={colors.info} />
           <View style={styles.infoBannerText}>
             <Text style={styles.infoText}>
-              <Text style={styles.boldText}>{sharedData.sharedBy}</Text> shared this information with{' '}
-              <Text style={styles.boldText}>{sharedData.recipientName}</Text> on{' '}
+              <Text style={styles.boldText}>{sharedData.sharedBy}</Text> shared
+              this information with{" "}
+              <Text style={styles.boldText}>{sharedData.recipientName}</Text> on{" "}
               {sharedData.sharedDate.toLocaleDateString()}
             </Text>
           </View>
@@ -200,28 +213,38 @@ export const SharedProfileView: React.FC<SharedProfileViewProps> = ({
         </View>
 
         {/* Shared Categories */}
-        {Object.entries(sharedData.sharedCategories).map(([category, entries]) => (
-          <View key={category} style={styles.categorySection}>
-            <Text style={[
-              styles.categoryTitle,
-              { color: category === 'strengths' ? colors.warning : colors.error }
-            ]}>
-              {category.charAt(0).toUpperCase() + category.slice(1)}
-            </Text>
-            {entries.map((entry, index) => (
-              <View key={index} style={styles.entryCard}>
-                <Text style={styles.entryTitle}>{entry.title}</Text>
-                <Text style={styles.entryDescription}>{entry.description}</Text>
-              </View>
-            ))}
-          </View>
-        ))}
+        {Object.entries(sharedData.sharedCategories).map(
+          ([category, entries]) => (
+            <View key={category} style={styles.categorySection}>
+              <Text
+                style={[
+                  styles.categoryTitle,
+                  {
+                    color:
+                      category === "strengths" ? colors.warning : colors.error,
+                  },
+                ]}
+              >
+                {category.charAt(0).toUpperCase() + category.slice(1)}
+              </Text>
+              {entries.map((entry, index) => (
+                <View key={index} style={styles.entryCard}>
+                  <Text style={styles.entryTitle}>{entry.title}</Text>
+                  <Text style={styles.entryDescription}>
+                    {entry.description}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          ),
+        )}
 
         {/* Footer */}
         <View style={styles.footer}>
           <View style={styles.footerDivider} />
           <Text style={styles.footerText}>
-            This information is confidential and shared via Manylla's secure platform.
+            This information is confidential and shared via Manylla's secure
+            platform.
           </Text>
           <Text style={styles.footerText}>
             Please do not share the access code or take screenshots.
@@ -232,7 +255,7 @@ export const SharedProfileView: React.FC<SharedProfileViewProps> = ({
   );
 };
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -242,7 +265,7 @@ const styles = StyleSheet.create({
   // Unlock Screen Styles
   unlockContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingHorizontal: 20,
     paddingTop: 100,
   },
@@ -250,9 +273,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: 16,
     padding: 32,
-    alignItems: 'center',
+    alignItems: "center",
     elevation: 4,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
@@ -262,27 +285,27 @@ const styles = StyleSheet.create({
   },
   unlockTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.text,
     marginBottom: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   unlockDescription: {
     fontSize: 16,
     color: colors.textSecondary,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: 24,
     marginBottom: 32,
   },
   inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: 8,
     paddingHorizontal: 16,
     marginBottom: 8,
-    width: '100%',
+    width: "100%",
   },
   inputIcon: {
     marginRight: 12,
@@ -292,9 +315,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: colors.text,
     paddingVertical: 16,
-    textAlign: 'center',
+    textAlign: "center",
     letterSpacing: 2,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
   inputError: {
     borderColor: colors.error,
@@ -303,14 +326,14 @@ const styles = StyleSheet.create({
     color: colors.error,
     fontSize: 14,
     marginBottom: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   unlockButton: {
     backgroundColor: colors.primary,
     paddingVertical: 16,
     borderRadius: 8,
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
     marginBottom: 16,
   },
   buttonDisabled: {
@@ -319,12 +342,12 @@ const styles = StyleSheet.create({
   unlockButtonText: {
     color: colors.white,
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   hint: {
     fontSize: 12,
     color: colors.textSecondary,
-    textAlign: 'center',
+    textAlign: "center",
   },
   // Main View Styles
   header: {
@@ -334,24 +357,24 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
   },
   headerContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.text,
   },
   expiryChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: colors.surface,
     paddingHorizontal: 8,
     paddingVertical: 4,
@@ -361,15 +384,15 @@ const styles = StyleSheet.create({
   expiryText: {
     fontSize: 12,
     color: colors.warning,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   content: {
     padding: 20,
   },
   infoBanner: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    backgroundColor: '#E3F2FD',
+    flexDirection: "row",
+    alignItems: "flex-start",
+    backgroundColor: "#E3F2FD",
     padding: 16,
     borderRadius: 8,
     marginBottom: 16,
@@ -384,7 +407,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   boldText: {
-    fontWeight: '600',
+    fontWeight: "600",
   },
   noteCard: {
     backgroundColor: colors.hover,
@@ -394,7 +417,7 @@ const styles = StyleSheet.create({
   },
   noteTitle: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.text,
     marginBottom: 8,
   },
@@ -409,14 +432,14 @@ const styles = StyleSheet.create({
     padding: 20,
     marginBottom: 16,
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
   },
   profileHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 16,
   },
   avatar: {
@@ -424,13 +447,13 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     backgroundColor: colors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 16,
   },
   avatarText: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.white,
   },
   profileInfo: {
@@ -438,7 +461,7 @@ const styles = StyleSheet.create({
   },
   childName: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.text,
     marginBottom: 4,
   },
@@ -456,7 +479,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.text,
     marginBottom: 12,
   },
@@ -465,7 +488,7 @@ const styles = StyleSheet.create({
   },
   quickInfoKey: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.textSecondary,
     marginBottom: 4,
   },
@@ -479,7 +502,7 @@ const styles = StyleSheet.create({
   },
   categoryTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 12,
   },
   entryCard: {
@@ -488,14 +511,14 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 12,
     elevation: 1,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
   },
   entryTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.text,
     marginBottom: 8,
   },
@@ -507,18 +530,18 @@ const styles = StyleSheet.create({
   footer: {
     marginTop: 32,
     marginBottom: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   footerDivider: {
     height: 1,
     backgroundColor: colors.border,
-    width: '100%',
+    width: "100%",
     marginBottom: 16,
   },
   footerText: {
     fontSize: 12,
     color: colors.textSecondary,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: 16,
     marginBottom: 4,
   },

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -6,9 +6,9 @@ import {
   StyleSheet,
   ScrollView,
   Platform,
-} from 'react-native';
-import { Entry } from '../../types/ChildProfile';
-import { MarkdownRenderer } from '../Forms';
+} from "react-native";
+import { Entry } from "../../types/ChildProfile";
+import { MarkdownRenderer } from "../Forms";
 
 interface CategorySectionProps {
   title: string;
@@ -32,10 +32,10 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
   const renderContent = (content: string) => {
     // Simple markdown/HTML stripping for now
     const stripped = content
-      .replace(/<[^>]*>/g, '')
-      .replace(/\*\*(.*?)\*\*/g, '$1')
-      .replace(/\*(.*?)\*/g, '$1')
-      .replace(/^#+\s/gm, '');
+      .replace(/<[^>]*>/g, "")
+      .replace(/\*\*(.*?)\*\*/g, "$1")
+      .replace(/\*(.*?)\*/g, "$1")
+      .replace(/^#+\s/gm, "");
     return stripped;
   };
 
@@ -61,8 +61,8 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
           </View>
         ) : (
           entries.map((entry) => (
-            <View 
-              key={entry.id} 
+            <View
+              key={entry.id}
               style={[styles.card, { borderLeftColor: color }]}
             >
               <View style={styles.cardContent}>
@@ -92,7 +92,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
                   </View>
                 </View>
 
-                <MarkdownRenderer 
+                <MarkdownRenderer
                   content={entry.description}
                   style={styles.cardDescription}
                 />
@@ -111,9 +111,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
             style={[styles.addButton, { backgroundColor: color }]}
             onPress={onAddEntry}
           >
-            <Text style={styles.addButtonText}>
-              + Add {title}
-            </Text>
+            <Text style={styles.addButtonText}>+ Add {title}</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -126,8 +124,8 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 16,
     paddingBottom: 8,
     borderBottomWidth: 2,
@@ -137,31 +135,31 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: "600",
+    color: "#333",
     flex: 1,
   },
   entriesContainer: {
     gap: 12,
   },
   emptyCard: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
     padding: 20,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   emptyText: {
-    color: '#666',
+    color: "#666",
     fontSize: 14,
   },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 8,
     borderLeftWidth: 4,
     marginBottom: 12,
     ...Platform.select({
       ios: {
-        shadowColor: '#000',
+        shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
@@ -175,9 +173,9 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     marginBottom: 8,
   },
   cardTitleContainer: {
@@ -185,47 +183,47 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: "600",
+    color: "#333",
   },
   cardActions: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 8,
   },
   actionButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#F0F0F0',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#F0F0F0",
+    justifyContent: "center",
+    alignItems: "center",
   },
   deleteButton: {
-    backgroundColor: '#FFE6E6',
+    backgroundColor: "#FFE6E6",
   },
   actionButtonText: {
     fontSize: 16,
   },
   cardDescription: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     lineHeight: 20,
     marginBottom: 12,
   },
   cardDate: {
     fontSize: 12,
-    color: '#999',
+    color: "#999",
   },
   addButton: {
     padding: 12,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 12,
   },
   addButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
 

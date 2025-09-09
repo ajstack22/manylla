@@ -1,4 +1,4 @@
-import { ChildProfile } from '../../types/ChildProfile';
+import { ChildProfile } from "../../types/ChildProfile";
 
 export interface SyncStatus {
   isConnected: boolean;

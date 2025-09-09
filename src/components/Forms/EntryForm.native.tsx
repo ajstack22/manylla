@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,38 +9,43 @@ import {
   Platform,
   Alert,
   StyleSheet,
-} from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { Entry } from '../../types/ChildProfile';
-import { getPlaceholder, getRandomExample } from '../../utils/placeholders';
+} from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { Entry } from "../../types/ChildProfile";
+import { getPlaceholder, getRandomExample } from "../../utils/placeholders";
 
 interface EntryFormProps {
   visible: boolean;
   onClose: () => void;
-  onSave: (entry: Omit<Entry, 'id'>) => void;
+  onSave: (entry: Omit<Entry, "id">) => void;
   category: string;
   entry?: Entry;
-  categories?: Array<{ id: string; name: string; displayName: string; color: string }>;
+  categories?: Array<{
+    id: string;
+    name: string;
+    displayName: string;
+    color: string;
+  }>;
 }
 
 const visibilityOptions = [
-  { value: 'family', label: 'Family' },
-  { value: 'medical', label: 'Medical Team' },
-  { value: 'education', label: 'Education Team' },
+  { value: "family", label: "Family" },
+  { value: "medical", label: "Medical Team" },
+  { value: "education", label: "Education Team" },
 ];
 
 const colors = {
-  primary: '#8B7355',
-  secondary: '#A0937D',
-  background: '#FDFBF7',
-  surface: '#F4E4C1',
-  text: '#4A4A4A',
-  textSecondary: '#666666',
-  border: '#E0E0E0',
-  white: '#FFFFFF',
-  error: '#D32F2F',
-  success: '#2E7D32',
+  primary: "#8B7355",
+  secondary: "#A0937D",
+  background: "#FDFBF7",
+  surface: "#F4E4C1",
+  text: "#4A4A4A",
+  textSecondary: "#666666",
+  border: "#E0E0E0",
+  white: "#FFFFFF",
+  error: "#D32F2F",
+  success: "#2E7D32",
 };
 
 export const EntryForm: React.FC<EntryFormProps> = ({
@@ -51,48 +56,48 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   entry,
   categories = [],
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState(category || '');
+  const [selectedCategory, setSelectedCategory] = useState(category || "");
   const [selectedVisibility, setSelectedVisibility] = useState<string[]>(
-    entry?.visibility || ['private']
+    entry?.visibility || ["private"],
   );
   const [formData, setFormData] = useState({
-    title: entry?.title || '',
-    description: entry?.description || '',
+    title: entry?.title || "",
+    description: entry?.description || "",
   });
 
   // Reset form data when modal opens/closes or entry changes
   useEffect(() => {
     if (visible) {
-      setSelectedCategory(entry?.category || category || '');
-      setSelectedVisibility(entry?.visibility || ['private']);
+      setSelectedCategory(entry?.category || category || "");
+      setSelectedVisibility(entry?.visibility || ["private"]);
       setFormData({
-        title: entry?.title || '',
-        description: entry?.description || '',
+        title: entry?.title || "",
+        description: entry?.description || "",
       });
     } else {
       // Clear form data when modal closes
-      setSelectedCategory('');
-      setSelectedVisibility(['private']);
+      setSelectedCategory("");
+      setSelectedVisibility(["private"]);
       setFormData({
-        title: '',
-        description: '',
+        title: "",
+        description: "",
       });
     }
   }, [visible, entry, category]);
 
   const handleSubmit = () => {
     if (!selectedCategory.trim()) {
-      Alert.alert('Error', 'Please select a category');
+      Alert.alert("Error", "Please select a category");
       return;
     }
 
     if (!formData.title.trim()) {
-      Alert.alert('Error', 'Please enter a title');
+      Alert.alert("Error", "Please enter a title");
       return;
     }
 
     if (!formData.description.trim()) {
-      Alert.alert('Error', 'Please enter a description');
+      Alert.alert("Error", "Please enter a description");
       return;
     }
 
@@ -106,30 +111,30 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   };
 
   const getCategoryTitle = () => {
-    if (!selectedCategory && !category) return 'Entry';
+    if (!selectedCategory && !category) return "Entry";
     const catName = selectedCategory || category;
     // Convert category name to title case
     return catName
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   };
 
   const toggleVisibility = (option: string) => {
-    if (option === 'private') {
+    if (option === "private") {
       // When checking Private, uncheck all others
-      setSelectedVisibility(['private']);
+      setSelectedVisibility(["private"]);
     } else {
       // When checking a non-private option, remove 'private' and add this option
       if (selectedVisibility.includes(option)) {
         // Remove this option
-        const newVis = selectedVisibility.filter(v => v !== option);
+        const newVis = selectedVisibility.filter((v) => v !== option);
         // If nothing is selected, default back to private
-        setSelectedVisibility(newVis.length > 0 ? newVis : ['private']);
+        setSelectedVisibility(newVis.length > 0 ? newVis : ["private"]);
       } else {
         // Add this option and remove private
         setSelectedVisibility(
-          selectedVisibility.filter(v => v !== 'private').concat(option)
+          selectedVisibility.filter((v) => v !== "private").concat(option),
         );
       }
     }
@@ -140,14 +145,14 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   return (
     <KeyboardAvoidingView
       style={styles.overlay}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
           <Icon name="add-circle" size={24} color={colors.primary} />
           <Text style={styles.headerTitle}>
-            {entry ? 'Edit' : 'Add'} {getCategoryTitle()}
+            {entry ? "Edit" : "Add"} {getCategoryTitle()}
           </Text>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Icon name="close" size={24} color={colors.text} />
@@ -166,7 +171,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
                   style={styles.picker}
                 >
                   <Picker.Item label="Select a category" value="" />
-                  {categories.map(cat => (
+                  {categories.map((cat) => (
                     <Picker.Item
                       key={cat.id}
                       label={cat.displayName}
@@ -184,8 +189,10 @@ export const EntryForm: React.FC<EntryFormProps> = ({
             <TextInput
               style={styles.textInput}
               value={formData.title}
-              onChangeText={(value) => setFormData({ ...formData, title: value })}
-              placeholder={getPlaceholder(category, 'title')}
+              onChangeText={(value) =>
+                setFormData({ ...formData, title: value })
+              }
+              placeholder={getPlaceholder(category, "title")}
               placeholderTextColor={colors.textSecondary}
               autoFocus={!entry}
               returnKeyType="next"
@@ -198,32 +205,37 @@ export const EntryForm: React.FC<EntryFormProps> = ({
             <TextInput
               style={[styles.textInput, styles.textArea]}
               value={formData.description}
-              onChangeText={(value) => setFormData({ ...formData, description: value })}
-              placeholder={getPlaceholder(category, 'description')}
+              onChangeText={(value) =>
+                setFormData({ ...formData, description: value })
+              }
+              placeholder={getPlaceholder(category, "description")}
               placeholderTextColor={colors.textSecondary}
               multiline
               numberOfLines={4}
               textAlignVertical="top"
             />
             <Text style={styles.helperText}>
-              Example: {getRandomExample(category) || 'Add details here'}
+              Example: {getRandomExample(category) || "Add details here"}
             </Text>
           </View>
 
           {/* Visibility */}
           <View style={styles.section}>
             <Text style={styles.sectionLabel}>Who can see this?</Text>
-            
+
             {/* Private option */}
             <TouchableOpacity
               style={styles.checkboxRow}
-              onPress={() => toggleVisibility('private')}
+              onPress={() => toggleVisibility("private")}
             >
-              <View style={[
-                styles.checkbox,
-                selectedVisibility.includes('private') && styles.checkboxChecked
-              ]}>
-                {selectedVisibility.includes('private') && (
+              <View
+                style={[
+                  styles.checkbox,
+                  selectedVisibility.includes("private") &&
+                    styles.checkboxChecked,
+                ]}
+              >
+                {selectedVisibility.includes("private") && (
                   <Icon name="check" size={16} color={colors.white} />
                 )}
               </View>
@@ -231,16 +243,19 @@ export const EntryForm: React.FC<EntryFormProps> = ({
             </TouchableOpacity>
 
             {/* Other visibility options */}
-            {visibilityOptions.map(option => (
+            {visibilityOptions.map((option) => (
               <TouchableOpacity
                 key={option.value}
                 style={styles.checkboxRow}
                 onPress={() => toggleVisibility(option.value)}
               >
-                <View style={[
-                  styles.checkbox,
-                  selectedVisibility.includes(option.value) && styles.checkboxChecked
-                ]}>
+                <View
+                  style={[
+                    styles.checkbox,
+                    selectedVisibility.includes(option.value) &&
+                      styles.checkboxChecked,
+                  ]}
+                >
                   {selectedVisibility.includes(option.value) && (
                     <Icon name="check" size={16} color={colors.white} />
                   )}
@@ -264,7 +279,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
             onPress={handleSubmit}
           >
             <Text style={styles.saveButtonText}>
-              {entry ? 'Update' : 'Save'}
+              {entry ? "Update" : "Save"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -276,19 +291,19 @@ export const EntryForm: React.FC<EntryFormProps> = ({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "flex-end",
   },
   container: {
     backgroundColor: colors.background,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    maxHeight: '90%',
-    minHeight: '60%',
+    maxHeight: "90%",
+    minHeight: "60%",
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
@@ -297,7 +312,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     flex: 1,
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.text,
     marginLeft: 12,
   },
@@ -313,7 +328,7 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.text,
     marginBottom: 8,
   },
@@ -329,7 +344,7 @@ const styles = StyleSheet.create({
   },
   textArea: {
     minHeight: 100,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
   helperText: {
     fontSize: 14,
@@ -346,8 +361,8 @@ const styles = StyleSheet.create({
     height: 50,
   },
   checkboxRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 8,
   },
   checkbox: {
@@ -356,8 +371,8 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 2,
     borderColor: colors.border,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 12,
   },
   checkboxChecked: {
@@ -369,7 +384,7 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   actions: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderTopWidth: 1,
@@ -380,8 +395,8 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 14,
     borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   cancelButton: {
     backgroundColor: colors.white,
@@ -391,7 +406,7 @@ const styles = StyleSheet.create({
   cancelButtonText: {
     fontSize: 16,
     color: colors.text,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   saveButton: {
     backgroundColor: colors.primary,
@@ -399,6 +414,6 @@ const styles = StyleSheet.create({
   saveButtonText: {
     fontSize: 16,
     color: colors.white,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });

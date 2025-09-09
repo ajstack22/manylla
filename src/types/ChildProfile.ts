@@ -41,7 +41,7 @@ export interface ChildProfile {
   categories: CategoryConfig[];
   createdAt: Date;
   updatedAt: Date;
-  themeMode?: 'light' | 'dark' | 'manylla';
+  themeMode?: "light" | "dark" | "manylla";
 }
 
 export interface ShareableProfile {

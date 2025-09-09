@@ -474,37 +474,37 @@ function AppContent() {
             date: new Date(),
             visibility: ['private']
           },
-          // Goals
+          // Development
           {
             id: '1',
-            category: 'goals',
+            category: 'development',
             title: 'Improve Communication Skills',
             description: 'Working on using full sentences instead of single words. Practice asking for help with "Can you help me?" instead of just "help".',
             date: new Date('2024-01-15'),
             visibility: ['family', 'medical', 'education']
           },
-          // Successes  
+          // Development  
           {
             id: '2',
-            category: 'successes',
+            category: 'development',
             title: 'First Full Day at School',
             description: 'Ellie completed her first full day at school without needing to come home early! She participated in circle time and even raised her hand once.',
             date: new Date('2024-01-10'),
             visibility: ['family']
           },
-          // Education
+          // Development
           {
             id: '3',
-            category: 'education',
+            category: 'development',
             title: 'Visual Learning',
             description: 'Ellie learns best with visual aids. Picture cards, visual schedules, and demonstrations work much better than verbal instructions alone.',
             date: new Date('2024-01-08'),
             visibility: ['education']
           },
-          // Behaviors
+          // Daily Support
           {
             id: '4',
-            category: 'behaviors',
+            category: 'daily-support',
             title: 'Loud Noises',
             description: 'Sudden loud noises (fire alarms, hand dryers) cause significant distress. Always warn beforehand when possible. Noise-canceling headphones help.',
             date: new Date('2024-01-05'),
@@ -519,14 +519,32 @@ function AppContent() {
             date: new Date('2021-08-20'),
             visibility: ['medical']
           },
-          // Tips & Tricks
+          // Daily Support
           {
             id: '6',
-            category: 'tips-tricks',
+            category: 'daily-support',
             title: 'Transition Warnings',
             description: 'Give 5 and 2 minute warnings before transitions. Use visual timer. "In 5 minutes, we\'ll clean up and get ready for lunch."',
             date: new Date('2024-01-12'),
             visibility: ['family', 'medical', 'education']
+          },
+          // Health
+          {
+            id: '7',
+            category: 'health',
+            title: 'Sleep Routine',
+            description: 'Bedtime at 8pm with melatonin. Needs weighted blanket and white noise machine.',
+            date: new Date('2024-01-11'),
+            visibility: ['family', 'medical']
+          },
+          // Other
+          {
+            id: '8',
+            category: 'other',
+            title: 'Favorite Activities',
+            description: 'Loves puzzles, building blocks, and water play. Great for reward time.',
+            date: new Date('2024-01-09'),
+            visibility: ['family']
           }
         ],
         createdAt: new Date(),

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,11 +8,11 @@ import {
   ActivityIndicator,
   Image,
   Dimensions,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { ChildProfile } from '../../types/ChildProfile';
-import { unifiedCategories } from '../../utils/unifiedCategories';
-import { API_ENDPOINTS } from '../../config/api';
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { ChildProfile } from "../../types/ChildProfile";
+import { unifiedCategories } from "../../utils/unifiedCategories";
+import { API_ENDPOINTS } from "../../config/api";
 
 interface SharedViewProps {
   shareCode: string;
@@ -20,19 +20,19 @@ interface SharedViewProps {
 
 // Manylla theme colors - hardcoded for consistent provider view
 const manyllaColors = {
-  background: '#C4A66B',      // Actual manila envelope color
-  paper: '#D4B896',           // Lighter manila for cards
-  text: '#3D2F1F',            // Dark brown text
-  textSecondary: '#5D4A37',   // Medium brown for secondary text
-  border: '#A68B5B',          // Darker manila for borders
-  white: '#FFFFFF',
-  error: '#D32F2F',
+  background: "#C4A66B", // Actual manila envelope color
+  paper: "#D4B896", // Lighter manila for cards
+  text: "#3D2F1F", // Dark brown text
+  textSecondary: "#5D4A37", // Medium brown for secondary text
+  border: "#A68B5B", // Darker manila for borders
+  white: "#FFFFFF",
+  error: "#D32F2F",
 };
 
 export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [sharedProfile, setSharedProfile] = useState<ChildProfile | null>(null);
 
   // Auto-authenticate with code from URL
@@ -40,50 +40,52 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
     const loadSharedData = async () => {
       try {
         // Parse share code - must be "token#key" format
-        if (!shareCode.includes('#')) {
-          setError('Invalid share URL format');
+        if (!shareCode.includes("#")) {
+          setError("Invalid share URL format");
           setIsLoading(false);
           return;
         }
-        
-        const [token, encryptionKey] = shareCode.split('#');
+
+        const [token, encryptionKey] = shareCode.split("#");
         // // console.log('[SharedView] Loading share from API:', { token, hasKey: !!encryptionKey });
-        
+
         if (!encryptionKey) {
-          setError('Missing decryption key in URL');
+          setError("Missing decryption key in URL");
           setIsLoading(false);
           return;
         }
-        
+
         // Phase 3: Fetch share from database via API
         try {
           const response = await fetch(API_ENDPOINTS.share.access, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ access_code: token })
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ access_code: token }),
           });
-          
+
           if (!response.ok) {
             const errorData = await response.json();
             if (response.status === 404) {
-              setError('Share not found');
+              setError("Share not found");
             } else if (response.status === 403) {
-              setError(errorData.error || 'Share has expired or reached view limit');
+              setError(
+                errorData.error || "Share has expired or reached view limit",
+              );
             } else {
-              setError('Failed to load share');
+              setError("Failed to load share");
             }
             setIsLoading(false);
             return;
           }
-          
+
           const result = await response.json();
-          
+
           if (!result.encrypted_data) {
-            setError('Share data is missing');
+            setError("Share data is missing");
             setIsLoading(false);
             return;
           }
-          
+
           // For now, we'll simulate the decryption process
           // In a real implementation, you'd need to import and use TweetNaCl
           // const keyBytes = util.decodeBase64(encryptionKey);
@@ -91,72 +93,75 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
           // const nonce = combined.slice(0, 24);
           // const ciphertext = combined.slice(24);
           // const decrypted = nacl.secretbox.open(ciphertext, nonce, keyBytes);
-          
+
           // Mock profile data for demo
           const profile = {
-            id: 'shared-profile',
-            name: 'Ellie Thompson',
-            preferredName: 'Ellie',
-            pronouns: 'she/her',
-            dateOfBirth: new Date('2018-03-15'),
+            id: "shared-profile",
+            name: "Ellie Thompson",
+            preferredName: "Ellie",
+            pronouns: "she/her",
+            dateOfBirth: new Date("2018-03-15"),
             photo: null,
             createdAt: new Date(),
             updatedAt: new Date(),
             entries: [
               {
-                id: '1',
-                title: 'Visual Learning',
-                description: 'Ellie learns best with visual aids. Picture cards and demonstrations work much better than verbal instructions alone.',
-                category: 'strengths',
+                id: "1",
+                title: "Visual Learning",
+                description:
+                  "Ellie learns best with visual aids. Picture cards and demonstrations work much better than verbal instructions alone.",
+                category: "strengths",
                 date: new Date(),
-                visibility: ['education']
+                visibility: ["education"],
               },
               {
-                id: '2',
-                title: 'Loud Noises',
-                description: 'Sudden loud noises cause significant distress. Always warn beforehand when possible. Noise-canceling headphones help.',
-                category: 'challenges',
+                id: "2",
+                title: "Loud Noises",
+                description:
+                  "Sudden loud noises cause significant distress. Always warn beforehand when possible. Noise-canceling headphones help.",
+                category: "challenges",
                 date: new Date(),
-                visibility: ['education']
-              }
+                visibility: ["education"],
+              },
             ],
             quickInfoPanels: [
               {
-                id: 'communication',
-                name: 'communication',
-                displayName: 'Communication',
-                value: 'Uses 2-3 word phrases. Understands more than she can express.',
+                id: "communication",
+                name: "communication",
+                displayName: "Communication",
+                value:
+                  "Uses 2-3 word phrases. Understands more than she can express.",
                 isVisible: true,
                 isCustom: false,
-                order: 0
+                order: 0,
               },
               {
-                id: 'emergency',
-                name: 'emergency',
-                displayName: 'Emergency Contact',
-                value: 'Mom: 555-0123, Dad: 555-0124',
+                id: "emergency",
+                name: "emergency",
+                displayName: "Emergency Contact",
+                value: "Mom: 555-0123, Dad: 555-0124",
                 isVisible: true,
                 isCustom: false,
-                order: 1
-              }
+                order: 1,
+              },
             ],
             categoryConfigs: [],
-            syncEnabled: false
+            syncEnabled: false,
           };
-          
+
           setSharedProfile(profile);
           setIsAuthenticated(true);
         } catch (decryptError) {
-          console.error('Decryption error:', decryptError);
-          setError('Invalid share code or decryption failed');
+          console.error("Decryption error:", decryptError);
+          setError("Invalid share code or decryption failed");
         }
       } catch (err) {
-        setError('Failed to load shared data');
+        setError("Failed to load shared data");
       } finally {
         setIsLoading(false);
       }
     };
-    
+
     loadSharedData();
   }, [shareCode]);
 
@@ -164,10 +169,19 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
     return (
       <View style={styles.loadingContainer}>
         <View style={styles.loadingCard}>
-          <Icon name="security" size={48} color={manyllaColors.text} style={styles.loadingIcon} />
+          <Icon
+            name="security"
+            size={48}
+            color={manyllaColors.text}
+            style={styles.loadingIcon}
+          />
           <Text style={styles.loadingTitle}>Verifying Access</Text>
           <Text style={styles.loadingSubtitle}>Verifying access code...</Text>
-          <ActivityIndicator size="large" color={manyllaColors.text} style={styles.spinner} />
+          <ActivityIndicator
+            size="large"
+            color={manyllaColors.text}
+            style={styles.spinner}
+          />
         </View>
       </View>
     );
@@ -189,7 +203,9 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
       <View style={styles.errorContainer}>
         <View style={styles.errorCard}>
           <Icon name="error" size={48} color={manyllaColors.error} />
-          <Text style={styles.errorText}>No profile data found for this share code</Text>
+          <Text style={styles.errorText}>
+            No profile data found for this share code
+          </Text>
         </View>
       </View>
     );
@@ -201,7 +217,11 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>manylla</Text>
         <View style={styles.headerRight}>
-          <Icon name="visibility" size={20} color={manyllaColors.textSecondary} />
+          <Icon
+            name="visibility"
+            size={20}
+            color={manyllaColors.textSecondary}
+          />
           <View style={styles.profileChip}>
             <Icon name="person" size={16} color={manyllaColors.text} />
             <Text style={styles.profileChipText}>
@@ -215,8 +235,9 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
         {/* Access Info Banner */}
         <View style={styles.infoBanner}>
           <Text style={styles.infoText}>
-            <Text style={styles.boldText}>Shared Access:</Text> You are viewing information shared by the family. 
-            This is a temporary link that will expire.
+            <Text style={styles.boldText}>Shared Access:</Text> You are viewing
+            information shared by the family. This is a temporary link that will
+            expire.
           </Text>
         </View>
 
@@ -224,7 +245,9 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
         <View style={styles.profileCard}>
           <View style={styles.avatar}>
             <Text style={styles.avatarText}>
-              {(sharedProfile.preferredName || sharedProfile.name).charAt(0).toUpperCase()}
+              {(sharedProfile.preferredName || sharedProfile.name)
+                .charAt(0)
+                .toUpperCase()}
             </Text>
           </View>
           <Text style={styles.profileName}>
@@ -237,47 +260,66 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
         </View>
 
         {/* Quick Info */}
-        {sharedProfile.quickInfoPanels && sharedProfile.quickInfoPanels.length > 0 && (
-          <View style={styles.quickInfoCard}>
-            <Text style={styles.sectionTitle}>Quick Information</Text>
-            {sharedProfile.quickInfoPanels
-              .filter(panel => panel.isVisible && panel.value)
-              .map((panel) => (
-                <View key={panel.id} style={styles.quickInfoItem}>
-                  <Text style={styles.quickInfoLabel}>{panel.displayName}:</Text>
-                  <Text style={styles.quickInfoValue}>{panel.value}</Text>
-                </View>
-              ))}
-          </View>
-        )}
+        {sharedProfile.quickInfoPanels &&
+          sharedProfile.quickInfoPanels.length > 0 && (
+            <View style={styles.quickInfoCard}>
+              <Text style={styles.sectionTitle}>Quick Information</Text>
+              {sharedProfile.quickInfoPanels
+                .filter((panel) => panel.isVisible && panel.value)
+                .map((panel) => (
+                  <View key={panel.id} style={styles.quickInfoItem}>
+                    <Text style={styles.quickInfoLabel}>
+                      {panel.displayName}:
+                    </Text>
+                    <Text style={styles.quickInfoValue}>{panel.value}</Text>
+                  </View>
+                ))}
+            </View>
+          )}
 
         {/* Entries by category */}
         {unifiedCategories
-          .filter(cat => cat.isVisible)
+          .filter((cat) => cat.isVisible)
           .sort((a, b) => a.order - b.order)
-          .map(category => {
-            const entries = sharedProfile.entries.filter(e => e.category === category.name);
+          .map((category) => {
+            const entries = sharedProfile.entries.filter(
+              (e) => e.category === category.name,
+            );
             if (entries.length === 0 && !category.isQuickInfo) return null;
-            
+
             // Handle Quick Info category specially
             if (category.isQuickInfo) {
-              const quickInfoEntries = sharedProfile.entries.filter(e => e.category === 'quick-info');
-              if (quickInfoEntries.length === 0 && 
-                  (!sharedProfile.quickInfoPanels || sharedProfile.quickInfoPanels.length === 0)) {
+              const quickInfoEntries = sharedProfile.entries.filter(
+                (e) => e.category === "quick-info",
+              );
+              if (
+                quickInfoEntries.length === 0 &&
+                (!sharedProfile.quickInfoPanels ||
+                  sharedProfile.quickInfoPanels.length === 0)
+              ) {
                 return null;
               }
             }
-            
+
             return (
               <View key={category.id} style={styles.categoryCard}>
                 <View style={styles.categoryHeader}>
-                  <View style={[styles.categoryIndicator, { backgroundColor: category.color }]} />
-                  <Text style={styles.categoryTitle}>{category.displayName}</Text>
+                  <View
+                    style={[
+                      styles.categoryIndicator,
+                      { backgroundColor: category.color },
+                    ]}
+                  />
+                  <Text style={styles.categoryTitle}>
+                    {category.displayName}
+                  </Text>
                 </View>
-                {entries.map(entry => (
+                {entries.map((entry) => (
                   <View key={entry.id} style={styles.entryItem}>
                     <Text style={styles.entryTitle}>{entry.title}</Text>
-                    <Text style={styles.entryDescription}>{entry.description}</Text>
+                    <Text style={styles.entryDescription}>
+                      {entry.description}
+                    </Text>
                   </View>
                 ))}
               </View>
@@ -288,7 +330,7 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
   );
 };
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -299,15 +341,15 @@ const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
     backgroundColor: manyllaColors.background,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 20,
   },
   loadingCard: {
     backgroundColor: manyllaColors.white,
     borderRadius: 16,
     padding: 32,
-    alignItems: 'center',
+    alignItems: "center",
     width: width - 40,
     maxWidth: 400,
   },
@@ -316,14 +358,14 @@ const styles = StyleSheet.create({
   },
   loadingTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: manyllaColors.text,
     marginBottom: 8,
   },
   loadingSubtitle: {
     fontSize: 16,
     color: manyllaColors.textSecondary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 24,
   },
   spinner: {
@@ -333,22 +375,22 @@ const styles = StyleSheet.create({
   errorContainer: {
     flex: 1,
     backgroundColor: manyllaColors.background,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 20,
   },
   errorCard: {
     backgroundColor: manyllaColors.white,
     borderRadius: 16,
     padding: 32,
-    alignItems: 'center',
+    alignItems: "center",
     width: width - 40,
     maxWidth: 400,
   },
   errorText: {
     fontSize: 16,
     color: manyllaColors.error,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 16,
   },
   // Main View
@@ -358,24 +400,24 @@ const styles = StyleSheet.create({
     borderBottomColor: manyllaColors.border,
     paddingHorizontal: 20,
     paddingVertical: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   headerTitle: {
     fontSize: 36,
-    fontWeight: '700',
+    fontWeight: "700",
     color: manyllaColors.text,
     letterSpacing: -1,
   },
   headerRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   profileChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1,
     borderColor: manyllaColors.text,
     borderRadius: 16,
@@ -386,7 +428,7 @@ const styles = StyleSheet.create({
   profileChipText: {
     fontSize: 14,
     color: manyllaColors.text,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   content: {
     flex: 1,
@@ -407,13 +449,13 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   boldText: {
-    fontWeight: '600',
+    fontWeight: "600",
   },
   profileCard: {
     backgroundColor: manyllaColors.paper,
     borderRadius: 12,
     padding: 32,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 16,
   },
   avatar: {
@@ -421,18 +463,18 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     backgroundColor: manyllaColors.textSecondary,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 16,
   },
   avatarText: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: manyllaColors.paper,
   },
   profileName: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: manyllaColors.text,
     marginBottom: 8,
   },
@@ -448,7 +490,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     color: manyllaColors.text,
     marginBottom: 16,
   },
@@ -457,7 +499,7 @@ const styles = StyleSheet.create({
   },
   quickInfoLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     color: manyllaColors.textSecondary,
     marginBottom: 4,
   },
@@ -473,8 +515,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   categoryHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 16,
   },
   categoryIndicator: {
@@ -485,7 +527,7 @@ const styles = StyleSheet.create({
   },
   categoryTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     color: manyllaColors.text,
   },
   entryItem: {
@@ -493,7 +535,7 @@ const styles = StyleSheet.create({
   },
   entryTitle: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     color: manyllaColors.text,
     marginBottom: 8,
   },

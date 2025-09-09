@@ -1,10 +1,10 @@
-import 'react-native-get-random-values'; // Must be imported before nacl
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import nacl from 'tweetnacl';
-import util from 'tweetnacl-util';
-import manyllaEncryptionService from './manyllaEncryptionService';
-import conflictResolver from './conflictResolver';
-import { API_ENDPOINTS } from '../../config/api';
+import "react-native-get-random-values"; // Must be imported before nacl
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import nacl from "tweetnacl";
+import util from "tweetnacl-util";
+import manyllaEncryptionService from "./manyllaEncryptionService";
+import conflictResolver from "./conflictResolver";
+import { API_ENDPOINTS } from "../../config/api";
 
 class ManyllaMinimalSyncService {
   constructor() {
@@ -15,13 +15,13 @@ class ManyllaMinimalSyncService {
     this.dataCallback = null;
     this.lastPullTimestamp = 0;
     this.deviceId = null;
-    
+
     // Initialize device ID asynchronously
     this.initializeDeviceId();
-    
+
     // Manylla uses 60-second interval instead of StackMap's 30
     this.PULL_INTERVAL = 60000; // 1 minute
-    
+
     // Rate limiting properties
     this.MIN_REQUEST_INTERVAL = 200; // 200ms between API requests
     this.lastRequestTime = 0;
@@ -47,24 +47,28 @@ class ManyllaMinimalSyncService {
     try {
       // Check if AsyncStorage is available
       if (!AsyncStorage || !AsyncStorage.getItem) {
-        console.warn('[ManyllaSync] AsyncStorage not available, using fallback');
-        return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+        console.warn(
+          "[ManyllaSync] AsyncStorage not available, using fallback",
+        );
+        return (
+          Date.now().toString(36) + Math.random().toString(36).substr(2, 9)
+        );
       }
-      
-      let deviceId = await AsyncStorage.getItem('manylla_device_id');
+
+      let deviceId = await AsyncStorage.getItem("manylla_device_id");
       if (!deviceId) {
         // Generate new device ID
         const bytes = nacl.randomBytes(8);
         deviceId = Array.from(bytes)
-          .map(b => b.toString(16).padStart(2, '0'))
-          .join('');
-        
-        await AsyncStorage.setItem('manylla_device_id', deviceId);
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join("");
+
+        await AsyncStorage.setItem("manylla_device_id", deviceId);
         // console.log('[ManyllaSync] Generated device ID:', deviceId);
       }
       return deviceId;
     } catch (error) {
-      console.error('[ManyllaSync] Error with device ID:', error);
+      console.error("[ManyllaSync] Error with device ID:", error);
       // Fallback device ID
       return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
     }
@@ -78,36 +82,37 @@ class ManyllaMinimalSyncService {
   async enableSync(recoveryPhrase, isNewSync = false) {
     try {
       // console.log('[ManyllaSync] Enabling sync...');
-      
+
       // Validate recovery phrase format
       if (!recoveryPhrase || !recoveryPhrase.match(/^[a-f0-9]{32}$/)) {
-        throw new Error('Invalid recovery phrase format');
+        throw new Error("Invalid recovery phrase format");
       }
-      
+
       this.recoveryPhrase = recoveryPhrase;
-      
+
       // Initialize encryption with recovery phrase
-      const { syncId } = await manyllaEncryptionService.initialize(recoveryPhrase);
+      const { syncId } =
+        await manyllaEncryptionService.initialize(recoveryPhrase);
       this.syncId = syncId;
-      
+
       // Use AsyncStorage as backend
-      await AsyncStorage.setItem('manylla_sync_enabled', 'true');
-      await AsyncStorage.setItem('manylla_recovery_phrase', recoveryPhrase);
-      
+      await AsyncStorage.setItem("manylla_sync_enabled", "true");
+      await AsyncStorage.setItem("manylla_recovery_phrase", recoveryPhrase);
+
       this.isEnabled = true;
-      
+
       // Start pull interval
       this.startPullInterval();
-      
+
       // If joining existing sync, immediately pull
       if (!isNewSync) {
         await this.pull();
       }
-      
+
       // console.log('[ManyllaSync] Sync enabled successfully');
       return { success: true, syncId: this.syncId };
     } catch (error) {
-      console.error('[ManyllaSync] Error enabling sync:', error);
+      console.error("[ManyllaSync] Error enabling sync:", error);
       throw error;
     }
   }
@@ -117,15 +122,15 @@ class ManyllaMinimalSyncService {
    */
   async disableSync() {
     // console.log('[ManyllaSync] Disabling sync...');
-    
+
     this.stopPullInterval();
     this.isEnabled = false;
     this.syncId = null;
     this.recoveryPhrase = null;
-    
-    await AsyncStorage.removeItem('manylla_sync_enabled');
-    await AsyncStorage.removeItem('manylla_recovery_phrase');
-    
+
+    await AsyncStorage.removeItem("manylla_sync_enabled");
+    await AsyncStorage.removeItem("manylla_recovery_phrase");
+
     // console.log('[ManyllaSync] Sync disabled');
   }
 
@@ -134,17 +139,19 @@ class ManyllaMinimalSyncService {
    */
   async checkSyncStatus() {
     try {
-      const enabled = await AsyncStorage.getItem('manylla_sync_enabled');
-      const recoveryPhrase = await AsyncStorage.getItem('manylla_recovery_phrase');
-      
-      if (enabled === 'true' && recoveryPhrase) {
+      const enabled = await AsyncStorage.getItem("manylla_sync_enabled");
+      const recoveryPhrase = await AsyncStorage.getItem(
+        "manylla_recovery_phrase",
+      );
+
+      if (enabled === "true" && recoveryPhrase) {
         // Re-enable sync with stored recovery phrase
         await this.enableSync(recoveryPhrase, false);
         return true;
       }
       return false;
     } catch (error) {
-      console.error('[ManyllaSync] Error checking sync status:', error);
+      console.error("[ManyllaSync] Error checking sync status:", error);
       return false;
     }
   }
@@ -156,13 +163,13 @@ class ManyllaMinimalSyncService {
     try {
       const encrypted = await manyllaEncryptionService.encrypt(data);
       await AsyncStorage.setItem(`manylla_${key}`, encrypted);
-      
+
       // Also trigger push if sync is enabled
       if (this.isEnabled) {
         await this.push(key, data);
       }
     } catch (error) {
-      console.error('[ManyllaSync] Error saving to storage:', error);
+      console.error("[ManyllaSync] Error saving to storage:", error);
       throw error;
     }
   }
@@ -174,11 +181,11 @@ class ManyllaMinimalSyncService {
     try {
       const encrypted = await AsyncStorage.getItem(`manylla_${key}`);
       if (!encrypted) return null;
-      
+
       const decrypted = await manyllaEncryptionService.decrypt(encrypted);
       return decrypted;
     } catch (error) {
-      console.error('[ManyllaSync] Error loading from storage:', error);
+      console.error("[ManyllaSync] Error loading from storage:", error);
       return null;
     }
   }
@@ -188,12 +195,12 @@ class ManyllaMinimalSyncService {
    */
   async push(key, data) {
     if (!this.isEnabled) return;
-    
+
     try {
       // console.log('[ManyllaSync] Push operation would happen here');
       // TODO: Implement actual push to server when API is ready
     } catch (error) {
-      console.error('[ManyllaSync] Error pushing data:', error);
+      console.error("[ManyllaSync] Error pushing data:", error);
     }
   }
 
@@ -202,12 +209,12 @@ class ManyllaMinimalSyncService {
    */
   async pull() {
     if (!this.isEnabled) return;
-    
+
     try {
       // console.log('[ManyllaSync] Pull operation would happen here');
       // TODO: Implement actual pull from server when API is ready
     } catch (error) {
-      console.error('[ManyllaSync] Error pulling data:', error);
+      console.error("[ManyllaSync] Error pulling data:", error);
     }
   }
 
@@ -218,11 +225,11 @@ class ManyllaMinimalSyncService {
     if (this.pullInterval) {
       clearInterval(this.pullInterval);
     }
-    
+
     this.pullInterval = setInterval(() => {
       this.pull();
     }, this.PULL_INTERVAL);
-    
+
     // console.log('[ManyllaSync] Started pull interval');
   }
 
@@ -250,8 +257,8 @@ class ManyllaMinimalSyncService {
   generateRecoveryPhrase() {
     const bytes = nacl.randomBytes(16);
     return Array.from(bytes)
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('');
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
   }
 }
 

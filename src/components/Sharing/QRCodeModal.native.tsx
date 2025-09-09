@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -8,12 +8,12 @@ import {
   Alert,
   Share,
   Dimensions,
-} from 'react-native';
+} from "react-native";
 // Icon fallback - using text instead of vector icons
 // QRCode fallback - will show URL text if QRCode library is missing
 let QRCode: any;
 try {
-  QRCode = require('react-native-qrcode-svg').default;
+  QRCode = require("react-native-qrcode-svg").default;
 } catch (e) {
   QRCode = null;
 }
@@ -26,24 +26,24 @@ interface QRCodeModalProps {
 }
 
 const colors = {
-  primary: '#8B7355',
-  secondary: '#A0937D',
-  background: '#FDFBF7',
-  surface: '#F4E4C1',
-  text: '#4A4A4A',
-  textSecondary: '#666666',
-  border: '#E0E0E0',
-  white: '#FFFFFF',
-  error: '#D32F2F',
-  success: '#2E7D32',
-  hover: '#F5F5F5',
+  primary: "#8B7355",
+  secondary: "#A0937D",
+  background: "#FDFBF7",
+  surface: "#F4E4C1",
+  text: "#4A4A4A",
+  textSecondary: "#666666",
+  border: "#E0E0E0",
+  white: "#FFFFFF",
+  error: "#D32F2F",
+  success: "#2E7D32",
+  hover: "#F5F5F5",
 };
 
 export const QRCodeModal: React.FC<QRCodeModalProps> = ({
   visible,
   onClose,
   url,
-  title = 'Share QR Code',
+  title = "Share QR Code",
 }) => {
   const qrCodeRef = React.useRef<View>(null);
 
@@ -53,11 +53,11 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
       await Share.share({
         message: `Manylla Share Link: ${url}\n\nScan the QR code or use this link to access shared information.`,
         url: url,
-        title: 'Manylla Share QR Code',
+        title: "Manylla Share QR Code",
       });
     } catch (error) {
-      Alert.alert('Error', 'Failed to share QR code. Please try again.');
-      console.error('Error sharing QR code:', error);
+      Alert.alert("Error", "Failed to share QR code. Please try again.");
+      console.error("Error sharing QR code:", error);
     }
   };
 
@@ -65,11 +65,11 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
     try {
       await Share.share({
         url: url,
-        title: 'Shared Information Link',
-        message: 'Access shared information via this secure link',
+        title: "Shared Information Link",
+        message: "Access shared information via this secure link",
       });
     } catch (error) {
-      console.error('Error sharing URL:', error);
+      console.error("Error sharing URL:", error);
     }
   };
 
@@ -107,7 +107,9 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
                 ) : (
                   <View style={styles.qrFallback}>
                     <Text style={styles.qrFallbackText}>QR Code</Text>
-                    <Text style={styles.qrFallbackUrl} numberOfLines={3}>{url}</Text>
+                    <Text style={styles.qrFallbackUrl} numberOfLines={3}>
+                      {url}
+                    </Text>
                   </View>
                 )}
               </View>
@@ -123,7 +125,11 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
                 style={[styles.button, styles.shareButton]}
                 onPress={shareUrl}
               >
-                <Text style={{ fontSize: 16, color: colors.white, marginRight: 8 }}>📤</Text>
+                <Text
+                  style={{ fontSize: 16, color: colors.white, marginRight: 8 }}
+                >
+                  📤
+                </Text>
                 <Text style={styles.shareButtonText}>Share Link</Text>
               </TouchableOpacity>
 
@@ -131,7 +137,15 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
                 style={[styles.button, styles.downloadButton]}
                 onPress={downloadQRCode}
               >
-                <Text style={{ fontSize: 16, color: colors.primary, marginRight: 8 }}>💾</Text>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: colors.primary,
+                    marginRight: 8,
+                  }}
+                >
+                  💾
+                </Text>
                 <Text style={styles.downloadButtonText}>Save QR Code</Text>
               </TouchableOpacity>
             </View>
@@ -142,14 +156,14 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
   );
 };
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalContainer: {
     backgroundColor: colors.background,
@@ -158,15 +172,15 @@ const styles = StyleSheet.create({
     minWidth: 320,
     maxWidth: width - 40,
     elevation: 8,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 8,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
@@ -174,7 +188,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.text,
   },
   closeButton: {
@@ -182,11 +196,11 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 24,
-    alignItems: 'center',
+    alignItems: "center",
   },
   qrContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: 24,
   },
   qrBackground: {
@@ -194,7 +208,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 12,
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -202,19 +216,19 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 14,
     color: colors.textSecondary,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: 20,
     marginBottom: 24,
     paddingHorizontal: 16,
   },
   actions: {
-    width: '100%',
+    width: "100%",
     gap: 12,
   },
   button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 14,
     borderRadius: 8,
     gap: 8,
@@ -224,7 +238,7 @@ const styles = StyleSheet.create({
   },
   shareButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.white,
   },
   downloadButton: {
@@ -234,26 +248,26 @@ const styles = StyleSheet.create({
   },
   downloadButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.primary,
   },
   qrFallback: {
     width: 200,
     height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: colors.white,
     padding: 20,
   },
   qrFallbackText: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.primary,
     marginBottom: 10,
   },
   qrFallbackUrl: {
     fontSize: 12,
     color: colors.textSecondary,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });

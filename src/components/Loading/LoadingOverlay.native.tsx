@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, Modal } from 'react-native';
+import React from "react";
+import { View, Text, ActivityIndicator, StyleSheet, Modal } from "react-native";
 
 interface LoadingOverlayProps {
   open: boolean;
@@ -7,39 +7,30 @@ interface LoadingOverlayProps {
 }
 
 const colors = {
-  primary: '#8B7355',
-  secondary: '#A0937D',
-  background: '#FDFBF7',
-  surface: '#F4E4C1',
-  text: '#4A4A4A',
-  textSecondary: '#666666',
-  border: '#E0E0E0',
-  white: '#FFFFFF',
+  primary: "#8B7355",
+  secondary: "#A0937D",
+  background: "#FDFBF7",
+  surface: "#F4E4C1",
+  text: "#4A4A4A",
+  textSecondary: "#666666",
+  border: "#E0E0E0",
+  white: "#FFFFFF",
 };
 
-export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({ 
-  open, 
-  message = 'Loading...' 
+export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
+  open,
+  message = "Loading...",
 }) => {
   return (
-    <Modal
-      visible={open}
-      transparent
-      animationType="fade"
-      statusBarTranslucent
-    >
+    <Modal visible={open} transparent animationType="fade" statusBarTranslucent>
       <View style={styles.backdrop}>
         <View style={styles.contentContainer}>
-          <ActivityIndicator 
-            size="large" 
-            color={colors.white} 
+          <ActivityIndicator
+            size="large"
+            color={colors.white}
             style={styles.spinner}
           />
-          {message && (
-            <Text style={styles.message}>
-              {message}
-            </Text>
-          )}
+          {message && <Text style={styles.message}>{message}</Text>}
         </View>
       </View>
     </Modal>
@@ -49,13 +40,13 @@ export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   contentContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     gap: 16,
   },
   spinner: {
@@ -64,6 +55,6 @@ const styles = StyleSheet.create({
   message: {
     fontSize: 16,
     color: colors.white,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });

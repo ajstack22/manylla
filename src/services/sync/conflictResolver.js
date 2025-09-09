@@ -1,7 +1,7 @@
 /**
  * Conflict Resolution Service for Manylla
  * Based on StackMap's field-level conflict resolution approach
- * 
+ *
  * Handles merging of profile data when conflicts occur during sync
  */
 
@@ -9,7 +9,7 @@ class ConflictResolver {
   constructor() {
     // 3-second merge window for near-simultaneous updates
     this.MERGE_WINDOW = 3000;
-    
+
     // Field priority for resolution (higher number = higher priority)
     this.FIELD_PRIORITY = {
       medicalInfo: 10,
@@ -17,7 +17,7 @@ class ConflictResolver {
       medications: 8,
       quickInfo: 7,
       categories: 6,
-      settings: 5
+      settings: 5,
     };
   }
 
@@ -36,14 +36,14 @@ class ConflictResolver {
     // Handle null/undefined cases
     if (!local || !local.timestamp) return remote;
     if (!remote || !remote.timestamp) return local;
-    
+
     // If timestamps are within merge window, do field-level merge
     const timeDiff = Math.abs(local.timestamp - remote.timestamp);
     if (timeDiff < this.MERGE_WINDOW) {
       // console.log('[ConflictResolver] Within merge window, doing field-level merge');
       return this.fieldLevelMerge(local, remote);
     }
-    
+
     // Outside merge window - use last-write-wins
     if (remote.timestamp > local.timestamp) {
       // console.log('[ConflictResolver] Remote is newer, using remote data');
@@ -64,29 +64,56 @@ class ConflictResolver {
     const merged = {
       ...local,
       timestamp: Math.max(local.timestamp, remote.timestamp),
-      lastModified: new Date().toISOString()
+      lastModified: new Date().toISOString(),
     };
 
     // Merge basic info (prefer most recent non-empty values)
-    merged.name = this.mergeField(local.name, remote.name, local.timestamp, remote.timestamp);
-    merged.dateOfBirth = this.mergeField(local.dateOfBirth, remote.dateOfBirth, local.timestamp, remote.timestamp);
-    merged.profileImage = this.mergeField(local.profileImage, remote.profileImage, local.timestamp, remote.timestamp);
+    merged.name = this.mergeField(
+      local.name,
+      remote.name,
+      local.timestamp,
+      remote.timestamp,
+    );
+    merged.dateOfBirth = this.mergeField(
+      local.dateOfBirth,
+      remote.dateOfBirth,
+      local.timestamp,
+      remote.timestamp,
+    );
+    merged.profileImage = this.mergeField(
+      local.profileImage,
+      remote.profileImage,
+      local.timestamp,
+      remote.timestamp,
+    );
 
     // Merge arrays (combine and deduplicate)
-    merged.categories = this.mergeCategories(local.categories || [], remote.categories || []);
-    merged.quickInfo = this.mergeQuickInfo(local.quickInfo || [], remote.quickInfo || []);
-    
-    // Merge complex objects
-    merged.medicalInfo = this.mergeMedicalInfo(local.medicalInfo || {}, remote.medicalInfo || {});
-    merged.emergencyContacts = this.mergeEmergencyContacts(
-      local.emergencyContacts || [], 
-      remote.emergencyContacts || []
+    merged.categories = this.mergeCategories(
+      local.categories || [],
+      remote.categories || [],
     );
-    merged.medications = this.mergeMedications(local.medications || [], remote.medications || []);
-    
+    merged.quickInfo = this.mergeQuickInfo(
+      local.quickInfo || [],
+      remote.quickInfo || [],
+    );
+
+    // Merge complex objects
+    merged.medicalInfo = this.mergeMedicalInfo(
+      local.medicalInfo || {},
+      remote.medicalInfo || {},
+    );
+    merged.emergencyContacts = this.mergeEmergencyContacts(
+      local.emergencyContacts || [],
+      remote.emergencyContacts || [],
+    );
+    merged.medications = this.mergeMedications(
+      local.medications || [],
+      remote.medications || [],
+    );
+
     // Settings - prefer local device settings
     merged.settings = local.settings || remote.settings;
-    
+
     return merged;
   }
 
@@ -97,7 +124,7 @@ class ConflictResolver {
     // If one is empty/null, use the other
     if (!localValue) return remoteValue;
     if (!remoteValue) return localValue;
-    
+
     // If both have values, use the more recent one
     return localTime >= remoteTime ? localValue : remoteValue;
   }
@@ -107,20 +134,20 @@ class ConflictResolver {
    */
   mergeCategories(local, remote) {
     const mergedMap = new Map();
-    
+
     // Add all local categories
-    local.forEach(category => {
+    local.forEach((category) => {
       mergedMap.set(category.id, category);
     });
-    
+
     // Add or update with remote categories
-    remote.forEach(category => {
+    remote.forEach((category) => {
       const existing = mergedMap.get(category.id);
-      if (!existing || (category.lastModified > existing.lastModified)) {
+      if (!existing || category.lastModified > existing.lastModified) {
         mergedMap.set(category.id, category);
       }
     });
-    
+
     return Array.from(mergedMap.values());
   }
 
@@ -129,15 +156,19 @@ class ConflictResolver {
    */
   mergeQuickInfo(local, remote) {
     const mergedMap = new Map();
-    
+
     // Process all items from both sources
-    [...local, ...remote].forEach(item => {
+    [...local, ...remote].forEach((item) => {
       const existing = mergedMap.get(item.id);
-      if (!existing || (item.timestamp && (!existing.timestamp || item.timestamp > existing.timestamp))) {
+      if (
+        !existing ||
+        (item.timestamp &&
+          (!existing.timestamp || item.timestamp > existing.timestamp))
+      ) {
         mergedMap.set(item.id, item);
       }
     });
-    
+
     return Array.from(mergedMap.values());
   }
 
@@ -148,20 +179,20 @@ class ConflictResolver {
     // For medical info, prefer the most complete/recent data
     const localCompleteness = this.calculateCompleteness(local);
     const remoteCompleteness = this.calculateCompleteness(remote);
-    
+
     if (remoteCompleteness > localCompleteness) {
       return remote;
     } else if (localCompleteness > remoteCompleteness) {
       return local;
     }
-    
+
     // If equally complete, merge field by field
     return {
       diagnoses: this.mergeArrayField(local.diagnoses, remote.diagnoses),
       allergies: this.mergeArrayField(local.allergies, remote.allergies),
       bloodType: local.bloodType || remote.bloodType,
       notes: this.mergeTextField(local.notes, remote.notes),
-      lastUpdated: new Date().toISOString()
+      lastUpdated: new Date().toISOString(),
     };
   }
 
@@ -170,17 +201,17 @@ class ConflictResolver {
    */
   mergeEmergencyContacts(local, remote) {
     const mergedMap = new Map();
-    
+
     // Key contacts by phone number for deduplication
-    [...local, ...remote].forEach(contact => {
+    [...local, ...remote].forEach((contact) => {
       const key = contact.phone || contact.email || contact.name;
       const existing = mergedMap.get(key);
-      
+
       if (!existing || this.isMoreComplete(contact, existing)) {
         mergedMap.set(key, contact);
       }
     });
-    
+
     return Array.from(mergedMap.values());
   }
 
@@ -189,17 +220,21 @@ class ConflictResolver {
    */
   mergeMedications(local, remote) {
     const mergedMap = new Map();
-    
+
     // Key by medication name + dosage for uniqueness
-    [...local, ...remote].forEach(med => {
+    [...local, ...remote].forEach((med) => {
       const key = `${med.name}_${med.dosage}`.toLowerCase();
       const existing = mergedMap.get(key);
-      
-      if (!existing || (med.lastModified && (!existing.lastModified || med.lastModified > existing.lastModified))) {
+
+      if (
+        !existing ||
+        (med.lastModified &&
+          (!existing.lastModified || med.lastModified > existing.lastModified))
+      ) {
         mergedMap.set(key, med);
       }
     });
-    
+
     return Array.from(mergedMap.values());
   }
 
@@ -217,7 +252,7 @@ class ConflictResolver {
   mergeTextField(local, remote) {
     if (!local) return remote;
     if (!remote) return local;
-    
+
     // Prefer the longer text as it likely contains more information
     return local.length >= remote.length ? local : remote;
   }
@@ -228,11 +263,11 @@ class ConflictResolver {
   calculateCompleteness(obj) {
     let score = 0;
     Object.entries(obj || {}).forEach(([key, value]) => {
-      if (value !== null && value !== undefined && value !== '') {
+      if (value !== null && value !== undefined && value !== "") {
         score++;
         if (Array.isArray(value)) {
           score += value.length;
-        } else if (typeof value === 'string') {
+        } else if (typeof value === "string") {
           score += value.length > 0 ? 1 : 0;
         }
       }
@@ -251,20 +286,20 @@ class ConflictResolver {
    * Validate merged data structure
    */
   validateMergedData(data) {
-    if (!data || typeof data !== 'object') {
-      console.error('[ConflictResolver] Invalid data structure');
+    if (!data || typeof data !== "object") {
+      console.error("[ConflictResolver] Invalid data structure");
       return false;
     }
-    
+
     // Ensure required fields exist
-    const requiredFields = ['timestamp'];
+    const requiredFields = ["timestamp"];
     for (const field of requiredFields) {
       if (!(field in data)) {
         console.warn(`[ConflictResolver] Missing required field: ${field}`);
         return false;
       }
     }
-    
+
     return true;
   }
 }

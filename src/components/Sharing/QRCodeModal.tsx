@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -8,13 +8,13 @@ import {
   Typography,
   Button,
   Stack,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Close as CloseIcon,
   Download as DownloadIcon,
-} from '@mui/icons-material';
-import { QRCodeCanvas } from 'qrcode.react';
-import { manyllaColors } from '../../theme/theme';
+} from "@mui/icons-material";
+import { QRCodeCanvas } from "qrcode.react";
+import { manyllaColors } from "../../theme/theme";
 
 interface QRCodeModalProps {
   open: boolean;
@@ -27,15 +27,17 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
   open,
   onClose,
   url,
-  title = 'Share QR Code',
+  title = "Share QR Code",
 }) => {
   const downloadQRCode = () => {
-    const canvas = document.getElementById('qr-code-canvas') as HTMLCanvasElement;
+    const canvas = document.getElementById(
+      "qr-code-canvas",
+    ) as HTMLCanvasElement;
     if (canvas) {
-      const url = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
+      const url = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
       link.href = url;
-      link.download = 'manylla-share-qr.png';
+      link.download = "manylla-share-qr.png";
       link.click();
     }
   };
@@ -43,7 +45,13 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
       <DialogTitle>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Typography variant="h6">{title}</Typography>
           <IconButton onClick={onClose} size="small">
             <CloseIcon />
@@ -55,7 +63,7 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
           <Box
             sx={{
               p: 3,
-              bgcolor: 'white',
+              bgcolor: "white",
               borderRadius: 2,
               boxShadow: 1,
             }}
@@ -69,7 +77,7 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
               fgColor={manyllaColors.brown}
             />
           </Box>
-          
+
           <Typography variant="body2" color="text.secondary" textAlign="center">
             Recipients can scan this QR code to access the shared information
           </Typography>

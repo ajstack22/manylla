@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { ChildProfile } from '../../types/ChildProfile';
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { ChildProfile } from "../../types/ChildProfile";
 
 interface ProfileCardProps {
   profile: ChildProfile;
@@ -11,51 +11,51 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, onPress }) => {
   const getCategoryCount = () => {
     const customCategories = profile.customCategories || [];
     const defaultCategoriesUsed = [
-      'medical',
-      'behavior', 
-      'sensory',
-      'dietary',
-      'communication',
-      'daily',
-      'education',
-      'emergency'
-    ].filter(cat => {
+      "medical",
+      "behavior",
+      "sensory",
+      "dietary",
+      "communication",
+      "daily",
+      "education",
+      "emergency",
+    ].filter((cat) => {
       const entries = profile[cat as keyof ChildProfile];
       return Array.isArray(entries) && entries.length > 0;
     });
-    
+
     return customCategories.length + defaultCategoriesUsed.length;
   };
 
   const getItemCount = () => {
     let count = 0;
-    
+
     const categoryFields = [
-      'medical',
-      'behavior',
-      'sensory', 
-      'dietary',
-      'communication',
-      'daily',
-      'education',
-      'emergency'
+      "medical",
+      "behavior",
+      "sensory",
+      "dietary",
+      "communication",
+      "daily",
+      "education",
+      "emergency",
     ];
-    
-    categoryFields.forEach(field => {
+
+    categoryFields.forEach((field) => {
       const entries = profile[field as keyof ChildProfile];
       if (Array.isArray(entries)) {
         count += entries.length;
       }
     });
-    
+
     if (profile.customCategories) {
-      profile.customCategories.forEach(category => {
+      profile.customCategories.forEach((category) => {
         if (category.entries) {
           count += category.entries.length;
         }
       });
     }
-    
+
     return count;
   };
 
@@ -67,7 +67,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, onPress }) => {
           <Text style={styles.diagnosis}>{profile.diagnosis}</Text>
         )}
       </View>
-      
+
       <View style={styles.stats}>
         <View style={styles.statItem}>
           <Text style={styles.statValue}>{getCategoryCount()}</Text>
@@ -78,12 +78,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, onPress }) => {
           <Text style={styles.statLabel}>Items</Text>
         </View>
       </View>
-      
+
       {profile.quickInfo && profile.quickInfo.length > 0 && (
         <View style={styles.quickInfo}>
           <Text style={styles.quickInfoLabel}>Quick Info:</Text>
           <Text style={styles.quickInfoText} numberOfLines={2}>
-            {profile.quickInfo.map(info => `• ${info}`).join(' ')}
+            {profile.quickInfo.map((info) => `• ${info}`).join(" ")}
           </Text>
         </View>
       )}
@@ -93,12 +93,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, onPress }) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 16,
     marginHorizontal: 16,
     marginVertical: 8,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -112,46 +112,46 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 20,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: "600",
+    color: "#333",
     marginBottom: 4,
   },
   diagnosis: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
   },
   stats: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 12,
   },
   statItem: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   statValue: {
     fontSize: 24,
-    fontWeight: '600',
-    color: '#8B7355',
+    fontWeight: "600",
+    color: "#8B7355",
   },
   statLabel: {
     fontSize: 12,
-    color: '#666',
+    color: "#666",
     marginTop: 4,
   },
   quickInfo: {
     borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
+    borderTopColor: "#E0E0E0",
     paddingTop: 12,
   },
   quickInfoLabel: {
     fontSize: 12,
-    fontWeight: '600',
-    color: '#666',
+    fontWeight: "600",
+    color: "#666",
     marginBottom: 4,
   },
   quickInfoText: {
     fontSize: 14,
-    color: '#333',
+    color: "#333",
     lineHeight: 20,
   },
 });

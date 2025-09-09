@@ -1,7 +1,7 @@
-import { useTheme, useMediaQuery } from '@mui/material';
-import { Slide } from '@mui/material';
-import { TransitionProps } from '@mui/material/transitions';
-import React from 'react';
+import { useTheme, useMediaQuery } from "@mui/material";
+import { Slide } from "@mui/material";
+import { TransitionProps } from "@mui/material/transitions";
+import React from "react";
 
 const SlideTransition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -14,20 +14,20 @@ const SlideTransition = React.forwardRef(function Transition(
 
 export const useMobileDialog = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const dialogProps = isMobile
     ? {
         fullScreen: true,
         TransitionComponent: SlideTransition,
         sx: {
-          '& .MuiDialog-paper': {
+          "& .MuiDialog-paper": {
             m: 0,
-            maxHeight: '100%',
+            maxHeight: "100%",
             borderRadius: 0,
-            position: 'fixed',
+            position: "fixed",
             bottom: 0,
-            maxWidth: '100%',
+            maxWidth: "100%",
           },
         },
       }
@@ -38,19 +38,19 @@ export const useMobileDialog = () => {
         fullScreen: true,
         TransitionComponent: SlideTransition,
         sx: {
-          '& .MuiDialog-paper': {
+          "& .MuiDialog-paper": {
             m: 0,
             borderRadius: 0,
-            width: '100%',
-            maxWidth: '100%',
-            height: '100%',
-            maxHeight: '100%',
+            width: "100%",
+            maxWidth: "100%",
+            height: "100%",
+            maxHeight: "100%",
           },
         },
       }
     : {
         fullWidth: true,
-        maxWidth: 'sm' as const,
+        maxWidth: "sm" as const,
       };
 
   return {

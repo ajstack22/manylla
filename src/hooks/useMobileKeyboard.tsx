@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef } from 'react';
-import { useTheme } from '@mui/material/styles';
-import { useMediaQuery } from '@mui/material';
+import { useEffect, useState, useRef } from "react";
+import { useTheme } from "@mui/material/styles";
+import { useMediaQuery } from "@mui/material";
 
 interface UseMobileKeyboardOptions {
   scrollIntoView?: boolean;
@@ -9,28 +9,30 @@ interface UseMobileKeyboardOptions {
 
 export const useMobileKeyboard = (options: UseMobileKeyboardOptions = {}) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const inputRef = useRef<HTMLElement | null>(null);
-  
+
   const { scrollIntoView = true, scrollOffset = 100 } = options;
 
   useEffect(() => {
     if (!isMobile) return;
 
-    let lastViewportHeight = window.visualViewport?.height || window.innerHeight;
-    
+    let lastViewportHeight =
+      window.visualViewport?.height || window.innerHeight;
+
     const handleViewportChange = () => {
-      const currentViewportHeight = window.visualViewport?.height || window.innerHeight;
+      const currentViewportHeight =
+        window.visualViewport?.height || window.innerHeight;
       const windowHeight = window.innerHeight;
-      
+
       // Keyboard is shown when viewport height decreases
       if (currentViewportHeight < windowHeight * 0.75) {
         const estimatedKeyboardHeight = windowHeight - currentViewportHeight;
         setIsKeyboardVisible(true);
         setKeyboardHeight(estimatedKeyboardHeight);
-        
+
         // Auto-scroll to keep input visible
         if (scrollIntoView && inputRef.current) {
           setTimeout(() => {
@@ -38,12 +40,12 @@ export const useMobileKeyboard = (options: UseMobileKeyboardOptions = {}) => {
             if (element) {
               const rect = element.getBoundingClientRect();
               const isVisible = rect.bottom < currentViewportHeight;
-              
+
               if (!isVisible) {
                 const scrollTop = window.scrollY + rect.top - scrollOffset;
                 window.scrollTo({
                   top: scrollTop,
-                  behavior: 'smooth'
+                  behavior: "smooth",
                 });
               }
             }
@@ -53,16 +55,19 @@ export const useMobileKeyboard = (options: UseMobileKeyboardOptions = {}) => {
         setIsKeyboardVisible(false);
         setKeyboardHeight(0);
       }
-      
+
       lastViewportHeight = currentViewportHeight;
     };
 
     // Handle focus events to detect keyboard
     const handleFocus = (e: FocusEvent) => {
       const target = e.target as HTMLElement;
-      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) {
+      if (
+        target &&
+        (target.tagName === "INPUT" || target.tagName === "TEXTAREA")
+      ) {
         inputRef.current = target;
-        
+
         // iOS specific: wait for keyboard animation
         setTimeout(handleViewportChange, 100);
       }
@@ -72,7 +77,11 @@ export const useMobileKeyboard = (options: UseMobileKeyboardOptions = {}) => {
       setTimeout(() => {
         // Check if another input is focused
         const activeElement = document.activeElement;
-        if (!activeElement || (activeElement.tagName !== 'INPUT' && activeElement.tagName !== 'TEXTAREA')) {
+        if (
+          !activeElement ||
+          (activeElement.tagName !== "INPUT" &&
+            activeElement.tagName !== "TEXTAREA")
+        ) {
           setIsKeyboardVisible(false);
           setKeyboardHeight(0);
           inputRef.current = null;
@@ -82,23 +91,29 @@ export const useMobileKeyboard = (options: UseMobileKeyboardOptions = {}) => {
 
     // Listen to viewport changes (more reliable on mobile)
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', handleViewportChange);
-      window.visualViewport.addEventListener('scroll', handleViewportChange);
+      window.visualViewport.addEventListener("resize", handleViewportChange);
+      window.visualViewport.addEventListener("scroll", handleViewportChange);
     }
-    
+
     // Fallback for older browsers
-    window.addEventListener('resize', handleViewportChange);
-    document.addEventListener('focusin', handleFocus);
-    document.addEventListener('focusout', handleBlur);
+    window.addEventListener("resize", handleViewportChange);
+    document.addEventListener("focusin", handleFocus);
+    document.addEventListener("focusout", handleBlur);
 
     return () => {
       if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', handleViewportChange);
-        window.visualViewport.removeEventListener('scroll', handleViewportChange);
+        window.visualViewport.removeEventListener(
+          "resize",
+          handleViewportChange,
+        );
+        window.visualViewport.removeEventListener(
+          "scroll",
+          handleViewportChange,
+        );
       }
-      window.removeEventListener('resize', handleViewportChange);
-      document.removeEventListener('focusin', handleFocus);
-      document.removeEventListener('focusout', handleBlur);
+      window.removeEventListener("resize", handleViewportChange);
+      document.removeEventListener("focusin", handleFocus);
+      document.removeEventListener("focusout", handleBlur);
     };
   }, [isMobile, scrollIntoView, scrollOffset]);
 
@@ -109,12 +124,14 @@ export const useMobileKeyboard = (options: UseMobileKeyboardOptions = {}) => {
     // Helper to add padding when keyboard is visible
     keyboardPadding: isKeyboardVisible ? keyboardHeight : 0,
     // Helper styles for sticky elements
-    stickyStyles: isKeyboardVisible ? {
-      position: 'fixed' as const,
-      bottom: keyboardHeight,
-      left: 0,
-      right: 0,
-      zIndex: 1000,
-    } : {},
+    stickyStyles: isKeyboardVisible
+      ? {
+          position: "fixed" as const,
+          bottom: keyboardHeight,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+        }
+      : {},
   };
 };

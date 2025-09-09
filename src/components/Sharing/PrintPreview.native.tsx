@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -9,8 +9,8 @@ import {
   Alert,
   Dimensions,
   Share,
-} from 'react-native';
-import { Entry } from '../../types/ChildProfile';
+} from "react-native";
+import { Entry } from "../../types/ChildProfile";
 
 interface PrintPreviewProps {
   visible: boolean;
@@ -29,17 +29,17 @@ interface PrintPreviewProps {
 }
 
 const colors = {
-  primary: '#8B7355',
-  secondary: '#A0937D',
-  background: '#FDFBF7',
-  surface: '#F4E4C1',
-  text: '#4A4A4A',
-  textSecondary: '#666666',
-  border: '#E0E0E0',
-  white: '#FFFFFF',
-  error: '#D32F2F',
-  success: '#2E7D32',
-  hover: '#F5F5F5',
+  primary: "#8B7355",
+  secondary: "#A0937D",
+  background: "#FDFBF7",
+  surface: "#F4E4C1",
+  text: "#4A4A4A",
+  textSecondary: "#666666",
+  border: "#E0E0E0",
+  white: "#FFFFFF",
+  error: "#D32F2F",
+  success: "#2E7D32",
+  hover: "#F5F5F5",
 };
 
 export const PrintPreview: React.FC<PrintPreviewProps> = ({
@@ -53,10 +53,10 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
   note,
 }) => {
   const categoryTitles: Record<string, string> = {
-    goals: 'Current Goals',
-    successes: 'Recent Successes',
-    strengths: 'Strengths',
-    challenges: 'Challenges',
+    goals: "Current Goals",
+    successes: "Recent Successes",
+    strengths: "Strengths",
+    challenges: "Challenges",
   };
 
   const generateHTML = () => {
@@ -138,7 +138,7 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
         <div class="header">
           <div class="title">${childName} - Information Summary</div>
           <div class="subtitle">
-            Prepared on ${currentDate}${recipientName ? ` for ${recipientName}` : ''}
+            Prepared on ${currentDate}${recipientName ? ` for ${recipientName}` : ""}
           </div>
         </div>
         
@@ -169,15 +169,15 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
     }
 
     // Add selected categories
-    selectedCategories.forEach(category => {
+    selectedCategories.forEach((category) => {
       const categoryEntries = entries[category as keyof typeof entries];
       if (categoryEntries && categoryEntries.length > 0) {
         html += `
           <div class="section">
             <div class="section-title">${categoryTitles[category]}</div>
         `;
-        
-        categoryEntries.forEach(entry => {
+
+        categoryEntries.forEach((entry) => {
           html += `
             <div class="entry">
               <div class="entry-title">• ${entry.title}</div>
@@ -185,7 +185,7 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
             </div>
           `;
         });
-        
+
         html += `</div>`;
       }
     });
@@ -206,16 +206,16 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
     try {
       // Generate a text version of the document
       const textContent = generateTextContent();
-      
+
       // Share the content as text
       await Share.share({
         message: textContent,
         title: `${childName} - Information Summary`,
       });
     } catch (error) {
-      if (error.message !== 'User did not share') {
-        Alert.alert('Error', 'Failed to share document. Please try again.');
-        console.error('Share error:', error);
+      if (error.message !== "User did not share") {
+        Alert.alert("Error", "Failed to share document. Please try again.");
+        console.error("Share error:", error);
       }
     }
   };
@@ -224,25 +224,25 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
     // Same as print for now - shares the text content
     await handlePrint();
   };
-  
+
   const generateTextContent = () => {
     let content = `${childName} - Information Summary\n`;
     content += `Prepared on ${new Date().toLocaleDateString()}\n`;
     if (recipientName) {
       content += `For: ${recipientName}\n`;
     }
-    content += '\n---\n\n';
-    
+    content += "\n---\n\n";
+
     if (note) {
       content += `Note: ${note}\n\n`;
     }
-    
-    selectedCategories.forEach(category => {
+
+    selectedCategories.forEach((category) => {
       const categoryEntries = entries[category] || [];
       if (categoryEntries.length > 0) {
         content += `${category.toUpperCase()}\n`;
-        content += '='.repeat(category.length) + '\n\n';
-        
+        content += "=".repeat(category.length) + "\n\n";
+
         categoryEntries.forEach((entry, index) => {
           content += `${index + 1}. ${entry.title}\n`;
           content += `   ${entry.description}\n`;
@@ -250,21 +250,21 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
         });
       }
     });
-    
+
     return content;
   };
 
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      onRequestClose={onClose}
-    >
+    <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <Text style={{ fontSize: 24, color: colors.primary, marginRight: 8 }}>🖨️</Text>
+            <Text
+              style={{ fontSize: 24, color: colors.primary, marginRight: 8 }}
+            >
+              🖨️
+            </Text>
             <Text style={styles.headerTitle}>Print Preview</Text>
           </View>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
@@ -301,26 +301,31 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
                 <Text style={styles.sectionTitle}>Quick Reference</Text>
                 <View style={styles.quickInfoItems}>
                   <Text style={styles.quickInfoItem}>
-                    <Text style={styles.bold}>Communication:</Text> Uses 2-3 word phrases. Understands more than she can express.
+                    <Text style={styles.bold}>Communication:</Text> Uses 2-3
+                    word phrases. Understands more than she can express.
                   </Text>
                   <Text style={styles.quickInfoItem}>
-                    <Text style={styles.bold}>Sensory:</Text> Sensitive to loud noises and bright lights. Loves soft textures.
+                    <Text style={styles.bold}>Sensory:</Text> Sensitive to loud
+                    noises and bright lights. Loves soft textures.
                   </Text>
                   <Text style={styles.quickInfoItem}>
-                    <Text style={styles.bold}>Medical:</Text> No allergies. Takes melatonin for sleep (prescribed).
+                    <Text style={styles.bold}>Medical:</Text> No allergies.
+                    Takes melatonin for sleep (prescribed).
                   </Text>
                   <Text style={styles.quickInfoItem}>
-                    <Text style={styles.bold}>Dietary:</Text> Gluten-free diet. Prefers crunchy foods. No nuts.
+                    <Text style={styles.bold}>Dietary:</Text> Gluten-free diet.
+                    Prefers crunchy foods. No nuts.
                   </Text>
                   <Text style={styles.quickInfoItem}>
-                    <Text style={styles.bold}>Emergency Contact:</Text> Mom: 555-0123, Dad: 555-0124
+                    <Text style={styles.bold}>Emergency Contact:</Text> Mom:
+                    555-0123, Dad: 555-0124
                   </Text>
                 </View>
               </View>
             )}
 
             {/* Selected Categories */}
-            {selectedCategories.map(category => {
+            {selectedCategories.map((category) => {
               const categoryEntries = entries[category as keyof typeof entries];
               if (!categoryEntries || categoryEntries.length === 0) return null;
 
@@ -333,7 +338,9 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
                     {categoryEntries.map((entry, index) => (
                       <View key={index} style={styles.entry}>
                         <Text style={styles.entryTitle}>• {entry.title}</Text>
-                        <Text style={styles.entryDescription}>{entry.description}</Text>
+                        <Text style={styles.entryDescription}>
+                          {entry.description}
+                        </Text>
                       </View>
                     ))}
                   </View>
@@ -344,7 +351,8 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
             {/* Footer */}
             <View style={styles.documentFooter}>
               <Text style={styles.footerText}>
-                This information is confidential. Generated by Manylla on {new Date().toLocaleString()}
+                This information is confidential. Generated by Manylla on{" "}
+                {new Date().toLocaleString()}
               </Text>
             </View>
           </View>
@@ -358,20 +366,26 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
           >
             <Text style={styles.cancelButtonText}>Close</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             style={[styles.button, styles.downloadButton]}
             onPress={handleDownloadPDF}
           >
-            <Text style={{ fontSize: 16, color: colors.primary, marginRight: 8 }}>📄</Text>
+            <Text
+              style={{ fontSize: 16, color: colors.primary, marginRight: 8 }}
+            >
+              📄
+            </Text>
             <Text style={styles.downloadButtonText}>Share as Text</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             style={[styles.button, styles.printButton]}
             onPress={handlePrint}
           >
-            <Text style={{ fontSize: 18, color: colors.white, marginRight: 6 }}>🖨️</Text>
+            <Text style={{ fontSize: 18, color: colors.white, marginRight: 6 }}>
+              🖨️
+            </Text>
             <Text style={styles.printButtonText}>Print</Text>
           </TouchableOpacity>
         </View>
@@ -380,7 +394,7 @@ export const PrintPreview: React.FC<PrintPreviewProps> = ({
   );
 };
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -388,9 +402,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
@@ -398,13 +412,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 12,
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.text,
   },
   closeButton: {
@@ -420,26 +434,26 @@ const styles = StyleSheet.create({
     padding: 24,
     borderRadius: 8,
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
   documentHeader: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 24,
   },
   documentTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.text,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 8,
   },
   documentSubtitle: {
     fontSize: 14,
     color: colors.textSecondary,
-    textAlign: 'center',
+    textAlign: "center",
   },
   divider: {
     height: 1,
@@ -455,7 +469,7 @@ const styles = StyleSheet.create({
   noteText: {
     fontSize: 14,
     color: colors.text,
-    fontStyle: 'italic',
+    fontStyle: "italic",
     lineHeight: 20,
   },
   section: {
@@ -463,7 +477,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.text,
     marginBottom: 12,
   },
@@ -477,7 +491,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   bold: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   entriesContainer: {
     marginLeft: 16,
@@ -487,7 +501,7 @@ const styles = StyleSheet.create({
   },
   entryTitle: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     color: colors.text,
     marginBottom: 4,
   },
@@ -502,15 +516,15 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     borderTopWidth: 1,
     borderTopColor: colors.border,
-    alignItems: 'center',
+    alignItems: "center",
   },
   footerText: {
     fontSize: 12,
     color: colors.textSecondary,
-    textAlign: 'center',
+    textAlign: "center",
   },
   actions: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderTopWidth: 1,
@@ -520,9 +534,9 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 14,
     borderRadius: 8,
     gap: 6,
@@ -535,7 +549,7 @@ const styles = StyleSheet.create({
   cancelButtonText: {
     fontSize: 16,
     color: colors.text,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   downloadButton: {
     backgroundColor: colors.white,
@@ -545,7 +559,7 @@ const styles = StyleSheet.create({
   downloadButtonText: {
     fontSize: 16,
     color: colors.primary,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   printButton: {
     backgroundColor: colors.primary,
@@ -553,6 +567,6 @@ const styles = StyleSheet.create({
   printButtonText: {
     fontSize: 16,
     color: colors.white,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });

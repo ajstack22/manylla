@@ -1,8 +1,8 @@
-import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MainTabParamList } from './types';
-import { useTheme } from '@context/ThemeContext';
-import { Platform, View, Text } from 'react-native';
+import React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { MainTabParamList } from "./types";
+import { useTheme } from "@context/ThemeContext";
+import { Platform, View, Text } from "react-native";
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Import stack navigators (to be created)
@@ -26,13 +26,13 @@ const MainTabNavigator: React.FC = () => {
           backgroundColor: colors.background.paper,
           borderTopColor: colors.border,
           borderTopWidth: 1,
-          paddingBottom: Platform.OS === 'ios' ? 20 : 5,
+          paddingBottom: Platform.OS === "ios" ? 20 : 5,
           paddingTop: 5,
-          height: Platform.OS === 'ios' ? 85 : 60,
+          height: Platform.OS === "ios" ? 85 : 60,
         },
         tabBarLabelStyle: {
           fontSize: 12,
-          fontWeight: '500',
+          fontWeight: "500",
         },
       }}
     >
@@ -40,7 +40,7 @@ const MainTabNavigator: React.FC = () => {
         name="Home"
         component={PlaceholderScreen}
         options={{
-          tabBarLabel: 'Home',
+          tabBarLabel: "Home",
           // tabBarIcon: ({ color, size }) => (
           //   <Icon name="home" color={color} size={size} />
           // ),
@@ -50,7 +50,7 @@ const MainTabNavigator: React.FC = () => {
         name="Entries"
         component={PlaceholderScreen}
         options={{
-          tabBarLabel: 'Entries',
+          tabBarLabel: "Entries",
           // tabBarIcon: ({ color, size }) => (
           //   <Icon name="folder" color={color} size={size} />
           // ),
@@ -60,7 +60,7 @@ const MainTabNavigator: React.FC = () => {
         name="Add"
         component={PlaceholderScreen}
         options={{
-          tabBarLabel: 'Add',
+          tabBarLabel: "Add",
           // tabBarIcon: ({ color, size }) => (
           //   <Icon name="plus-circle" color={color} size={size} />
           // ),
@@ -70,7 +70,7 @@ const MainTabNavigator: React.FC = () => {
         name="Share"
         component={PlaceholderScreen}
         options={{
-          tabBarLabel: 'Share',
+          tabBarLabel: "Share",
           // tabBarIcon: ({ color, size }) => (
           //   <Icon name="share-variant" color={color} size={size} />
           // ),
@@ -80,7 +80,7 @@ const MainTabNavigator: React.FC = () => {
         name="Settings"
         component={PlaceholderScreen}
         options={{
-          tabBarLabel: 'Settings',
+          tabBarLabel: "Settings",
           // tabBarIcon: ({ color, size }) => (
           //   <Icon name="cog" color={color} size={size} />
           // ),
@@ -93,19 +93,23 @@ const MainTabNavigator: React.FC = () => {
 // Temporary placeholder screen
 const PlaceholderScreen: React.FC<{ route?: any }> = ({ route }) => {
   const { colors } = useTheme();
-  const screenName = route?.name || 'Screen';
-  
+  const screenName = route?.name || "Screen";
+
   return (
-    <View style={{ 
-      flex: 1, 
-      justifyContent: 'center', 
-      alignItems: 'center', 
-      backgroundColor: colors.background.default 
-    }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: colors.background.default,
+      }}
+    >
       <Text style={{ color: colors.text.primary, fontSize: 18 }}>
         {screenName} Screen
       </Text>
-      <Text style={{ color: colors.text.secondary, fontSize: 14, marginTop: 8 }}>
+      <Text
+        style={{ color: colors.text.secondary, fontSize: 14, marginTop: 8 }}
+      >
         Coming soon...
       </Text>
     </View>

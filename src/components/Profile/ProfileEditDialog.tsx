@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -14,20 +14,20 @@ import {
   AppBar,
   Toolbar,
   Paper,
-} from '@mui/material';
-import { manyllaColors } from '../../theme/theme';
-import { modalTheme, getModalDialogProps } from '../../theme/modalTheme';
+} from "@mui/material";
+import { manyllaColors } from "../../theme/theme";
+import { modalTheme, getModalDialogProps } from "../../theme/modalTheme";
 import {
   Close as CloseIcon,
   PhotoCamera as PhotoCameraIcon,
   CalendarToday as CalendarIcon,
   Person as PersonIcon,
-} from '@mui/icons-material';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { DatePicker } from '@mui/x-date-pickers';
-import { ChildProfile } from '../../types/ChildProfile';
-import { useMobileDialog } from '../../hooks/useMobileDialog';
+} from "@mui/icons-material";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers";
+import { ChildProfile } from "../../types/ChildProfile";
+import { useMobileDialog } from "../../hooks/useMobileDialog";
 
 interface ProfileEditDialogProps {
   open: boolean;
@@ -44,7 +44,7 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
 }) => {
   const { mobileDialogProps, isMobile } = useMobileDialog();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   const [formData, setFormData] = useState({
     name: profile.name,
     preferredName: profile.preferredName,
@@ -52,8 +52,8 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
     pronouns: profile.pronouns,
     photo: profile.photo,
   });
-  
-  const [photoPreview, setPhotoPreview] = useState<string>(profile.photo || '');
+
+  const [photoPreview, setPhotoPreview] = useState<string>(profile.photo || "");
 
   const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -81,11 +81,14 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
     const birthDate = new Date(dob);
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
       age--;
     }
-    
+
     return age;
   };
 
@@ -105,7 +108,7 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
         </AppBar>
       ) : (
         <DialogTitle>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <PersonIcon sx={{ mr: 1 }} />
             Edit Profile
             <Box sx={{ flexGrow: 1 }} />
@@ -115,11 +118,11 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
           </Box>
         </DialogTitle>
       )}
-      
+
       <DialogContent sx={{ pt: isMobile ? 2 : 3 }}>
         {!isMobile && (
-          <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <PersonIcon sx={{ fontSize: 64, color: 'primary.main', mb: 2 }} />
+          <Box sx={{ textAlign: "center", mb: 4 }}>
+            <PersonIcon sx={{ fontSize: 64, color: "primary.main", mb: 2 }} />
             <Typography variant="h4" gutterBottom fontWeight="bold">
               Edit Profile
             </Typography>
@@ -130,26 +133,28 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
         )}
         <Stack spacing={2}>
           {/* Profile Photo */}
-          <Paper 
+          <Paper
             elevation={0}
-            sx={{ 
-              p: 3, 
-              border: '1px solid',
-              borderColor: 'divider',
+            sx={{
+              p: 3,
+              border: "1px solid",
+              borderColor: "divider",
               borderRadius: 2,
-              textAlign: 'center',
+              textAlign: "center",
             }}
           >
             <Avatar
               src={photoPreview}
-              sx={{ 
-                width: 100, 
-                height: 100, 
-                mb: 2, 
-                mx: 'auto',
-                bgcolor: photoPreview ? 'transparent' : manyllaColors.avatarDefaultBg,
-                color: photoPreview ? 'inherit' : 'white',
-                fontSize: '2.5rem',
+              sx={{
+                width: 100,
+                height: 100,
+                mb: 2,
+                mx: "auto",
+                bgcolor: photoPreview
+                  ? "transparent"
+                  : manyllaColors.avatarDefaultBg,
+                color: photoPreview ? "inherit" : "white",
+                fontSize: "2.5rem",
               }}
             >
               {formData.name.charAt(0)}
@@ -159,7 +164,7 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
               ref={fileInputRef}
               onChange={handlePhotoChange}
               accept="image/*"
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
             />
             <Button
               variant="outlined"
@@ -177,15 +182,19 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
               <TextField
                 label="Full Name"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 required
                 {...modalTheme.textField}
               />
-              
+
               <TextField
                 label="Preferred Name"
                 value={formData.preferredName}
-                onChange={(e) => setFormData({ ...formData, preferredName: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, preferredName: e.target.value })
+                }
                 fullWidth
                 helperText="What they like to be called"
                 size="small"
@@ -203,7 +212,7 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
                   slotProps={{
                     textField: {
                       fullWidth: true,
-                      size: 'small',
+                      size: "small",
                       InputProps: {
                         endAdornment: <CalendarIcon fontSize="small" />,
                       },
@@ -216,7 +225,9 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
               <TextField
                 label="Pronouns"
                 value={formData.pronouns}
-                onChange={(e) => setFormData({ ...formData, pronouns: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, pronouns: e.target.value })
+                }
                 fullWidth
                 placeholder="e.g., she/her, he/him, they/them"
                 size="small"
@@ -225,7 +236,7 @@ export const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
           </Paper>
         </Stack>
       </DialogContent>
-      
+
       <DialogActions sx={{ px: 2, py: 2 }}>
         <Button onClick={onClose}>Cancel</Button>
         <Button variant="contained" onClick={handleSave}>

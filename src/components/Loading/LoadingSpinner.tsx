@@ -1,6 +1,6 @@
-import React from 'react';
-import { Platform } from 'react-native';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import React from "react";
+import { Platform } from "react-native";
+import { Box, CircularProgress, Typography } from "@mui/material";
 
 interface LoadingSpinnerProps {
   message?: string;
@@ -8,13 +8,13 @@ interface LoadingSpinnerProps {
   fullScreen?: boolean;
 }
 
-export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
-  message = 'Loading...', 
+export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
+  message = "Loading...",
   size = 40,
-  fullScreen = false 
+  fullScreen = false,
 }) => {
   // Only render on web - React Native components should import the .native version
-  if (Platform.OS === 'ios' || Platform.OS === 'android') {
+  if (Platform.OS === "ios" || Platform.OS === "android") {
     return null;
   }
 
@@ -22,11 +22,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     <>
       <CircularProgress size={size} />
       {message && (
-        <Typography 
-          variant="body2" 
-          color="text.secondary" 
-          sx={{ mt: 2 }}
-        >
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
           {message}
         </Typography>
       )}
@@ -37,12 +33,12 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     return (
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minHeight: '100vh',
-          bgcolor: 'background.default'
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "100vh",
+          bgcolor: "background.default",
         }}
       >
         {content}
@@ -53,11 +49,11 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        py: 4
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        py: 4,
       }}
     >
       {content}

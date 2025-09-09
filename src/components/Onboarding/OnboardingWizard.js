@@ -3,7 +3,7 @@
  * Works on iOS, Android, and Web
  */
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -12,22 +12,16 @@ import {
   ScrollView,
   StyleSheet,
   Platform,
-} from 'react-native';
-import { useTheme } from '../../context/ThemeContext';
-import { 
-  AddIcon, 
-  PersonIcon, 
-  ShareIcon, 
-  MenuIcon,
-  CloseIcon
-} from '../Common';
+} from "react-native";
+import { useTheme } from "../../context/ThemeContext";
+import { AddIcon, PersonIcon, ShareIcon, MenuIcon, CloseIcon } from "../Common";
 
 export const OnboardingWizard = ({ onComplete }) => {
   const [step, setStep] = useState(0);
-  const [accessCode, setAccessCode] = useState('');
-  const [childName, setChildName] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
-  const [photo, setPhoto] = useState('');
+  const [accessCode, setAccessCode] = useState("");
+  const [childName, setChildName] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [photo, setPhoto] = useState("");
   const { colors } = useTheme();
 
   const handleStartFresh = () => {
@@ -36,14 +30,14 @@ export const OnboardingWizard = ({ onComplete }) => {
 
   const handleChildInfoSubmit = () => {
     if (!childName.trim()) {
-      if (Platform.OS === 'web') {
-        alert('Please enter the child\'s name');
+      if (Platform.OS === "web") {
+        alert("Please enter the child's name");
       }
       return;
     }
-    
+
     onComplete({
-      mode: 'fresh',
+      mode: "fresh",
       childName: childName.trim(),
       dateOfBirth: dateOfBirth || undefined,
       photo: photo || undefined,
@@ -52,14 +46,14 @@ export const OnboardingWizard = ({ onComplete }) => {
 
   const handleDemoMode = () => {
     onComplete({
-      mode: 'demo',
+      mode: "demo",
     });
   };
 
   const handleJoinWithCode = () => {
     if (accessCode) {
       onComplete({
-        mode: 'join',
+        mode: "join",
         accessCode,
       });
     }
@@ -72,27 +66,27 @@ export const OnboardingWizard = ({ onComplete }) => {
     },
     scrollContent: {
       padding: 20,
-      alignItems: 'center',
-      paddingTop: Platform.OS === 'web' ? 60 : 40,
+      alignItems: "center",
+      paddingTop: Platform.OS === "web" ? 60 : 40,
     },
     logo: {
       width: 80,
       height: 80,
       marginBottom: 20,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     title: {
       fontSize: 28,
-      fontWeight: '700',
+      fontWeight: "700",
       color: colors.text.primary,
       marginBottom: 10,
-      textAlign: 'center',
+      textAlign: "center",
     },
     subtitle: {
       fontSize: 16,
       color: colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
       marginBottom: 30,
       paddingHorizontal: 20,
     },
@@ -101,12 +95,12 @@ export const OnboardingWizard = ({ onComplete }) => {
       padding: 15,
       borderRadius: 10,
       marginBottom: 30,
-      width: '100%',
+      width: "100%",
       maxWidth: 400,
     },
     infoTitle: {
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
       color: colors.text.primary,
       marginBottom: 10,
     },
@@ -121,31 +115,31 @@ export const OnboardingWizard = ({ onComplete }) => {
       paddingHorizontal: 20,
       borderRadius: 8,
       marginBottom: 12,
-      width: '100%',
+      width: "100%",
       maxWidth: 400,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
     },
     buttonOutline: {
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
       borderWidth: 1,
       borderColor: colors.primary,
     },
     buttonText: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
       marginLeft: 8,
     },
     buttonTextOutline: {
       color: colors.primary,
     },
     divider: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       marginVertical: 20,
-      width: '100%',
+      width: "100%",
       maxWidth: 400,
     },
     dividerLine: {
@@ -159,7 +153,7 @@ export const OnboardingWizard = ({ onComplete }) => {
       fontSize: 14,
     },
     inputContainer: {
-      width: '100%',
+      width: "100%",
       maxWidth: 400,
       marginBottom: 20,
     },
@@ -176,10 +170,10 @@ export const OnboardingWizard = ({ onComplete }) => {
     },
     // Child info step styles
     stepHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      width: '100%',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      width: "100%",
       maxWidth: 400,
       marginBottom: 20,
     },
@@ -192,11 +186,11 @@ export const OnboardingWizard = ({ onComplete }) => {
     },
     stepTitle: {
       fontSize: 20,
-      fontWeight: '600',
+      fontWeight: "600",
       color: colors.text.primary,
     },
     photoSection: {
-      alignItems: 'center',
+      alignItems: "center",
       marginBottom: 30,
     },
     photoButton: {
@@ -204,10 +198,10 @@ export const OnboardingWizard = ({ onComplete }) => {
       height: 100,
       borderRadius: 50,
       backgroundColor: colors.background.secondary,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       borderWidth: 2,
-      borderStyle: 'dashed',
+      borderStyle: "dashed",
       borderColor: colors.border,
       marginBottom: 10,
     },
@@ -219,26 +213,26 @@ export const OnboardingWizard = ({ onComplete }) => {
       color: colors.text.secondary,
     },
     formSection: {
-      width: '100%',
+      width: "100%",
       maxWidth: 400,
     },
     label: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: "600",
       color: colors.text.primary,
       marginBottom: 8,
     },
     helpText: {
       fontSize: 12,
       color: colors.text.secondary,
-      fontStyle: 'italic',
-      textAlign: 'center',
+      fontStyle: "italic",
+      textAlign: "center",
       marginTop: 10,
       marginBottom: 20,
     },
   });
 
-  const ScrollComponent = Platform.OS === 'web' ? View : ScrollView;
+  const ScrollComponent = Platform.OS === "web" ? View : ScrollView;
 
   // Render child info step
   if (step === 1) {
@@ -246,7 +240,10 @@ export const OnboardingWizard = ({ onComplete }) => {
       <ScrollComponent style={styles.container}>
         <View style={styles.scrollContent}>
           <View style={styles.stepHeader}>
-            <TouchableOpacity style={styles.backButton} onPress={() => setStep(0)}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => setStep(0)}
+            >
               <CloseIcon size={24} color={colors.text.primary} />
             </TouchableOpacity>
             <Text style={styles.stepTitle}>Child Information</Text>
@@ -258,9 +255,9 @@ export const OnboardingWizard = ({ onComplete }) => {
           </Text>
 
           <View style={styles.photoSection}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.photoButton}
-              onPress={() => setPhoto('default')}
+              onPress={() => setPhoto("default")}
             >
               <PersonIcon size={40} color={colors.text.secondary} />
             </TouchableOpacity>
@@ -275,7 +272,7 @@ export const OnboardingWizard = ({ onComplete }) => {
               placeholderTextColor={colors.text.disabled}
               value={childName}
               onChangeText={setChildName}
-              autoFocus={Platform.OS === 'web'}
+              autoFocus={Platform.OS === "web"}
             />
 
             <Text style={styles.label}>Date of Birth</Text>
@@ -321,10 +318,9 @@ export const OnboardingWizard = ({ onComplete }) => {
         <View style={styles.infoBox}>
           <Text style={styles.infoTitle}>manylla helps you:</Text>
           <Text style={styles.infoText}>
-            • Track developmental milestones{'\n'}
-            • Organize IEP goals and medical records{'\n'}
-            • Share information securely{'\n'}
-            • Sync across all your devices
+            • Track developmental milestones{"\n"}• Organize IEP goals and
+            medical records{"\n"}• Share information securely{"\n"}• Sync across
+            all your devices
           </Text>
         </View>
 

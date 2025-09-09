@@ -1,10 +1,10 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ChildProfile } from '../../types/ChildProfile';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ChildProfile } from "../../types/ChildProfile";
 
 const STORAGE_KEYS = {
-  PROFILES: 'manylla_profiles',
-  ACTIVE_PROFILE: 'manylla_active_profile',
-  HAS_ONBOARDED: 'manylla_has_onboarded',
+  PROFILES: "manylla_profiles",
+  ACTIVE_PROFILE: "manylla_active_profile",
+  HAS_ONBOARDED: "manylla_has_onboarded",
 };
 
 class ProfileStorageService {
@@ -13,7 +13,7 @@ class ProfileStorageService {
       const profiles = await this.getProfiles();
       return profiles.length > 0;
     } catch (error) {
-      console.error('Error checking for profiles:', error);
+      console.error("Error checking for profiles:", error);
       return false;
     }
   }
@@ -26,16 +26,19 @@ class ProfileStorageService {
       }
       return JSON.parse(profilesJson);
     } catch (error) {
-      console.error('Error getting profiles:', error);
+      console.error("Error getting profiles:", error);
       return [];
     }
   }
 
   async saveProfiles(profiles: ChildProfile[]): Promise<void> {
     try {
-      await AsyncStorage.setItem(STORAGE_KEYS.PROFILES, JSON.stringify(profiles));
+      await AsyncStorage.setItem(
+        STORAGE_KEYS.PROFILES,
+        JSON.stringify(profiles),
+      );
     } catch (error) {
-      console.error('Error saving profiles:', error);
+      console.error("Error saving profiles:", error);
       throw error;
     }
   }
@@ -46,22 +49,25 @@ class ProfileStorageService {
       profiles.push(profile);
       await this.saveProfiles(profiles);
     } catch (error) {
-      console.error('Error adding profile:', error);
+      console.error("Error adding profile:", error);
       throw error;
     }
   }
 
-  async updateProfile(id: string, updates: Partial<ChildProfile>): Promise<void> {
+  async updateProfile(
+    id: string,
+    updates: Partial<ChildProfile>,
+  ): Promise<void> {
     try {
       const profiles = await this.getProfiles();
-      const index = profiles.findIndex(p => p.id === id);
+      const index = profiles.findIndex((p) => p.id === id);
       if (index === -1) {
-        throw new Error('Profile not found');
+        throw new Error("Profile not found");
       }
       profiles[index] = { ...profiles[index], ...updates };
       await this.saveProfiles(profiles);
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error("Error updating profile:", error);
       throw error;
     }
   }
@@ -69,10 +75,10 @@ class ProfileStorageService {
   async deleteProfile(id: string): Promise<void> {
     try {
       const profiles = await this.getProfiles();
-      const filtered = profiles.filter(p => p.id !== id);
+      const filtered = profiles.filter((p) => p.id !== id);
       await this.saveProfiles(filtered);
     } catch (error) {
-      console.error('Error deleting profile:', error);
+      console.error("Error deleting profile:", error);
       throw error;
     }
   }
@@ -81,7 +87,7 @@ class ProfileStorageService {
     try {
       return await AsyncStorage.getItem(STORAGE_KEYS.ACTIVE_PROFILE);
     } catch (error) {
-      console.error('Error getting active profile:', error);
+      console.error("Error getting active profile:", error);
       return null;
     }
   }
@@ -90,7 +96,7 @@ class ProfileStorageService {
     try {
       await AsyncStorage.setItem(STORAGE_KEYS.ACTIVE_PROFILE, id);
     } catch (error) {
-      console.error('Error setting active profile:', error);
+      console.error("Error setting active profile:", error);
       throw error;
     }
   }
@@ -102,9 +108,9 @@ class ProfileStorageService {
         return null;
       }
       const profiles = await this.getProfiles();
-      return profiles.find(p => p.id === activeId) || null;
+      return profiles.find((p) => p.id === activeId) || null;
     } catch (error) {
-      console.error('Error getting active profile:', error);
+      console.error("Error getting active profile:", error);
       return null;
     }
   }
@@ -113,7 +119,7 @@ class ProfileStorageService {
     try {
       await AsyncStorage.setItem(STORAGE_KEYS.HAS_ONBOARDED, value.toString());
     } catch (error) {
-      console.error('Error setting onboarded status:', error);
+      console.error("Error setting onboarded status:", error);
       throw error;
     }
   }
@@ -121,9 +127,9 @@ class ProfileStorageService {
   async getHasOnboarded(): Promise<boolean> {
     try {
       const value = await AsyncStorage.getItem(STORAGE_KEYS.HAS_ONBOARDED);
-      return value === 'true';
+      return value === "true";
     } catch (error) {
-      console.error('Error getting onboarded status:', error);
+      console.error("Error getting onboarded status:", error);
       return false;
     }
   }
@@ -136,7 +142,7 @@ class ProfileStorageService {
         STORAGE_KEYS.HAS_ONBOARDED,
       ]);
     } catch (error) {
-      console.error('Error clearing storage:', error);
+      console.error("Error clearing storage:", error);
       throw error;
     }
   }

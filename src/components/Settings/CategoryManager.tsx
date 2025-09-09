@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -17,7 +17,7 @@ import {
   Chip,
   AppBar,
   Toolbar,
-} from '@mui/material';
+} from "@mui/material";
 import {
   DragIndicator as DragIcon,
   Delete as DeleteIcon,
@@ -25,10 +25,10 @@ import {
   Visibility as VisibilityIcon,
   VisibilityOff as VisibilityOffIcon,
   Close as CloseIcon,
-} from '@mui/icons-material';
-import { CategoryConfig } from '../../types/ChildProfile';
-import { UnifiedAddDialog } from '../Dialogs/UnifiedAddDialog';
-import { useMobileDialog } from '../../hooks/useMobileDialog';
+} from "@mui/icons-material";
+import { CategoryConfig } from "../../types/ChildProfile";
+import { UnifiedAddDialog } from "../Dialogs/UnifiedAddDialog";
+import { useMobileDialog } from "../../hooks/useMobileDialog";
 
 interface CategoryManagerProps {
   open: boolean;
@@ -43,25 +43,28 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({
   categories,
   onUpdate,
 }) => {
-  const [categoryList, setCategoryList] = useState<CategoryConfig[]>(categories);
+  const [categoryList, setCategoryList] =
+    useState<CategoryConfig[]>(categories);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const { mobileDialogProps, isMobile } = useMobileDialog();
 
   const handleToggleVisibility = (categoryId: string) => {
-    const updated = categoryList.map(category =>
-      category.id === categoryId ? { ...category, isVisible: !category.isVisible } : category
+    const updated = categoryList.map((category) =>
+      category.id === categoryId
+        ? { ...category, isVisible: !category.isVisible }
+        : category,
     );
     setCategoryList(updated);
   };
 
   const handleDeleteCategory = (categoryId: string) => {
-    const category = categoryList.find(c => c.id === categoryId);
+    const category = categoryList.find((c) => c.id === categoryId);
     if (category && !category.isCustom) {
       // For default categories, just hide them
       handleToggleVisibility(categoryId);
     } else {
       // For custom categories, remove them
-      setCategoryList(categoryList.filter(c => c.id !== categoryId));
+      setCategoryList(categoryList.filter((c) => c.id !== categoryId));
     }
   };
 
@@ -83,8 +86,8 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({
               <Typography variant="h6" sx={{ flexGrow: 1 }}>
                 Manage Categories
               </Typography>
-              <IconButton 
-                size="small" 
+              <IconButton
+                size="small"
                 onClick={() => setAddDialogOpen(true)}
                 sx={{ mr: 1 }}
               >
@@ -97,7 +100,13 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({
           </AppBar>
         ) : (
           <DialogTitle>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
               <Typography variant="h6">Manage Categories</Typography>
               <Button
                 variant="contained"
@@ -112,50 +121,62 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({
         )}
         <DialogContent sx={{ pt: isMobile ? 2 : 3 }}>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            Show or hide categories, or add custom categories for organizing entries.
+            Show or hide categories, or add custom categories for organizing
+            entries.
           </Typography>
 
           <List>
             {categoryList
               .sort((a, b) => a.order - b.order)
-              .map(category => (
+              .map((category) => (
                 <React.Fragment key={category.id}>
                   <ListItem>
                     <IconButton size="small" edge="start" disabled>
                       <DragIcon />
                     </IconButton>
-                    
+
                     <ListItemText
                       primary={
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                        >
                           <Chip
                             label={category.displayName}
                             size="small"
                             sx={{
                               backgroundColor: category.color,
-                              color: 'white',
-                              fontWeight: 'medium',
+                              color: "white",
+                              fontWeight: "medium",
                             }}
                           />
                           {!category.isVisible && (
-                            <VisibilityOffIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                            <VisibilityOffIcon
+                              sx={{ fontSize: 16, color: "text.secondary" }}
+                            />
                           )}
                           {category.isCustom && (
-                            <Typography variant="caption" color="text.secondary">
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                            >
                               (Custom)
                             </Typography>
                           )}
                         </Box>
                       }
                     />
-                    
+
                     <ListItemSecondaryAction>
                       <IconButton
                         size="small"
                         onClick={() => handleToggleVisibility(category.id)}
-                        title={category.isVisible ? 'Hide' : 'Show'}
+                        title={category.isVisible ? "Hide" : "Show"}
                       >
-                        {category.isVisible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                        {category.isVisible ? (
+                          <VisibilityIcon />
+                        ) : (
+                          <VisibilityOffIcon />
+                        )}
                       </IconButton>
                       {category.isCustom && (
                         <IconButton
@@ -173,11 +194,16 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({
               ))}
           </List>
 
-          <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}>
-            Note: Default categories can be hidden but not deleted. Custom categories can be deleted permanently.
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ mt: 2, display: "block" }}
+          >
+            Note: Default categories can be hidden but not deleted. Custom
+            categories can be deleted permanently.
           </Typography>
         </DialogContent>
-        
+
         <DialogActions>
           <Button onClick={onClose}>Cancel</Button>
           <Button variant="contained" onClick={handleSave}>
