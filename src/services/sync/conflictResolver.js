@@ -29,9 +29,9 @@ class ConflictResolver {
    */
   mergeProfiles(local, remote) {
     // console.log('[ConflictResolver] Merging profiles', {
-      localTimestamp: local?.timestamp,
-      remoteTimestamp: remote?.timestamp
-    });
+    //   localTimestamp: local?.timestamp,
+    //   remoteTimestamp: remote?.timestamp
+    // });
 
     // Handle null/undefined cases
     if (!local || !local.timestamp) return remote;
