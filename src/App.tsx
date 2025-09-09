@@ -3,7 +3,7 @@ import { Container } from '@mui/material';
 import { ManyllaThemeProvider } from './context/ThemeContext';
 import { SyncProvider, useSync } from './context/SyncContext';
 import { ToastProvider } from './context/ToastContext';
-import Header from './components/Layout/Header';
+import { Header } from './components/Layout';
 import { LoadingSpinner } from './components/Loading/LoadingSpinner';
 import { LoadingOverlay } from './components/Loading/LoadingOverlay';
 import { StorageService } from './services/storageService';
@@ -381,7 +381,7 @@ function AppContent() {
     localStorage.setItem('manylla_profile', JSON.stringify(updatedProfile));
   };
 
-  const handleThemeChange = (mode: 'light' | 'dark') => {
+  const handleThemeChange = (mode: 'light' | 'dark' | 'manylla') => {
     if (!profile) return;
     
     const updatedProfile = {
@@ -450,7 +450,6 @@ function AppContent() {
                 entries: [],
                 createdAt: new Date(),
                 updatedAt: new Date(),
-                visibility: ['private'],
               };
               handleCreateProfile(newProfile);
             }

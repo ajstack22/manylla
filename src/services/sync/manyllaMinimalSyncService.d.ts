@@ -16,11 +16,11 @@ export interface SyncService {
   getSyncStatus(): SyncStatus;
   isEnabled(): boolean;
   isSyncEnabled(): boolean;
-  setDataCallback(callback: () => any): void;
-  enableSync(recoveryPhrase: string): Promise<void>;
+  setDataCallback(callback: (profile: any) => void): void;
+  enableSync(recoveryPhrase: string, initialData?: any): Promise<void>;
   getSyncId(): string;
-  pushData(): Promise<void>;
-  pullData(): Promise<any>;
+  pushData(data?: any): Promise<void>;
+  pullData(ignoreLastPull?: boolean): Promise<any>;
   disableSync(): Promise<void>;
 }
 

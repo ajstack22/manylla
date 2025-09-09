@@ -66,7 +66,7 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
               size={200}
               level="H"
               includeMargin
-              fgColor={manyllaColors.primary}
+              fgColor={manyllaColors.brown}
             />
           </Box>
           

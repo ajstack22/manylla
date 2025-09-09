@@ -381,7 +381,7 @@ export const ShareDialogOptimized: React.FC<ShareDialogOptimizedProps> = ({
 
   const renderCompleteStep = () => (
     <Stack spacing={3}>
-      <Alert severity="success" sx={{ bgcolor: manyllaColors.success.light }}>
+      <Alert severity="success" sx={{ bgcolor: manyllaColors.lightManilaAccent }}>
         Share link created successfully! This link will expire in {
           expirationDays <= 30 
             ? `${expirationDays} ${expirationDays === 1 ? 'day' : 'days'}`
@@ -490,7 +490,7 @@ export const ShareDialogOptimized: React.FC<ShareDialogOptimizedProps> = ({
         {...(isMobile ? mobileDialogProps : {})}
       >
       {isMobile ? (
-        <AppBar position="static" sx={{ bgcolor: manyllaColors.primary }}>
+        <AppBar position="static" sx={{ bgcolor: manyllaColors.brown }}>
           <Toolbar>
             <IconButton edge="start" onClick={onClose} sx={{ color: 'white' }}>
               <CloseIcon />

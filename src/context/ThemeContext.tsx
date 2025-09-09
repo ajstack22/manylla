@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { lightTheme, darkTheme, manyllaTheme } from '../theme/theme';
+import { lightTheme, darkTheme, manyllaTheme, manyllaColors } from '../theme/theme';
 
 export type ThemeMode = 'light' | 'dark' | 'manylla';
 
