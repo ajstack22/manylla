@@ -14,7 +14,6 @@ import {
   ScrollView,
   StyleSheet,
   Platform,
-  StatusBar,
   Text,
   TouchableOpacity,
   Alert,
@@ -22,20 +21,6 @@ import {
   Dimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-// Icon imports
-let EditIcon, DeleteIcon;
-if (Platform.OS === 'web') {
-  // Use Material-UI icons for web
-  const MuiIcons = require('@mui/icons-material');
-  EditIcon = MuiIcons.Edit;
-  DeleteIcon = MuiIcons.Delete;
-} else {
-  // Use React Native Vector Icons for mobile
-  const Icon = require('react-native-vector-icons/MaterialIcons').default;
-  EditIcon = (props) => <Icon name="edit" size={20} color={props.color || '#666'} />;
-  DeleteIcon = (props) => <Icon name="delete" size={20} color={props.color || '#666'} />;
-}
 
 // Shared imports
 import { ThemeProvider, SyncProvider, useSync, useTheme } from './src/context';
@@ -51,11 +36,24 @@ import { ThemedToast } from './src/components/Toast';
 import { LoadingOverlay } from './src/components/Loading';
 import { PrintPreview, QRCodeModal } from './src/components/Sharing';
 import { Header } from './src/components/Layout';
-import { MarkdownRenderer } from './src/components/Forms';
 
 // Import Share and Sync dialogs
 import { ShareDialogOptimized } from './src/components/Sharing';
 import { SyncDialog } from './src/components/Sync';
+
+// Icon imports - must be after other imports due to conditional requires
+let EditIcon, DeleteIcon;
+if (Platform.OS === 'web') {
+  // Use Material-UI icons for web
+  const MuiIcons = require('@mui/icons-material');
+  EditIcon = MuiIcons.Edit;
+  DeleteIcon = MuiIcons.Delete;
+} else {
+  // Use React Native Vector Icons for mobile
+  const Icon = require('react-native-vector-icons/MaterialIcons').default;
+  EditIcon = (props) => <Icon name="edit" size={20} color={props.color || '#666'} />;
+  DeleteIcon = (props) => <Icon name="delete" size={20} color={props.color || '#666'} />;
+}
 
 
 // Platform-specific imports
