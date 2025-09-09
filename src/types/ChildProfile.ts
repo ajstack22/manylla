@@ -39,7 +39,6 @@ export interface ChildProfile {
   photo?: string;
   entries: Entry[];
   categories: CategoryConfig[];
-  quickInfoPanels: QuickInfoConfig[];
   createdAt: Date;
   updatedAt: Date;
   themeMode?: 'light' | 'dark' | 'manylla';

@@ -20,18 +20,18 @@ const MainTabNavigator: React.FC = () => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.accent,
+        tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.text.secondary,
         tabBarStyle: {
-          backgroundColor: colors.background.primary,
-          borderTopColor: colors.gray[300],
+          backgroundColor: colors.background.paper,
+          borderTopColor: colors.border,
           borderTopWidth: 1,
           paddingBottom: Platform.OS === 'ios' ? 20 : 5,
           paddingTop: 5,
           height: Platform.OS === 'ios' ? 85 : 60,
         },
         tabBarLabelStyle: {
-          fontSize: theme.typography.fontSize.xs,
+          fontSize: 12,
           fontWeight: '500',
         },
       }}
@@ -100,7 +100,7 @@ const PlaceholderScreen: React.FC<{ route?: any }> = ({ route }) => {
       flex: 1, 
       justifyContent: 'center', 
       alignItems: 'center', 
-      backgroundColor: colors.background.primary 
+      backgroundColor: colors.background.default 
     }}>
       <Text style={{ color: colors.text.primary, fontSize: 18 }}>
         {screenName} Screen

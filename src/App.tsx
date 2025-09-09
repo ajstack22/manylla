@@ -47,7 +47,6 @@ const mockProfile: ChildProfile = {
   photo: '/ellie.png',
   categories: unifiedCategories,
   themeMode: 'manylla',
-  quickInfoPanels: [], // Will be removed in future
   entries: [
     ...quickInfoEntries,
     {
@@ -446,7 +445,6 @@ function AppContent() {
                 photo: data.photo || '',
                 categories: unifiedCategories,
                 themeMode: 'manylla',
-                quickInfoPanels: [],
                 entries: [],
                 createdAt: new Date(),
                 updatedAt: new Date(),

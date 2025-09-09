@@ -9,81 +9,86 @@ export const initializeSampleData = async () => {
       const sampleProfile: ChildProfile = {
           id: '1',
           name: 'Alex Johnson',
-          diagnosis: 'Autism Spectrum Disorder',
-          quickInfo: [
-            'Non-verbal, uses AAC device',
-            'Loves music and puzzles',
-            'Sensitive to loud noises'
-          ],
-          medical: [
+          dateOfBirth: new Date('2015-01-01'),
+          categories: [
             {
+              id: 'quick-info',
+              name: 'Quick Info',
+              displayName: 'Quick Info',
+              icon: 'info',
+              color: '#F4E4C1',
+              order: 0,
+              isVisible: true,
+              isCustom: false,
+              isQuickInfo: true
+            },
+            {
+              id: 'medical',
+              name: 'Medical',
+              displayName: 'Medical',
+              icon: 'medical',
+              color: '#FFE5CC',
+              order: 1,
+              isVisible: true,
+              isCustom: false
+            },
+            {
+              id: 'behavior',
+              name: 'Behavior',
+              displayName: 'Behavior',
+              icon: 'behavior',
+              color: '#E5F2FF',
+              order: 2,
+              isVisible: true,
+              isCustom: false
+            }
+          ],
+          entries: [
+            {
+              id: '1',
+              category: 'Quick Info',
+              title: 'Communication',
+              description: 'Non-verbal, uses AAC device',
+              date: new Date()
+            },
+            {
+              id: '2',
+              category: 'Quick Info',
+              title: 'Interests',
+              description: 'Loves music and puzzles',
+              date: new Date()
+            },
+            {
+              id: '3',
+              category: 'Quick Info',
+              title: 'Sensory',
+              description: 'Sensitive to loud noises',
+              date: new Date()
+            },
+            {
+              id: '4',
+              category: 'Medical',
               title: 'Daily Medications',
-              description: 'Melatonin 3mg at bedtime for sleep'
+              description: 'Melatonin 3mg at bedtime for sleep',
+              date: new Date()
             },
             {
+              id: '5',
+              category: 'Medical',
               title: 'Allergies',
-              description: 'Peanuts - severe (carries EpiPen)'
-            }
-          ],
-          behavior: [
+              description: 'Peanuts - severe (carries EpiPen)',
+              date: new Date()
+            },
             {
+              id: '6',
+              category: 'Behavior',
               title: 'Calming Strategies',
-              description: 'Deep pressure, weighted blanket, quiet space'
+              description: 'Deep pressure, weighted blanket, quiet space',
+              date: new Date()
             }
           ],
-          sensory: [
-            {
-              title: 'Sensitivities',
-              description: 'Avoid fluorescent lights, prefers dim lighting'
-            },
-            {
-              title: 'Preferences',
-              description: 'Likes soft textures, fidget toys help with focus'
-            }
-          ],
-          dietary: [
-            {
-              title: 'Restricted Foods',
-              description: 'No peanuts, tree nuts, or shellfish'
-            },
-            {
-              title: 'Preferred Foods',
-              description: 'Mac and cheese, apple slices, crackers'
-            }
-          ],
-          communication: [
-            {
-              title: 'Primary Method',
-              description: 'AAC device with Proloquo2Go app'
-            },
-            {
-              title: 'Understanding',
-              description: 'Understands simple instructions, may need visual supports'
-            }
-          ],
-          daily: [
-            {
-              title: 'Morning Routine',
-              description: 'Visual schedule helps with transitions'
-            }
-          ],
-          education: [
-            {
-              title: 'IEP Goals',
-              description: 'Focus on communication and social skills'
-            }
-          ],
-          emergency: [
-            {
-              title: 'Emergency Contact',
-              description: 'Mom: (555) 123-4567'
-            },
-            {
-              title: 'Hospital Preference',
-              description: 'Children\'s Hospital - has medical records on file'
-            }
-          ],
-          customCategories: []
+          createdAt: new Date(),
+          updatedAt: new Date()
       };
       
       await AsyncStorage.setItem('childProfile', JSON.stringify(sampleProfile));

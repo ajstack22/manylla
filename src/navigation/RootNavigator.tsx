@@ -39,7 +39,7 @@ const RootNavigator: React.FC = () => {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background.primary }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background.default }}>
         <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
@@ -90,7 +90,7 @@ const PlaceholderScreen: React.FC<{ route?: any }> = ({ route }) => {
       flex: 1, 
       justifyContent: 'center', 
       alignItems: 'center', 
-      backgroundColor: colors.background.primary,
+      backgroundColor: colors.background.default,
       padding: 20 
     }}>
       <Text style={{ 

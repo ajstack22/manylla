@@ -268,23 +268,30 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
         </Paper>
       
       {/* Quick Info */}
-      {sharedProfile.quickInfoPanels && sharedProfile.quickInfoPanels.length > 0 && (
-        <Paper sx={{ p: 3, mb: 3 }}>
-          <Typography variant="h6" gutterBottom>Quick Information</Typography>
-          <Stack spacing={2}>
-            {sharedProfile.quickInfoPanels
-              .filter(panel => panel.isVisible && panel.value)
-              .map((panel) => (
-                <Box key={panel.id}>
+      {(() => {
+        const quickInfoCategories = sharedProfile.categories.filter(c => c.isQuickInfo);
+        const quickInfoEntries = sharedProfile.entries.filter(e => 
+          quickInfoCategories.some(cat => cat.name === e.category)
+        );
+        
+        if (quickInfoEntries.length === 0) return null;
+        
+        return (
+          <Paper sx={{ p: 3, mb: 3 }}>
+            <Typography variant="h6" gutterBottom>Quick Information</Typography>
+            <Stack spacing={2}>
+              {quickInfoEntries.map((entry) => (
+                <Box key={entry.id}>
                   <Typography variant="subtitle2" color="text.secondary">
-                    {panel.displayName}:
+                    {entry.title}:
                   </Typography>
-                  <Typography variant="body1">{panel.value}</Typography>
+                  <Typography variant="body1">{entry.description}</Typography>
                 </Box>
               ))}
-          </Stack>
-        </Paper>
-      )}
+            </Stack>
+          </Paper>
+        );
+      })()}
       
         {/* Entries by category - show all unified categories */}
         {unifiedCategories
@@ -297,8 +304,7 @@ export const SharedView: React.FC<SharedViewProps> = ({ shareCode }) => {
             // Handle Quick Info category specially
             if (category.isQuickInfo) {
               const quickInfoEntries = sharedProfile.entries.filter(e => e.category === 'quick-info');
-              if (quickInfoEntries.length === 0 && 
-                  (!sharedProfile.quickInfoPanels || sharedProfile.quickInfoPanels.length === 0)) {
+              if (quickInfoEntries.length === 0) {
                 return null;
               }
             }

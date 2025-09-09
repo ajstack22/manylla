@@ -39,7 +39,8 @@ export class StorageAdapter {
 
   static async getAllKeys(): Promise<string[]> {
     try {
-      return await AsyncStorage.getAllKeys();
+      const keys = await AsyncStorage.getAllKeys();
+      return keys as string[];
     } catch (error) {
       console.error('Error getting all keys:', error);
       return [];
@@ -49,7 +50,7 @@ export class StorageAdapter {
   static async multiGet(keys: string[]): Promise<[string, string | null][]> {
     try {
       const results = await AsyncStorage.multiGet(keys);
-      return results;
+      return results as [string, string | null][];
     } catch (error) {
       console.error('Error getting multiple items:', error);
       return keys.map(key => [key, null]);

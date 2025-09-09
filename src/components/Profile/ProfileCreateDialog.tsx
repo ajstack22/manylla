@@ -79,7 +79,6 @@ export const ProfileCreateDialog: React.FC<ProfileCreateDialogProps> = ({
         ...formData,
         entries: [],
         categories: defaultCategories,
-        quickInfoPanels: defaultQuickInfoPanels,
         themeMode: 'light',
         createdAt: new Date(),
         updatedAt: new Date(),

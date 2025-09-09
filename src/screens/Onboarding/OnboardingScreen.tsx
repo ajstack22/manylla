@@ -1,39 +1,26 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import OnboardingWizard from '@components/Onboarding';
-import { useProfile } from '@context/ProfileContext';
-import { ChildProfile } from '@types/ChildProfile';
+import { OnboardingWizard } from '@components/Onboarding';
+import { useProfiles } from '@context/ProfileContext';
+import { ChildProfile } from '../../types/ChildProfile';
 
 const OnboardingScreen: React.FC = () => {
   const navigation = useNavigation();
-  const { setProfile } = useProfile();
+  const { setProfiles } = useProfiles();
 
   const handleStartFresh = async () => {
     // Create a new profile
     const newProfile: ChildProfile = {
       id: Date.now().toString(),
       name: '',
-      dateOfBirth: '',
-      diagnosis: [],
-      medications: [],
-      therapies: [],
-      education: {
-        school: '',
-        grade: '',
-        iepGoals: [],
-        accommodations: [],
-      },
-      medical: {
-        conditions: [],
-        allergies: [],
-        providers: [],
-      },
-      documents: [],
-      quickInfo: [],
-      lastUpdated: new Date().toISOString(),
+      dateOfBirth: new Date(),
+      categories: [],
+      entries: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
-    await setProfile(newProfile);
+    await setProfiles([newProfile]);
     // Navigation will automatically update based on profile existence
   };
 
@@ -48,97 +35,97 @@ const OnboardingScreen: React.FC = () => {
     const demoProfile: ChildProfile = {
       id: 'demo-' + Date.now(),
       name: 'Alex Smith',
-      dateOfBirth: '2018-06-15',
-      diagnosis: ['Autism Spectrum Disorder', 'ADHD'],
-      medications: [
+      dateOfBirth: new Date('2018-06-15'),
+      categories: [
         {
           id: '1',
-          name: 'Methylphenidate',
-          dosage: '10mg',
-          frequency: 'Once daily',
-          prescriber: 'Dr. Johnson',
-        },
-      ],
-      therapies: [
-        {
-          id: '1',
-          type: 'Speech Therapy',
-          provider: 'Sarah Williams, SLP',
-          frequency: 'Weekly',
-          location: 'Children\'s Therapy Center',
+          name: 'Quick Info',
+          displayName: 'Quick Info',
+          icon: 'info',
+          color: '#F4E4C1',
+          order: 0,
+          isVisible: true,
+          isCustom: false,
+          isQuickInfo: true
         },
         {
           id: '2',
-          type: 'Occupational Therapy',
-          provider: 'Michael Chen, OTR/L',
-          frequency: 'Bi-weekly',
-          location: 'Children\'s Therapy Center',
+          name: 'Medical',
+          displayName: 'Medical',
+          icon: 'medical',
+          color: '#FFE5CC',
+          order: 1,
+          isVisible: true,
+          isCustom: false
         },
+        {
+          id: '3',
+          name: 'Education',
+          displayName: 'Education',
+          icon: 'school',
+          color: '#E5F2FF',
+          order: 2,
+          isVisible: true,
+          isCustom: false
+        }
       ],
-      education: {
-        school: 'Sunshine Elementary School',
-        grade: '1st Grade',
-        teacher: 'Ms. Thompson',
-        iepGoals: [
-          {
-            id: '1',
-            category: 'Communication',
-            goal: 'Improve verbal communication in classroom settings',
-            targetDate: '2024-06-01',
-          },
-          {
-            id: '2',
-            category: 'Social Skills',
-            goal: 'Engage in cooperative play with peers for 10 minutes',
-            targetDate: '2024-06-01',
-          },
-        ],
-        accommodations: [
-          'Preferential seating near teacher',
-          'Visual schedule',
-          'Sensory breaks as needed',
-          'Modified assignments',
-        ],
-      },
-      medical: {
-        conditions: ['Autism Spectrum Disorder', 'ADHD', 'Sensory Processing Disorder'],
-        allergies: ['Peanuts', 'Tree nuts'],
-        providers: [
-          {
-            id: '1',
-            name: 'Dr. Emily Johnson',
-            specialty: 'Developmental Pediatrics',
-            phone: '555-0100',
-            location: 'Children\'s Medical Center',
-          },
-          {
-            id: '2',
-            name: 'Dr. Robert Martinez',
-            specialty: 'Child Psychiatry',
-            phone: '555-0101',
-            location: 'Behavioral Health Clinic',
-          },
-        ],
-      },
-      documents: [],
-      quickInfo: [
-        'Non-verbal when overwhelmed - uses AAC device',
-        'Loves trains and dinosaurs',
-        'Calms down with deep pressure',
-        'Emergency contact: Mom - 555-0123',
+      entries: [
+        {
+          id: '1',
+          category: 'Quick Info',
+          title: 'Communication',
+          description: 'Non-verbal when overwhelmed - uses AAC device',
+          date: new Date()
+        },
+        {
+          id: '2',
+          category: 'Quick Info',
+          title: 'Interests',
+          description: 'Loves trains and dinosaurs',
+          date: new Date()
+        },
+        {
+          id: '3',
+          category: 'Quick Info',
+          title: 'Sensory',
+          description: 'Calms down with deep pressure',
+          date: new Date()
+        },
+        {
+          id: '4',
+          category: 'Quick Info',
+          title: 'Emergency Contact',
+          description: 'Mom - 555-0123',
+          date: new Date()
+        }
       ],
-      lastUpdated: new Date().toISOString(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
-    await setProfile(demoProfile);
+    await setProfiles([demoProfile]);
     // Navigation will automatically update based on profile existence
+  };
+
+  const handleComplete = async (data: {
+    mode: 'fresh' | 'join' | 'demo';
+    childName?: string;
+    dateOfBirth?: string;
+    photo?: string;
+    accessCode?: string;
+  }) => {
+    if (data.mode === 'fresh') {
+      await handleStartFresh();
+    } else if (data.mode === 'join' && data.accessCode) {
+      await handleJoinWithCode(data.accessCode);
+    } else if (data.mode === 'demo') {
+      await handleDemoMode();
+    }
   };
 
   return (
     <OnboardingWizard
-      onStartFresh={handleStartFresh}
-      onJoinWithCode={handleJoinWithCode}
-      onDemoMode={handleDemoMode}
+      onComplete={handleComplete}
     />
   );
 };

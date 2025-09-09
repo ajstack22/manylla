@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ChildProfile } from '@src/types/ChildProfile';
+import { ChildProfile } from '../../types/ChildProfile';
 
 const STORAGE_KEYS = {
   PROFILES: 'manylla_profiles',
