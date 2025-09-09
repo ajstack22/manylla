@@ -98,10 +98,10 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
                 />
 
                 <Text style={styles.cardDate}>
-                  {new Intl.DateTimeFormat('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
+                  {new Intl.DateTimeFormat("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
                   }).format(new Date(entry.updatedAt || entry.date))}
                 </Text>
               </View>

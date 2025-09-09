@@ -47,7 +47,7 @@ const darkTheme = {
 };
 
 const manyllaTheme = {
-  primary: "#9D8B73",  // Medium manila brown (halfway point)
+  primary: "#9D8B73", // Medium manila brown (halfway point)
   secondary: "#8A7862", // Complementary medium brown
   background: {
     primary: "#EBD9C3", // Light manila but still noticeable

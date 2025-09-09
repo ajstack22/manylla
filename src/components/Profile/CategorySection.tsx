@@ -81,7 +81,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
                         size="small"
                         onClick={() => onEditEntry(entry)}
                         sx={{
-                          color: 'text.secondary',
+                          color: "text.secondary",
                           minWidth: 44,
                           minHeight: 44,
                           "&:hover": {
@@ -97,7 +97,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
                         size="small"
                         onClick={() => onDeleteEntry(entry.id)}
                         sx={{
-                          color: 'text.secondary',
+                          color: "text.secondary",
                           minWidth: 44,
                           minHeight: 44,
                           "&:hover": {
@@ -121,10 +121,10 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
                   color="text.secondary"
                   sx={{ display: "block", mt: 1 }}
                 >
-                  {new Intl.DateTimeFormat('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
+                  {new Intl.DateTimeFormat("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
                   }).format(new Date(entry.updatedAt || entry.date))}
                 </Typography>
               </CardContent>

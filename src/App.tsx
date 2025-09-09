@@ -352,7 +352,9 @@ function AppContent() {
     if (!profile) return;
 
     // Show confirmation dialog
-    const confirmed = window.confirm('Are you sure you want to delete this entry?');
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this entry?",
+    );
     if (!confirmed) return;
 
     setIsSaving(true);
