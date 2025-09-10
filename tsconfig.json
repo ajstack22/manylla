@@ -26,12 +26,13 @@
     "noUnusedParameters": false,
     "noImplicitReturns": true,
     "forceConsistentCasingInFileNames": true,
-    "allowJs": false,
+    "allowJs": true,
+    "checkJs": false,
     "moduleResolution": "node",
     "types": ["react", "react-dom", "node"],
     "noEmit": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx"],
   "exclude": [
     "**/node_modules",
     "**/Pods",
