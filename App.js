@@ -561,7 +561,11 @@ function AppContent() {
     // OnboardingScreen now handles demo mode creation
     if (data.mode === 'demo') {
       // Demo profile is already created by OnboardingScreen
-      // Just mark onboarding as complete
+      // Load the profile that was created
+      const savedProfile = await StorageService.loadProfile();
+      if (savedProfile) {
+        setProfile(savedProfile);
+      }
       await AsyncStorage.setItem('manylla_onboarding_completed', 'true');
       setShowOnboarding(false);
       return;
