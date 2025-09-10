@@ -1,5 +1,32 @@
 # Manylla Release Notes
 
+## Version 2025.09.10.3
+Demo Data & Profile Photo Fix
+
+### 🔴 Critical Production Fix
+- **Demo Data Restored**: Fixed missing demo categories in production
+  - All 6 unified categories now appear: Quick Info, Daily Support, Health & Therapy, Education & Goals, Behavior & Social, Family & Resources
+  - Added comprehensive demo entries across all categories (14 total entries)
+  - Demo profile now properly initialized with complete sample data
+  
+### 🖼️ Profile Photo Fixed
+- **Demo Profile Photo**: Added working profile photo for demo mode
+  - Uses Ellie Thompson as consistent demo character
+  - Profile photo properly displays at `/ellie.png`
+  - Fixed missing photo references in demo initialization
+
+### 📝 Data Consistency
+- **Unified Demo Experience**: Consistent demo profile across application
+  - Name: Ellie Thompson (with preferred name and pronouns)
+  - Comprehensive entries showing real-world usage examples
+  - Proper category ordering and colors matching unified system
+
+### 🔧 Technical Details
+- Updated OnboardingScreen.js handleDemoMode function
+- Fixed category definitions to match unifiedCategories.js
+- Added profile photo path reference
+- No breaking changes or regressions
+
 ## Version 2025.09.10.2
 TypeScript Cleanup - Deployment Blocker Fixed
 

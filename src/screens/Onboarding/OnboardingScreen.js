@@ -1,8 +1,21 @@
+// React imports
 import React from "react";
+
+// React Native imports (navigation is RN)
 import { useNavigation } from "@react-navigation/native";
-import { OnboardingWizard } from "@components/Onboarding";
+
+// Third-party libraries
+// (none in this file)
+
+// Context/Hooks
 import { useProfiles } from "@context/ProfileContext";
+
+// Components
+import { OnboardingWizard } from "@components/Onboarding";
+
+// Utils and types
 import { ChildProfile } from "../../types/ChildProfile";
+import { unifiedCategories } from "../../utils/unifiedCategories";
 
 const OnboardingScreen = () => {
   const navigation = useNavigation();
@@ -25,7 +38,7 @@ const OnboardingScreen = () => {
   };
 
   const handleJoinWithCode = async (code) => {
-    // TODOmplement joining with sync code
+    // TODO: Implement joining with sync code
     // This will eventually sync with the server using the provided code
   };
 
@@ -33,88 +46,38 @@ const OnboardingScreen = () => {
     // Create a demo profile with sample data
     const demoProfile = {
       id: "demo-" + Date.now(),
-      name: "Alex Smith",
+      name: "Ellie Thompson",
+      preferredName: "Ellie",
+      pronouns: "she/her",
       dateOfBirth: new Date("2018-06-15"),
-      categories: [
-        {
-          id: "quick-info",
-          name: "quick-info",
-          displayName: "Quick Info",
-          icon: "info",
-          color: "#E74C3C",
-          order: 1,
-          isVisible: true,
-          isCustom: false,
-          isQuickInfo: true,
-        },
-        {
-          id: "daily-support",
-          name: "daily-support",
-          displayName: "Daily Support",
-          icon: "support",
-          color: "#3498DB",
-          order: 1,
-          isVisible: true,
-          isCustom: false,
-        },
-        {
-          id: "medical",
-          name: "medical",
-          displayName: "Medical",
-          icon: "medical",
-          color: "#E67E22",
-          order: 1,
-          isVisible: true,
-          isCustom: false,
-        },
-        {
-          id: "development",
-          name: "development",
-          displayName: "Development",
-          icon: "development",
-          color: "#2ECC71",
-          order: 1,
-          isVisible: true,
-          isCustom: false,
-        },
-        {
-          id: "health",
-          name: "health",
-          displayName: "Health",
-          icon: "health",
-          color: "#9B59B6",
-          order: 1,
-          isVisible: true,
-          isCustom: false,
-        },
-        {
-          id: "other",
-          name: "other",
-          displayName: "Other",
-          icon: "other",
-          color: "#95A5A6",
-          order: 1,
-          isVisible: true,
-          isCustom: false,
-        },
-      ],
+      photo: "/ellie.png",
+      // Use unified categories from the shared configuration
+      categories: [...unifiedCategories],
       entries: [
         {
           id: "1",
           category: "quick-info",
           title: "Communication",
-          description: "Non-verbal when overwhelmed - uses AAC device",
+          description:
+            "Non-verbal when overwhelmed - uses AAC device with picture cards",
           date: new Date(),
         },
         {
           id: "2",
           category: "quick-info",
           title: "Emergency Contact",
-          description: "Mom - 555-0123",
+          description: "Mom (Emily) - 555-0123",
           date: new Date(),
         },
         {
           id: "3",
+          category: "quick-info",
+          title: "Medical Alert",
+          description: "Allergic to peanuts - carries EpiPen",
+          date: new Date(),
+        },
+        {
+          id: "4",
           category: "daily-support",
           title: "Sensory Needs",
           description:
@@ -122,7 +85,7 @@ const OnboardingScreen = () => {
           date: new Date(),
         },
         {
-          id: "4",
+          id: "5",
           category: "daily-support",
           title: "Daily Routine",
           description:
@@ -130,17 +93,72 @@ const OnboardingScreen = () => {
           date: new Date(),
         },
         {
-          id: "5",
-          category: "medical",
-          title: "Medications",
-          description: "No daily medications currently",
+          id: "6",
+          category: "daily-support",
+          title: "Comfort Items",
+          description:
+            "Blue weighted blanket and dinosaur stuffed animal help with anxiety",
           date: new Date(),
         },
         {
-          id: "6",
-          category: "development",
-          title: "Current Goals",
-          description: "Working on verbal communication and social interaction",
+          id: "7",
+          category: "health-therapy",
+          title: "Medications",
+          description: "Melatonin 3mg at bedtime for sleep",
+          date: new Date(),
+        },
+        {
+          id: "8",
+          category: "health-therapy",
+          title: "Therapy Schedule",
+          description: "Speech therapy Tuesdays, OT Thursdays at 3pm",
+          date: new Date(),
+        },
+        {
+          id: "9",
+          category: "education-goals",
+          title: "IEP Goals",
+          description:
+            "Working on 2-word phrases and following 2-step directions",
+          date: new Date(),
+        },
+        {
+          id: "10",
+          category: "education-goals",
+          title: "Learning Style",
+          description:
+            "Visual learner - responds well to picture cards and demonstrations",
+          date: new Date(),
+        },
+        {
+          id: "11",
+          category: "behavior-social",
+          title: "Triggers",
+          description:
+            "Loud unexpected noises, changes in routine without warning",
+          date: new Date(),
+        },
+        {
+          id: "12",
+          category: "behavior-social",
+          title: "Social Preferences",
+          description: "Prefers parallel play, working on turn-taking skills",
+          date: new Date(),
+        },
+        {
+          id: "13",
+          category: "family-resources",
+          title: "Support Team",
+          description:
+            "Dr. Martinez (pediatrician), Ms. Johnson (special ed teacher)",
+          date: new Date(),
+        },
+        {
+          id: "14",
+          category: "family-resources",
+          title: "Helpful Resources",
+          description:
+            "Local autism support group meets first Saturday of each month",
           date: new Date(),
         },
       ],
