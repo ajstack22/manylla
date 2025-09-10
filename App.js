@@ -558,7 +558,17 @@ function AppContent() {
   };
 
   const handleOnboardingComplete = async (data) => {
+    // OnboardingScreen now handles demo mode creation
     if (data.mode === 'demo') {
+      // Demo profile is already created by OnboardingScreen
+      // Just mark onboarding as complete
+      await AsyncStorage.setItem('manylla_onboarding_completed', 'true');
+      setShowOnboarding(false);
+      return;
+    }
+    
+    // DEPRECATED - Remove this old demo creation code
+    if (false && data.mode === 'demo') {
       // Create demo profile - Ellie's comprehensive example data
       const demoProfile = {
         id: '1',

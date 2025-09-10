@@ -57,7 +57,6 @@ const OnboardingScreen = () => {
   };
 
   const handleDemoMode = async () => {
-    console.log("Creating demo mode profile...");
     // Clear any existing profiles first to ensure clean demo
     await AsyncStorage.removeItem("profiles");
     await AsyncStorage.removeItem("childProfile"); // Also clear old storage key
@@ -189,10 +188,8 @@ const OnboardingScreen = () => {
       updatedAt: new Date(),
     };
 
-    console.log("Demo profile to save:", JSON.stringify(demoProfile, null, 2));
     await saveProfiles([demoProfile]);
     setCurrentProfile(demoProfile);
-    console.log("Demo profile saved successfully");
     // Navigation will automatically update based on profile existence
   };
 
