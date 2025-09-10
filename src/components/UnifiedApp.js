@@ -22,10 +22,13 @@ import {
 } from "react-native";
 // DatePicker handled through platform-specific implementations
 let DateTimePicker = null;
-try {
-  DateTimePicker = require("@react-native-community/datetimepicker").default;
-} catch (e) {
-  // Fallback - DatePicker not available
+if (Platform.OS !== "web") {
+  try {
+    // Use eval to prevent webpack from analyzing this require
+    DateTimePicker = eval('require')("@react-native-community/datetimepicker").default;
+  } catch (e) {
+    // Fallback - DatePicker not available
+  }
 }
 
 // Color constants (manila envelope theme)
@@ -736,7 +739,7 @@ const styles = StyleSheet.create({
   },
   categoryMoveButtons: {
     flexDirection: "row",
-    gap: 4,
+    gap: 40,
   },
   moveButton: {
     width: 28,

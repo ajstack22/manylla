@@ -8,7 +8,7 @@
  * Release notes must be updated before deployment
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   ScrollView,
@@ -35,7 +35,7 @@ import { EntryForm, ProfileEditForm, CategoryManager } from './src/components/Un
 import { ThemedToast } from './src/components/Toast';
 import { LoadingOverlay } from './src/components/Loading';
 import { PrintPreview, QRCodeModal } from './src/components/Sharing';
-import { Header } from './src/components/Layout';
+import { Header, HEADER_HEIGHT } from './src/components/Layout';
 
 // Import Share and Sync dialogs
 import { ShareDialogOptimized } from './src/components/Sharing';
@@ -130,7 +130,8 @@ const ProfileOverview = ({
   onEditProfile,
   onManageCategories,
   styles,
-  colors
+  colors,
+  onScrollChange
 }) => {
   
   if (!profile) {
@@ -169,12 +170,69 @@ const ProfileOverview = ({
   
   const visibleCategories = [...quickInfoCategories, ...regularCategories];
 
-  const screenWidth = Dimensions.get('window').width;
-  const isDesktop = screenWidth > 1024;
+  const [windowWidth, setWindowWidth] = useState(Dimensions.get('window').width);
+  const scrollViewRef = useRef(null);
+  
+  useEffect(() => {
+    const updateWidth = () => {
+      setWindowWidth(Dimensions.get('window').width);
+    };
+    
+    const subscription = Dimensions.addEventListener('change', updateWidth);
+    return () => subscription?.remove();
+  }, []);
+
+  // Add scroll listener for web with throttling
+  useEffect(() => {
+    if (Platform.OS === 'web' && onScrollChange) {
+      let ticking = false;
+      let lastKnownScrollY = 0;
+      
+      const handleWebScroll = () => {
+        lastKnownScrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            const shouldHideProfile = lastKnownScrollY > 150;
+            console.log('Web scroll:', { scrollY: lastKnownScrollY, shouldHideProfile });
+            onScrollChange(shouldHideProfile);
+            ticking = false;
+          });
+          ticking = true;
+        }
+      };
+
+      // Check initial scroll position
+      const initialScrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+      onScrollChange(initialScrollY > 150);
+      
+      window.addEventListener('scroll', handleWebScroll, { passive: true });
+      return () => window.removeEventListener('scroll', handleWebScroll);
+    }
+  }, [onScrollChange]);
+  
+  const isDesktop = windowWidth > 1024;
+
+  // Track scroll position for header profile display
+  const handleScroll = (event) => {
+    if (Platform.OS === 'web' && onScrollChange) {
+      // For React Native Web, contentOffset might not work properly
+      const scrollY = event.nativeEvent.contentOffset?.y || 
+                     event.nativeEvent.scrollTop || 
+                     event.currentTarget.scrollTop || 0;
+      // Profile photo is about 120px + padding, hide when scrolled past ~150px
+      const shouldHideProfile = scrollY > 150;
+      console.log('Scroll detected:', { scrollY, shouldHideProfile });
+      onScrollChange(shouldHideProfile);
+    }
+  };
 
   return (
     <View style={{ flex: 1, position: 'relative' }}>
-      <ScrollView style={styles.profileContainer}>
+      <ScrollView 
+        style={styles.profileContainer}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}>
         <View style={styles.contentContainer}>
         {/* Desktop: Side-by-side layout, Mobile: Stacked layout */}
         <View style={isDesktop ? styles.desktopHeader : null}>
@@ -293,8 +351,17 @@ const ProfileOverview = ({
           {visibleCategories.filter(cat => cat.name !== 'quick-info').map((category) => {
             const entries = getEntriesByCategory(category.name);
             
+            // Dynamic column width based on current window width
+            const categoryStyle = [
+              styles.categorySection,
+              windowWidth > 768 && Platform.OS === 'web' && {
+                width: 'calc(50% - 12px)',
+                marginHorizontal: 6,
+              }
+            ];
+            
             return (
-              <View key={category.id} style={styles.categorySection}>
+              <View key={category.id} style={categoryStyle}>
               <View style={styles.categoryHeader}>
                 <View style={[styles.categoryColorStrip, { backgroundColor: category.color }]} />
                 <Text style={styles.categoryTitle}>{category.displayName}</Text>
@@ -416,6 +483,7 @@ function AppContent() {
   const [toast, setToast] = useState({ open: false, message: '', severity: 'success' });
   const [operationLoading, setOperationLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
+  const [isProfileHidden, setIsProfileHidden] = useState(false);
 
   // Load initial data
   useEffect(() => {
@@ -810,6 +878,9 @@ function AppContent() {
         theme={theme}
         colors={colors}
         showToast={showToast}
+        profile={profile}
+        isProfileHidden={isProfileHidden}
+        onEditProfile={() => setProfileEditOpen(true)}
       />
       <ProfileOverview
         profile={profile}
@@ -822,6 +893,7 @@ function AppContent() {
         onManageCategories={() => setCategoriesOpen(true)}
         styles={styles}
         colors={colors}
+        onScrollChange={setIsProfileHidden}
       />
       
       {/* Entry Form Modal */}
@@ -939,6 +1011,13 @@ const createStyles = (colors) => {
     flex: 1,
     backgroundColor: colors.background.default,
     ...baseTextStyle,
+    // Add padding for fixed header on web
+    ...Platform.select({
+      web: {
+        paddingTop: HEADER_HEIGHT,
+      },
+      default: {},
+    }),
   },
   loadingContainer: {
     flex: 1,
@@ -1077,29 +1156,9 @@ const createStyles = (colors) => {
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: colors.border,
-    // Responsive column layout - 2 columns on desktop
-    ...(() => {
-      const screenWidth = Dimensions.get('window').width;
-      // 2 columns on large screens (>1024px)
-      if (screenWidth > 1024) {
-        return {
-          width: Platform.OS === 'web' ? 'calc(50% - 12px)' : '48%',
-          marginHorizontal: Platform.OS === 'web' ? 6 : '1%',
-        };
-      }
-      // 2 columns on tablets (768-1024px)
-      if (screenWidth > 768) {
-        return {
-          width: Platform.OS === 'web' ? 'calc(50% - 12px)' : '48%',
-          marginHorizontal: Platform.OS === 'web' ? 6 : '1%',
-        };
-      }
-      // 1 column on phones (<768px)
-      return {
-        width: '100%',
-        marginHorizontal: 0,
-      };
-    })(),
+    // Default to full width, will be overridden dynamically for desktop
+    width: '100%',
+    marginHorizontal: 0,
   },
   quickInfoSection: {
     width: '100%',

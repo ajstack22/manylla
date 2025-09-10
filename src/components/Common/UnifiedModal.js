@@ -185,7 +185,7 @@ const createStyles = (colors) =>
           : undefined,
     },
     closeButton: {
-      padding: 4,
+      padding: 40,
     },
     modalScrollView: {
       flex: 1,

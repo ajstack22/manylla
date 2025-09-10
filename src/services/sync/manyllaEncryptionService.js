@@ -1,7 +1,7 @@
 import { Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// Import random bytes polyfill for React Native
-import "react-native-get-random-values";
+// Import crypto polyfill
+import '../../polyfills/crypto';
 import nacl from "tweetnacl";
 import pako from "pako";
 

@@ -1,0 +1,329 @@
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  Modal,
+  ScrollView,
+  TouchableOpacity,
+  Switch,
+  StyleSheet,
+  SafeAreaView,
+  Platform,
+} from "react-native";
+import DraggableFlatList, {
+  ScaleDecorator,
+  RenderItemParams,
+} from "react-native-draggable-flatlist";
+import { CategoryConfig } from "../../types/ChildProfile";
+
+interface UnifiedCategoryManagerProps {
+  open;
+  onClose: () => void;
+  categories: CategoryConfig[];
+  onUpdate: (categories: CategoryConfig[]) => void;
+}
+
+export const UnifiedCategoryManager= ({
+  open,
+  onClose,
+  categories,
+  onUpdate,
+}) => {
+  const [localCategories, setLocalCategories] = useState(categories);
+
+  useEffect(() => {
+    setLocalCategories(categories);
+  }, [categories]);
+
+  const handleToggleVisibility = (id) => {
+    setLocalCategories((items) =>
+      items.map((item) =>
+        item.id === id ? { ...item, isVisible: !item.isVisible } : item,
+      ),
+    );
+  };
+
+  const handleDragEnd = ({ data }: { data: CategoryConfig[] }) => {
+    const updatedCategories = data.map((item, index) => ({
+      ...item,
+      order: index + 1,
+    }));
+    setLocalCategories(updatedCategories);
+  };
+
+  const handleSave = () => {
+    onUpdate(localCategories);
+    onClose();
+  };
+
+  const renderItem = ({
+    item,
+    drag,
+    isActive,
+  }: RenderItemParams) => {
+    return (
+      
+        <TouchableOpacity
+          onLongPress={drag}
+          disabled={isActive}
+          style={[styles.categoryItem, isActive && styles.categoryItemActive]}
+        >
+          
+            {/* Drag Handle */}
+            ☰
+
+            {/* Color Indicator */}
+            <View
+              style={[styles.colorIndicator, { backgroundColor: item.color }]}
+            />
+
+            {/* Category Info */}
+            
+              
+                {item.displayName}
+                {item.isQuickInfo && (
+                  
+                    Priority
+                  
+                )}
+                {item.isCustom && (
+                  
+                    
+                      Custom
+                    
+                  
+                )}
+              
+              
+                {item.isVisible ? "Visible in profile" : "Hidden from profile"}
+              
+            
+
+            {/* Visibility Toggle */}
+            <Switch
+              value={item.isVisible}
+              onValueChange={() => handleToggleVisibility(item.id)}
+              trackColor={{ false: "#E0E0E0", true: "#8B7355" }}
+              thumbColor={item.isVisible ? "#FFFFFF" : "#FAFAFA"}
+            />
+          
+        
+      
+    );
+  };
+
+  return (
+    <Modal
+      visible={open}
+      animationType="slide"
+      presentationStyle="pageSheet"
+      onRequestClose={onClose}
+    >
+      
+        {/* Header */}
+        
+          🏷️ Manage Categories
+          
+            ✕
+          
+        
+
+        {/* Instructions */}
+        
+          
+            Long press and drag to reorder categories. Toggle switches to
+            show/hide in profile.
+          
+        
+
+        {/* Category List */}
+        
+          <DraggableFlatList
+            data={localCategories}
+            onDragEnd={handleDragEnd}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+            showsVerticalScrollIndicator={false}
+          />
+        
+
+        {/* Footer Actions */}
+        
+          
+            Cancel
+          
+          
+            Save Changes
+          
+        
+      
+    
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#F5F5F5",
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E0E0E0",
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#333",
+  },
+  closeButton: {
+    padding: 8,
+  },
+  closeButtonText: {
+    fontSize: 24,
+    color: "#666",
+  },
+  instructions: {
+    backgroundColor: "#F4E4C1",
+    padding: 12,
+    marginHorizontal: 16,
+    marginTop: 16,
+    borderRadius: 8,
+  },
+  instructionText: {
+    fontSize: 14,
+    color: "#666",
+    textAlign: "center",
+  },
+  listContainer: {
+    flex: 1,
+    padding: 16,
+  },
+  categoryItem: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    marginBottom: 12,
+    padding: 16,
+    borderWidth: 2,
+    borderColor: "#E0E0E0",
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  categoryItemActive: {
+    borderColor: "#8B7355",
+    backgroundColor: "#FAFAFA",
+  },
+  categoryContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  dragHandle: {
+    fontSize: 20,
+    color: "#999",
+    marginRight: 12,
+  },
+  colorIndicator: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    marginRight: 12,
+  },
+  categoryInfo: {
+    flex: 1,
+  },
+  categoryHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 4,
+  },
+  categoryName: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+    marginRight: 8,
+  },
+  categoryStatus: {
+    fontSize: 13,
+    color: "#666",
+  },
+  chip: {
+    backgroundColor: "#8B7355",
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 12,
+    marginRight: 4,
+  },
+  chipOutline: {
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: "#8B7355",
+  },
+  chipText: {
+    fontSize: 11,
+    color: "#FFFFFF",
+    fontWeight: "500",
+  },
+  chipTextOutline: {
+    color: "#8B7355",
+  },
+  footer: {
+    flexDirection: "row",
+    padding: 16,
+    backgroundColor: "#FFFFFF",
+    borderTopWidth: 1,
+    borderTopColor: "#E0E0E0",
+    gap: 12,
+  },
+  cancelButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+    alignItems: "center",
+  },
+  cancelButtonText: {
+    fontSize: 16,
+    color: "#666",
+    fontWeight: "500",
+  },
+  saveButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 8,
+    backgroundColor: "#8B7355",
+    alignItems: "center",
+  },
+  saveButtonText: {
+    fontSize: 16,
+    color: "#FFFFFF",
+    fontWeight: "600",
+  },
+});
+
+export default UnifiedCategoryManager;
