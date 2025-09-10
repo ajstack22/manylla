@@ -25,26 +25,6 @@ module.exports = {
     publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
     clean: true,
   },
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          priority: 10,
-          reuseExistingChunk: true,
-        },
-        common: {
-          minChunks: 2,
-          priority: 5,
-          reuseExistingChunk: true,
-        },
-      },
-    },
-    runtimeChunk: 'single',
-    minimize: isProduction,
-  },
   module: {
     rules: [
       {
@@ -197,6 +177,7 @@ module.exports = {
         },
       },
     },
+    runtimeChunk: 'single',
   },
   devServer: {
     static: {

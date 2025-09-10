@@ -97,7 +97,7 @@ const PlaceholderScreen = ({ route }) => {
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: colors.background.default,
-        padding: 00,
+        padding: 0,
       }}
     >
       <Text

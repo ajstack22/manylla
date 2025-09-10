@@ -46,7 +46,7 @@ export class ProfileValidator {
     if (!Array.isArray(data.entries)) {
       errors.push("Entries must be an array");
     } else {
-      data.entries.forEach((entryny, indexumber) => {
+      data.entries.forEach((entry, index) => {
         const entryErrors = this.validateEntry(entry);
         if (entryErrors.length > 0) {
           errors.push(`Entry ${index + 1}: ${entryErrors.join(", ")}`);

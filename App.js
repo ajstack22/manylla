@@ -133,6 +133,8 @@ const ProfileOverview = ({
   colors,
   onScrollChange
 }) => {
+  const [windowWidth, setWindowWidth] = useState(Dimensions.get('window').width);
+  const scrollViewRef = useRef(null);
   
   if (!profile) {
     return (
@@ -169,9 +171,6 @@ const ProfileOverview = ({
     .sort((a, b) => a.order - b.order);
   
   const visibleCategories = [...quickInfoCategories, ...regularCategories];
-
-  const [windowWidth, setWindowWidth] = useState(Dimensions.get('window').width);
-  const scrollViewRef = useRef(null);
   
   useEffect(() => {
     const updateWidth = () => {
