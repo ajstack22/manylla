@@ -125,6 +125,7 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         { from: 'public/favicon.ico', to: 'favicon.ico', noErrorOnMissing: true },
+        { from: 'public/favicon.svg', to: 'favicon.svg', noErrorOnMissing: true },
         { from: 'public/logo192.png', to: 'logo192.png', noErrorOnMissing: true },
         { from: 'public/logo512.png', to: 'logo512.png', noErrorOnMissing: true },
         { from: 'public/manifest.json', to: 'manifest.json', noErrorOnMissing: true },

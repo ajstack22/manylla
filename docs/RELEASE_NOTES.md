@@ -1,5 +1,27 @@
 # Manylla Release Notes
 
+## Version 2025.09.10.7 - 2025-09-10
+Fix Missing Resources in Production Build
+
+### Fixed
+- **Missing favicon.svg**: Added favicon.svg to webpack copy configuration
+  - Production build now includes favicon.svg file
+  - Eliminates 404 error in browser console
+  - Browser tab now displays proper icon
+
+### Technical
+- Updated webpack.config.js to copy favicon.svg to build output
+- Added pattern to CopyWebpackPlugin for favicon.svg
+- Both global-styles.css and favicon.svg now properly included in build
+- No breaking changes
+
+### Validation
+- TypeScript files: 0 ✓
+- Platform-specific files: 0 ✓
+- Material-UI imports: 0 ✓
+- Build: Success ✓
+- Prettier: Pass ✓
+
 ## Version 2025.09.10.6
 Routine Deployment - No Code Changes
 
