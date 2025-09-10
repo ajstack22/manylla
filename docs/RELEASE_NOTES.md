@@ -1,5 +1,28 @@
 # Manylla Release Notes
 
+## Version 2025.09.10.5 - 2025-09-10
+Demo Data Fix - Production Deployment
+
+### Fixed
+- **Demo Profile Creation**: Re-enabled complete demo profile creation in App.js
+  - OnboardingWizard now properly triggers demo data creation
+  - Creates Ellie Thompson profile with all 6 categories
+  - Includes 14 demo entries across all categories
+  - Profile photo correctly set to /ellie.png
+  
+### Technical
+- Fixed handleOnboardingComplete to create demo profile when mode='demo'
+- Removed profile overwrite that was clearing stored data
+- Cleaned up debug console.log statements
+- No architecture violations
+
+### Validation
+- TypeScript files: 0 ✓
+- Platform-specific files: 0 ✓
+- Material-UI imports: 0 ✓
+- Build: Success ✓
+- Console logs: 1 (minimal) ✓
+
 ## Version 2025.09.10.4 - 2025-09-10
 Demo Data Display Fix
 
