@@ -166,13 +166,11 @@ export const ShareDialogOptimized = ({ open, onClose, profile }) => {
 
       if (!response.ok) {
         const error = await response.json();
-        console.error("[ShareDialog] Failed to create share:", error);
         Alert.alert("Error", "Failed to create share link. Please try again.");
         return;
       }
 
       const result = await response.json();
-      // // console.log('[ShareDialog] Share created successfully:', result);
 
       // Generate link with key in fragment
       const getShareDomain = () => {
@@ -186,7 +184,6 @@ export const ShareDialogOptimized = ({ open, onClose, profile }) => {
       setGeneratedLink(`${shareDomain}/share/${token}#${keyBase64}`);
       setStep("complete");
     } catch (error) {
-      console.error("[ShareDialog] Failed to create share:", error);
       Alert.alert("Error", "Failed to create share link. Please try again.");
     } finally {
       setLoading(false);
@@ -215,7 +212,6 @@ export const ShareDialogOptimized = ({ open, onClose, profile }) => {
         title: subject,
       });
     } catch (error) {
-      console.error("Error sharing:", error);
     }
   };
 

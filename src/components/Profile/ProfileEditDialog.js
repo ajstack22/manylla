@@ -84,7 +84,6 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
       if (response.didCancel) {
         // User cancelled camera - no logging needed
       } else if (response.error) {
-        console.log("Camera Error: ", response.error);
       } else {
         const imageUri = `data:${response.type};base64,${response.base64}`;
         setPhotoPreview(imageUri);
@@ -105,7 +104,6 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
       if (response.didCancel) {
         // User cancelled image picker - no logging needed
       } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
       } else {
         const imageUri = `data:${response.type};base64,${response.base64}`;
         setPhotoPreview(imageUri);

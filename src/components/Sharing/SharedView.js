@@ -43,7 +43,6 @@ export const SharedView = ({ shareCode }) => {
         }
 
         const [token, encryptionKey] = shareCode.split("#");
-        // // console.log('[SharedView] Loading share from API:', { token, hasKey: !!encryptionKey });
 
         if (!encryptionKey) {
           setError("Missing decryption key in URL");
@@ -148,7 +147,6 @@ export const SharedView = ({ shareCode }) => {
           setSharedProfile(profile);
           setIsAuthenticated(true);
         } catch (decryptError) {
-          console.error("Decryption error:", decryptError);
           setError("Invalid share code or decryption failed");
         }
       } catch (err) {

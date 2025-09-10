@@ -4,7 +4,6 @@ const AsyncStorage = {
     try {
       return localStorage.getItem(key);
     } catch (error) {
-      console.error("AsyncStorage.getItem error:", error);
       return null;
     }
   },
@@ -13,7 +12,6 @@ const AsyncStorage = {
     try {
       localStorage.setItem(key, value);
     } catch (error) {
-      console.error("AsyncStorage.setItem error:", error);
       throw error;
     }
   },
@@ -22,7 +20,6 @@ const AsyncStorage = {
     try {
       localStorage.removeItem(key);
     } catch (error) {
-      console.error("AsyncStorage.removeItem error:", error);
       throw error;
     }
   },
@@ -31,7 +28,6 @@ const AsyncStorage = {
     try {
       localStorage.clear();
     } catch (error) {
-      console.error("AsyncStorage.clear error:", error);
       throw error;
     }
   },
@@ -40,7 +36,6 @@ const AsyncStorage = {
     try {
       return Object.keys(localStorage);
     } catch (error) {
-      console.error("AsyncStorage.getAllKeys error:", error);
       return [];
     }
   },
@@ -49,7 +44,6 @@ const AsyncStorage = {
     try {
       return keys.map((key) => [key, localStorage.getItem(key)]);
     } catch (error) {
-      console.error("AsyncStorage.multiGet error:", error);
       return [];
     }
   },
@@ -60,7 +54,6 @@ const AsyncStorage = {
         localStorage.setItem(key, value);
       });
     } catch (error) {
-      console.error("AsyncStorage.multiSet error:", error);
       throw error;
     }
   },
@@ -71,7 +64,6 @@ const AsyncStorage = {
         localStorage.removeItem(key);
       });
     } catch (error) {
-      console.error("AsyncStorage.multiRemove error:", error);
       throw error;
     }
   },

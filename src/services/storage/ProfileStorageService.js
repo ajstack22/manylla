@@ -13,7 +13,6 @@ class ProfileStorageService {
       const profiles = await this.getProfiles();
       return profiles.length > 0;
     } catch (error) {
-      console.error("Error checking for profiles:", error);
       return false;
     }
   }
@@ -26,7 +25,6 @@ class ProfileStorageService {
       }
       return JSON.parse(profilesJson);
     } catch (error) {
-      console.error("Error getting profiles:", error);
       return [];
     }
   }
@@ -38,7 +36,6 @@ class ProfileStorageService {
         JSON.stringify(profiles),
       );
     } catch (error) {
-      console.error("Error saving profiles:", error);
       throw error;
     }
   }
@@ -49,7 +46,6 @@ class ProfileStorageService {
       profiles.push(profile);
       await this.saveProfiles(profiles);
     } catch (error) {
-      console.error("Error adding profile:", error);
       throw error;
     }
   }
@@ -64,7 +60,6 @@ class ProfileStorageService {
       profiles[index] = { ...profiles[index], ...updates };
       await this.saveProfiles(profiles);
     } catch (error) {
-      console.error("Error updating profile:", error);
       throw error;
     }
   }
@@ -75,7 +70,6 @@ class ProfileStorageService {
       const filtered = profiles.filter((p) => p.id !== id);
       await this.saveProfiles(filtered);
     } catch (error) {
-      console.error("Error deleting profile:", error);
       throw error;
     }
   }
@@ -84,7 +78,6 @@ class ProfileStorageService {
     try {
       return await AsyncStorage.getItem(STORAGE_KEYS.ACTIVE_PROFILE);
     } catch (error) {
-      console.error("Error getting active profile:", error);
       return null;
     }
   }
@@ -93,7 +86,6 @@ class ProfileStorageService {
     try {
       await AsyncStorage.setItem(STORAGE_KEYS.ACTIVE_PROFILE, id);
     } catch (error) {
-      console.error("Error setting active profile:", error);
       throw error;
     }
   }
@@ -107,7 +99,6 @@ class ProfileStorageService {
       const profiles = await this.getProfiles();
       return profiles.find((p) => p.id === activeId) || null;
     } catch (error) {
-      console.error("Error getting active profile:", error);
       return null;
     }
   }
@@ -116,7 +107,6 @@ class ProfileStorageService {
     try {
       await AsyncStorage.setItem(STORAGE_KEYS.HAS_ONBOARDED, value.toString());
     } catch (error) {
-      console.error("Error setting onboarded status:", error);
       throw error;
     }
   }
@@ -126,7 +116,6 @@ class ProfileStorageService {
       const value = await AsyncStorage.getItem(STORAGE_KEYS.HAS_ONBOARDED);
       return value === "true";
     } catch (error) {
-      console.error("Error getting onboarded status:", error);
       return false;
     }
   }
@@ -139,7 +128,6 @@ class ProfileStorageService {
         STORAGE_KEYS.HAS_ONBOARDED,
       ]);
     } catch (error) {
-      console.error("Error clearing storage:", error);
       throw error;
     }
   }

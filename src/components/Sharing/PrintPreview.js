@@ -187,7 +187,6 @@ export const PrintPreview = ({
     } catch (error) {
       if (error.message !== "User did not share") {
         Alert.alert("Error", "Failed to share document. Please try again.");
-        console.error("Share error:", error);
       }
     }
   };

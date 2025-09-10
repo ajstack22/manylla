@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const { GenerateSW } = require('workbox-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
+// TerserPlugin is included in webpack 5 by default
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -20,9 +20,30 @@ module.exports = {
   entry: './index.web.js',
   output: {
     path: path.resolve(__dirname, 'web/build'),
-    filename: 'bundle.[contenthash].js',
+    filename: '[name].[contenthash].js',
+    chunkFilename: '[name].[contenthash].chunk.js',
     publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
     clean: true,
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          priority: 10,
+          reuseExistingChunk: true,
+        },
+        common: {
+          minChunks: 2,
+          priority: 5,
+          reuseExistingChunk: true,
+        },
+      },
+    },
+    runtimeChunk: 'single',
+    minimize: isProduction,
   },
   module: {
     rules: [
@@ -161,19 +182,6 @@ module.exports = {
   ],
   optimization: {
     minimize: isProduction,
-    minimizer: [
-      new TerserPlugin({
-        terserOptions: {
-          compress: {
-            drop_console: isProduction,
-          },
-          format: {
-            comments: false,
-          },
-        },
-        extractComments: false,
-      }),
-    ],
     splitChunks: {
       chunks: 'all',
       cacheGroups: {

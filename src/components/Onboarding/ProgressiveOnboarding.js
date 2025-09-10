@@ -1,38 +1,18 @@
 import React, { useState } from "react";
 import {
-  Container,
-  Typography,
-  Button,
-  TextField,
-  Box,
-  Stack,
-  Fade,
-  Slide,
-  Stepper,
-  Step,
-  StepLabel,
-  Paper,
-  IconButton,
-  Collapse,
-  Alert,
-  Avatar,
-} from "@mui/material";
-import {
-  ArrowForward as ArrowForwardIcon,
-  ArrowBack as ArrowBackIcon,
-  Add as AddIcon,
-  Share as ShareIcon,
-  PlayCircle as PlayIcon,
-  Security as SecurityIcon,
-  CloudSync as CloudSyncIcon,
-  Check as CheckIcon,
-  Cake as CakeIcon,
-  CameraAlt as CameraAltIcon,
-  AddAPhoto as AddAPhotoIcon,
-} from "@mui/icons-material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+  StyleSheet,
+  Platform,
+  Dimensions,
+  Image,
+  Alert
+} from "react-native";
+
+const { width } = Dimensions.get('window');
 
 export const ProgressiveOnboarding = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState("welcome");
@@ -162,1006 +142,461 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
 
   const getTotalSteps = () => (mode === "demo" || mode === "join" ? 4 : 5);
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: manyllaColors.background,
+      paddingVertical: 32,
+    },
+    scrollContainer: {
+      paddingHorizontal: 16,
+      maxWidth: Platform.OS === 'web' ? 480 : width,
+      alignSelf: 'center',
+      width: '100%',
+    },
+    progressContainer: {
+      marginBottom: 24,
+    },
+    progressHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 8,
+    },
+    progressText: {
+      fontSize: 12,
+      color: manyllaColors.textSecondary,
+    },
+    backButton: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    backIcon: {
+      fontSize: 18,
+      color: manyllaColors.text,
+    },
+    progressBar: {
+      width: '100%',
+      height: 2,
+      backgroundColor: manyllaColors.border,
+      borderRadius: 8,
+    },
+    progressFill: {
+      height: '100%',
+      backgroundColor: manyllaColors.primary,
+      borderRadius: 8,
+    },
+    card: {
+      backgroundColor: manyllaColors.paper,
+      borderRadius: 8,
+      padding: 24,
+      borderWidth: 1,
+      borderColor: manyllaColors.border,
+    },
+    centerText: {
+      textAlign: 'center',
+    },
+    logoContainer: {
+      alignItems: 'center',
+      marginBottom: 16,
+    },
+    logo: {
+      fontSize: 48,
+      fontWeight: '600',
+      color: manyllaColors.primary,
+      letterSpacing: -2,
+      lineHeight: 48,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: '600',
+      color: manyllaColors.text,
+      marginBottom: 8,
+    },
+    subtitle: {
+      fontSize: 16,
+      color: manyllaColors.textSecondary,
+      marginBottom: 16,
+    },
+    featureContainer: {
+      backgroundColor: manyllaColors.background,
+      borderRadius: 8,
+      padding: 24,
+      marginBottom: 16,
+      borderWidth: 1,
+      borderColor: manyllaColors.border,
+    },
+    featureRow: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      marginBottom: 20,
+    },
+    featureIcon: {
+      width: 30,
+      height: 30,
+      borderRadius: 15,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: 12,
+    },
+    featureIconText: {
+      fontSize: 12,
+      color: 'white',
+    },
+    featureTitle: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: manyllaColors.text,
+      marginBottom: 4,
+    },
+    featureDescription: {
+      fontSize: 14,
+      color: manyllaColors.textSecondary,
+    },
+    button: {
+      backgroundColor: manyllaColors.primary,
+      borderRadius: 8,
+      paddingVertical: 12,
+      paddingHorizontal: 24,
+      alignItems: 'center',
+    },
+    buttonText: {
+      fontSize: 16,
+      fontWeight: '500',
+      color: 'white',
+    },
+    optionCard: {
+      backgroundColor: manyllaColors.paper,
+      borderRadius: 8,
+      padding: 24,
+      marginBottom: 16,
+      borderWidth: 2,
+      borderColor: manyllaColors.border,
+    },
+    optionSelected: {
+      borderColor: manyllaColors.primary,
+    },
+    optionRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    optionIcon: {
+      fontSize: 20,
+      marginRight: 16,
+    },
+    optionContent: {
+      flex: 1,
+    },
+    optionTitle: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: manyllaColors.text,
+      marginBottom: 4,
+    },
+    optionDescription: {
+      fontSize: 14,
+      color: manyllaColors.textSecondary,
+    },
+    codeInput: {
+      flexDirection: 'row',
+      marginTop: 16,
+    },
+    textInput: {
+      flex: 1,
+      backgroundColor: 'white',
+      borderRadius: 8,
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      marginRight: 8,
+      fontSize: 16,
+      color: manyllaColors.text,
+    },
+    codeButton: {
+      backgroundColor: manyllaColors.primary,
+      borderRadius: 8,
+      paddingHorizontal: 16,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    infoAlert: {
+      backgroundColor: manyllaColors.background,
+      borderRadius: 8,
+      padding: 16,
+      borderWidth: 1,
+      borderColor: manyllaColors.border,
+      marginBottom: 16,
+    },
+    infoText: {
+      fontSize: 14,
+      color: manyllaColors.text,
+    },
+  });
+
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        backgroundColor: manyllaColors.background,
-        py: 4,
-      }}
-    >
-      <Container maxWidth="sm" sx={{ px: 2 }}>
+    <View style={styles.container}>
+      <ScrollView 
+        style={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Progress indicator */}
-        <Box sx={{ mb: 3 }}>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              mb: 1,
-            }}
-          >
-            <Typography
-              variant="caption"
-              sx={{ color: manyllaColors.textSecondary }}
-            >
+        <View style={styles.progressContainer}>
+          <View style={styles.progressHeader}>
+            <Text style={styles.progressText}>
               Step {getStepNumber() + 1} of {getTotalSteps()}
-            </Typography>
+            </Text>
             {currentStep !== "welcome" && (
-              <IconButton
-                onClick={handleBack}
-                size="small"
-                sx={{ color: manyllaColors.text }}
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={handleBack}
               >
-                <ArrowBackIcon />
-              </IconButton>
+                <Text style={styles.backIcon}>←</Text>
+              </TouchableOpacity>
             )}
-          </Box>
-          <Box
-            sx={{
-              width: "100%",
-              height: 2,
-              backgroundColor: manyllaColors.border,
-              borderRadius: 8,
-            }}
-          >
-            <Box
-              sx={{
-                width: `${((getStepNumber() + 1) / getTotalSteps()) * 100}%`,
-                height: "100%",
-                backgroundColor: manyllaColors.primary,
-                borderRadius: 8,
-                transition: "width 0.3s ease",
-              }}
+          </View>
+          <View style={styles.progressBar}>
+            <View 
+              style={[
+                styles.progressFill, 
+                { width: `${((getStepNumber() + 1) / getTotalSteps()) * 100}%` }
+              ]} 
             />
-          </Box>
-        </Box>
+          </View>
+        </View>
 
         {/* Step Content */}
-        <Fade in timeout={300}>
-          <Box>
-            {currentStep === "welcome" && (
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 3,
-                  backgroundColor: manyllaColors.paper,
-                  borderRadius: 8,
-                  border: `1px solid ${manyllaColors.border}`,
-                }}
+        <View style={styles.card}>
+          {currentStep === "welcome" && (
+            <View>
+              <View style={[styles.logoContainer, styles.centerText]}>
+                <Text style={styles.logo}>manylla</Text>
+              </View>
+              <Text style={[styles.title, styles.centerText]}>
+                Welcome! Let's get started
+              </Text>
+              <Text style={[styles.subtitle, styles.centerText]}>
+                Your secure companion for managing your child's special needs journey
+              </Text>
+
+              <View style={styles.featureContainer}>
+                <View style={styles.featureRow}>
+                  <View style={[styles.featureIcon, { backgroundColor: manyllaColors.primary }]}>
+                    <Text style={styles.featureIconText}>🔒</Text>
+                  </View>
+                  <View>
+                    <Text style={styles.featureTitle}>Private & Secure</Text>
+                    <Text style={styles.featureDescription}>
+                      Your data never leaves your device without encryption
+                    </Text>
+                  </View>
+                </View>
+                
+                <View style={styles.featureRow}>
+                  <View style={[styles.featureIcon, { backgroundColor: '#7B9EA8' }]}>
+                    <Text style={styles.featureIconText}>☁️</Text>
+                  </View>
+                  <View>
+                    <Text style={styles.featureTitle}>Multi-device Sync</Text>
+                    <Text style={styles.featureDescription}>
+                      Access from anywhere with your recovery phrase
+                    </Text>
+                  </View>
+                </View>
+                
+                <View style={styles.featureRow}>
+                  <View style={[styles.featureIcon, { backgroundColor: '#8B9467' }]}>
+                    <Text style={styles.featureIconText}>📤</Text>
+                  </View>
+                  <View>
+                    <Text style={styles.featureTitle}>Controlled Sharing</Text>
+                    <Text style={styles.featureDescription}>
+                      Share only what you want, when you want
+                    </Text>
+                  </View>
+                </View>
+              </View>
+
+              <TouchableOpacity style={styles.button} onPress={handleNext}>
+                <Text style={styles.buttonText}>Get Started</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {currentStep === "choose-path" && (
+            <View>
+              <Text style={[styles.title, styles.centerText]}>
+                How would you like to begin?
+              </Text>
+              <Text style={[styles.subtitle, styles.centerText]}>
+                You can always change this later
+              </Text>
+
+              <TouchableOpacity
+                style={[
+                  styles.optionCard,
+                  mode === "fresh" && styles.optionSelected
+                ]}
+                onPress={() => handleModeSelect("fresh")}
               >
-                <Box sx={{ textAlign: "center" }}>
-                  <Box
-                    sx={{
-                      display: "inline-block",
-                      position: "relative",
-                      mb: 2,
-                    }}
-                  >
-                    <Typography
-                      variant="h3"
-                      sx={{
-                        fontWeight: 600,
-                        background: `linear-gradient(135deg, ${manyllaColors.primary} 0%, ${manyllaColors.primaryDark} 100%)`,
-                        backgroundClip: "text",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        letterSpacing: "-2px",
-                        lineHeight: 1,
-                        fontSize: "48px",
-                        display: "inline-block",
-                        paddingBottom: "8px",
-                        paddingTop: "4px",
-                        position: "relative",
-                        zIndex: 1,
-                      }}
-                    >
-                      manylla
-                    </Typography>
-                  </Box>
-                  <Typography
-                    variant="h5"
-                    gutterBottom
-                    sx={{ fontWeight: 600, color: manyllaColors.text }}
-                  >
-                    Welcome! Let's get started
-                  </Typography>
-                  <Typography
-                    variant="body1"
-                    sx={{ mb: 2, color: manyllaColors.textSecondary }}
-                  >
-                    Your secure companion for managing your child's special
-                    needs journey
-                  </Typography>
+                <View style={styles.optionRow}>
+                  <Text style={[styles.optionIcon, { color: manyllaColors.primary }]}>➕</Text>
+                  <View style={styles.optionContent}>
+                    <Text style={styles.optionTitle}>Start Fresh</Text>
+                    <Text style={styles.optionDescription}>
+                      Create a new profile for your child
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
 
-                  <Box
-                    sx={{
-                      p: 3,
-                      backgroundColor: manyllaColors.background,
-                      borderRadius: 8,
-                      mb: 2,
-                      border: `1px solid ${manyllaColors.border}`,
-                    }}
-                  >
-                    <Stack spacing={2.5} sx={{ textAlign: "left" }}>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "flex-start",
-                          gap: 8,
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            minWidth: 30,
-                            minHeight: 30,
-                            width: 30,
-                            height: 30,
-                            borderRadius: "50%",
-                            backgroundColor: manyllaColors.primary,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            flexShrink: 0,
-                          }}
-                        >
-                          <SecurityIcon sx={{ color: "white", fontSize: 12 }} />
-                        </Box>
-                        <Box>
-                          <Typography
-                            variant="subtitle2"
-                            sx={{ fontWeight: 600, color: manyllaColors.text }}
-                          >
-                            Private Secure
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ color: manyllaColors.textSecondary }}
-                          >
-                            Your data never leaves your device without
-                            encryption
-                          </Typography>
-                        </Box>
-                      </Box>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "flex-start",
-                          gap: 8,
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            minWidth: 30,
-                            minHeight: 30,
-                            width: 30,
-                            height: 30,
-                            borderRadius: "50%",
-                            backgroundColor: "#7B9EA8",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            flexShrink: 0,
-                          }}
-                        >
-                          <CloudSyncIcon
-                            sx={{ color: "white", fontSize: 12 }}
-                          />
-                        </Box>
-                        <Box>
-                          <Typography
-                            variant="subtitle2"
-                            sx={{ fontWeight: 600, color: manyllaColors.text }}
-                          >
-                            Multi-device Sync
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ color: manyllaColors.textSecondary }}
-                          >
-                            Access from anywhere with your recovery phrase
-                          </Typography>
-                        </Box>
-                      </Box>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "flex-start",
-                          gap: 8,
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            minWidth: 30,
-                            minHeight: 30,
-                            width: 30,
-                            height: 30,
-                            borderRadius: "50%",
-                            backgroundColor: "#8B9467",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            flexShrink: 0,
-                          }}
-                        >
-                          <ShareIcon sx={{ color: "white", fontSize: 12 }} />
-                        </Box>
-                        <Box>
-                          <Typography
-                            variant="subtitle2"
-                            sx={{ fontWeight: 600, color: manyllaColors.text }}
-                          >
-                            Controlled Sharing
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ color: manyllaColors.textSecondary }}
-                          >
-                            Share only what you want, when you want
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Stack>
-                  </Box>
-
-                  <Button
-                    variant="contained"
-                    size="large"
-                    endIcon={<ArrowForwardIcon />}
-                    onClick={handleNext}
-                    fullWidth
-                    sx={{
-                      py: 1.5,
-                      backgroundColor: manyllaColors.primary,
-                      color: "white",
-                      ":hover": {
-                        backgroundColor: manyllaColors.primaryDark,
-                      },
-                    }}
-                  >
-                    Get Started
-                  </Button>
-                </Box>
-              </Paper>
-            )}
-
-            {currentStep === "choose-path" && (
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 3,
-                  backgroundColor: manyllaColors.paper,
-                  borderRadius: 8,
-                  border: `1px solid ${manyllaColors.border}`,
-                }}
+              <TouchableOpacity
+                style={[
+                  styles.optionCard,
+                  mode === "demo" && styles.optionSelected
+                ]}
+                onPress={() => handleModeSelect("demo")}
               >
-                <Typography
-                  variant="h5"
-                  gutterBottom
-                  sx={{
-                    fontWeight: 600,
-                    textAlign: "center",
-                    mb: 2,
-                    color: manyllaColors.text,
-                  }}
-                >
-                  How would you like to begin?
-                </Typography>
-                <Typography
-                  variant="body1"
-                  sx={{
-                    mb: 2,
-                    textAlign: "center",
-                    color: manyllaColors.textSecondary,
-                  }}
-                >
-                  You can always change this later
-                </Typography>
+                <View style={styles.optionRow}>
+                  <Text style={[styles.optionIcon, { color: '#8B9467' }]}>▶️</Text>
+                  <View style={styles.optionContent}>
+                    <Text style={styles.optionTitle}>Try Demo</Text>
+                    <Text style={styles.optionDescription}>
+                      Explore with Ellie's example profile
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
 
-                <Stack spacing={2}>
-                  <Paper
-                    sx={{
-                      p: 3,
-                      cursor: "pointer",
-                      border: "2px solid",
-                      borderColor:
-                        mode === "fresh"
-                          ? manyllaColors.primary
-                          : manyllaColors.border,
-                      backgroundColor: manyllaColors.paper,
-                      ":hover": { borderColor: manyllaColors.primary },
-                    }}
-                    onClick={() => handleModeSelect("fresh")}
-                  >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                      <AddIcon sx={{ color: manyllaColors.primary }} />
-                      <Box sx={{ flex: 1 }}>
-                        <Typography
-                          variant="subtitle1"
-                          sx={{ fontWeight: 600, color: manyllaColors.text }}
-                        >
-                          Start Fresh
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{ color: manyllaColors.textSecondary }}
-                        >
-                          Create a new profile for your child
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Paper>
-
-                  <Paper
-                    sx={{
-                      p: 3,
-                      cursor: "pointer",
-                      border: "2px solid",
-                      borderColor:
-                        mode === "demo"
-                          ? manyllaColors.primary
-                          : manyllaColors.border,
-                      backgroundColor: manyllaColors.paper,
-                      ":hover": { borderColor: manyllaColors.primary },
-                    }}
-                    onClick={() => handleModeSelect("demo")}
-                  >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                      <PlayIcon sx={{ color: "#8B9467" }} />
-                      <Box sx={{ flex: 1 }}>
-                        <Typography
-                          variant="subtitle1"
-                          sx={{ fontWeight: 600, color: manyllaColors.text }}
-                        >
-                          Try Demo
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{ color: manyllaColors.textSecondary }}
-                        >
-                          Explore with Ellie's example profile
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Paper>
-
-                  <Paper
-                    sx={{
-                      p: 3,
-                      cursor: "pointer",
-                      border: "2px solid",
-                      borderColor: showAccessCode
-                        ? manyllaColors.primary
-                        : manyllaColors.border,
-                      backgroundColor: manyllaColors.paper,
-                      ":hover": { borderColor: manyllaColors.primary },
-                    }}
-                    onClick={() => setShowAccessCode(!showAccessCode)}
-                  >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                      <ShareIcon sx={{ color: manyllaColors.textSecondary }} />
-                      <Box sx={{ flex: 1 }}>
-                        <Typography
-                          variant="subtitle1"
-                          sx={{ fontWeight: 600, color: manyllaColors.text }}
-                        >
-                          Join with Code
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{ color: manyllaColors.textSecondary }}
-                        >
-                          Connect to an existing shared profile
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Paper>
-
-                  <Collapse in={showAccessCode}>
-                    <Box sx={{ mt: 2 }}>
-                      <Stack direction="row" spacing={1}>
-                        <TextField
-                          value={accessCode}
-                          onChange={(e) =>
-                            setAccessCode(e.target.value.toUpperCase())
-                          }
-                          placeholder="Enter 6-digit code"
-                          fullWidth
-                          size="small"
-                          variant="filled"
-                          inputProps={{
-                            maxLength: 6,
-                            style: {
-                              textTransform: "uppercase",
-                              letterSpacing: 1,
-                            },
-                          }}
-                          sx={{
-                            " .MuiFilledInput-root": {
-                              backgroundColor: "white",
-                              color: manyllaColors.text,
-                              ":hover": {
-                                backgroundColor: "white",
-                              },
-                              ".Mui-focused": {
-                                backgroundColor: "white",
-                              },
-                            },
-                          }}
-                        />
-                        <Button
-                          variant="contained"
-                          onClick={handleJoinWithCode}
-                          disabled={accessCode.length !== 6}
-                          endIcon={<ArrowForwardIcon />}
-                          sx={{
-                            backgroundColor: manyllaColors.primary,
-                            color: "white",
-                            ":hover": {
-                              backgroundColor: manyllaColors.primaryDark,
-                            },
-                            ":disabled": {
-                              backgroundColor: manyllaColors.border,
-                            },
-                          }}
-                        >
-                          Join
-                        </Button>
-                      </Stack>
-                    </Box>
-                  </Collapse>
-                </Stack>
-              </Paper>
-            )}
-
-            {currentStep === "child-info" && mode === "fresh" && (
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 3,
-                  backgroundColor: manyllaColors.paper,
-                  borderRadius: 8,
-                  border: `1px solid ${manyllaColors.border}`,
-                }}
+              <TouchableOpacity
+                style={[
+                  styles.optionCard,
+                  showAccessCode && styles.optionSelected
+                ]}
+                onPress={() => setShowAccessCode(!showAccessCode)}
               >
-                <Typography
-                  variant="h5"
-                  gutterBottom
-                  sx={{
-                    fontWeight: 600,
-                    textAlign: "center",
-                    mb: 2,
-                    color: manyllaColors.text,
-                  }}
-                >
-                  Tell us about your child
-                </Typography>
-                <Typography
-                  variant="body1"
-                  sx={{
-                    mb: 2,
-                    textAlign: "center",
-                    color: manyllaColors.textSecondary,
-                  }}
-                >
-                  This helps personalize your experience
-                </Typography>
-
-                <Stack spacing={3}>
-                  {/* Photo upload centered at the top */}
-                  <Box
-                    sx={{ display: "flex", justifyContent: "center", mb: 2 }}
-                  >
-                    <IconButton
-                      component="label"
-                      sx={{
-                        p: 0,
-                        width: 100,
-                        height: 100,
-                        ":hover": {
-                          " .MuiAvatar-root": {
-                            opacity: 0.9,
-                          },
-                        },
-                      }}
-                    >
-                      <Avatar
-                        src={photo}
-                        sx={{
-                          width: 100,
-                          height: 100,
-                          bgcolor: photo ? "transparent" : manyllaColors.border,
-                          color: manyllaColors.text,
-                          fontSize: "2.5rem",
-                          cursor: "pointer",
-                          transition: "opacity 0.2s",
-                        }}
-                      >
-                        {photo ? null : childName ? (
-                          childName[0].toUpperCase()
-                        ) : (
-                          <AddAPhotoIcon sx={{ fontSize: 40 }} />
-                        )}
-                      </Avatar>
-                      <input
-                        type="file"
-                        hidden
-                        accept="image/*"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            const reader = new FileReader();
-                            reader.onloadend = () => {
-                              setPhoto(reader.result);
-                            };
-                            reader.readAsDataURL(file);
-                          }
-                        }}
-                      />
-                    </IconButton>
-                  </Box>
-
-                  <Box
-                    sx={{
-                      display: "grid",
-                      gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                      gap: 8,
-                    }}
-                  >
-                    <TextField
-                      label="Child's Name"
-                      value={childName}
-                      onChange={(e) => {
-                        setChildName(e.target.value);
-                        setNameError(false);
-                      }}
-                      fullWidth
-                      required
-                      error={nameError}
-                      helperText={
-                        nameError
-                          ? "Child's name is required"
-                          : "This is how your child will be identified in the app"
-                      }
-                      autoFocus
-                      variant="filled"
-                      sx={{
-                        " .MuiFilledInput-root": {
-                          backgroundColor: "white",
-                          color: manyllaColors.text,
-                          borderRadius: "12px",
-                          ":hover": {
-                            backgroundColor: "white",
-                          },
-                          ".Mui-focused": {
-                            backgroundColor: "white",
-                          },
-                          ":before, :after": {
-                            display: "none",
-                          },
-                        },
-                        " .MuiInputLabel-root": {
-                          color: manyllaColors.textSecondary,
-                        },
-                        " .MuiFormHelperText-root": {
-                          color: manyllaColors.textSecondary,
-                        },
-                      }}
+                <View style={styles.optionRow}>
+                  <Text style={[styles.optionIcon, { color: manyllaColors.textSecondary }]}>📤</Text>
+                  <View style={styles.optionContent}>
+                    <Text style={styles.optionTitle}>Join with Code</Text>
+                    <Text style={styles.optionDescription}>
+                      Connect to an existing shared profile
+                    </Text>
+                  </View>
+                </View>
+                
+                {showAccessCode && (
+                  <View style={styles.codeInput}>
+                    <TextInput
+                      style={styles.textInput}
+                      value={accessCode}
+                      onChangeText={(text) => setAccessCode(text.toUpperCase())}
+                      placeholder="Enter 6-digit code"
+                      maxLength={6}
+                      autoCapitalize="characters"
                     />
-
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <DatePicker
-                        label="Date of Birth (optional)"
-                        value={dateOfBirth}
-                        onChange={(newValue) => setDateOfBirth(newValue)}
-                        sx={{
-                          width: "100%",
-                          " .MuiPickersFilledInput-root": {
-                            backgroundColor: "white !important",
-                            borderRadius: "12px",
-                            color: manyllaColors.text,
-                            ":hover": {
-                              backgroundColor: "white !important",
-                            },
-                            ".Mui-focused": {
-                              backgroundColor: "white !important",
-                            },
-                            "::before": {
-                              display: "none !important",
-                            },
-                            "::after": {
-                              display: "none !important",
-                            },
-                          },
-                          " .MuiPickersInputBase-root": {
-                            backgroundColor: "white !important",
-                            borderRadius: "12px",
-                            color: manyllaColors.text,
-                            "::before": {
-                              display: "none !important",
-                            },
-                            "::after": {
-                              display: "none !important",
-                            },
-                          },
-                          " .MuiPickersSectionList-sectionContent": {
-                            color: manyllaColors.text,
-                          },
-                          " .MuiPickersInputBase-sectionContent": {
-                            color: manyllaColors.text,
-                          },
-                          " .MuiPickersFilledInput-underline": {
-                            ":before": {
-                              display: "none !important",
-                            },
-                            ":after": {
-                              display: "none !important",
-                            },
-                          },
-                          " .MuiInputLabel-root": {
-                            color: manyllaColors.textSecondary,
-                          },
-                          " .MuiFormHelperText-root": {
-                            color: manyllaColors.textSecondary,
-                          },
-                          " .MuiInputAdornment-root": {
-                            color: manyllaColors.text,
-                            " .MuiIconButton-root": {
-                              color: manyllaColors.text,
-                            },
-                            " .MuiSvgIcon-root": {
-                              color: manyllaColors.text,
-                            },
-                          },
-                        }}
-                        slotProps={{
-                          textField: {
-                            fullWidth: true,
-                            variant: "filled",
-                            helperText:
-                              "Helps track age-appropriate information",
-                          },
-                        }}
-                      />
-                    </LocalizationProvider>
-                  </Box>
-
-                  <Alert
-                    severity="info"
-                    icon={<SecurityIcon />}
-                    sx={{
-                      backgroundColor: manyllaColors.background,
-                      color: manyllaColors.text,
-                      border: `1px solid ${manyllaColors.border}`,
-                      " .MuiAlert-icon": {
-                        color: manyllaColors.primary,
-                      },
-                    }}
-                  >
-                    This information stays on your device and is never shared
-                    without your permission
-                  </Alert>
-
-                  <Button
-                    variant="contained"
-                    size="large"
-                    endIcon={<ArrowForwardIcon />}
-                    onClick={() => {
-                      if (!childName.trim()) {
-                        setNameError(true);
-                      } else {
-                        handleNext();
-                      }
-                    }}
-                    fullWidth
-                    sx={{
-                      py: 1.5,
-                      backgroundColor: manyllaColors.primary,
-                      color: "white",
-                      ":hover": {
-                        backgroundColor: manyllaColors.primaryDark,
-                      },
-                    }}
-                  >
-                    Continue
-                  </Button>
-                </Stack>
-              </Paper>
-            )}
-
-            {currentStep === "privacy" && (
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 3,
-                  backgroundColor: manyllaColors.paper,
-                  borderRadius: 8,
-                  border: `1px solid ${manyllaColors.border}`,
-                }}
-              >
-                <Typography
-                  variant="h5"
-                  gutterBottom
-                  sx={{
-                    fontWeight: 600,
-                    textAlign: "center",
-                    mb: 2,
-                    color: manyllaColors.text,
-                  }}
-                >
-                  Your Privacy Matters
-                </Typography>
-
-                <Stack spacing={3}>
-                  <Paper
-                    sx={{
-                      p: 3,
-                      border: "2px solid",
-                      borderColor: "#8B9467",
-                      backgroundColor: manyllaColors.paper,
-                    }}
-                  >
-                    <Box
-                      sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}
+                    <TouchableOpacity
+                      style={[
+                        styles.codeButton,
+                        accessCode.length !== 6 && { opacity: 0.5 }
+                      ]}
+                      onPress={handleJoinWithCode}
+                      disabled={accessCode.length !== 6}
                     >
-                      <CheckIcon
-                        sx={{ mt: 2.5, fontSize: 18, color: "#8B9467" }}
-                      />
-                      <Box>
-                        <Typography
-                          variant="subtitle1"
-                          sx={{
-                            fontWeight: 600,
-                            mb: 0.5,
-                            color: manyllaColors.text,
-                          }}
-                        >
-                          Zero-Knowledge Encryption
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{ color: manyllaColors.textSecondary }}
-                        >
-                          Your data is encrypted on your device. We never see
-                          it.
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Paper>
+                      <Text style={styles.buttonText}>Join</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </TouchableOpacity>
+            </View>
+          )}
 
-                  <Paper
-                    sx={{
-                      p: 3,
-                      border: "2px solid",
-                      borderColor: "#7B9EA8",
-                      backgroundColor: manyllaColors.paper,
-                    }}
-                  >
-                    <Box
-                      sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}
-                    >
-                      <CheckIcon
-                        sx={{ mt: 2.5, fontSize: 18, color: "#7B9EA8" }}
-                      />
-                      <Box>
-                        <Typography
-                          variant="subtitle1"
-                          sx={{
-                            fontWeight: 600,
-                            mb: 0.5,
-                            color: manyllaColors.text,
-                          }}
-                        >
-                          No Account Required
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{ color: manyllaColors.textSecondary }}
-                        >
-                          No emails, no passwords, no tracking. Just a recovery
-                          phrase.
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Paper>
+          {currentStep === "privacy" && (
+            <View>
+              <Text style={[styles.title, styles.centerText]}>
+                Your Privacy Matters
+              </Text>
 
-                  <Paper
-                    sx={{
-                      p: 3,
-                      border: "2px solid",
-                      borderColor: manyllaColors.primary,
-                      backgroundColor: manyllaColors.paper,
-                    }}
-                  >
-                    <Box
-                      sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}
-                    >
-                      <CheckIcon
-                        sx={{
-                          mt: 0.5,
-                          fontSize: 18,
-                          color: manyllaColors.primary,
-                        }}
-                      />
-                      <Box>
-                        <Typography
-                          variant="subtitle1"
-                          sx={{
-                            fontWeight: 600,
-                            mb: 0.5,
-                            color: manyllaColors.text,
-                          }}
-                        >
-                          You Control Sharing
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{ color: manyllaColors.textSecondary }}
-                        >
-                          Share specific information with time limits and access
-                          codes.
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Paper>
-                </Stack>
+              <View style={[styles.optionCard, { borderColor: '#8B9467' }]}>
+                <View style={styles.optionRow}>
+                  <Text style={[styles.optionIcon, { color: '#8B9467' }]}>✅</Text>
+                  <View style={styles.optionContent}>
+                    <Text style={styles.optionTitle}>Zero-Knowledge Encryption</Text>
+                    <Text style={styles.optionDescription}>
+                      Your data is encrypted on your device. We never see it.
+                    </Text>
+                  </View>
+                </View>
+              </View>
 
-                <Button
-                  variant="contained"
-                  size="large"
-                  endIcon={<ArrowForwardIcon />}
-                  onClick={handleNext}
-                  fullWidth
-                  sx={{
-                    mt: 2,
-                    backgroundColor: manyllaColors.primary,
-                    color: "white",
-                    ":hover": {
-                      backgroundColor: manyllaColors.primaryDark,
-                    },
-                  }}
-                >
-                  I Understand
-                </Button>
-              </Paper>
-            )}
+              <View style={[styles.optionCard, { borderColor: '#7B9EA8' }]}>
+                <View style={styles.optionRow}>
+                  <Text style={[styles.optionIcon, { color: '#7B9EA8' }]}>✅</Text>
+                  <View style={styles.optionContent}>
+                    <Text style={styles.optionTitle}>No Account Required</Text>
+                    <Text style={styles.optionDescription}>
+                      No emails, no passwords, no tracking. Just a recovery phrase.
+                    </Text>
+                  </View>
+                </View>
+              </View>
 
-            {currentStep === "ready" && (
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 3,
-                  backgroundColor: manyllaColors.paper,
-                  borderRadius: 8,
-                  textAlign: "center",
-                  border: `1px solid ${manyllaColors.border}`,
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 30,
-                    height: 30,
-                    borderRadius: "50%",
-                    backgroundColor: "#8B9467",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    margin: "0 auto",
-                    mb: 2,
-                  }}
-                >
-                  <CheckIcon sx={{ fontSize: 18, color: "white" }} />
-                </Box>
+              <View style={[styles.optionCard, { borderColor: manyllaColors.primary }]}>
+                <View style={styles.optionRow}>
+                  <Text style={[styles.optionIcon, { color: manyllaColors.primary }]}>✅</Text>
+                  <View style={styles.optionContent}>
+                    <Text style={styles.optionTitle}>You Control Sharing</Text>
+                    <Text style={styles.optionDescription}>
+                      Share specific information with time limits and access codes.
+                    </Text>
+                  </View>
+                </View>
+              </View>
 
-                <Typography
-                  variant="h5"
-                  gutterBottom
-                  sx={{ fontWeight: 600, color: manyllaColors.text }}
-                >
+              <TouchableOpacity style={styles.button} onPress={handleNext}>
+                <Text style={styles.buttonText}>I Understand</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {currentStep === "ready" && (
+            <View>
+              <View style={styles.centerText}>
+                <View style={[styles.featureIcon, { backgroundColor: '#8B9467', alignSelf: 'center', marginBottom: 16 }]}>
+                  <Text style={styles.featureIconText}>✅</Text>
+                </View>
+
+                <Text style={styles.title}>
                   {mode === "demo" ? "Ready to Explore!" : "All Set!"}
-                </Typography>
-                <Typography
-                  variant="body1"
-                  sx={{ mb: 2, color: manyllaColors.textSecondary }}
-                >
+                </Text>
+                <Text style={styles.subtitle}>
                   {mode === "demo"
                     ? "You'll be using Ellie's example profile to explore manylla"
                     : `Let's start building ${childName || "your child"}'s profile`}
-                </Typography>
+                </Text>
 
-                <Box
-                  sx={{
-                    p: 3,
-                    backgroundColor: manyllaColors.background,
-                    borderRadius: 8,
-                    mb: 2,
-                    textAlign: "left",
-                    border: `1px solid ${manyllaColors.border}`,
-                  }}
-                >
-                  <Typography
-                    variant="subtitle2"
-                    gutterBottom
-                    sx={{ fontWeight: 600, color: manyllaColors.text }}
-                  >
+                <View style={styles.infoAlert}>
+                  <Text style={[styles.featureTitle, { marginBottom: 8 }]}>
                     Quick tips to get started:
-                  </Typography>
-                  <Stack spacing={1.5} sx={{ mt: 2 }}>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                      <Box
-                        sx={{
-                          width: 6,
-                          height: 2,
-                          borderRadius: "50%",
-                          backgroundColor: manyllaColors.primary,
-                          flexShrink: 0,
-                        }}
-                      />
-                      <Typography
-                        variant="body2"
-                        sx={{ color: manyllaColors.text }}
-                      >
-                        Add important information in Quick Info
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                      <Box
-                        sx={{
-                          width: 6,
-                          height: 2,
-                          borderRadius: "50%",
-                          backgroundColor: manyllaColors.primary,
-                          flexShrink: 0,
-                        }}
-                      />
-                      <Typography
-                        variant="body2"
-                        sx={{ color: manyllaColors.text }}
-                      >
-                        Track progress with Goals and Successes
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                      <Box
-                        sx={{
-                          width: 6,
-                          height: 2,
-                          borderRadius: "50%",
-                          backgroundColor: manyllaColors.primary,
-                          flexShrink: 0,
-                        }}
-                      />
-                      <Typography
-                        variant="body2"
-                        sx={{ color: manyllaColors.text }}
-                      >
-                        Enable sync to access from other devices
-                      </Typography>
-                    </Box>
-                  </Stack>
-                </Box>
+                  </Text>
+                  <Text style={styles.infoText}>
+                    • Add important information in Quick Info{'\n'}
+                    • Track progress with Goals and Successes{'\n'}
+                    • Enable sync to access from other devices
+                  </Text>
+                </View>
 
-                <Button
-                  variant="contained"
-                  size="large"
-                  onClick={handleFinish}
-                  fullWidth
-                  sx={{
-                    py: 1.5,
-                    backgroundColor: manyllaColors.primary,
-                    color: "white",
-                    ":hover": {
-                      backgroundColor: manyllaColors.primaryDark,
-                    },
-                  }}
-                >
-                  {mode === "demo" ? "Start Demo" : "Start Using manylla"}
-                </Button>
-              </Paper>
-            )}
-          </Box>
-        </Fade>
-      </Container>
-    </Box>
+                <TouchableOpacity style={styles.button} onPress={handleFinish}>
+                  <Text style={styles.buttonText}>
+                    {mode === "demo" ? "Start Demo" : "Start Using manylla"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        </View>
+      </ScrollView>
+    </View>
   );
 };

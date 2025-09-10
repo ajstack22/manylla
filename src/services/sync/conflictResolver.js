@@ -28,10 +28,6 @@ class ConflictResolver {
    * @returns {Object} Merged profile data
    */
   mergeProfiles(local, remote) {
-    // console.log('[ConflictResolver] Merging profiles', {
-    //   localTimestamp: local?.timestamp,
-    //   remoteTimestamp: remote?.timestamp
-    // });
 
     // Handle null/undefined cases
     if (!local || !local.timestamp) return remote;
@@ -40,16 +36,13 @@ class ConflictResolver {
     // If timestamps are within merge window, do field-level merge
     const timeDiff = Math.abs(local.timestamp - remote.timestamp);
     if (timeDiff < this.MERGE_WINDOW) {
-      // console.log('[ConflictResolver] Within merge window, doing field-level merge');
       return this.fieldLevelMerge(local, remote);
     }
 
     // Outside merge window - use last-write-wins
     if (remote.timestamp > local.timestamp) {
-      // console.log('[ConflictResolver] Remote is newer, using remote data');
       return remote;
     } else {
-      // console.log('[ConflictResolver] Local is newer, keeping local data');
       return local;
     }
   }
@@ -287,7 +280,6 @@ class ConflictResolver {
    */
   validateMergedData(data) {
     if (!data || typeof data !== "object") {
-      console.error("[ConflictResolver] Invalid data structure");
       return false;
     }
 
@@ -295,7 +287,6 @@ class ConflictResolver {
     const requiredFields = ["timestamp"];
     for (const field of requiredFields) {
       if (!(field in data)) {
-        console.warn(`[ConflictResolver] Missing required field: ${field}`);
         return false;
       }
     }

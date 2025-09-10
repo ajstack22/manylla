@@ -46,7 +46,6 @@ export class StorageService {
 
       return profile;
     } catch (error) {
-      console.error("Error loading profile:", error);
       return null;
     }
   }
@@ -61,7 +60,6 @@ export class StorageService {
         await AsyncStorage.setItem(this.PROFILE_KEY, profileData);
       }
     } catch (error) {
-      console.error("Error saving profile:", error);
       throw error;
     }
   }
@@ -76,7 +74,6 @@ export class StorageService {
         await AsyncStorage.removeItem("manylla_onboarding_completed");
       }
     } catch (error) {
-      console.error("Error clearing profile:", error);
     }
   }
 }

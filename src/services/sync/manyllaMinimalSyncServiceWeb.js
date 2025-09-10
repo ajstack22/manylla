@@ -38,7 +38,6 @@ class ManyllaMinimalSyncService {
     // Test sync health
     const isHealthy = await this.checkHealth();
     if (!isHealthy) {
-      console.warn("Sync endpoint not reachable, running in offline mode");
     }
 
     return true;
@@ -57,7 +56,6 @@ class ManyllaMinimalSyncService {
       const data = await response.json();
       return data.status === "healthy";
     } catch (error) {
-      console.error("Sync health check failed:", error);
       return false;
     }
   }
@@ -122,7 +120,6 @@ class ManyllaMinimalSyncService {
 
           throw lastError;
         } catch (error) {
-          console.error("Push error:", error);
           this.notifyListeners("push-error", error);
           reject(error);
         }
@@ -190,7 +187,6 @@ class ManyllaMinimalSyncService {
       }
       return decrypted;
     } catch (error) {
-      console.error("Pull error:", error);
       this.notifyListeners("pull-error", error);
       throw error;
     }
@@ -203,12 +199,12 @@ class ManyllaMinimalSyncService {
     this.isPolling = true;
 
     // Initial pull
-    this.pull().catch(console.error);
+    this.pull().catch(() => {});
 
     // Set up interval
     this.pollInterval = setInterval(() => {
       if (this.syncId && manyllaEncryptionService.isInitialized()) {
-        this.pull().catch(console.error);
+        this.pull().catch(() => {});
       }
     }, this.POLL_INTERVAL);
   }
@@ -234,7 +230,6 @@ class ManyllaMinimalSyncService {
       try {
         callback(event, data);
       } catch (error) {
-        console.error("Listener error:", error);
       }
     });
   }

@@ -40,7 +40,6 @@ export const QRCodeModal = ({
       });
     } catch (error) {
       Alert.alert("Error", "Failed to share QR code. Please try again.");
-      console.error("Error sharing QR code:", error);
     }
   };
 
@@ -52,7 +51,6 @@ export const QRCodeModal = ({
         message: "Access shared information via this secure link",
       });
     } catch (error) {
-      console.error("Error sharing URL:", error);
     }
   };
 

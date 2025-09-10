@@ -9,7 +9,6 @@ if (Platform.OS !== "web") {
     // Use eval to prevent webpack from analyzing this require
     eval("require")("react-native-get-random-values");
   } catch (e) {
-    console.warn("react-native-get-random-values not available");
   }
 }
 

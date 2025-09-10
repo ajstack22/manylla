@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import {
-  Box,
-  Paper,
-  Typography,
-  Avatar,
-  Chip,
-  IconButton,
-  Fab,
-} from "@mui/material";
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  Platform,
+  Image,
+  Dimensions
+} from "react-native";
 import { manyllaColors } from "../../theme/theme";
-import { Edit as EditIcon, Add as AddIcon } from "@mui/icons-material";
 import { CategorySection } from "./CategorySection";
 import { getVisibleCategories } from "../../utils/unifiedCategories";
 import { ProfileEditDialog } from "./ProfileEditDialog";
+
+const { width } = Dimensions.get('window');
 
 export const ProfileOverview = ({
   profile,
@@ -64,81 +66,186 @@ export const ProfileOverview = ({
     return age;
   };
 
-  return (
-    <Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
-      <Paper sx={{ p: { xs: 2, sm: 3 }, mb: { xs: 2, sm: 3 } }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            position: "relative",
-          }}
-        >
-          <Avatar
-            src={profile.photo}
-            sx={{
-              width: 120,
-              height: 120,
-              mb: 2,
-              cursor: "pointer",
-              bgcolor: profile.photo
-                ? "transparent"
-                : manyllaColors.avatarDefaultBg,
-              color: profile.photo ? "inherit" : "white",
-              fontSize: "3rem",
-            }}
-            onClick={() => onUpdateProfile && setProfileEditOpen(true)}
-          >
-            {profile.name.charAt(0)}
-          </Avatar>
-          {onUpdateProfile && (
-            <IconButton
-              size="small"
-              onClick={() => setProfileEditOpen(true)}
-              sx={{
-                position: "absolute",
-                top: 0,
-                right: "calc(50% - 60px)",
-                backgroundColor: "background.paper",
-                boxShadow: 1,
-                ":hover": { backgroundColor: "action.hover" },
-              }}
-              title="Edit Profile"
-            >
-              <EditIcon fontSize="small" />
-            </IconButton>
-          )}
-          <Typography variant="h4" gutterBottom align="center">
-            {profile.preferredName || profile.name}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" align="center">
-            Age: {calculateAge(profile.dateOfBirth)} years
-          </Typography>
-          {profile.pronouns && (
-            <Chip label={profile.pronouns} size="small" sx={{ mt: 1 }} />
-          )}
-        </Box>
-      </Paper>
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: Platform.OS === 'web' ? 24 : 16,
+    },
+    profileCard: {
+      backgroundColor: '#FFFFFF',
+      borderRadius: 12,
+      padding: Platform.OS === 'web' ? 24 : 20,
+      marginBottom: Platform.OS === 'web' ? 24 : 16,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 3,
+    },
+    profileHeader: {
+      alignItems: 'center',
+      position: 'relative',
+    },
+    avatar: {
+      width: 120,
+      height: 120,
+      borderRadius: 60,
+      marginBottom: 16,
+      backgroundColor: profile.photo ? 'transparent' : manyllaColors.avatarDefaultBg,
+    },
+    avatarPlaceholder: {
+      width: 120,
+      height: 120,
+      borderRadius: 60,
+      backgroundColor: manyllaColors.avatarDefaultBg,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 16,
+    },
+    avatarText: {
+      fontSize: 48,
+      fontWeight: 'bold',
+      color: 'white',
+    },
+    editButton: {
+      position: 'absolute',
+      top: 0,
+      right: width > 600 ? 'calc(50% - 60px)' : '40%',
+      backgroundColor: '#FFFFFF',
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      alignItems: 'center',
+      justifyContent: 'center',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
+      elevation: 2,
+    },
+    editIcon: {
+      fontSize: 16,
+      color: '#666',
+    },
+    name: {
+      fontSize: 28,
+      fontWeight: '600',
+      textAlign: 'center',
+      marginBottom: 8,
+      color: '#333',
+    },
+    ageText: {
+      fontSize: 14,
+      color: '#666',
+      textAlign: 'center',
+      marginBottom: 8,
+    },
+    pronounsChip: {
+      backgroundColor: '#f0f0f0',
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      borderRadius: 16,
+      marginTop: 8,
+    },
+    pronounsText: {
+      fontSize: 12,
+      color: '#666',
+      fontWeight: '500',
+    },
+    content: {
+      position: 'relative',
+    },
+    categoriesContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      marginBottom: 24,
+    },
+    categoryWrapper: {
+      width: Platform.OS === 'web' && width > 768 ? '48%' : '100%',
+      marginRight: Platform.OS === 'web' && width > 768 ? '2%' : 0,
+      marginBottom: 16,
+    },
+    fab: {
+      position: 'fixed',
+      bottom: Platform.OS === 'web' ? 24 : 16,
+      right: Platform.OS === 'web' ? 24 : 16,
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      backgroundColor: manyllaColors.brown,
+      alignItems: 'center',
+      justifyContent: 'center',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+      elevation: 8,
+      zIndex: 1200,
+    },
+    fabIcon: {
+      fontSize: 24,
+      color: 'white',
+      fontWeight: 'bold',
+    },
+  });
 
-      <Box sx={{ position: "relative" }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: { xs: 1, sm: 2 },
-            mb: 3,
-          }}
-        >
+  return (
+    <ScrollView style={styles.container}>
+      <View style={styles.profileCard}>
+        <View style={styles.profileHeader}>
+          {profile.photo ? (
+            <TouchableOpacity 
+              onPress={() => onUpdateProfile && setProfileEditOpen(true)}
+            >
+              <Image 
+                source={{ uri: profile.photo }} 
+                style={styles.avatar}
+                resizeMode="cover"
+              />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity 
+              style={styles.avatarPlaceholder}
+              onPress={() => onUpdateProfile && setProfileEditOpen(true)}
+            >
+              <Text style={styles.avatarText}>
+                {profile.name.charAt(0).toUpperCase()}
+              </Text>
+            </TouchableOpacity>
+          )}
+          
+          {onUpdateProfile && (
+            <TouchableOpacity
+              style={styles.editButton}
+              onPress={() => setProfileEditOpen(true)}
+            >
+              <Text style={styles.editIcon}>✏️</Text>
+            </TouchableOpacity>
+          )}
+          
+          <Text style={styles.name}>
+            {profile.preferredName || profile.name}
+          </Text>
+          
+          <Text style={styles.ageText}>
+            Age: {calculateAge(profile.dateOfBirth)} years
+          </Text>
+          
+          {profile.pronouns && (
+            <View style={styles.pronounsChip}>
+              <Text style={styles.pronounsText}>{profile.pronouns}</Text>
+            </View>
+          )}
+        </View>
+      </View>
+
+      <View style={styles.content}>
+        <View style={styles.categoriesContainer}>
           {visibleCategories.map((category) => {
             const entries = getEntriesByCategory(category.name);
 
-            // All categories show as full sections
             return (
-              <Box
-                key={category.id}
-                sx={{ width: { xs: "100%", md: "calc(50% - 12px)" } }}
-              >
+              <View key={category.id} style={styles.categoryWrapper}>
                 <CategorySection
                   title={category.displayName}
                   entries={entries}
@@ -150,28 +257,22 @@ export const ProfileOverview = ({
                   onEditEntry={onEditEntry}
                   onDeleteEntry={onDeleteEntry}
                 />
-              </Box>
+              </View>
             );
           })}
-        </Box>
+        </View>
 
         {/* Floating Action Button for Add Entry */}
         {onAddEntry && (
-          <Fab
-            color="primary"
-            aria-label="add entry"
-            onClick={() => onAddEntry("")}
-            sx={{
-              position: "fixed",
-              bottom: { xs: 16, sm: 24 },
-              right: { xs: 16, sm: 24 },
-              zIndex: 1200,
-            }}
+          <TouchableOpacity
+            style={styles.fab}
+            onPress={() => onAddEntry("")}
+            activeOpacity={0.8}
           >
-            <AddIcon />
-          </Fab>
+            <Text style={styles.fabIcon}>+</Text>
+          </TouchableOpacity>
         )}
-      </Box>
+      </View>
 
       {onUpdateProfile && (
         <ProfileEditDialog
@@ -181,6 +282,6 @@ export const ProfileOverview = ({
           onSave={onUpdateProfile}
         />
       )}
-    </Box>
+    </ScrollView>
   );
 };

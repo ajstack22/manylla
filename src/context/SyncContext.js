@@ -117,7 +117,6 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
           setSyncStatus("not-setup");
         }
       } catch (error) {
-        console.error("Error initializing sync:", error);
         setSyncError(error.message);
         setSyncStatus("error");
       }
@@ -145,7 +144,6 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
       setEncryptionReady(true);
       return phrase;
     } catch (error) {
-      console.error("Error generating recovery phrase:", error);
       setSyncError(error.message);
       throw error;
     }
@@ -243,7 +241,6 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
       setSyncStatus("idle");
       return true;
     } catch (error) {
-      console.error("Error joining with phrase:", error);
       setSyncError(error.message);
       setSyncStatus("error");
       throw error;
@@ -287,7 +284,6 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
         // Return to idle after brief success
         setTimeout(() => setSyncStatus("idle"), 2000);
       } catch (error) {
-        console.error("Push sync error:", error);
         setSyncStatus("error");
         setSyncError(error.message);
         throw error;
@@ -338,7 +334,6 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
 
       return decryptedData;
     } catch (error) {
-      console.error("Pull sync error:", error);
       setSyncStatus("error");
       setSyncError(error.message);
       return null;
@@ -374,7 +369,6 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
       // Return to idle after brief success indication
       setTimeout(() => setSyncStatus("idle"), 2000);
     } catch (error) {
-      console.error("Sync failed:", error);
       setSyncStatus("error");
       setSyncError(error.message);
       throw error;
@@ -403,7 +397,6 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
 
         return `${baseUrl}/share/${shareId}#${shareData.key}`;
       } catch (error) {
-        console.error("Create share error:", error);
         throw error;
       }
     },
@@ -435,7 +428,6 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
         ManyllaMinimalSyncService.stopPolling();
       }
     } catch (error) {
-      console.error("Failed to disable sync:", error);
       setSyncError(error.message);
       throw error;
     }
@@ -446,7 +438,6 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
     try {
       await disableSync();
     } catch (error) {
-      console.error("Error resetting sync:", error);
       setSyncError(error.message);
     }
   }, []);

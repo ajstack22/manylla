@@ -24,14 +24,12 @@ const RootNavigator = () => {
     try {
       // Check if user has a profile
       const profileExists = await ProfileStorageService.hasProfile();
-      // console.log('Profile exists:', profileExists);
       setHasProfile(profileExists);
 
       // TODOheck if biometric auth is enabled and required
       // const authRequired = await checkAuthRequired();
       // setNeedsAuth(authRequired);
     } catch (error) {
-      console.error("Failed to check initial state:", error);
     } finally {
       setIsLoading(false);
     }

@@ -13,7 +13,6 @@ if (Platform.OS !== "web") {
   try {
     MaterialIcons = require("react-native-vector-icons/MaterialIcons").default;
   } catch (e) {
-    console.warn("react-native-vector-icons not available:", e);
   }
 }
 
@@ -224,9 +223,6 @@ const Icon = ({ name, size = 24, color = "#000000", style, ...props }) => {
   }
 
   // Fallback to text when icon library not available
-  console.warn(
-    `Icon not available: ${name}, MaterialIcons loaded: ${!!MaterialIcons}`,
-  );
   return <Text style={{ fontSize: size * 0.8, color, ...style }}>○</Text>;
 };
 

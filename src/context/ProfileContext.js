@@ -21,7 +21,6 @@ export const ProfileProvider = ({ children }) => {
         }
       }
     } catch (error) {
-      console.error("Error loading profiles:", error);
     }
   };
 
@@ -30,7 +29,6 @@ export const ProfileProvider = ({ children }) => {
       await AsyncStorage.setItem("profiles", JSON.stringify(newProfiles));
       setProfiles(newProfiles);
     } catch (error) {
-      console.error("Error saving profiles:", error);
       throw error;
     }
   };

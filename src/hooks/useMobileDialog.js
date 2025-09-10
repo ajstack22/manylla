@@ -1,50 +1,55 @@
-import { useTheme, useMediaQuery } from "@mui/material";
-import { Slide } from "@mui/material";
 import React from "react";
-
-const SlideTransition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { Dimensions, Platform } from "react-native";
 
 export const useMobileDialog = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { width } = Dimensions.get('window');
+  const isMobile = width < 600; // Breakpoint equivalent to Material-UI sm
 
   const dialogProps = isMobile
     ? {
-        fullScreenrue,
-        TransitionComponentlideTransition,
-        sx: {
-          " .MuiDialog-paper": {
-            m,
-            maxHeight: "100%",
-            borderRadius: 8,
-            position: "fixed",
-            bottom,
-            maxWidth: "100%",
-          },
-        },
-      }
-    : {};
-
-  const mobileDialogProps = isMobile
-    ? {
-        fullScreenrue,
-        TransitionComponentlideTransition,
-        sx: {
-          " .MuiDialog-paper": {
-            m,
-            borderRadius: 8,
-            width: "100%",
-            maxWidth: "100%",
-            height: "100%",
-            maxHeight: "100%",
-          },
+        fullScreen: true,
+        animationType: "slide",
+        presentationStyle: "formSheet",
+        style: {
+          margin: 0,
+          maxHeight: "100%",
+          borderRadius: Platform.OS === 'ios' ? 12 : 8,
+          maxWidth: "100%",
         },
       }
     : {
-        fullWidth: true,
-        maxWidth: "sm",
+        animationType: "fade",
+        transparent: true,
+        style: {
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0,0,0,0.5)',
+        },
+      };
+
+  const mobileDialogProps = isMobile
+    ? {
+        fullScreen: true,
+        animationType: "slide",
+        presentationStyle: "formSheet",
+        style: {
+          margin: 0,
+          borderRadius: Platform.OS === 'ios' ? 12 : 8,
+          width: "100%",
+          maxWidth: "100%",
+          height: "100%",
+          maxHeight: "100%",
+        },
+      }
+    : {
+        animationType: "fade",
+        transparent: true,
+        style: {
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          maxWidth: 480,
+        },
       };
 
   return {

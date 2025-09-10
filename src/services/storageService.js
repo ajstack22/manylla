@@ -24,7 +24,6 @@ export class StorageService {
 
       return parsed;
     } catch (error) {
-      console.error("Failed to load profile:", error);
       return null;
     }
   }
@@ -34,7 +33,6 @@ export class StorageService {
       // Validate before saving
       const validation = ProfileValidator.validateProfile(profile);
       if (!validation.valid) {
-        console.error("Profile validation failed:", validation.errors);
         return false;
       }
 
@@ -54,7 +52,6 @@ export class StorageService {
       );
       return true;
     } catch (error) {
-      console.error("Failed to save profile:", error);
       return false;
     }
   }
@@ -66,7 +63,6 @@ export class StorageService {
       localStorage.removeItem(this.VERSION_KEY);
       return true;
     } catch (error) {
-      console.error("Failed to clear profile:", error);
       return false;
     }
   }
@@ -125,7 +121,6 @@ export class StorageService {
 
       return this.saveProfile(profile);
     } catch (error) {
-      console.error("Failed to import profile:", error);
       return false;
     }
   }

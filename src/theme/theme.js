@@ -1,5 +1,4 @@
-import { createTheme } from "@mui/material/styles";
-
+// React Native theme configuration - no Material-UI dependencies
 // Export the color palette for use across the app
 export const manyllaColors = {
   manila: "#F4E4C1",
@@ -33,222 +32,112 @@ export const manyllaColors = {
   inputBackground: "#FFFFFF", // White background for form inputs
 };
 
-export const lightTheme = createTheme({
-  palette: {
-    mode: "light",
-    primary: {
-      main: manyllaColors.brown,
-      light: manyllaColors.manila,
-      dark: manyllaColors.darkBrown,
-    },
-    secondary: {
-      main: manyllaColors.accent,
-    },
-    background: {
-      default: manyllaColors.lightManilaBackground,
-      paper: manyllaColors.lightManilaPaper,
-    },
-    action: {
-      hover: manyllaColors.lightManilaAccent,
-      selected: manyllaColors.lightManilaAccent,
-    },
-    success: {
-      main: manyllaColors.success,
-    },
-    warning: {
-      main: manyllaColors.warning,
-    },
-    error: {
-      main: manyllaColors.error,
-    },
+// React Native theme configurations
+export const lightTheme = {
+  colors: {
+    primary: manyllaColors.brown,
+    primaryLight: manyllaColors.manila,
+    primaryDark: manyllaColors.darkBrown,
+    secondary: manyllaColors.accent,
+    background: manyllaColors.lightManilaBackground,
+    surface: manyllaColors.lightManilaPaper,
+    text: "#333333",
+    textSecondary: "#666666",
+    textDisabled: "#999999",
+    border: "#E0E0E0",
+    success: manyllaColors.success,
+    warning: manyllaColors.warning,
+    error: manyllaColors.error,
   },
   typography: {
-    fontFamily:
-      '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
-    h1: {
-      fontSize: "2.5rem",
-      fontWeight00,
-    },
-    h2: {
-      fontSize: "2rem",
-      fontWeight00,
-    },
-    h3: {
-      fontSize: "1.5rem",
-      fontWeight00,
-    },
-    h4: {
-      fontSize: "1.25rem",
-      fontWeight00,
-    },
-    h5: {
-      fontSize: "1.125rem",
-      fontWeight00,
-    },
-    h6: {
-      fontSize: "1rem",
-      fontWeight00,
-    },
+    fontFamily: 'Atkinson Hyperlegible, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif',
+    h1: { fontSize: 40, fontWeight: '600' },
+    h2: { fontSize: 32, fontWeight: '600' },
+    h3: { fontSize: 24, fontWeight: '500' },
+    h4: { fontSize: 20, fontWeight: '500' },
+    h5: { fontSize: 18, fontWeight: '500' },
+    h6: { fontSize: 16, fontWeight: '500' },
+    body1: { fontSize: 16, fontWeight: '400' },
+    body2: { fontSize: 14, fontWeight: '400' },
+    caption: { fontSize: 12, fontWeight: '400' },
   },
   shape: {
-    borderRadius: 2,
+    borderRadius: 12,
   },
   components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          textTransform: "none",
-          borderRadius: 8,
-          padding: "10px 24px",
-        },
-      },
+    button: {
+      borderRadius: 8,
+      padding: { vertical: 10, horizontal: 24 },
     },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-          borderRadius: 6,
-        },
-      },
-    },
-    MuiChip: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-        },
-      },
+    card: {
+      borderRadius: 12,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08,
+      shadowRadius: 8,
+      elevation: 3,
     },
   },
-});
+};
 
-export const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#D4B896", // Manila accent for primary
-      light: "#E8DCC0",
-      dark: manyllaColors.brown,
-    },
-    secondary: {
-      main: "#6BA3E5", // Bright blue for contrast
-    },
-    background: {
-      default: manyllaColors.darkBackground,
-      paper: manyllaColors.darkPaper,
-    },
-    text: {
-      primary: manyllaColors.darkText,
-      secondary: manyllaColors.darkTextSecondary,
-    },
-    action: {
-      hover: manyllaColors.darkAccent,
-      selected: manyllaColors.darkAccent,
-    },
-    divider: "rgba(232, 220, 192, 0.12)", // Light divider on dark
-    success: {
-      main: "#7BC47F", // Bright green for visibility
-    },
-    warning: {
-      main: "#F5B478", // Bright orange for visibility
-    },
-    error: {
-      main: "#EA8368", // Bright red for visibility
-    },
+export const darkTheme = {
+  colors: {
+    primary: "#D4B896", // Manila accent for primary
+    primaryLight: "#E8DCC0",
+    primaryDark: manyllaColors.brown,
+    secondary: "#6BA3E5", // Bright blue for contrast
+    background: manyllaColors.darkBackground,
+    surface: manyllaColors.darkPaper,
+    text: manyllaColors.darkText,
+    textSecondary: manyllaColors.darkTextSecondary,
+    textDisabled: "#666666",
+    border: "rgba(232, 220, 192, 0.12)",
+    success: "#7BC47F", // Bright green for visibility
+    warning: "#F5B478", // Bright orange for visibility
+    error: "#EA8368", // Bright red for visibility
   },
-  typography: {
-    fontFamily:
-      '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
-    h1: lightTheme.typography.h1,
-    h2: lightTheme.typography.h2,
-    h3: lightTheme.typography.h3,
-    h4: lightTheme.typography.h4,
-    h5: lightTheme.typography.h5,
-    h6: lightTheme.typography.h6,
-  },
+  typography: lightTheme.typography,
   shape: lightTheme.shape,
   components: {
     ...lightTheme.components,
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          backgroundImage: "none",
-        },
-      },
-    },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
-          borderRadius: 6,
-          backgroundImage: "none",
-        },
-      },
+    card: {
+      borderRadius: 12,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+      elevation: 6,
     },
   },
-});
+};
 
-export const manyllaTheme = createTheme({
-  palette: {
-    mode: "light", // Base it on light mode for better component defaults
-    primary: {
-      main: manyllaColors.darkBrown, // Dark brown for primary actions
-      light: manyllaColors.brown,
-      dark: "#3D2F1F",
-    },
-    secondary: {
-      main: "#4A7C8E", // Muted teal that works with manila
-    },
-    background: {
-      default: manyllaColors.manyllaBackground,
-      paper: manyllaColors.manyllaPaper,
-    },
-    text: {
-      primary: manyllaColors.manyllaText,
-      secondary: manyllaColors.manyllaTextSecondary,
-    },
-    action: {
-      hover: manyllaColors.manyllaAccent,
-      selected: manyllaColors.manyllaAccent,
-    },
-    divider: "rgba(61, 47, 31, 0.2)", // Dark brown divider
-    success: {
-      main: "#4A7A51", // Forest green for manila
-    },
-    warning: {
-      main: "#B87333", // Copper for manila
-    },
-    error: {
-      main: "#8B3A3A", // Burgundy for manila
-    },
+export const manyllaTheme = {
+  colors: {
+    primary: manyllaColors.darkBrown, // Dark brown for primary actions
+    primaryLight: manyllaColors.brown,
+    primaryDark: "#3D2F1F",
+    secondary: "#4A7C8E", // Muted teal that works with manila
+    background: manyllaColors.manyllaBackground,
+    surface: manyllaColors.manyllaPaper,
+    text: manyllaColors.manyllaText,
+    textSecondary: manyllaColors.manyllaTextSecondary,
+    textDisabled: "#8A7862",
+    border: "rgba(61, 47, 31, 0.2)",
+    success: "#4A7A51", // Forest green for manila
+    warning: "#B87333", // Copper for manila
+    error: "#8B3A3A", // Burgundy for manila
   },
-  typography: {
-    fontFamily:
-      '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
-    h1: lightTheme.typography.h1,
-    h2: lightTheme.typography.h2,
-    h3: lightTheme.typography.h3,
-    h4: lightTheme.typography.h4,
-    h5: lightTheme.typography.h5,
-    h6: lightTheme.typography.h6,
-  },
+  typography: lightTheme.typography,
   shape: lightTheme.shape,
   components: {
     ...lightTheme.components,
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          backgroundImage: "none",
-        },
-      },
-    },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          boxShadow: "0 2px 8px rgba(61, 47, 31, 0.15)",
-          borderRadius: 6,
-          backgroundImage: "none",
-        },
-      },
+    card: {
+      borderRadius: 12,
+      shadowColor: 'rgba(61, 47, 31, 0.15)',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 1,
+      shadowRadius: 8,
+      elevation: 3,
     },
   },
-});
+};

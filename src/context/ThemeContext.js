@@ -138,7 +138,6 @@ export const ThemeProvider = ({
           setThemeMode(initialThemeMode);
         }
       } catch (error) {
-        console.error("Error loading theme:", error);
       }
     };
     loadTheme();
@@ -154,7 +153,6 @@ export const ThemeProvider = ({
     try {
       await setStorageItem("manylla_theme", newTheme);
     } catch (error) {
-      console.error("Error saving theme:", error);
     }
 
     if (onThemeChange) {
@@ -177,125 +175,26 @@ export const ThemeProvider = ({
         ? darkTheme
         : manyllaTheme;
 
-  // Create Material-UI theme for web
-  const createMuiTheme = () => {
-    if (Platform.OS !== "web") return null;
-
+  // Theme configuration for React Native components
+  const getThemeStyles = () => {
     return {
-      palette: {
-        mode: theme === "manylla" ? "light" : theme,
-        primary: {
-          main: colors.primary,
-          light: colors.secondary,
-          dark: colors.primary,
-        },
-        secondary: {
-          main: colors.secondary,
-        },
-        background: {
-          default: colors.background.default || colors.background.primary,
-          paper: colors.background.paper || colors.background.secondary,
-        },
-        text: {
-          primary: colors.text.primary,
-          secondary: colors.text.secondary,
-          disabled: colors.text.disabled,
-        },
-        action: {
-          active: colors.text.primary,
-          hover:
-            theme === "light"
-              ? manyllaColors.lightManilaAccent
-              : theme === "manylla"
-                ? manyllaColors.manyllaAccent
-                : manyllaColors.darkAccent,
-          selected:
-            theme === "light"
-              ? manyllaColors.lightManilaAccent
-              : theme === "manylla"
-                ? manyllaColors.manyllaAccent
-                : manyllaColors.darkAccent,
-          disabled: colors.text.disabled,
-          disabledBackground: "rgba(0, 0, 0, 0.12)",
-        },
-        success: {
-          main: manyllaColors.success,
-        },
-        warning: {
-          main: manyllaColors.warning,
-        },
-        error: {
-          main: manyllaColors.error,
-        },
-      },
+      borderRadius: 12,
+      fontFamily: 'Atkinson Hyperlegible, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif',
       typography: {
-        fontFamily:
-          '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
-        h1: {
-          fontSize: "2.5rem",
-          fontWeight: 600,
-        },
-        h2: {
-          fontSize: "2rem",
-          fontWeight: 600,
-        },
-        h3: {
-          fontSize: "1.5rem",
-          fontWeight: 500,
-        },
-        h4: {
-          fontSize: "1.25rem",
-          fontWeight: 500,
-        },
-        h5: {
-          fontSize: "1.125rem",
-          fontWeight: 500,
-        },
-        h6: {
-          fontSize: "1rem",
-          fontWeight: 500,
-        },
-      },
-      shape: {
-        borderRadius: 12,
-      },
-      components: {
-        MuiButton: {
-          styleOverrides: {
-            root: {
-              textTransform: "none",
-              borderRadius: 8,
-            },
-          },
-        },
-        MuiTextField: {
-          styleOverrides: {
-            root: {
-              "& .MuiOutlinedInput-root": {
-                borderRadius: 8,
-              },
-            },
-          },
-        },
-        MuiCard: {
-          styleOverrides: {
-            root: {
-              borderRadius: 12,
-            },
-          },
-        },
-        MuiPaper: {
-          styleOverrides: {
-            root: {
-              borderRadius: 12,
-            },
-          },
-        },
-      },
+        h1: { fontSize: 40, fontWeight: '600' },
+        h2: { fontSize: 32, fontWeight: '600' },
+        h3: { fontSize: 24, fontWeight: '500' },
+        h4: { fontSize: 20, fontWeight: '500' },
+        h5: { fontSize: 18, fontWeight: '500' },
+        h6: { fontSize: 16, fontWeight: '500' },
+        body1: { fontSize: 16, fontWeight: '400' },
+        body2: { fontSize: 14, fontWeight: '400' },
+        caption: { fontSize: 12, fontWeight: '400' }
+      }
     };
   };
 
-  const muiTheme = createMuiTheme();
+  const themeStyles = getThemeStyles();
 
   const value = {
     theme,
@@ -303,35 +202,10 @@ export const ThemeProvider = ({
     toggleTheme,
     setThemeMode: setThemeModeState,
     colors,
-    muiTheme,
+    styles: themeStyles,
   };
 
-  // On web, wrap with Material-UI ThemeProvider if available
-  if (Platform.OS === "web") {
-    try {
-      const {
-        ThemeProvider: MuiThemeProvider,
-        createTheme,
-      } = require("@mui/material/styles");
-      const CssBaseline = require("@mui/material/CssBaseline").default;
-
-      if (muiTheme) {
-        const theme = createTheme(muiTheme);
-
-        return (
-          <ThemeContext.Provider value={value}>
-            <MuiThemeProvider theme={theme}>
-              <CssBaseline />
-              {children}
-            </MuiThemeProvider>
-          </ThemeContext.Provider>
-        );
-      }
-    } catch (e) {
-      // Material-UI not available, just use context
-      // Material-UI availability logging removed for production
-    }
-  }
+  // Pure React Native theme context - no Material-UI dependencies
 
   return (
     <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>

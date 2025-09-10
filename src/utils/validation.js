@@ -229,7 +229,6 @@ export class ProfileValidator {
 
       return data;
     } catch (error) {
-      console.error("Failed to repair profile:", error);
       return null;
     }
   }

@@ -59,10 +59,6 @@ export const API_ENDPOINTS = {
 
 // Export for debugging
 if (process.env.NODE_ENV === "development") {
-  // console.log('[API] Configuration:', {
-  //   baseUrl: API_BASE_URL,
-  //   endpoints: API_ENDPOINTS
-  // });
 }
 
 export default {

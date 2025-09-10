@@ -1,15 +1,13 @@
 import React from "react";
 import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  IconButton,
-  Stack,
-  useTheme,
-} from "@mui/material";
-import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Platform
+} from "react-native";
 import { HtmlRenderer } from "../Forms/HtmlRenderer";
+import { useTheme } from "../../context/ThemeContext";
 
 export const CategorySection = ({
   title,
@@ -20,107 +18,170 @@ export const CategorySection = ({
   onEditEntry,
   onDeleteEntry,
 }) => {
-  const theme = useTheme();
+  const { colors } = useTheme();
+
+  const styles = StyleSheet.create({
+    container: {
+      marginBottom: 24,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 8,
+      paddingBottom: 8,
+      borderBottomWidth: 2,
+      borderBottomColor: color,
+    },
+    iconContainer: {
+      marginRight: 8,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: '600',
+      flex: 1,
+      color: '#333',
+    },
+    entriesContainer: {
+      gap: 16,
+    },
+    emptyCard: {
+      backgroundColor: colors.background.secondary || '#f5f5f5',
+      borderRadius: 8,
+      padding: 16,
+    },
+    emptyText: {
+      fontSize: 14,
+      color: '#666',
+      textAlign: 'center',
+    },
+    entryCard: {
+      borderLeftWidth: 4,
+      borderLeftColor: color,
+      backgroundColor: '#ffffff',
+      borderRadius: 8,
+      padding: 16,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 2,
+    },
+    entryHeader: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      marginBottom: 8,
+    },
+    entryContent: {
+      flex: 1,
+    },
+    entryActions: {
+      flexDirection: 'row',
+      gap: 4,
+    },
+    actionButton: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'transparent',
+    },
+    editButton: {
+      opacity: 0.6,
+    },
+    deleteButton: {
+      opacity: 0.6,
+    },
+    deleteButtonHover: {
+      backgroundColor: '#ffebee',
+    },
+    actionIcon: {
+      fontSize: 16,
+      color: '#666',
+    },
+    deleteIcon: {
+      fontSize: 16,
+      color: '#d32f2f',
+    },
+    entryDescription: {
+      marginBottom: 8,
+    },
+    entryDate: {
+      fontSize: 12,
+      color: '#666',
+      marginTop: 8,
+    },
+  });
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    }).format(date);
+  };
 
   return (
-    <Box sx={{ mb: 3 }}>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          mb: 1,
-          pb: 1,
-          borderBottom: `2px solid ${color}`,
-        }}
-      >
-        {icon && <Box sx={{ mr: 1, color, display: "flex" }}>{icon}</Box>}
-        <Typography variant="h5" sx={{ flexGrow: 1, fontWeight: 600 }}>
-          {title}
-        </Typography>
-      </Box>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        {icon && (
+          <View style={[styles.iconContainer, { color }]}>
+            {icon}
+          </View>
+        )}
+        <Text style={styles.title}>{title}</Text>
+      </View>
 
-      <Stack spacing={2}>
+      <View style={styles.entriesContainer}>
         {entries.length === 0 ? (
-          <Card sx={{ backgroundColor: theme.palette.action.hover }}>
-            <CardContent>
-              <Typography variant="body2" color="text.secondary" align="center">
-                No {title.toLowerCase()} added yet.
-              </Typography>
-            </CardContent>
-          </Card>
+          <View style={styles.emptyCard}>
+            <Text style={styles.emptyText}>
+              No {title.toLowerCase()} added yet.
+            </Text>
+          </View>
         ) : (
           entries.map((entry) => (
-            <Card
-              key={entry.id}
-              sx={{
-                borderLeft: `4px solid ${color}`,
-                ":hover": {
-                  boxShadow: theme.shadows[4],
-                },
-              }}
-            >
-              <CardContent>
-                <Box sx={{ display: "flex", alignItems: "flex-start", mb: 1 }}>
-                  <Box sx={{ flexGrow: 1 }}>
-                    <HtmlRenderer content={entry.title} variant="h6" />
-                  </Box>
-                  <Stack direction="row" spacing={0.5}>
-                    {onEditEntry && (
-                      <IconButton
-                        size="small"
-                        onClick={() => onEditEntry(entry)}
-                        sx={{
-                          color: "text.secondary",
-                          minWidth: 24,
-                          minHeight: 24,
-                          ":hover": {
-                            backgroundColor: "action.hover",
-                          },
-                        }}
-                      >
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                    )}
-                    {onDeleteEntry && (
-                      <IconButton
-                        size="small"
-                        onClick={() => onDeleteEntry(entry.id)}
-                        sx={{
-                          color: "text.secondary",
-                          minWidth: 24,
-                          minHeight: 24,
-                          ":hover": {
-                            backgroundColor: "error.light",
-                            color: "error.main",
-                          },
-                        }}
-                      >
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
-                    )}
-                  </Stack>
-                </Box>
+            <View key={entry.id} style={styles.entryCard}>
+              <View style={styles.entryHeader}>
+                <View style={styles.entryContent}>
+                  <HtmlRenderer content={entry.title} variant="h6" />
+                </View>
+                <View style={styles.entryActions}>
+                  {onEditEntry && (
+                    <TouchableOpacity
+                      style={[styles.actionButton, styles.editButton]}
+                      onPress={() => onEditEntry(entry)}
+                      activeOpacity={0.7}
+                    >
+                      <Text style={styles.actionIcon}>✏️</Text>
+                    </TouchableOpacity>
+                  )}
+                  {onDeleteEntry && (
+                    <TouchableOpacity
+                      style={[styles.actionButton, styles.deleteButton]}
+                      onPress={() => onDeleteEntry(entry.id)}
+                      activeOpacity={0.7}
+                    >
+                      <Text style={styles.deleteIcon}>🗑️</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              </View>
 
-                <Box sx={{ mb: 1 }}>
-                  <HtmlRenderer content={entry.description} variant="body2" />
-                </Box>
+              <View style={styles.entryDescription}>
+                <HtmlRenderer content={entry.description} variant="body2" />
+              </View>
 
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  sx={{ display: "block", mt: 1 }}
-                >
-                  {new Intl.DateTimeFormat("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  }).format(new Date(entry.updatedAt || entry.date))}
-                </Typography>
-              </CardContent>
-            </Card>
+              <Text style={styles.entryDate}>
+                {formatDate(entry.updatedAt || entry.date)}
+              </Text>
+            </View>
           ))
         )}
-      </Stack>
-    </Box>
+      </View>
+    </View>
   );
 };

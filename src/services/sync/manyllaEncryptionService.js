@@ -20,7 +20,6 @@ let encodeUTF8;
 let decodeUTF8;
 
 // Always use manual implementation like StackMap does
-// console.log('[ManyllaEncryption] Using manual UTF-8 implementation for all platforms');
 
 // Manual UTF-8 encoding that works reliably on all platforms
 encodeUTF8 = (str) => {
@@ -91,7 +90,6 @@ const SecureStorage = {
     try {
       return await AsyncStorage.getItem(`secure_${key}`);
     } catch (error) {
-      console.error("Storage error:", error);
       return null;
     }
   },
@@ -101,7 +99,6 @@ const SecureStorage = {
       await AsyncStorage.setItem(`secure_${key}`, value);
       return true;
     } catch (error) {
-      console.error("Storage error:", error);
       return false;
     }
   },
@@ -111,7 +108,6 @@ const SecureStorage = {
       await AsyncStorage.removeItem(`secure_${key}`);
       return true;
     } catch (error) {
-      console.error("Storage error:", error);
       return false;
     }
   },
@@ -232,7 +228,6 @@ class ManyllaEncryptionService {
           isCompressed = true;
         }
       } catch (error) {
-        console.warn("Compression failed:", error);
       }
     }
 
@@ -309,7 +304,6 @@ class ManyllaEncryptionService {
       try {
         dataBytes = pako.inflate(decrypted);
       } catch (error) {
-        console.error("Decompression failed:", error);
         throw new Error("Failed to decompress data");
       }
     }
@@ -403,7 +397,6 @@ class ManyllaEncryptionService {
 
       return true;
     } catch (error) {
-      console.error("Failed to restore encryption:", error);
       return false;
     }
   }

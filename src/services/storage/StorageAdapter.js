@@ -5,7 +5,6 @@ export class StorageAdapter {
     try {
       return await AsyncStorage.getItem(key);
     } catch (error) {
-      console.error(`Error getting item ${key}:`, error);
       return null;
     }
   }
@@ -14,7 +13,6 @@ export class StorageAdapter {
     try {
       await AsyncStorage.setItem(key, value);
     } catch (error) {
-      console.error(`Error setting item ${key}:`, error);
       throw error;
     }
   }
@@ -23,7 +21,6 @@ export class StorageAdapter {
     try {
       await AsyncStorage.removeItem(key);
     } catch (error) {
-      console.error(`Error removing item ${key}:`, error);
       throw error;
     }
   }
@@ -32,7 +29,6 @@ export class StorageAdapter {
     try {
       await AsyncStorage.clear();
     } catch (error) {
-      console.error("Error clearing storage:", error);
       throw error;
     }
   }
@@ -42,7 +38,6 @@ export class StorageAdapter {
       const keys = await AsyncStorage.getAllKeys();
       return keys;
     } catch (error) {
-      console.error("Error getting all keys:", error);
       return [];
     }
   }
@@ -52,7 +47,6 @@ export class StorageAdapter {
       const results = await AsyncStorage.multiGet(keys);
       return results;
     } catch (error) {
-      console.error("Error getting multiple items:", error);
       return keys.map((key) => [key, null]);
     }
   }
@@ -61,7 +55,6 @@ export class StorageAdapter {
     try {
       await AsyncStorage.multiSet(keyValuePairs);
     } catch (error) {
-      console.error("Error setting multiple items:", error);
       throw error;
     }
   }
@@ -70,7 +63,6 @@ export class StorageAdapter {
     try {
       await AsyncStorage.multiRemove(keys);
     } catch (error) {
-      console.error("Error removing multiple items:", error);
       throw error;
     }
   }
