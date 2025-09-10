@@ -85,7 +85,7 @@ export const ProfileEditDialog = ({
 
     ImagePicker.launchCamera(options, (response) => {
       if (response.didCancel) {
-        console.log("User cancelled camera");
+        // User cancelled camera - no logging needed
       } else if (response.error) {
         console.log("Camera Error: ", response.error);
       } else {
@@ -106,7 +106,7 @@ export const ProfileEditDialog = ({
 
     ImagePicker.launchImageLibrary(options, (response) => {
       if (response.didCancel) {
-        console.log("User cancelled image picker");
+        // User cancelled image picker - no logging needed
       } else if (response.error) {
         console.log("ImagePicker Error: ", response.error);
       } else {

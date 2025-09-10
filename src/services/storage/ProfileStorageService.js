@@ -8,7 +8,7 @@ const STORAGE_KEYS = {
 };
 
 class ProfileStorageService {
-  async hasProfile()romise<boolean> {
+  async hasProfile() {
     try {
       const profiles = await this.getProfiles();
       return profiles.length > 0;
@@ -18,7 +18,7 @@ class ProfileStorageService {
     }
   }
 
-  async getProfiles()romise<ChildProfile[]> {
+  async getProfiles() {
     try {
       const profilesJson = await AsyncStorage.getItem(STORAGE_KEYS.PROFILES);
       if (!profilesJson) {
@@ -31,7 +31,7 @@ class ProfileStorageService {
     }
   }
 
-  async saveProfiles(profileshildProfile[])romise<void> {
+  async saveProfiles(profiles) {
     try {
       await AsyncStorage.setItem(
         STORAGE_KEYS.PROFILES,
@@ -43,7 +43,7 @@ class ProfileStorageService {
     }
   }
 
-  async addProfile(profilehildProfile)romise<void> {
+  async addProfile(profile) {
     try {
       const profiles = await this.getProfiles();
       profiles.push(profile);
@@ -54,10 +54,7 @@ class ProfileStorageService {
     }
   }
 
-  async updateProfile(
-    idtring,
-    updatesartial<ChildProfile>,
-  )romise<void> {
+  async updateProfile(id, updates) {
     try {
       const profiles = await this.getProfiles();
       const index = profiles.findIndex((p) => p.id === id);
@@ -72,7 +69,7 @@ class ProfileStorageService {
     }
   }
 
-  async deleteProfile(idtring)romise<void> {
+  async deleteProfile(id) {
     try {
       const profiles = await this.getProfiles();
       const filtered = profiles.filter((p) => p.id !== id);
@@ -83,7 +80,7 @@ class ProfileStorageService {
     }
   }
 
-  async getActiveProfileId()romise<string | null> {
+  async getActiveProfileId() {
     try {
       return await AsyncStorage.getItem(STORAGE_KEYS.ACTIVE_PROFILE);
     } catch (error) {
@@ -92,7 +89,7 @@ class ProfileStorageService {
     }
   }
 
-  async setActiveProfileId(idtring)romise<void> {
+  async setActiveProfileId(id) {
     try {
       await AsyncStorage.setItem(STORAGE_KEYS.ACTIVE_PROFILE, id);
     } catch (error) {
@@ -101,7 +98,7 @@ class ProfileStorageService {
     }
   }
 
-  async getActiveProfile()romise<ChildProfile | null> {
+  async getActiveProfile() {
     try {
       const activeId = await this.getActiveProfileId();
       if (!activeId) {
@@ -115,7 +112,7 @@ class ProfileStorageService {
     }
   }
 
-  async setHasOnboarded(valueoolean)romise<void> {
+  async setHasOnboarded(value) {
     try {
       await AsyncStorage.setItem(STORAGE_KEYS.HAS_ONBOARDED, value.toString());
     } catch (error) {
@@ -124,7 +121,7 @@ class ProfileStorageService {
     }
   }
 
-  async getHasOnboarded()romise<boolean> {
+  async getHasOnboarded() {
     try {
       const value = await AsyncStorage.getItem(STORAGE_KEYS.HAS_ONBOARDED);
       return value === "true";
@@ -134,7 +131,7 @@ class ProfileStorageService {
     }
   }
 
-  async clearAll()romise<void> {
+  async clearAll() {
     try {
       await AsyncStorage.multiRemove([
         STORAGE_KEYS.PROFILES,

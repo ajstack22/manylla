@@ -4,12 +4,12 @@ export class ProfileValidator {
   /**
    * Validates a complete profile object
    */
-  static validateProfile(datany): { validoolean; errorstring[] } {
-    const errorstring[] = [];
+  static validateProfile(data) {
+    const errors = [];
 
     // Check required fields
     if (!data || typeof data !== "object") {
-      return { validalse, errors"Invalid profile data"] };
+      return { valid: false, errors: ["Invalid profile data"] };
     }
 
     // Validate basic fields
@@ -58,7 +58,7 @@ export class ProfileValidator {
     if (!Array.isArray(data.categories)) {
       errors.push("Categories must be an array");
     } else {
-      data.categories.forEach((catny, indexumber) => {
+      data.categories.forEach((cat, index) => {
         const catErrors = this.validateCategory(cat);
         if (catErrors.length > 0) {
           errors.push(`Category ${index + 1}: ${catErrors.join(", ")}`);
@@ -67,7 +67,7 @@ export class ProfileValidator {
     }
 
     return {
-      validrrors.length === 0,
+      valid: errors.length === 0,
       errors,
     };
   }
@@ -75,8 +75,8 @@ export class ProfileValidator {
   /**
    * Validates a single entry
    */
-  static validateEntry(entryny)tring[] {
-    const errorstring[] = [];
+  static validateEntry(entry) {
+    const errors = [];
 
     if (!entry.id) {
       errors.push("ID required");
@@ -104,7 +104,7 @@ export class ProfileValidator {
         errors.push("Visibility must be an array");
       } else {
         const validVisibility = ["private", "family", "medical", "education"];
-        entry.visibility.forEach((vny) => {
+        entry.visibility.forEach((v) => {
           if (!validVisibility.includes(v)) {
             errors.push(`Invalid visibility: ${v}`);
           }
@@ -128,8 +128,8 @@ export class ProfileValidator {
   /**
    * Validates a category configuration
    */
-  static validateCategory(categoryny)tring[] {
-    const errorstring[] = [];
+  static validateCategory(category) {
+    const errors = [];
 
     if (!category.id || typeof category.id !== "string") {
       errors.push("ID required");
@@ -161,29 +161,29 @@ export class ProfileValidator {
   /**
    * Sanitizes profile data before saving
    */
-  static sanitizeProfile(profilehildProfile)hildProfile {
+  static sanitizeProfile(profile) {
     return {
       ...profile,
-      namerofile.name.trim(),
-      preferredNamerofile.preferredName?.trim(),
-      pronounsrofile.pronouns?.trim(),
-      entriesrofile.entries.map((entry) => ({
+      name: profile.name.trim(),
+      preferredName: profile.preferredName?.trim(),
+      pronouns: profile.pronouns?.trim(),
+      entries: profile.entries.map((entry) => ({
         ...entry,
-        titlehis.sanitizeHtml(entry.title).trim(),
-        descriptionhis.sanitizeHtml(entry.description).trim(),
+        title: this.sanitizeHtml(entry.title).trim(),
+        description: this.sanitizeHtml(entry.description).trim(),
         visibility:
-          entry.visibility  Array.isArray(entry.visibility)
+          entry.visibility && Array.isArray(entry.visibility)
             ? entry.visibility
-            "private"],
+            : ["private"],
       })),
-      updatedAtew Date(),
+      updatedAt: new Date(),
     };
   }
 
   /**
    * Basic HTML sanitization (removes script tags and dangerous attributes)
    */
-  private static sanitizeHtml(htmltring)tring {
+  static sanitizeHtml(html) {
     // Remove script tags
     let cleaned = html.replace(
       /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
@@ -202,7 +202,7 @@ export class ProfileValidator {
   /**
    * Repairs common data issues
    */
-  static repairProfile(datany)hildProfile | null {
+  static repairProfile(data) {
     try {
       // Ensure required fields
       if (!data.id) data.id = Date.now().toString();
@@ -218,16 +218,16 @@ export class ProfileValidator {
       data.updatedAt = new Date(data.updatedAt || Date.now());
 
       // Fix entries
-      data.entries = data.entries.map((entryny) => ({
+      data.entries = data.entries.map((entry) => ({
         ...entry,
-        idntry.id || Date.now().toString(),
-        dateew Date(entry.date || Date.now()),
-        visibilityrray.isArray(entry.visibility)
+        id: entry.id || Date.now().toString(),
+        date: new Date(entry.date || Date.now()),
+        visibility: Array.isArray(entry.visibility)
           ? entry.visibility
-          "private"],
+          : ["private"],
       }));
 
-      return data as ChildProfile;
+      return data;
     } catch (error) {
       console.error("Failed to repair profile:", error);
       return null;

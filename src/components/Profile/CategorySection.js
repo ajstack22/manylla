@@ -9,20 +9,10 @@ import {
   useTheme,
 } from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
-import { Entry } from "../../types/ChildProfile";
 import { HtmlRenderer } from "../Forms/HtmlRenderer";
 
-interface CategorySectionProps {
-  titletring;
-  entriesntry[];
-  colortring;
-  icon?eact.ReactNode;
-  onAddEntry?: () => void;
-  onEditEntry?: (entryntry) => void;
-  onDeleteEntry?: (entryIdtring) => void;
-}
 
-export const CategorySection= ({
+export const CategorySection = ({
   title,
   entries,
   color,
@@ -34,25 +24,25 @@ export const CategorySection= ({
   const theme = useTheme();
 
   return (
-    <Box sx={{ mb }}>
+    <Box sx={{ mb: 3 }}>
       <Box
         sx={{
           display: "flex",
           alignItems: "center",
-          mb,
-          pb,
+          mb: 1,
+          pb: 1,
           borderBottom: `2px solid ${color}`,
         }}
       >
-        {icon  <Box sx={{ mr, color, display: "flex" }}>{icon}</Box>}
-        <Typography variant="h5" sx={{ flexGrow, fontWeight00 }}>
+        {icon && <Box sx={{ mr: 1, color, display: "flex" }}>{icon}</Box>}
+        <Typography variant="h5" sx={{ flexGrow: 1, fontWeight: 600 }}>
           {title}
         </Typography>
       </Box>
 
       <Stack spacing={2}>
         {entries.length === 0 ? (
-          <Card sx={{ backgroundColorheme.palette.action.hover }}>
+          <Card sx={{ backgroundColor: theme.palette.action.hover }}>
             <CardContent>
               <Typography variant="body2" color="text.secondary" align="center">
                 No {title.toLowerCase()} added yet.
@@ -66,24 +56,24 @@ export const CategorySection= ({
               sx={{
                 borderLeft: `4px solid ${color}`,
                 ":hover": {
-                  boxShadowheme.shadows[4],
+                  boxShadow: theme.shadows[4],
                 },
               }}
             >
               <CardContent>
-                <Box sx={{ display: "flex", alignItems: "flex-start", mb }}>
-                  <Box sx={{ flexGrow }}>
+                <Box sx={{ display: "flex", alignItems: "flex-start", mb: 1 }}>
+                  <Box sx={{ flexGrow: 1 }}>
                     <HtmlRenderer content={entry.title} variant="h6" />
                   </Box>
                   <Stack direction="row" spacing={0.5}>
-                    {onEditEntry  (
+                    {onEditEntry && (
                       <IconButton
                         size="small"
                         onClick={() => onEditEntry(entry)}
                         sx={{
                           color: "text.secondary",
-                          minWidth4,
-                          minHeight4,
+                          minWidth: 24,
+                          minHeight: 24,
                           ":hover": {
                             backgroundColor: "action.hover",
                           },
@@ -92,14 +82,14 @@ export const CategorySection= ({
                         <EditIcon fontSize="small" />
                       </IconButton>
                     )}
-                    {onDeleteEntry  (
+                    {onDeleteEntry && (
                       <IconButton
                         size="small"
                         onClick={() => onDeleteEntry(entry.id)}
                         sx={{
                           color: "text.secondary",
-                          minWidth4,
-                          minHeight4,
+                          minWidth: 24,
+                          minHeight: 24,
                           ":hover": {
                             backgroundColor: "error.light",
                             color: "error.main",
@@ -112,14 +102,14 @@ export const CategorySection= ({
                   </Stack>
                 </Box>
 
-                <Box sx={{ mb }}>
+                <Box sx={{ mb: 1 }}>
                   <HtmlRenderer content={entry.description} variant="body2" />
                 </Box>
 
                 <Typography
                   variant="caption"
                   color="text.secondary"
-                  sx={{ display: "block", mt }}
+                  sx={{ display: "block", mt: 1 }}
                 >
                   {new Intl.DateTimeFormat("en-US", {
                     month: "short",

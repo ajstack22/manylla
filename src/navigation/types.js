@@ -7,90 +7,97 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Entry, CategoryConfig } from "../types/ChildProfile";
 
 // Root Stack Navigator
-export RootStackParamList = {
-  Onboardingndefined;
-  MainavigatorScreenParams<MainTabParamList>;
-  Authndefined;
+export const RootStackParamList = {
+  Onboarding: undefined,
+  Main: undefined, // NavigatorScreenParams<MainTabParamList>
+  Auth: undefined,
 };
 
 // Main Tab Navigator
-export MainTabParamList = {
-  Homendefined;
-  Entriesndefined;
-  Addndefined;
-  Sharendefined;
-  Settingsndefined;
+export const MainTabParamList = {
+  Home: undefined,
+  Entries: undefined,
+  Add: undefined,
+  Share: undefined,
+  Settings: undefined,
 };
 
 // Home Stack Navigator
-export HomeStackParamList = {
-  ProfileOverviewndefined;
-  ProfileEdit: { profileId?tring };
-  EntryDetail: { entryIdtring };
-  CategoryDetail: { categoryIdtring };
+export const HomeStackParamList = {
+  ProfileOverview: undefined,
+  ProfileEdit: { profileId: undefined }, // string optional
+  EntryDetail: { entryId: undefined }, // string required
+  CategoryDetail: { categoryId: undefined }, // string required
 };
 
 // Entries Stack Navigator
-export EntriesStackParamList = {
-  EntriesList: { categoryId?tring };
-  EntryDetail: { entryIdtring };
-  EntryEdit: { entryId?tring; categoryId?tring };
+export const EntriesStackParamList = {
+  EntriesList: { categoryId: undefined }, // string optional
+  EntryDetail: { entryId: undefined }, // string required
+  EntryEdit: { entryId: undefined, categoryId: undefined }, // both optional
 };
 
 // Settings Stack Navigator
-export SettingsStackParamList = {
-  SettingsMainndefined;
-  Categoriesndefined;
-  CategoryEdit: { categoryId?tring };
-  Syncndefined;
-  Securityndefined;
-  Aboutndefined;
+export const SettingsStackParamList = {
+  SettingsMain: undefined,
+  Categories: undefined,
+  CategoryEdit: { categoryId: undefined }, // string optional
+  Sync: undefined,
+  Security: undefined,
+  About: undefined,
 };
 
 // Share Stack Navigator
-export ShareStackParamList = {
-  ShareMainndefined;
-  CreateShare: { entries?tring[] };
-  ShareQR: { shareIdtring; shareUrltring };
-  ShareHistoryndefined;
+export const ShareStackParamList = {
+  ShareMain: undefined,
+  CreateShare: { entries: undefined }, // string[] optional
+  ShareQR: { shareId: undefined, shareUrl: undefined }, // both string required
+  ShareHistory: undefined,
 };
 
 // Screen Props Types
-export RootStackScreenProps<T extends keyof RootStackParamList> =
-  NativeStackScreenProps<RootStackParamList, T>;
+// TypeScript type - commented out for JavaScript
+// export type RootStackScreenProps<T extends keyof RootStackParamList> =
+//   NativeStackScreenProps<RootStackParamList, T>;
 
-export MainTabScreenProps<T extends keyof MainTabParamList> =
-  CompositeScreenProps<
-    BottomTabScreenProps<MainTabParamList, T>,
-    RootStackScreenProps<keyof RootStackParamList>
-  >;
+// TypeScript type - commented out for JavaScript
+// export type MainTabScreenProps<T extends keyof MainTabParamList> =
+//   CompositeScreenProps<
+//     BottomTabScreenProps<MainTabParamList, T>,
+//     RootStackScreenProps<keyof RootStackParamList>
+//   >;
 
-export HomeStackScreenProps<T extends keyof HomeStackParamList> =
-  CompositeScreenProps<
-    NativeStackScreenProps<HomeStackParamList, T>,
-    MainTabScreenProps<"Home">
-  >;
+// TypeScript type - commented out for JavaScript
+// export type HomeStackScreenProps<T extends keyof HomeStackParamList> =
+//   CompositeScreenProps<
+//     NativeStackScreenProps<HomeStackParamList, T>,
+//     MainTabScreenProps<"Home">
+//   >;
 
-export EntriesStackScreenProps<T extends keyof EntriesStackParamList> =
-  CompositeScreenProps<
-    NativeStackScreenProps<EntriesStackParamList, T>,
-    MainTabScreenProps<"Entries">
-  >;
+// TypeScript type - commented out for JavaScript
+// export type EntriesStackScreenProps<T extends keyof EntriesStackParamList> =
+//   CompositeScreenProps<
+//     NativeStackScreenProps<EntriesStackParamList, T>,
+//     MainTabScreenProps<"Entries">
+//   >;
 
-export SettingsStackScreenProps<T extends keyof SettingsStackParamList> =
-  CompositeScreenProps<
-    NativeStackScreenProps<SettingsStackParamList, T>,
-    MainTabScreenProps<"Settings">
-  >;
+// TypeScript type - commented out for JavaScript
+// export type SettingsStackScreenProps<T extends keyof SettingsStackParamList> =
+//   CompositeScreenProps<
+//     NativeStackScreenProps<SettingsStackParamList, T>,
+//     MainTabScreenProps<"Settings">
+//   >;
 
-export ShareStackScreenProps<T extends keyof ShareStackParamList> =
-  CompositeScreenProps<
-    NativeStackScreenProps<ShareStackParamList, T>,
-    MainTabScreenProps<"Share">
-  >;
+// TypeScript type - commented out for JavaScript
+// export type ShareStackScreenProps<T extends keyof ShareStackParamList> =
+//   CompositeScreenProps<
+//     NativeStackScreenProps<ShareStackParamList, T>,
+//     MainTabScreenProps<"Share">
+//   >;
 
-declare global {
-  namespace ReactNavigation {
-    
-  }
-}
+// TypeScript global declaration - commented out for JavaScript
+// declare global {
+//   namespace ReactNavigation {
+//     interface RootParamList extends RootStackParamList {}
+//   }
+// }

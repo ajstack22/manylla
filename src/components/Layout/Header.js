@@ -143,14 +143,7 @@ const Header = ({
 
   const styles = createStyles(colors);
 
-  // Debug logging
-  if (Platform.OS === 'web') {
-    console.log('Header state:', { 
-      isProfileHidden, 
-      hasProfile: !!profile,
-      profileName: profile?.name 
-    });
-  }
+  // Debug logging removed for production
 
   // Platform-specific container styles
   const headerContainerStyle = Platform.select({

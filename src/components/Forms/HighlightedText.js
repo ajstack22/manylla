@@ -1,12 +1,20 @@
 import React from "react";
-import { Typography, Box } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Text, View } from "react-native";
 
-interface HighlightedTextProps {
-  contenttring;
-  variant?: "body1" | "body2" | "caption";
-  highlightTerms?tring[];
-}
+const colors = {
+  primary: "#8B7355",
+  secondary: "#A0937D",
+  background: "#FDFBF7",
+  surface: "#F4E4C1",
+  text: "#4A4A4A",
+  textSecondary: "#666666",
+  border: "#E0E0E0",
+  white: "#FFFFFF",
+  warning: {
+    light: "#FFE0B2",
+    dark: "#E65100"
+  }
+};
 
 // Common medical and important terms to auto-highlight
 const DEFAULT_HIGHLIGHT_TERMS = [
@@ -50,12 +58,11 @@ const DEFAULT_HIGHLIGHT_TERMS = [
   "must",
 ];
 
-export const HighlightedText= ({
+export const HighlightedText = ({
   content,
   variant = "body2",
   highlightTerms = DEFAULT_HIGHLIGHT_TERMS,
 }) => {
-  const theme = useTheme();
 
   // Create regex pattern for highlighting
   const createHighlightRegex = () => {
@@ -66,7 +73,7 @@ export const HighlightedText= ({
   };
 
   // Parse content and add highlights
-  const highlightContent = (texttring) => {
+  const highlightContent = (text) => {
     const regex = createHighlightRegex();
     const parts = text.split(regex);
 
@@ -77,20 +84,20 @@ export const HighlightedText= ({
 
       if (isHighlighted) {
         return (
-          <Box
+          <Text
             key={index}
-            component="span"
-            sx={{
-              backgroundColorheme.palette.warning.light + "20",
-              padding: "2px 4px",
-              borderRadius: "3px",
-              fontWeight00,
-              colorheme.palette.warning.dark,
-              border: `1px solid ${theme.palette.warning.light}40`,
+            style={{
+              backgroundColor: colors.warning.light + "20",
+              padding: 4,
+              borderRadius: 3,
+              fontWeight: "600",
+              color: colors.warning.dark,
+              borderWidth: 1,
+              borderColor: colors.warning.light + "40",
             }}
           >
             {part}
-          </Box>
+          </Text>
         );
       }
 
@@ -99,15 +106,15 @@ export const HighlightedText= ({
   };
 
   return (
-    <Typography
-      variant={variant}
-      sx={{
-        fontSizeariant === "body2" ? "15px" : "16px",
-        lineHeight.7,
-        letterSpacing: "0.3px",
+    <Text
+      style={{
+        fontSize: variant === "body2" ? 15 : 16,
+        lineHeight: 22,
+        letterSpacing: 0.3,
+        color: colors.text,
       }}
     >
       {highlightContent(content)}
-    </Typography>
+    </Text>
   );
 };

@@ -8,9 +8,9 @@ import { ActivityIndicator, View, Text } from "react-native";
 import { useTheme } from "@context/ThemeContext";
 import OnboardingScreen from "@screens/Onboarding/OnboardingScreen";
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator();
 
-const RootNavigator= () => {
+const RootNavigator = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasProfile, setHasProfile] = useState(false);
   const [needsAuth, setNeedsAuth] = useState(false);
@@ -88,7 +88,7 @@ const RootNavigator= () => {
 };
 
 // Temporary placeholder screen
-const PlaceholderScreen= ({ route }) => {
+const PlaceholderScreen = ({ route }) => {
   const { colors } = useTheme();
   const screenName = route?.name || "Unknown";
 

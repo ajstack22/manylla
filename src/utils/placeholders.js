@@ -1,16 +1,10 @@
 // Smart placeholder text for different categories and contexts
 
-export interface PlaceholderConfig {
-  titletring;
-  descriptiontring;
-  examples?tring[];
-}
-
-export const categoryPlaceholdersecord<string, PlaceholderConfig> = {
+export const categoryPlaceholders = {
   goals: {
     title: "What skill are we working on?",
     description: "Describe the goal, timeline, and how we'll measure success",
-    examples
+    examples: [
       "Use 3-word sentences by June",
       "Independently dress for school",
       "Complete homework without prompts",
@@ -19,7 +13,7 @@ export const categoryPlaceholdersecord<string, PlaceholderConfig> = {
   successes: {
     title: "What achievement are we celebrating?",
     description: "Describe what happened, when, and why it's significant",
-    examples
+    examples: [
       "First full day without meltdowns",
       "Read entire book independently",
       "Made a new friend at recess",
@@ -28,7 +22,7 @@ export const categoryPlaceholdersecord<string, PlaceholderConfig> = {
   strengths: {
     title: "What is your child great at?",
     description: "Describe the strength and how it helps them",
-    examples
+    examples: [
       "Visual learning - remembers picture schedules",
       "Kind and empathetic with younger children",
       "Excellent memory for facts and dates",
@@ -37,7 +31,7 @@ export const categoryPlaceholdersecord<string, PlaceholderConfig> = {
   challenges: {
     title: "What situation is difficult?",
     description: "Describe the trigger, response, and helpful strategies",
-    examples
+    examples: [
       "Loud noises → covers ears → offer noise-canceling headphones",
       "Transitions → anxiety → use 5-minute warnings",
       "Crowded spaces → overwhelm → find quiet area",
@@ -46,7 +40,7 @@ export const categoryPlaceholdersecord<string, PlaceholderConfig> = {
   "medical-history": {
     title: "Diagnosis, treatment, or medical event",
     description: "Include date, provider, and key details",
-    examples
+    examples: [
       "Autism diagnosis - Dr. Smith, Children's Hospital",
       "Started occupational therapy 2x weekly",
       "Medication adjustment - increased to 10mg",
@@ -55,7 +49,7 @@ export const categoryPlaceholdersecord<string, PlaceholderConfig> = {
   "tips-tricks": {
     title: "What strategy works well?",
     description: "Describe the situation and the helpful approach",
-    examples
+    examples: [
       "Use visual timer for transitions",
       "Offer choices to prevent power struggles",
       "Deep pressure helps with calming",
@@ -64,7 +58,7 @@ export const categoryPlaceholdersecord<string, PlaceholderConfig> = {
   therapies: {
     title: "Type of therapy and provider",
     description: "Include schedule, goals, and progress notes",
-    examples
+    examples: [
       "Speech therapy with Ms. Johnson - Tuesdays 3pm",
       "OT for fine motor skills - 2x weekly",
       "ABA therapy - home-based program",
@@ -73,8 +67,8 @@ export const categoryPlaceholdersecord<string, PlaceholderConfig> = {
   education: {
     title: "School-related information",
     description: "Include IEP goals, accommodations, or important notes",
-    examples
-      "IEP accommodationxtended time for tests",
+    examples: [
+      "IEP accommodation: extended time for tests",
       "Preferred seating near teacher",
       "Uses communication device in classroom",
     ],
@@ -82,7 +76,7 @@ export const categoryPlaceholdersecord<string, PlaceholderConfig> = {
   behaviors: {
     title: "Behavior pattern or trigger",
     description: "Describe what happens before, during, and after",
-    examples
+    examples: [
       "Spinning when excited - self-regulation strategy",
       "Hits when frustrated - working on using words",
       "Elopes when overwhelmed - need secured exits",
@@ -91,11 +85,11 @@ export const categoryPlaceholdersecord<string, PlaceholderConfig> = {
 };
 
 // Quick info specific placeholders
-export const quickInfoPlaceholdersecord<string, PlaceholderConfig> = {
+export const quickInfoPlaceholders = {
   communication: {
     title: "Communication",
     description: "How your child communicates and what support they need",
-    examples
+    examples: [
       "Uses 2-3 word phrases, understands more than can express",
       "Non-speaking, uses AAC device with picture symbols",
       "Speaks in full sentences but needs processing time",
@@ -104,7 +98,7 @@ export const quickInfoPlaceholdersecord<string, PlaceholderConfig> = {
   sensory: {
     title: "Sensory Needs",
     description: "Sensitivities and sensory preferences",
-    examples
+    examples: [
       "Sensitive to loud noises, bright lights. Seeks deep pressure",
       "Avoids certain textures. Prefers smooth, soft materials",
       "Seeks movement - needs frequent breaks to jump or swing",
@@ -113,8 +107,8 @@ export const quickInfoPlaceholdersecord<string, PlaceholderConfig> = {
   medical: {
     title: "Medical Information",
     description: "Current medications, allergies, and medical needs",
-    examples
-      "Allergieseanuts (EpiPen in backpack)\nMedicationsitalin 10mg morning",
+    examples: [
+      "Allergies: peanuts (EpiPen in backpack)\nMedications: Ritalin 10mg morning",
       "No allergies. Takes melatonin 3mg at bedtime",
       "Seizure disorder - emergency medication if seizure > 5 min",
     ],
@@ -122,7 +116,7 @@ export const quickInfoPlaceholdersecord<string, PlaceholderConfig> = {
   dietary: {
     title: "Dietary Needs",
     description: "Food restrictions, preferences, and feeding information",
-    examples
+    examples: [
       "Gluten-free diet. Prefers crunchy foods. No nuts",
       "Vegetarian. Will only eat foods that don't touch",
       "Texture sensitive - no mixed foods or sauces",
@@ -131,16 +125,16 @@ export const quickInfoPlaceholdersecord<string, PlaceholderConfig> = {
   emergency: {
     title: "Emergency Contacts",
     description: "Primary contacts and important phone numbers",
-    examples
-      "Mom55-0123\nDad55-0124\nDr. Smith55-0199",
+    examples: [
+      "Mom: (555) 555-0123\nDad: (555) 555-0124\nDr. Smith: (555) 555-0199",
       "Parent 1: (555) 123-4567\nSchool Nurse: (555) 234-5678",
-      "Guardian55-1111\nTherapist (crisis)55-2222",
+      "Guardian: (555) 555-1111\nTherapist (crisis): (555) 555-2222",
     ],
   },
   behaviors: {
     title: "Behavioral Information",
     description: "Common behaviors and effective responses",
-    examples
+    examples: [
       "Flaps hands when happy - this is okay!\nBites when frustrated - redirect to chewy",
       "May elope - always supervise near exits\nCalms with deep pressure hugs",
       "Rocks when anxious - offer break space\nMay hit if overwhelmed - give space",
@@ -149,7 +143,7 @@ export const quickInfoPlaceholdersecord<string, PlaceholderConfig> = {
   calming: {
     title: "Calming Strategies",
     description: "What helps during meltdowns or anxiety",
-    examples
+    examples: [
       "Quiet space, dim lights, weighted blanket, soft music",
       "Deep breaths, counting to 10, squeeze toy, walk outside",
       "Remove demands, offer water, no talking until calm",
@@ -158,19 +152,19 @@ export const quickInfoPlaceholdersecord<string, PlaceholderConfig> = {
   routines: {
     title: "Important Routines",
     description: "Daily routines that should be maintained",
-    examples
-      "Morningreakfast → Brush teeth → Get dressed (visual schedule on wall)",
-      "Bedtimeath at 7pm → Story → Lights out 8pm (no exceptions)",
-      "After schoolnack → 30min free time → Homework with timer",
+    examples: [
+      "Morning: breakfast → Brush teeth → Get dressed (visual schedule on wall)",
+      "Bedtime: bath at 7pm → Story → Lights out 8pm (no exceptions)",
+      "After school: snack → 30min free time → Homework with timer",
     ],
   },
 };
 
 // Helper function to get placeholder for a category
 export const getPlaceholder = (
-  categorytring,
-  field: "title" | "description",
-)tring => {
+  category,
+  field,
+) => {
   const config =
     categoryPlaceholders[category] || quickInfoPlaceholders[category];
 
@@ -182,7 +176,7 @@ export const getPlaceholder = (
 };
 
 // Helper function to get random example
-export const getRandomExample = (categorytring)tring | undefined => {
+export const getRandomExample = (category) => {
   const config =
     categoryPlaceholders[category] || quickInfoPlaceholders[category];
 
@@ -196,13 +190,13 @@ export const getRandomExample = (categorytring)tring | undefined => {
 
 // Helper function to format placeholder with example
 export const getPlaceholderWithExample = (
-  categorytring,
-  field: "title" | "description",
-)tring => {
+  category,
+  field,
+) => {
   const placeholder = getPlaceholder(category, field);
   const example = getRandomExample(category);
 
-  if (field === "title"  example) {
+  if (field === "title" && example) {
     return `${placeholder} (e.g., "${example}")`;
   }
 

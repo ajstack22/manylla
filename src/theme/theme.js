@@ -37,29 +37,29 @@ export const lightTheme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      mainanyllaColors.brown,
-      lightanyllaColors.manila,
-      darkanyllaColors.darkBrown,
+      main: manyllaColors.brown,
+      light: manyllaColors.manila,
+      dark: manyllaColors.darkBrown,
     },
     secondary: {
-      mainanyllaColors.accent,
+      main: manyllaColors.accent,
     },
     background: {
-      defaultanyllaColors.lightManilaBackground,
-      paperanyllaColors.lightManilaPaper,
+      default: manyllaColors.lightManilaBackground,
+      paper: manyllaColors.lightManilaPaper,
     },
     action: {
-      hoveranyllaColors.lightManilaAccent,
-      selectedanyllaColors.lightManilaAccent,
+      hover: manyllaColors.lightManilaAccent,
+      selected: manyllaColors.lightManilaAccent,
     },
     success: {
-      mainanyllaColors.success,
+      main: manyllaColors.success,
     },
     warning: {
-      mainanyllaColors.warning,
+      main: manyllaColors.warning,
     },
     error: {
-      mainanyllaColors.error,
+      main: manyllaColors.error,
     },
   },
   typography: {
@@ -127,22 +127,22 @@ export const darkTheme = createTheme({
     primary: {
       main: "#D4B896", // Manila accent for primary
       light: "#E8DCC0",
-      darkanyllaColors.brown,
+      dark: manyllaColors.brown,
     },
     secondary: {
       main: "#6BA3E5", // Bright blue for contrast
     },
     background: {
-      defaultanyllaColors.darkBackground,
-      paperanyllaColors.darkPaper,
+      default: manyllaColors.darkBackground,
+      paper: manyllaColors.darkPaper,
     },
     text: {
-      primaryanyllaColors.darkText,
-      secondaryanyllaColors.darkTextSecondary,
+      primary: manyllaColors.darkText,
+      secondary: manyllaColors.darkTextSecondary,
     },
     action: {
-      hoveranyllaColors.darkAccent,
-      selectedanyllaColors.darkAccent,
+      hover: manyllaColors.darkAccent,
+      selected: manyllaColors.darkAccent,
     },
     divider: "rgba(232, 220, 192, 0.12)", // Light divider on dark
     success: {
@@ -158,14 +158,14 @@ export const darkTheme = createTheme({
   typography: {
     fontFamily:
       '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
-    h1ightTheme.typography.h1,
-    h2ightTheme.typography.h2,
-    h3ightTheme.typography.h3,
-    h4ightTheme.typography.h4,
-    h5ightTheme.typography.h5,
-    h6ightTheme.typography.h6,
+    h1: lightTheme.typography.h1,
+    h2: lightTheme.typography.h2,
+    h3: lightTheme.typography.h3,
+    h4: lightTheme.typography.h4,
+    h5: lightTheme.typography.h5,
+    h6: lightTheme.typography.h6,
   },
-  shapeightTheme.shape,
+  shape: lightTheme.shape,
   components: {
     ...lightTheme.components,
     MuiPaper: {
@@ -191,24 +191,24 @@ export const manyllaTheme = createTheme({
   palette: {
     mode: "light", // Base it on light mode for better component defaults
     primary: {
-      mainanyllaColors.darkBrown, // Dark brown for primary actions
-      lightanyllaColors.brown,
+      main: manyllaColors.darkBrown, // Dark brown for primary actions
+      light: manyllaColors.brown,
       dark: "#3D2F1F",
     },
     secondary: {
       main: "#4A7C8E", // Muted teal that works with manila
     },
     background: {
-      defaultanyllaColors.manyllaBackground,
-      paperanyllaColors.manyllaPaper,
+      default: manyllaColors.manyllaBackground,
+      paper: manyllaColors.manyllaPaper,
     },
     text: {
-      primaryanyllaColors.manyllaText,
-      secondaryanyllaColors.manyllaTextSecondary,
+      primary: manyllaColors.manyllaText,
+      secondary: manyllaColors.manyllaTextSecondary,
     },
     action: {
-      hoveranyllaColors.manyllaAccent,
-      selectedanyllaColors.manyllaAccent,
+      hover: manyllaColors.manyllaAccent,
+      selected: manyllaColors.manyllaAccent,
     },
     divider: "rgba(61, 47, 31, 0.2)", // Dark brown divider
     success: {
@@ -224,14 +224,14 @@ export const manyllaTheme = createTheme({
   typography: {
     fontFamily:
       '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
-    h1ightTheme.typography.h1,
-    h2ightTheme.typography.h2,
-    h3ightTheme.typography.h3,
-    h4ightTheme.typography.h4,
-    h5ightTheme.typography.h5,
-    h6ightTheme.typography.h6,
+    h1: lightTheme.typography.h1,
+    h2: lightTheme.typography.h2,
+    h3: lightTheme.typography.h3,
+    h4: lightTheme.typography.h4,
+    h5: lightTheme.typography.h5,
+    h6: lightTheme.typography.h6,
   },
-  shapeightTheme.shape,
+  shape: lightTheme.shape,
   components: {
     ...lightTheme.components,
     MuiPaper: {

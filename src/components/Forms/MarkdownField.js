@@ -13,27 +13,7 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-interface MarkdownFieldProps {
-  labeltring;
-  valuetring;
-  onChange: (valuetring) => void;
-  required?oolean;
-  placeholder?tring;
-  helperText?tring;
-  height?umber;
-}
-
-interface MarkdownCommand {
-  icontring;
-  labeltring;
-  action: (
-    texttring,
-    selection: { startumber; endumber },
-  ) => {
-    texttring;
-    selection: { startumber; endumber };
-  };
-}
+// Interface definitions removed - using plain JavaScript
 
 const colors = {
   primary: "#8B7355",
@@ -49,7 +29,7 @@ const colors = {
   hover: "#F5F5F5",
 };
 
-const markdownCommandsarkdownCommand[] = [
+const markdownCommands = [
   {
     icon: "format-bold",
     label: "Bold",
@@ -60,16 +40,16 @@ const markdownCommandsarkdownCommand[] = [
         const after = text.substring(selection.end);
         const formattedText = `${before}**${selectedText}**${after}`;
         return {
-          textormattedText,
-          selection: { startelection.start + 2, endelection.end + 2 },
+          text: formattedText,
+          selection: { start: selection.start + 2, end: selection.end + 2 },
         };
       } else {
         const before = text.substring(0, selection.start);
         const after = text.substring(selection.start);
         const formattedText = `${before}****${after}`;
         return {
-          textormattedText,
-          selection: { startelection.start + 2, endelection.start + 2 },
+          text: formattedText,
+          selection: { start: selection.start + 2, end: selection.start + 2 },
         };
       }
     },
@@ -84,16 +64,16 @@ const markdownCommandsarkdownCommand[] = [
         const after = text.substring(selection.end);
         const formattedText = `${before}_${selectedText}_${after}`;
         return {
-          textormattedText,
-          selection: { startelection.start + 1, endelection.end + 1 },
+          text: formattedText,
+          selection: { start: selection.start + 1, end: selection.end + 1 },
         };
       } else {
         const before = text.substring(0, selection.start);
         const after = text.substring(selection.start);
         const formattedText = `${before}__${after}`;
         return {
-          textormattedText,
-          selection: { startelection.start + 1, endelection.start + 1 },
+          text: formattedText,
+          selection: { start: selection.start + 1, end: selection.start + 1 },
         };
       }
     },
@@ -108,16 +88,16 @@ const markdownCommandsarkdownCommand[] = [
         const after = text.substring(selection.end);
         const formattedText = `${before}~~${selectedText}~~${after}`;
         return {
-          textormattedText,
-          selection: { startelection.start + 2, endelection.end + 2 },
+          text: formattedText,
+          selection: { start: selection.start + 2, end: selection.end + 2 },
         };
       } else {
         const before = text.substring(0, selection.start);
         const after = text.substring(selection.start);
         const formattedText = `${before}~~~~${after}`;
         return {
-          textormattedText,
-          selection: { startelection.start + 2, endelection.start + 2 },
+          text: formattedText,
+          selection: { start: selection.start + 2, end: selection.start + 2 },
         };
       }
     },
@@ -146,8 +126,8 @@ const markdownCommandsarkdownCommand[] = [
 
       const newText = lines.join("\n");
       return {
-        textewText,
-        selection: { startelection.start + 2, endelection.end + 2 },
+        text: newText,
+        selection: { start: selection.start + 2, end: selection.end + 2 },
       };
     },
   },
@@ -175,8 +155,8 @@ const markdownCommandsarkdownCommand[] = [
 
       const newText = lines.join("\n");
       return {
-        textewText,
-        selection: { startelection.start + 3, endelection.end + 3 },
+        text: newText,
+        selection: { start: selection.start + 3, end: selection.end + 3 },
       };
     },
   },
@@ -190,10 +170,10 @@ const markdownCommandsarkdownCommand[] = [
       const after = text.substring(selection.end);
       const formattedText = `${before}[${linkText}](url)${after}`;
       return {
-        textormattedText,
+        text: formattedText,
         selection: {
-          startelection.start + linkText.length + 3,
-          endelection.start + linkText.length + 6,
+          start: selection.start + linkText.length + 3,
+          end: selection.start + linkText.length + 6,
         },
       };
     },
@@ -208,23 +188,23 @@ const markdownCommandsarkdownCommand[] = [
         const after = text.substring(selection.end);
         const formattedText = `${before}\`${selectedText}\`${after}`;
         return {
-          textormattedText,
-          selection: { startelection.start + 1, endelection.end + 1 },
+          text: formattedText,
+          selection: { start: selection.start + 1, end: selection.end + 1 },
         };
       } else {
         const before = text.substring(0, selection.start);
         const after = text.substring(selection.start);
         const formattedText = `${before}\`\`${after}`;
         return {
-          textormattedText,
-          selection: { startelection.start + 1, endelection.start + 1 },
+          text: formattedText,
+          selection: { start: selection.start + 1, end: selection.start + 1 },
         };
       }
     },
   },
 ];
 
-export const MarkdownField= ({
+export const MarkdownField = ({
   label,
   value,
   onChange,
@@ -235,15 +215,15 @@ export const MarkdownField= ({
 }) => {
   const [showToolbar, setShowToolbar] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
-  const [selection, setSelection] = useState({ start, end });
+  const [selection, setSelection] = useState({ start: 0, end: 0 });
   const [isFocused, setIsFocused] = useState(false);
 
-  const handleSelectionChange = (eventny) => {
+  const handleSelectionChange = (event) => {
     const { start, end } = event.nativeEvent.selection;
     setSelection({ start, end });
   };
 
-  const applyMarkdown = (commandarkdownCommand) => {
+  const applyMarkdown = (command) => {
     const result = command.action(value, selection);
     onChange(result.text);
     setSelection(result.selection);
@@ -251,7 +231,7 @@ export const MarkdownField= ({
   };
 
   // Simple markdown preview renderer
-  const renderPreview = (texttring) => {
+  const renderPreview = (text) => {
     if (!text) return "Preview will appear here...";
 
     // Basic markdown parsing for display
@@ -271,40 +251,40 @@ export const MarkdownField= ({
         <Text
           style={[
             styles.label,
-            { colorsFocused ? colors.primary olors.text },
+            { color: isFocused ? colors.primary : colors.text },
           ]}
         >
           {label}
-          {required  <Text style={styles.required}> *</Text>}
+          {required && <Text style={styles.required}> *</Text>}
         </Text>
 
         <View style={styles.headerButtons}>
           <TouchableOpacity
-            style={[styles.headerButton, showToolbar  styles.activeButton]}
+            style={[styles.headerButton, showToolbar && styles.activeButton]}
             onPress={() => setShowToolbar(!showToolbar)}
           >
             <Icon
               name="format-size"
               size={18}
-              color={showToolbar ? colors.white olors.primary}
+              color={showToolbar ? colors.white : colors.primary}
             />
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.headerButton, showPreview  styles.activeButton]}
+            style={[styles.headerButton, showPreview && styles.activeButton]}
             onPress={() => setShowPreview(!showPreview)}
           >
             <Icon
               name="visibility"
               size={18}
-              color={showPreview ? colors.white olors.primary}
+              color={showPreview ? colors.white : colors.primary}
             />
           </TouchableOpacity>
         </View>
       </View>
 
       {/* Toolbar */}
-      {showToolbar  (
+      {showToolbar && (
         <View style={styles.toolbar}>
           <ScrollView
             horizontal
@@ -330,12 +310,12 @@ export const MarkdownField= ({
         <View
           style={[
             styles.editorPanel,
-            { displayhowPreview ? "none" : "flex" },
-            { borderColorsFocused ? colors.primary olors.border },
+            { display: showPreview ? "none" : "flex" },
+            { borderColor: isFocused ? colors.primary : colors.border },
           ]}
         >
           <TextInput
-            style={[styles.textInput, { height: 2 }]}
+            style={[styles.textInput, { height: height }]}
             value={value}
             onChangeText={onChange}
             onSelectionChange={handleSelectionChange}
@@ -350,8 +330,8 @@ export const MarkdownField= ({
         </View>
 
         {/* Preview */}
-        {showPreview  (
-          <View style={[styles.previewPanel, { height: 2 }]}>
+        {showPreview && (
+          <View style={[styles.previewPanel, { height: height }]}>
             <ScrollView style={styles.previewScroll}>
               <Text style={styles.previewText}>{renderPreview(value)}</Text>
             </ScrollView>
@@ -360,7 +340,7 @@ export const MarkdownField= ({
       </View>
 
       {/* Helper Text */}
-      {helperText  (
+      {helperText && (
         <Text style={styles.helperText}>Example: {helperText}</Text>
       )}
 
@@ -388,7 +368,7 @@ export const MarkdownField= ({
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical,
+    marginVertical: 8,
   },
   headerRow: {
     flexDirection: "row",
@@ -408,8 +388,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   headerButton: {
-    paddingHorizontal,
-    paddingVertical,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
     borderRadius: 6,
     backgroundColor: colors.surface,
   },
@@ -424,16 +404,16 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   toolbarContent: {
-    paddingHorizontal: 2,
-    paddingVertical,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
   toolbarButton: {
     alignItems: "center",
-    paddingHorizontal: 2,
-    paddingVertical,
-    marginHorizontal,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginHorizontal: 4,
     borderRadius: 8,
-    minWidth0,
+    minWidth: 50,
   },
   toolbarButtonText: {
     fontSize: 10,
@@ -470,7 +450,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: 8,
-    padding: 60,
+    padding: 16,
   },
   previewScroll: {
     flex: 1,
@@ -494,10 +474,10 @@ const styles = StyleSheet.create({
   },
   helpModal: {
     backgroundColor: colors.white,
-    borderRadius: 2,
-    margin: 00,
-    maxWidthimensions.get("window").width - 40,
-    maxHeightimensions.get("window").height * 0.6,
+    borderRadius: 12,
+    margin: 20,
+    maxWidth: Dimensions.get("window").width - 40,
+    maxHeight: Dimensions.get("window").height * 0.6,
   },
   helpTitle: {
     fontSize: 18,
@@ -506,10 +486,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingVertical: 6,
     borderBottomWidth: 1,
-    borderBottomColorolors.border,
+    borderBottomColor: colors.border,
   },
   helpContent: {
-    padding: 60,
+    padding: 16,
   },
   helpText: {
     fontSize: 14,

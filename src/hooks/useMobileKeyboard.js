@@ -2,17 +2,12 @@ import { useEffect, useState, useRef } from "react";
 import { useTheme } from "@mui/material/styles";
 import { useMediaQuery } from "@mui/material";
 
-interface UseMobileKeyboardOptions {
-  scrollIntoView?oolean;
-  scrollOffset?umber;
-}
-
-export const useMobileKeyboard = (optionsseMobileKeyboardOptions = {}) => {
+export const useMobileKeyboard = (options = {}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
-  const inputRef = useRef<HTMLElement | null>(null);
+  const inputRef = useRef(null);
 
   const { scrollIntoView = true, scrollOffset = 100 } = options;
 
@@ -34,7 +29,7 @@ export const useMobileKeyboard = (optionsseMobileKeyboardOptions = {}) => {
         setKeyboardHeight(estimatedKeyboardHeight);
 
         // Auto-scroll to keep input visible
-        if (scrollIntoView  inputRef.current) {
+        if (scrollIntoView && inputRef.current) {
           setTimeout(() => {
             const element = inputRef.current;
             if (element) {
@@ -44,7 +39,7 @@ export const useMobileKeyboard = (optionsseMobileKeyboardOptions = {}) => {
               if (!isVisible) {
                 const scrollTop = window.scrollY + rect.top - scrollOffset;
                 window.scrollTo({
-                  topcrollTop,
+                  top: scrollTop,
                   behavior: "smooth",
                 });
               }
@@ -60,15 +55,15 @@ export const useMobileKeyboard = (optionsseMobileKeyboardOptions = {}) => {
     };
 
     // Handle focus events to detect keyboard
-    const handleFocus = (eocusEvent) => {
-      const target = e.target as HTMLElement;
+    const handleFocus = (e) => {
+      const target = e.target;
       if (
-        target 
+        target &&
         (target.tagName === "INPUT" || target.tagName === "TEXTAREA")
       ) {
         inputRef.current = target;
 
-        // iOS specificait for keyboard animation
+        // iOS specific wait for keyboard animation
         setTimeout(handleViewportChange, 100);
       }
     };
@@ -79,7 +74,7 @@ export const useMobileKeyboard = (optionsseMobileKeyboardOptions = {}) => {
         const activeElement = document.activeElement;
         if (
           !activeElement ||
-          (activeElement.tagName !== "INPUT" 
+          (activeElement.tagName !== "INPUT" &&
             activeElement.tagName !== "TEXTAREA")
         ) {
           setIsKeyboardVisible(false);
@@ -122,15 +117,15 @@ export const useMobileKeyboard = (optionsseMobileKeyboardOptions = {}) => {
     keyboardHeight,
     isMobile,
     // Helper to add padding when keyboard is visible
-    keyboardPaddingsKeyboardVisible ? keyboardHeight ,
+    keyboardPadding: isKeyboardVisible ? keyboardHeight : 0,
     // Helper styles for sticky elements
-    stickyStylessKeyboardVisible
+    stickyStyles: isKeyboardVisible
       ? {
-          position: "fixed" as const,
-          bottomeyboardHeight,
-          left,
-          right,
-          zIndex000,
+          position: "fixed",
+          bottom: keyboardHeight,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
         }
       : {},
   };

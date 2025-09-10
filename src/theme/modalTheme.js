@@ -18,7 +18,7 @@ export const modalTheme = {
 
   // AppBar/Header styling for modals
   header: {
-    backgroundColoranyllaColors.darkBrown,
+    backgroundColor: manyllaColors.darkBrown,
     color: "white",
     height: 4,
     borderRadius: "16px 16px 0 0",
@@ -27,25 +27,25 @@ export const modalTheme = {
   // Content area styling
   content: {
     padding: {
-      xs,
-      sm,
+      xs: 2,
+      sm: 3,
     },
-    spacing,
+    spacing: 2,
   },
 
   // Form field styling
   textField: {
-    variant: "filled" as const,
-    fullWidthrue,
+    variant: "filled",
+    fullWidth: true,
     sx: {
       " .MuiFilledInput-root": {
-        backgroundColoranyllaColors.inputBackground,
+        backgroundColor: manyllaColors.inputBackground,
         borderRadius: "12px",
         ":hover": {
-          backgroundColoranyllaColors.inputBackground,
+          backgroundColor: manyllaColors.inputBackground,
         },
         ".Mui-focused": {
-          backgroundColoranyllaColors.inputBackground,
+          backgroundColor: manyllaColors.inputBackground,
         },
         ":before, :after": {
           display: "none",
@@ -57,30 +57,30 @@ export const modalTheme = {
   // Button styling
   buttons: {
     primary: {
-      variant: "contained" as const,
+      variant: "contained",
       sx: {
         borderRadius: "8px",
-        textTransform: "none" as const,
-        px,
-        py,
+        textTransform: "none",
+        px: 3,
+        py: 1.5,
       },
     },
     secondary: {
-      variant: "outlined" as const,
+      variant: "outlined",
       sx: {
         borderRadius: "8px",
-        textTransform: "none" as const,
-        px,
-        py,
+        textTransform: "none",
+        px: 3,
+        py: 1.5,
       },
     },
     cancel: {
-      variant: "text" as const,
+      variant: "text",
       sx: {
         borderRadius: "8px",
-        textTransform: "none" as const,
-        px,
-        py,
+        textTransform: "none",
+        px: 3,
+        py: 1.5,
       },
     },
   },
@@ -88,23 +88,23 @@ export const modalTheme = {
   // Avatar styling
   avatar: {
     large: {
-      width20,
-      height: 20,
-      bgcoloranyllaColors.avatarDefaultBg,
+      width: 120,
+      height: 120,
+      bgcolor: manyllaColors.avatarDefaultBg,
       color: "white",
       fontSize: "3rem",
     },
     medium: {
-      width0,
-      height: 0,
-      bgcoloranyllaColors.avatarDefaultBg,
+      width: 80,
+      height: 80,
+      bgcolor: manyllaColors.avatarDefaultBg,
       color: "white",
       fontSize: "2rem",
     },
     small: {
-      width0,
-      height: 0,
-      bgcoloranyllaColors.avatarDefaultBg,
+      width: 80,
+      height: 80,
+      bgcolor: manyllaColors.avatarDefaultBg,
       color: "white",
       fontSize: "1.25rem",
     },
@@ -114,44 +114,44 @@ export const modalTheme = {
   panel: {
     elevation: 2,
     sx: {
-      p,
+      p: 3,
       borderRadius: 8,
       border: "1px solid",
       borderColor: "divider",
-      mb,
+      mb: 2,
     },
   },
 
   // Icon styling for modal headers
   headerIcon: {
     large: {
-      fontSize: 14,
-      mb,
+      fontSize: 24,
+      mb: 2,
     },
     medium: {
       fontSize: 18,
-      mb,
+      mb: 2,
     },
   },
 
   // Typography presets
   typography: {
     modalTitle: {
-      variant: "h5" as const,
-      fontWeight00,
-      textAlign: "center" as const,
-      mb,
+      variant: "h5",
+      fontWeight: 600,
+      textAlign: "center",
+      mb: 2,
     },
     modalSubtitle: {
-      variant: "body1" as const,
-      textAlign: "center" as const,
+      variant: "body1",
+      textAlign: "center",
       color: "text.secondary",
-      mb,
+      mb: 2,
     },
     sectionTitle: {
-      variant: "h6" as const,
-      fontWeight00,
-      mb,
+      variant: "h6",
+      fontWeight: 600,
+      mb: 2,
     },
   },
 
@@ -165,9 +165,9 @@ export const modalTheme = {
   // Transitions
   transitions: {
     duration: {
-      short00,
-      standard00,
-      long00,
+      short: 200,
+      standard: 300,
+      long: 400,
     },
   },
 };
@@ -175,12 +175,12 @@ export const modalTheme = {
 // Helper function to get consistent modal dialog props
 export const getModalDialogProps = (fullScreen = false) => ({
   fullScreen,
-  maxWidth: "sm" as const,
+  maxWidth: "sm",
   PaperProps: {
     sx: {
-      borderRadiusullScreen ? 0 odalTheme.modal.paper.borderRadius: 8,
+      borderRadius: fullScreen ? 0 : modalTheme.modal.paper.borderRadius,
       overflow: "hidden",
-      boxShadowodalTheme.shadows.modal,
+      boxShadow: modalTheme.shadows.modal,
     },
   },
 });
@@ -191,8 +191,6 @@ export const getModalTextFieldProps = () => ({
 });
 
 // Helper function to get consistent button props
-export const getModalButtonProps = (
-  type: "primary" | "secondary" | "cancel" = "primary",
-) => ({
+export const getModalButtonProps = (type = "primary") => ({
   ...modalTheme.buttons[type],
 });

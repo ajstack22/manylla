@@ -10,25 +10,11 @@ import {
 } from "@mui/material";
 import { manyllaColors } from "../../theme/theme";
 import { Edit as EditIcon, Add as AddIcon } from "@mui/icons-material";
-import { ChildProfile, Entry } from "../../types/ChildProfile";
 import { CategorySection } from "./CategorySection";
 import { getVisibleCategories } from "../../utils/unifiedCategories";
 import { ProfileEditDialog } from "./ProfileEditDialog";
-import { CategoryConfig } from "../../types/ChildProfile";
 
-interface ProfileOverviewProps {
-  profilehildProfile;
-  onAddEntry?: (categorytring) => void;
-  onEditEntry?: (entryntry) => void;
-  onDeleteEntry?: (entryIdtring) => void;
-  onShare?: () => void;
-  onUpdateCategories?: (categoriesategoryConfig[]) => void;
-  onUpdateProfile?: (updatesartial<ChildProfile>) => void;
-  profileEditOpen?oolean;
-  setProfileEditOpen?: (openoolean) => void;
-}
-
-export const ProfileOverview= ({
+export const ProfileOverview = ({
   profile,
   onAddEntry,
   onEditEntry,
@@ -36,15 +22,15 @@ export const ProfileOverview= ({
   onShare,
   onUpdateCategories,
   onUpdateProfile,
-  profileEditOpenrofileEditOpenProp,
-  setProfileEditOpenetProfileEditOpenProp,
+  profileEditOpen: profileEditOpenProp,
+  setProfileEditOpen: setProfileEditOpenProp,
 }) => {
   // Use local state if not controlled by parent
   const [profileEditOpenLocal, setProfileEditOpenLocal] = useState(false);
   const profileEditOpen = profileEditOpenProp ?? profileEditOpenLocal;
   const setProfileEditOpen = setProfileEditOpenProp ?? setProfileEditOpenLocal;
 
-  const getEntriesByCategory = (categorytring) =>
+  const getEntriesByCategory = (category) =>
     profile.entries.filter((entry) => entry.category === category);
 
   const allCategories = getVisibleCategories(profile.categories);
@@ -57,12 +43,12 @@ export const ProfileOverview= ({
     })
     .sort((a, b) => {
       // Quick Info categories always come first
-      if (a.isQuickInfo  !b.isQuickInfo) return -1;
-      if (!a.isQuickInfo  b.isQuickInfo) return 1;
+      if (a.isQuickInfo && !b.isQuickInfo) return -1;
+      if (!a.isQuickInfo && b.isQuickInfo) return 1;
       return a.order - b.order;
     });
 
-  const calculateAge = (dobate) => {
+  const calculateAge = (dob) => {
     const today = new Date();
     const birthDate = new Date(dob);
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -70,7 +56,7 @@ export const ProfileOverview= ({
 
     if (
       monthDiff < 0 ||
-      (monthDiff === 0  today.getDate() < birthDate.getDate())
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
     ) {
       age--;
     }
@@ -79,8 +65,8 @@ export const ProfileOverview= ({
   };
 
   return (
-    <Box sx={{ p: { xs, sm, md } }}>
-      <Paper sx={{ p: { xs, sm }, mb: { xs, sm } }}>
+    <Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
+      <Paper sx={{ p: { xs: 2, sm: 3 }, mb: { xs: 2, sm: 3 } }}>
         <Box
           sx={{
             display: "flex",
@@ -92,30 +78,30 @@ export const ProfileOverview= ({
           <Avatar
             src={profile.photo}
             sx={{
-              width20,
-              height: 20,
-              mb,
+              width: 120,
+              height: 120,
+              mb: 2,
               cursor: "pointer",
-              bgcolorrofile.photo
+              bgcolor: profile.photo
                 ? "transparent"
-                anyllaColors.avatarDefaultBg,
-              colorrofile.photo ? "inherit" : "white",
+                : manyllaColors.avatarDefaultBg,
+              color: profile.photo ? "inherit" : "white",
               fontSize: "3rem",
             }}
-            onClick={() => onUpdateProfile  setProfileEditOpen(true)}
+            onClick={() => onUpdateProfile && setProfileEditOpen(true)}
           >
             {profile.name.charAt(0)}
           </Avatar>
-          {onUpdateProfile  (
+          {onUpdateProfile && (
             <IconButton
               size="small"
               onClick={() => setProfileEditOpen(true)}
               sx={{
                 position: "absolute",
-                top0,
+                top: 0,
                 right: "calc(50% - 60px)",
                 backgroundColor: "background.paper",
-                boxShadow,
+                boxShadow: 1,
                 ":hover": { backgroundColor: "action.hover" },
               }}
               title="Edit Profile"
@@ -129,8 +115,8 @@ export const ProfileOverview= ({
           <Typography variant="body2" color="text.secondary" align="center">
             Age: {calculateAge(profile.dateOfBirth)} years
           </Typography>
-          {profile.pronouns  (
-            <Chip label={profile.pronouns} size="small" sx={{ mt }} />
+          {profile.pronouns && (
+            <Chip label={profile.pronouns} size="small" sx={{ mt: 1 }} />
           )}
         </Box>
       </Paper>
@@ -140,8 +126,8 @@ export const ProfileOverview= ({
           sx={{
             display: "flex",
             flexWrap: "wrap",
-            gap: { xs, sm },
-            mb,
+            gap: { xs: 1, sm: 2 },
+            mb: 3,
           }}
         >
           {visibleCategories.map((category) => {
@@ -159,7 +145,7 @@ export const ProfileOverview= ({
                   color={category.color}
                   icon={null}
                   onAddEntry={
-                    onAddEntry ? () => onAddEntry(category.name) ndefined
+                    onAddEntry ? () => onAddEntry(category.name) : undefined
                   }
                   onEditEntry={onEditEntry}
                   onDeleteEntry={onDeleteEntry}
@@ -170,16 +156,16 @@ export const ProfileOverview= ({
         </Box>
 
         {/* Floating Action Button for Add Entry */}
-        {onAddEntry  (
+        {onAddEntry && (
           <Fab
             color="primary"
             aria-label="add entry"
             onClick={() => onAddEntry("")}
             sx={{
               position: "fixed",
-              bottom: { xs6, sm4 },
-              right: { xs6, sm4 },
-              zIndex200,
+              bottom: { xs: 16, sm: 24 },
+              right: { xs: 16, sm: 24 },
+              zIndex: 1200,
             }}
           >
             <AddIcon />
@@ -187,7 +173,7 @@ export const ProfileOverview= ({
         )}
       </Box>
 
-      {onUpdateProfile  (
+      {onUpdateProfile && (
         <ProfileEditDialog
           open={profileEditOpen}
           onClose={() => setProfileEditOpen(false)}

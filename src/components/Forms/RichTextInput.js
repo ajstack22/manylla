@@ -1,35 +1,31 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
-  Box,
-  IconButton,
-  Tooltip,
-  FormControl,
-  Typography,
-  Paper,
-  useTheme,
-  useMediaQuery,
-  FormHelperText,
-} from "@mui/material";
-import {
-  FormatBold as BoldIcon,
-  FormatItalic as ItalicIcon,
-  FormatListBulleted as ListIcon,
-  Code as CodeIcon,
-} from "@mui/icons-material";
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
-interface RichTextInputProps {
-  labeltring;
-  valuetring;
-  onChange: (valuetring) => void;
-  placeholder?tring;
-  helperText?tring;
-  required?oolean;
-  multiline?oolean;
-  rows?umber;
-  autoFocus?oolean;
-}
+const colors = {
+  primary: "#8B7355",
+  secondary: "#A0937D",
+  background: "#FDFBF7",
+  surface: "#F4E4C1",
+  text: "#4A4A4A",
+  textSecondary: "#666666",
+  border: "#E0E0E0",
+  white: "#FFFFFF",
+  error: "#D32F2F",
+  action: {
+    hover: "#F5F5F5",
+    selected: "#E3F2FD"
+  }
+};
 
-export const RichTextInput= ({
+export const RichTextInput = ({
   label,
   value,
   onChange,
@@ -40,321 +36,197 @@ export const RichTextInput= ({
   rows = 3,
   autoFocus = false,
 }) => {
-  const theme = useTheme();
-  const editorRef = useRef<HTMLDivElement>(null);
+  const textInputRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
   const [activeFormats, setActiveFormats] = useState({
-    boldalse,
-    italicalse,
-    codealse,
+    bold: false,
+    italic: false,
+    code: false,
   });
 
   // Initialize content
   useEffect(() => {
-    if (editorRef.current  value !== editorRef.current.innerHTML) {
-      editorRef.current.innerHTML = value || "";
-      setIsEmpty(!value || value === "<br>" || value === "");
-    }
+    setIsEmpty(!value || value === "");
   }, [value]);
 
   // Handle input changes
-  const handleInput = () => {
-    if (editorRef.current) {
-      const html = editorRef.current.innerHTML;
-      const isEmpty = !html || html === "<br>" || html === "";
-      setIsEmpty(isEmpty);
-      onChange(isEmpty ? "" tml);
-      updateActiveFormats();
-    }
+  const handleInput = (text) => {
+    const isEmpty = !text || text === "";
+    setIsEmpty(isEmpty);
+    onChange(text);
   };
 
-  // Update active format states based on current selection
+  // Simple format tracking for React Native
   const updateActiveFormats = () => {
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) return;
+    // In React Native, we'll track formats differently
+    // This is a simplified version for the demo
+  };
 
-    const range = selection.getRangeAt(0);
-    const container = range.commonAncestorContainer;
-    const parentElement =
-      container.nodeType === 3
-        ? container.parentElement
-        : (container as HTMLElement);
-
-    if (parentElement) {
-      setActiveFormats({
-        boldocument.queryCommandState("bold"),
-        italicocument.queryCommandState("italic"),
-        code: !!parentElement.closest("code"),
-      });
+  // Apply formatting (simplified for React Native)
+  const applyFormat = (command) => {
+    // In a full implementation, this would apply formatting to the text
+    // For now, we'll just toggle the active state
+    setActiveFormats((prev) => ({
+      ...prev,
+      [command]: !prev[command],
+    }));
+    
+    if (textInputRef.current) {
+      textInputRef.current.focus();
     }
   };
 
-  // Apply formatting
-  const applyFormat = (commandtring) => {
-    if (command === "code") {
-      // Special handling for code formatting
-      const selection = window.getSelection();
-      if (selection  selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0);
-        const selectedText = range.toString();
-
-        if (selectedText) {
-          const code = document.createElement("code");
-          code.style.backgroundColor = theme.palette.action.hover;
-          code.style.padding = "2px 4px";
-          code.style.borderRadius = "3px";
-          code.style.fontFamily = "monospace";
-          code.textContent = selectedText;
-
-          range.deleteContents();
-          range.insertNode(code);
-
-          // Move cursor after the code element
-          range.setStartAfter(code);
-          range.setEndAfter(code);
-          selection.removeAllRanges();
-          selection.addRange(range);
-        }
-      }
-    } else if (command === "insertUnorderedList") {
-      document.execCommand(command, false);
-    } else {
-      // Toggle bold/italic
-      document.execCommand(command, false);
-      setActiveFormats((prev) => ({
-        ...prev,
-        [command]: !prev[command as keyof typeof prev],
-      }));
-    }
-
-    editorRef.current?.focus();
-    handleInput();
+  // Handle keyboard shortcuts (simplified for React Native)
+  const handleKeyDown = () => {
+    // React Native doesn't have the same keyboard event handling
+    // This would need to be implemented differently
   };
 
-  // Handle keyboard shortcuts
-  const handleKeyDown = (eeact.KeyboardEvent) => {
-    if (e.ctrlKey || e.metaKey) {
-      switch (e.key) {
-        case "b":
-          e.preventDefault();
-          applyFormat("bold");
-          break;
-        case "i":
-          e.preventDefault();
-          applyFormat("italic");
-          break;
-      }
-    }
-
-    // Handle Enter key for single-line input
-    if (!multiline  e.key === "Enter") {
-      e.preventDefault();
-    }
+  // Handle paste (React Native handles this automatically)
+  const handlePaste = () => {
+    // React Native TextInput handles paste automatically
   };
 
-  // Handle paste - clean up formatting
-  const handlePaste = (eeact.ClipboardEvent) => {
-    e.preventDefault();
-    const text = e.clipboardData.getData("text/plain");
-    document.execCommand("insertText", false, text);
-  };
-
-  const minHeight = multiline ? rows * 24 0;
+  const minHeight = multiline ? rows * 24 : 40;
 
   return (
-    <FormControl fullWidth>
-      <Typography
-        variant="body2"
-        color={isFocused ? "primary" : "text.secondary"}
-        sx={{ mb, fontSize: "14px", fontWeight00 }}
+    <View style={styles.container}>
+      <Text
+        style={[
+          styles.label,
+          { color: isFocused ? colors.primary : colors.textSecondary }
+        ]}
       >
         {label}
-        {required  (
-          <span style={{ colorheme.palette.error.main }}> *</span>
+        {required && (
+          <Text style={{ color: colors.error }}> *</Text>
         )}
-      </Typography>
+      </Text>
 
       {/* Formatting Toolbar */}
-      <Paper
-        elevation={0}
-        sx={{
-          p.5,
-          mb,
-          backgroundColorheme.palette.action.hover,
-          border: `1px solid ${theme.palette.divider}`,
-          display: "flex",
-          gap.5,
-        }}
-      >
-        <Tooltip title="Bold (Ctrl+B)">
-          <IconButton
-            size="small"
-            onClick={() => applyFormat("bold")}
-            sx={{
-              minWidth6,
-              minHeight6,
-              backgroundColorctiveFormats.bold
-                ? theme.palette.action.selected
-                : "transparent",
-              ":hover": {
-                backgroundColorctiveFormats.bold
-                  ? theme.palette.action.selected
-                  heme.palette.action.hover,
-              },
-            }}
-          >
-            <BoldIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Italic (Ctrl+I)">
-          <IconButton
-            size="small"
-            onClick={() => applyFormat("italic")}
-            sx={{
-              minWidth6,
-              minHeight6,
-              backgroundColorctiveFormats.italic
-                ? theme.palette.action.selected
-                : "transparent",
-              ":hover": {
-                backgroundColorctiveFormats.italic
-                  ? theme.palette.action.selected
-                  heme.palette.action.hover,
-              },
-            }}
-          >
-            <ItalicIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Code">
-          <IconButton
-            size="small"
-            onClick={() => applyFormat("code")}
-            sx={{
-              minWidth6,
-              minHeight6,
-              backgroundColorctiveFormats.code
-                ? theme.palette.action.selected
-                : "transparent",
-              ":hover": {
-                backgroundColorctiveFormats.code
-                  ? theme.palette.action.selected
-                  heme.palette.action.hover,
-              },
-            }}
-          >
-            <CodeIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Bullet List">
-          <IconButton
-            size="small"
-            onClick={() => applyFormat("insertUnorderedList")}
-            sx={{
-              minWidth6,
-              minHeight6,
-              ":hover": {
-                backgroundColorheme.palette.action.hover,
-              },
-            }}
-          >
-            <ListIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-      </Paper>
+      <View style={styles.toolbar}>
+        <TouchableOpacity
+          style={[
+            styles.formatButton,
+            { backgroundColor: activeFormats.bold ? colors.action.selected : "transparent" }
+          ]}
+          onPress={() => applyFormat("bold")}
+        >
+          <Icon name="format-bold" size={20} color={colors.primary} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.formatButton,
+            { backgroundColor: activeFormats.italic ? colors.action.selected : "transparent" }
+          ]}
+          onPress={() => applyFormat("italic")}
+        >
+          <Icon name="format-italic" size={20} color={colors.primary} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.formatButton,
+            { backgroundColor: activeFormats.code ? colors.action.selected : "transparent" }
+          ]}
+          onPress={() => applyFormat("code")}
+        >
+          <Icon name="code" size={20} color={colors.primary} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.formatButton}
+          onPress={() => applyFormat("list")}
+        >
+          <Icon name="format-list-bulleted" size={20} color={colors.primary} />
+        </TouchableOpacity>
+      </View>
 
       {/* Editor */}
-      <Box
-        sx={{
-          position: "relative",
-          border: `1px solid ${isFocused ? theme.palette.primary.main heme.palette.divider}`,
-          borderRadius: 8,
-          backgroundColor:
-            theme.palette.mode === "dark"
-              ? theme.palette.background.default // Use darker background in dark mode for contrast
-              heme.palette.background.paper,
-          transition: "border-color 0.2s",
-          ":hover": {
-            borderColorsFocused
-              ? theme.palette.primary.main
-              heme.palette.text.primary,
-          },
-        }}
+      <View
+        style={[
+          styles.editorContainer,
+          { borderColor: isFocused ? colors.primary : colors.border }
+        ]}
       >
-        {isEmpty  !isFocused  (
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            sx={{
-              position: "absolute",
-              top2,
-              left4,
-              pointerEvents: "none",
-              fontSize: "16px",
-            }}
-          >
-            {placeholder}
-          </Typography>
-        )}
+        {/* Placeholder is handled by TextInput */}
 
-        <Box
-          ref={editorRef}
-          contentEditable
-          onInput={handleInput}
+        <TextInput
+          ref={textInputRef}
+          style={[
+            styles.textInput,
+            {
+              minHeight,
+              maxHeight: multiline ? 300 : minHeight,
+              textAlignVertical: multiline ? "top" : "center"
+            }
+          ]}
+          value={value}
+          onChangeText={handleInput}
           onFocus={() => {
             setIsFocused(true);
             updateActiveFormats();
           }}
           onBlur={() => setIsFocused(false)}
-          onKeyDown={handleKeyDown}
-          onPaste={handlePaste}
-          onMouseUp={updateActiveFormats}
-          onKeyUp={updateActiveFormats}
-          sx={{
-            minHeight: `${minHeight}px`,
-            maxHeightultiline ? "300px" : `${minHeight}px`,
-            overflow: "auto",
-            p.5,
-            fontSize: "16px",
-            lineHeight.6,
-            letterSpacing: "0.3px",
-            outline: "none",
-            cursor: "text",
-            " *": {
-              fontSize: "inherit",
-              lineHeight: "inherit",
-            },
-            " b,  strong": {
-              fontWeight00,
-            },
-            " i,  em": {
-              fontStyle: "italic",
-            },
-            " code": {
-              backgroundColorheme.palette.action.hover,
-              padding: "2px 4px",
-              borderRadius: "3px",
-              fontFamily: "monospace",
-              fontSize: "0.9em",
-            },
-            " ul": {
-              margin: "8px 0",
-              paddingLeft: "24px",
-            },
-            " li": {
-              marginBottom: "4px",
-            },
-          }}
-          {...(autoFocus  { autoFocusrue })}
+          placeholder={placeholder}
+          placeholderTextColor={colors.textSecondary}
+          multiline={multiline}
+          numberOfLines={multiline ? rows : 1}
+          autoFocus={autoFocus}
+          selectionColor={colors.primary}
         />
-      </Box>
+      </View>
 
-      {helperText  (
-        <FormHelperText sx={{ mt, fontSize: "13px" }}>
+      {helperText && (
+        <Text style={styles.helperText}>
           {helperText}
-        </FormHelperText>
+        </Text>
       )}
-    </FormControl>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    marginVertical: 8,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: "600",
+    marginBottom: 4,
+  },
+  toolbar: {
+    backgroundColor: colors.action.hover,
+    padding: 8,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 8,
+    flexDirection: "row",
+    gap: 8,
+  },
+  formatButton: {
+    minWidth: 36,
+    minHeight: 36,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 6,
+  },
+  editorContainer: {
+    borderWidth: 1,
+    borderRadius: 8,
+    backgroundColor: colors.white,
+  },
+  textInput: {
+    fontSize: 16,
+    color: colors.text,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    lineHeight: 22,
+    letterSpacing: 0.3,
+  },
+  helperText: {
+    fontSize: 13,
+    color: colors.textSecondary,
+    marginTop: 4,
+  },
+});

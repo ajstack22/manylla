@@ -1,37 +1,35 @@
-import React, { Component, ReactNode } from "react";
-import { Box, Typography, Button, Paper } from "@mui/material";
-import { Warning as WarningIcon } from "@mui/icons-material";
+import React, { Component } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  Platform,
+} from 'react-native';
 
-interface Props {
-  childreneactNode;
-  fallback?eactNode;
-}
-
-interface State {
-  hasErroroolean;
-  errorrror | null;
-}
-
-export class ErrorBoundary extends Component<Props, State> {
-  constructor(propsrops) {
+export class ErrorBoundary extends Component {
+  constructor(props) {
     super(props);
-    this.state = { hasErroralse, errorull };
+    this.state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError(errorrror)tate {
-    return { hasErrorrue, error };
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
   }
 
-  componentDidCatch(errorrror, errorInfony) {
-    console.error("ErrorBoundary caught an error:", error, errorInfo);
+  componentDidCatch(error, errorInfo) {
+    console.error('ErrorBoundary caught an error:', error, errorInfo);
     // In production, send to error reporting service
   }
 
   handleReset = () => {
-    this.setState({ hasErroralse, errorull });
+    this.setState({ hasError: false, error: null });
     // Optionally reload the page for a fresh start
     if (!this.props.fallback) {
-      window.location.reload();
+      if (Platform.OS === 'web' && typeof window !== 'undefined') {
+        window.location.reload();
+      }
     }
   };
 
@@ -41,76 +39,101 @@ export class ErrorBoundary extends Component<Props, State> {
         return this.props.fallback;
       }
 
+      const styles = StyleSheet.create({
+        container: {
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 20,
+          backgroundColor: '#F5F5F5',
+        },
+        card: {
+          backgroundColor: '#FFFFFF',
+          borderRadius: 8,
+          padding: 24,
+          maxWidth: 500,
+          width: '100%',
+          alignItems: 'center',
+          ...Platform.select({
+            web: {
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            },
+            default: {
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 8,
+              elevation: 3,
+            },
+          }),
+        },
+        icon: {
+          fontSize: 64,
+          marginBottom: 16,
+        },
+        title: {
+          fontSize: 20,
+          fontWeight: 'bold',
+          marginBottom: 12,
+          textAlign: 'center',
+        },
+        message: {
+          fontSize: 14,
+          color: '#666666',
+          textAlign: 'center',
+          marginBottom: 24,
+          lineHeight: 20,
+        },
+        errorBox: {
+          backgroundColor: '#F0F0F0',
+          borderRadius: 4,
+          padding: 12,
+          marginBottom: 24,
+          maxHeight: 200,
+          width: '100%',
+        },
+        errorText: {
+          fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
+          fontSize: 12,
+          color: '#333333',
+        },
+        button: {
+          backgroundColor: '#A08670',
+          paddingHorizontal: 24,
+          paddingVertical: 12,
+          borderRadius: 4,
+        },
+        buttonText: {
+          color: '#FFFFFF',
+          fontSize: 16,
+          fontWeight: '500',
+        },
+      });
+
+      const isDevelopment = __DEV__ || (Platform.OS === 'web' && process?.env?.NODE_ENV === 'development');
+
       return (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            minHeight: "100vh",
-            p,
-            bgcolor: "background.default",
-          }}
-        >
-          <Paper
-            elevation={3}
-            sx={{
-              p,
-              maxWidth00,
-              textAlign: "center",
-              borderRadius: 8,
-            }}
-          >
-            <WarningIcon
-              sx={{
-                fontSize: 14,
-                color: "warning.main",
-                mb,
-              }}
-            />
-            <Typography variant="h5" gutterBottom>
-              Oops! Something went wrong
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb }}>
-              We encountered an unexpected error. Your data is safe in your
-              browser's storage.
-            </Typography>
-            {process.env.NODE_ENV === "development"  this.state.error  (
-              <Paper
-                sx={{
-                  p,
-                  mb,
-                  bgcolor: "grey.100",
-                  maxHeight00,
-                  overflow: "auto",
-                }}
-              >
-                <Typography
-                  variant="caption"
-                  component="pre"
-                  sx={{
-                    textAlign: "left",
-                    fontFamily: "monospace",
-                    whiteSpace: "pre-wrap",
-                    wordBreak: "break-word",
-                  }}
-                >
+        <View style={styles.container}>
+          <View style={styles.card}>
+            <Text style={styles.icon}>⚠️</Text>
+            <Text style={styles.title}>Oops! Something went wrong</Text>
+            <Text style={styles.message}>
+              We encountered an unexpected error. Your data is safe in your browser's storage.
+            </Text>
+            {isDevelopment && this.state.error && (
+              <ScrollView style={styles.errorBox}>
+                <Text style={styles.errorText}>
                   {this.state.error.message}
-                  {"\n\n"}
+                  {'\n\n'}
                   {this.state.error.stack}
-                </Typography>
-              </Paper>
+                </Text>
+              </ScrollView>
             )}
-            <Button
-              variant="contained"
-              onClick={this.handleReset}
-              sx={{ mt }}
-            >
-              Try Again
-            </Button>
-          </Paper>
-        </Box>
+            <TouchableOpacity style={styles.button} onPress={this.handleReset}>
+              <Text style={styles.buttonText}>Try Again</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       );
     }
 

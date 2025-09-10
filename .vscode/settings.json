@@ -7,6 +7,21 @@
   "search.exclude": {
     "**/node_modules": true,
     "**/build": true,
-    "**/.git": true
+    "**/web/build": true,
+    "**/.git": true,
+    "**/ios/build": true,
+    "**/android/build": true
+  },
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "editor.rulers": [100],
+  "editor.tabSize": 2,
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/web/build/**": true,
+    "**/ios/build/**": true,
+    "**/android/build/**": true
   }
 }

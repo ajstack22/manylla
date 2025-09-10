@@ -3,31 +3,13 @@ import React, {
   useContext,
   useState,
   useEffect,
-  ReactNode,
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ChildProfile } from "../types/ChildProfile";
+const ProfileContext = createContext(undefined);
 
-interface ProfileContextType {
-  profileshildProfile[];
-  currentProfilehildProfile | null;
-  setProfiles: (profileshildProfile[]) => void;
-  setCurrentProfile: (profilehildProfile | null) => void;
-  addProfile: (profilehildProfile) => Promise<void>;
-  updateProfile: (profilehildProfile) => Promise<void>;
-  deleteProfile: (idtring) => Promise<void>;
-  loadProfiles: () => Promise<void>;
-}
-
-const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
-
-export const ProfileProvider= ({
-  children,
-}) => {
-  const [profiles, setProfiles] = useState<ChildProfile[]>([]);
-  const [currentProfile, setCurrentProfile] = useState<ChildProfile | null>(
-    null,
-  );
+export const ProfileProvider = ({ children }) => {
+  const [profiles, setProfiles] = useState([]);
+  const [currentProfile, setCurrentProfile] = useState(null);
 
   useEffect(() => {
     loadProfiles();
@@ -39,7 +21,7 @@ export const ProfileProvider= ({
       if (storedProfiles) {
         const parsedProfiles = JSON.parse(storedProfiles);
         setProfiles(parsedProfiles);
-        if (parsedProfiles.length > 0  !currentProfile) {
+        if (parsedProfiles.length > 0 && !currentProfile) {
           setCurrentProfile(parsedProfiles[0]);
         }
       }
@@ -48,7 +30,7 @@ export const ProfileProvider= ({
     }
   };
 
-  const saveProfiles = async (newProfileshildProfile[]) => {
+  const saveProfiles = async (newProfiles) => {
     try {
       await AsyncStorage.setItem("profiles", JSON.stringify(newProfiles));
       setProfiles(newProfiles);
@@ -58,7 +40,7 @@ export const ProfileProvider= ({
     }
   };
 
-  const addProfile = async (profilehildProfile) => {
+  const addProfile = async (profile) => {
     const newProfiles = [...profiles, profile];
     await saveProfiles(newProfiles);
     if (!currentProfile) {
@@ -66,9 +48,9 @@ export const ProfileProvider= ({
     }
   };
 
-  const updateProfile = async (updatedProfilehildProfile) => {
+  const updateProfile = async (updatedProfile) => {
     const newProfiles = profiles.map((p) =>
-      p.id === updatedProfile.id ? updatedProfile ,
+      p.id === updatedProfile.id ? updatedProfile : p,
     );
     await saveProfiles(newProfiles);
     if (currentProfile?.id === updatedProfile.id) {
@@ -76,11 +58,11 @@ export const ProfileProvider= ({
     }
   };
 
-  const deleteProfile = async (idtring) => {
+  const deleteProfile = async (id) => {
     const newProfiles = profiles.filter((p) => p.id !== id);
     await saveProfiles(newProfiles);
     if (currentProfile?.id === id) {
-      setCurrentProfile(newProfiles.length > 0 ? newProfiles[0] ull);
+      setCurrentProfile(newProfiles.length > 0 ? newProfiles[0] : null);
     }
   };
 

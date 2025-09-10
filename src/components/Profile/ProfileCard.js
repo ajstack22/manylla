@@ -58,7 +58,7 @@ const ProfileCard = ({ profile, onPress }) => {
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <View style={styles.header}>
         <Text style={styles.name}>{profile.name}</Text>
-        {profile.diagnosis  (
+        {profile.diagnosis && (
           <Text style={styles.diagnosis}>{profile.diagnosis}</Text>
         )}
       </View>
@@ -74,7 +74,7 @@ const ProfileCard = ({ profile, onPress }) => {
         </View>
       </View>
 
-      {profile.quickInfo  profile.quickInfo.length > 0  (
+      {profile.quickInfo && profile.quickInfo.length > 0 && (
         <View style={styles.quickInfo}>
           <Text style={styles.quickInfoLabel}>Quick Info:</Text>
           <Text style={styles.quickInfoText} numberOfLines={2}>

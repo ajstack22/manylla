@@ -1,6 +1,5 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { MainTabParamList } from "./types";
 import { useTheme } from "@context/ThemeContext";
 import { Platform, View, Text } from "react-native";
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -11,24 +10,24 @@ import { Platform, View, Text } from "react-native";
 // import SettingsStackNavigator from './stacks/SettingsStackNavigator';
 // import ShareStackNavigator from './stacks/ShareStackNavigator';
 
-const Tab = createBottomTabNavigator<MainTabParamList>();
+const Tab = createBottomTabNavigator();
 
-const MainTabNavigator= () => {
+const MainTabNavigator = () => {
   const { colors, theme } = useTheme();
 
   return (
     <Tab.Navigator
       screenOptions={{
-        headerShownalse,
-        tabBarActiveTintColorolors.primary,
-        tabBarInactiveTintColorolors.text.secondary,
+        headerShown: false,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.text.secondary,
         tabBarStyle: {
           backgroundColor: colors.background.paper,
           borderTopColor: colors.border,
           borderTopWidth: 1,
-          paddingBottomlatform.OS === "ios" ? 20 ,
+          paddingBottom: Platform.OS === "ios" ? 20 : 8,
           paddingTop: 8,
-          heightlatform.OS === "ios" ? 85 0,
+          height: Platform.OS === "ios" ? 85 : 60,
         },
         tabBarLabelStyle: {
           fontSize: 12,
@@ -91,7 +90,7 @@ const MainTabNavigator= () => {
 };
 
 // Temporary placeholder screen
-const PlaceholderScreen= ({ route }) => {
+const PlaceholderScreen = ({ route }) => {
   const { colors } = useTheme();
   const screenName = route?.name || "Screen";
 
@@ -108,7 +107,7 @@ const PlaceholderScreen= ({ route }) => {
         {screenName} Screen
       </Text>
       <Text
-        style={{ color: colors.text.secondary, fontSize: 14, marginTop }}
+        style={{ color: colors.text.secondary, fontSize: 14, marginTop: 8 }}
       >
         Coming soon...
       </Text>

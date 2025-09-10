@@ -2,12 +2,12 @@ import { ChildProfile } from "../types/ChildProfile";
 import { ProfileValidator } from "../utils/validation";
 
 export class StorageService {
-  private static readonly PROFILE_KEY = "manylla_profile";
-  private static readonly SYNC_TIME_KEY = "manylla_last_sync";
-  private static readonly VERSION_KEY = "manylla_version";
+  static PROFILE_KEY = "manylla_profile";
+  static SYNC_TIME_KEY = "manylla_last_sync";
+  static VERSION_KEY = "manylla_version";
 
   // Profile operations
-  static getProfile()hildProfile | null {
+  static getProfile() {
     try {
       const stored = localStorage.getItem(this.PROFILE_KEY);
       if (!stored) return null;
@@ -17,9 +17,9 @@ export class StorageService {
       parsed.dateOfBirth = new Date(parsed.dateOfBirth);
       parsed.createdAt = new Date(parsed.createdAt);
       parsed.updatedAt = new Date(parsed.updatedAt);
-      parsed.entries = parsed.entries.map((eny) => ({
+      parsed.entries = parsed.entries.map((e) => ({
         ...e,
-        dateew Date(e.date),
+        date: new Date(e.date),
       }));
 
       return parsed;
@@ -29,7 +29,7 @@ export class StorageService {
     }
   }
 
-  static saveProfile(profilehildProfile)oolean {
+  static saveProfile(profile) {
     try {
       // Validate before saving
       const validation = ProfileValidator.validateProfile(profile);
@@ -44,8 +44,8 @@ export class StorageService {
       // Add version for future sync
       const profileWithVersion = {
         ...sanitized,
-        versionate.now(),
-        updatedAtew Date(),
+        version: Date.now(),
+        updatedAt: new Date(),
       };
 
       localStorage.setItem(
@@ -59,7 +59,7 @@ export class StorageService {
     }
   }
 
-  static clearProfile()oolean {
+  static clearProfile() {
     try {
       localStorage.removeItem(this.PROFILE_KEY);
       localStorage.removeItem(this.SYNC_TIME_KEY);
@@ -72,41 +72,41 @@ export class StorageService {
   }
 
   // Sync metadata operations
-  static getLastSyncTime()umber | null {
+  static getLastSyncTime() {
     try {
       const time = localStorage.getItem(this.SYNC_TIME_KEY);
-      return time ? parseInt(time, 10) ull;
+      return time ? parseInt(time, 10) : null;
     } catch {
       return null;
     }
   }
 
-  static setLastSyncTime(timestampumber)oid {
+  static setLastSyncTime(timestamp) {
     localStorage.setItem(this.SYNC_TIME_KEY, timestamp.toString());
   }
 
-  static getVersion()umber {
+  static getVersion() {
     try {
       const version = localStorage.getItem(this.VERSION_KEY);
-      return version ? parseInt(version, 10) ;
+      return version ? parseInt(version, 10) : 0;
     } catch {
       return 0;
     }
   }
 
-  static setVersion(versionumber)oid {
+  static setVersion(version) {
     localStorage.setItem(this.VERSION_KEY, version.toString());
   }
 
   // Export/Import for backup
-  static exportProfile()tring | null {
+  static exportProfile() {
     const profile = this.getProfile();
     if (!profile) return null;
 
     return JSON.stringify(profile, null, 2);
   }
 
-  static importProfile(jsonStringtring)oolean {
+  static importProfile(jsonString) {
     try {
       const profile = JSON.parse(jsonString);
       // Validate basic structure
@@ -118,9 +118,9 @@ export class StorageService {
       profile.dateOfBirth = new Date(profile.dateOfBirth);
       profile.createdAt = new Date(profile.createdAt);
       profile.updatedAt = new Date(profile.updatedAt);
-      profile.entries = profile.entries.map((eny) => ({
+      profile.entries = profile.entries.map((e) => ({
         ...e,
-        dateew Date(e.date),
+        date: new Date(e.date),
       }));
 
       return this.saveProfile(profile);

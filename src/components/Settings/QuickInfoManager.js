@@ -13,14 +13,7 @@ import {
   Modal,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { QuickInfoConfig } from "../../types/ChildProfile";
 
-interface QuickInfoManagerProps {
-  visible;
-  onClose: () => void;
-  quickInfoPanels: QuickInfoConfig[];
-  onUpdate: (panels: QuickInfoConfig[]) => void;
-}
 
 const colors = {
   primary: "#8B7355",
@@ -36,16 +29,14 @@ const colors = {
   hover: "#F5F5F5",
 };
 
-export const QuickInfoManager= ({
+export const QuickInfoManager = ({
   visible,
   onClose,
   quickInfoPanels,
   onUpdate,
 }) => {
   const [panels, setPanels] = useState(quickInfoPanels);
-  const [editingPanel, setEditingPanel] = useState(
-    null,
-  );
+  const [editingPanel, setEditingPanel] = useState(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [newPanelName, setNewPanelName] = useState("");
   const [editValue, setEditValue] = useState("");
@@ -98,7 +89,7 @@ export const QuickInfoManager= ({
       return;
     }
 
-    const newPanel: QuickInfoConfig = {
+    const newPanel = {
       id: `custom-${Date.now()}`,
       name: newPanelName.toLowerCase().replace(/\s+/g, "-"),
       displayName: newPanelName,
@@ -118,7 +109,7 @@ export const QuickInfoManager= ({
     onClose();
   };
 
-  const startEditing = (panel: QuickInfoConfig) => {
+  const startEditing = (panel) => {
     setEditingPanel(panel);
     setEditValue(panel.value);
   };
@@ -134,12 +125,12 @@ export const QuickInfoManager= ({
     }
   };
 
-  const renderPanelItem = ({ item: panel }: { item: QuickInfoConfig }) => (
-    
-      
-        
-          {panel.displayName}
-          
+  const renderPanelItem = ({ item: panel }) => (
+    <View style={styles.panelItem}>
+      <View style={styles.panelHeader}>
+        <View style={styles.panelInfo}>
+          <Text style={styles.panelTitle}>{panel.displayName}</Text>
+          <View style={styles.panelMeta}>
             {!panel.isVisible && (
               <Icon
                 name="visibility-off"
@@ -147,13 +138,13 @@ export const QuickInfoManager= ({
                 color={colors.textSecondary}
               />
             )}
-            {panel.isCustom && Custom}
-          
-        
+            {panel.isCustom && <Text style={styles.customLabel}>Custom</Text>}
+          </View>
+        </View>
 
-        
-          
-            Visible
+        <View style={styles.panelActions}>
+          <View style={styles.switchContainer}>
+            <Text style={styles.switchLabel}>Visible</Text>
             <Switch
               value={panel.isVisible}
               onValueChange={() => handleToggleVisibility(panel.id)}
@@ -162,30 +153,30 @@ export const QuickInfoManager= ({
                 panel.isVisible ? colors.primary : colors.textSecondary
               }
             />
-          
+          </View>
 
           {panel.isCustom && (
             <TouchableOpacity
               style={styles.deleteButton}
               onPress={() => handleDeletePanel(panel.id)}
             >
-              
-            
+              <Icon name="delete" size={20} color={colors.error} />
+            </TouchableOpacity>
           )}
-        
-      
+        </View>
+      </View>
 
       <TouchableOpacity
         style={styles.valueContainer}
         onPress={() => startEditing(panel)}
       >
         {panel.value ? (
-          {panel.value}
+          <Text style={styles.valueText}>{panel.value}</Text>
         ) : (
-          Tap to add value...
+          <Text style={styles.placeholderText}>Tap to add value...</Text>
         )}
-      
-    
+      </TouchableOpacity>
+    </View>
   );
 
   const AddPanelDialog = () => (
@@ -195,9 +186,9 @@ export const QuickInfoManager= ({
       animationType="fade"
       onRequestClose={() => setShowAddDialog(false)}
     >
-      
-        
-          Add Quick Info Panel
+      <View style={styles.modalOverlay}>
+        <View style={styles.addDialogContent}>
+          <Text style={styles.addDialogTitle}>Add Quick Info Panel</Text>
 
           <TextInput
             style={styles.addInput}
@@ -208,7 +199,7 @@ export const QuickInfoManager= ({
             autoFocus
           />
 
-          
+          <View style={styles.addDialogActions}>
             <TouchableOpacity
               style={[styles.addButton, styles.cancelButton]}
               onPress={() => {
@@ -216,18 +207,18 @@ export const QuickInfoManager= ({
                 setNewPanelName("");
               }}
             >
-              Cancel
-            
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
             <TouchableOpacity
               style={[styles.addButton, styles.saveButton]}
               onPress={handleAddPanel}
             >
-              Add
-            
-          
-        
-      
-    
+              <Text style={styles.saveButtonText}>Add</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
   );
 
   const EditValueDialog = () => (
@@ -241,10 +232,10 @@ export const QuickInfoManager= ({
         style={styles.modalOverlay}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        
-          
+        <View style={styles.editDialogContent}>
+          <Text style={styles.editDialogTitle}>
             Edit {editingPanel?.displayName}
-          
+          </Text>
 
           <TextInput
             style={styles.editInput}
@@ -258,23 +249,23 @@ export const QuickInfoManager= ({
             autoFocus
           />
 
-          
+          <View style={styles.editDialogActions}>
             <TouchableOpacity
               style={[styles.editButton, styles.cancelButton]}
               onPress={cancelEditing}
             >
-              Cancel
-            
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
             <TouchableOpacity
               style={[styles.editButton, styles.saveButton]}
               onPress={saveEditing}
             >
-              Save
-            
-          
-        
-      
-    
+              <Text style={styles.saveButtonText}>Save</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </KeyboardAvoidingView>
+    </Modal>
   );
 
   if (!visible) return null;
@@ -284,29 +275,32 @@ export const QuickInfoManager= ({
       style={styles.overlay}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      
+      <View style={styles.container}>
         {/* Header */}
-        
-          Manage Quick Info
-          
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Manage Quick Info</Text>
+          <View style={styles.headerActions}>
             <TouchableOpacity
               style={styles.addIconButton}
               onPress={() => setShowAddDialog(true)}
             >
-              
-            
-            
-              
-            
-          
-        
+              <Icon name="add" size={24} color={colors.primary} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={onClose}
+            >
+              <Icon name="close" size={24} color={colors.text} />
+            </TouchableOpacity>
+          </View>
+        </View>
 
         {/* Content */}
-        
-          
+        <View style={styles.content}>
+          <Text style={styles.description}>
             Show or hide information panels. Edit values directly or add custom
             panels.
-          
+          </Text>
 
           <FlatList
             data={panels.sort((a, b) => a.order - b.order)}
@@ -316,33 +310,33 @@ export const QuickInfoManager= ({
             showsVerticalScrollIndicator={false}
           />
 
-          
+          <Text style={styles.note}>
             Note: Default panels can be hidden but not deleted. Custom panels
             can be deleted permanently.
-          
-        
+          </Text>
+        </View>
 
         {/* Footer */}
-        
+        <View style={styles.footer}>
           <TouchableOpacity
             style={[styles.footerButton, styles.cancelButton]}
             onPress={onClose}
           >
-            Cancel
-          
+            <Text style={styles.cancelButtonText}>Cancel</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={[styles.footerButton, styles.saveButton]}
             onPress={handleSave}
           >
-            Save Changes
-          
-        
+            <Text style={styles.saveButtonText}>Save Changes</Text>
+          </TouchableOpacity>
+        </View>
 
         {/* Modals */}
-        
-        
-      
-    
+        <AddPanelDialog />
+        <EditValueDialog />
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 

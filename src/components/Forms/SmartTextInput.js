@@ -12,26 +12,9 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-interface SmartTextInputProps {
-  labeltring;
-  valuetring;
-  onChange: (valuetring) => void;
-  placeholder?tring;
-  helperText?tring;
-  required?oolean;
-  multiline?oolean;
-  rows?umber;
-  maxRows?umber;
-  autoFocus?oolean;
-}
+// Interface definitions removed - using plain JavaScript
 
-interface FormatButton {
-  icontring;
-  tooltiptring;
-  markdown: { prefixtring; suffixtring };
-}
-
-const formatButtonsormatButton[] = [
+const formatButtons = [
   {
     icon: "format-bold",
     tooltip: "Bold",
@@ -73,7 +56,7 @@ const colors = {
   hover: "#F5F5F5",
 };
 
-export const SmartTextInput= ({
+export const SmartTextInput = ({
   label,
   value,
   onChange,
@@ -85,7 +68,7 @@ export const SmartTextInput= ({
   maxRows = 10,
   autoFocus = false,
 }) => {
-  const textInputRef = useRef<TextInput>(null);
+  const textInputRef = useRef(null);
   const [showFormatting, setShowFormatting] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [selectionStart, setSelectionStart] = useState(0);
@@ -95,10 +78,10 @@ export const SmartTextInput= ({
   // Check if text has formatting
   useEffect(() => {
     const hasFormatting = /\*\*.*?\*\*|_.*?_|`.*?`|\[.*?\]\(.*?\)/.test(value);
-    setShowPreview(hasFormatting  multiline);
+    setShowPreview(hasFormatting && multiline);
   }, [value, multiline]);
 
-  const handleChange = (newValuetring) => {
+  const handleChange = (newValue) => {
     // Check for auto-formatting triggers
     if (newValue.endsWith("  ")) {
       // Double space triggers new paragraph
@@ -109,14 +92,14 @@ export const SmartTextInput= ({
     }
   };
 
-  const handleSelectionChange = (eventny) => {
+  const handleSelectionChange = (event) => {
     const { start, end } = event.nativeEvent.selection;
     setSelectionStart(start);
     setSelectionEnd(end);
   };
 
   // Apply formatting to selected text
-  const applyFormat = (formatormatButton) => {
+  const applyFormat = (format) => {
     if (!textInputRef.current) return;
 
     const start = selectionStart;
@@ -135,7 +118,7 @@ export const SmartTextInput= ({
         if (textInputRef.current) {
           const newCursorPos = start + formatted.length;
           textInputRef.current.setNativeProps({
-            selection: { startewCursorPos, endewCursorPos },
+            selection: { start: newCursorPos, end: newCursorPos },
           });
         }
       }, 100);
@@ -144,7 +127,7 @@ export const SmartTextInput= ({
       const before = value.substring(0, start);
       const after = value.substring(start);
       const lastNewline = before.lastIndexOf("\n");
-      const lineStart = lastNewline === -1 ? 0 astNewline + 1;
+      const lineStart = lastNewline === -1 ? 0 : lastNewline + 1;
 
       const newValue =
         value.substring(0, lineStart) + "- " + value.substring(lineStart);
@@ -156,7 +139,7 @@ export const SmartTextInput= ({
   };
 
   // Parse markdown-like syntax for preview
-  const parseFormatting = (texttring)tring => {
+  const parseFormatting = (text) => {
     if (!text) return text;
 
     // Simple text-only parsing for preview
@@ -167,23 +150,23 @@ export const SmartTextInput= ({
       .replace(/\[(.*?)\]\((.*?)\)/g, "$1 ($2)"); // Links
   };
 
-  const minHeight = multiline ? rows * 20 + 20 0;
-  const maxHeight = multiline ? maxRows * 20 + 20 0;
+  const minHeight = multiline ? rows * 20 + 20 : 0;
+  const maxHeight = multiline ? maxRows * 20 + 20 : 0;
 
   return (
     <View style={styles.container}>
       <Text
         style={[
           styles.label,
-          { colorsFocused ? colors.primary olors.text },
+          { color: isFocused ? colors.primary : colors.text },
         ]}
       >
         {label}
-        {required  <Text style={styles.required}> *</Text>}
+        {required && <Text style={styles.required}> *</Text>}
       </Text>
 
       {/* Preview */}
-      {showPreview  (
+      {showPreview && (
         <View style={styles.previewContainer}>
           <Text style={styles.previewLabel}>Preview:</Text>
           <Text style={styles.previewText}>{parseFormatting(value)}</Text>
@@ -194,7 +177,7 @@ export const SmartTextInput= ({
       <View
         style={[
           styles.inputContainer,
-          { borderColorsFocused ? colors.primary olors.border },
+          { borderColor: isFocused ? colors.primary : colors.border },
         ]}
       >
         <TextInput
@@ -203,8 +186,8 @@ export const SmartTextInput= ({
             styles.textInput,
             {
               minHeight,
-              maxHeightultiline ? maxHeight inHeight,
-              textAlignVerticalultiline ? "top" : "center",
+              maxHeight: multiline ? maxHeight : minHeight,
+              textAlignVertical: multiline ? "top" : "center",
             },
           ]}
           value={value}
@@ -215,13 +198,13 @@ export const SmartTextInput= ({
           placeholder={placeholder}
           placeholderTextColor={colors.textSecondary}
           multiline={multiline}
-          numberOfLines={multiline ? rows }
+          numberOfLines={multiline ? rows : 1}
           autoFocus={autoFocus}
           selectionColor={colors.primary}
         />
 
         {/* Format button for selected text */}
-        {isFocused  selectionEnd > selectionStart  (
+        {isFocused && selectionEnd > selectionStart && (
           <TouchableOpacity
             style={styles.formatToggle}
             onPress={() => setShowFormatting(true)}
@@ -232,10 +215,10 @@ export const SmartTextInput= ({
       </View>
 
       {/* Helper Text */}
-      {helperText  <Text style={styles.helperText}>{helperText}</Text>}
+      {helperText && <Text style={styles.helperText}>{helperText}</Text>}
 
       {/* Tips */}
-      {value.length === 0  !isFocused  (
+      {value.length === 0 && !isFocused && (
         <Text style={styles.tipText}>
           Tipse **text** for bold, _text_ for italic, - for lists
         </Text>
@@ -285,7 +268,7 @@ export const SmartTextInput= ({
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical,
+    marginVertical: 8,
   },
   label: {
     fontSize: 16,
@@ -337,12 +320,12 @@ const styles = StyleSheet.create({
   },
   formatToggle: {
     position: "absolute",
-    top,
-    right,
+    top: 8,
+    right: 8,
     backgroundColor: colors.surface,
     borderRadius: 6,
-    width2,
-    height: 2,
+    width: 32,
+    height: 32,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -366,8 +349,8 @@ const styles = StyleSheet.create({
   formatToolbar: {
     backgroundColor: colors.white,
     borderRadius: 2,
-    margin: 00,
-    maxWidthimensions.get("window").width - 40,
+    margin: 20,
+    maxWidth: Dimensions.get("window").width - 40,
     elevation: 2,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -381,7 +364,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingVertical: 6,
     borderBottomWidth: 1,
-    borderBottomColorolors.border,
+    borderBottomColor: colors.border,
   },
   formatButtons: {
     flexDirection: "row",
@@ -392,10 +375,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 2,
-    paddingVertical,
-    marginHorizontal,
+    paddingVertical: 8,
+    marginHorizontal: 4,
     borderRadius: 8,
-    minWidth0,
+    minWidth: 50,
   },
   formatButtonText: {
     fontSize: 12,
@@ -405,6 +388,6 @@ const styles = StyleSheet.create({
   },
   closeFormatting: {
     alignSelf: "center",
-    padding: 60,
+    padding: 16,
   },
 });

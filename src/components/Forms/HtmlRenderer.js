@@ -1,17 +1,25 @@
 import React from "react";
-import { Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Text, View } from "react-native";
+import { WebView } from "react-native-webview";
 
-interface HtmlRendererProps {
-  contenttring;
-  variant?: "body1" | "body2" | "h6";
-}
+const colors = {
+  primary: "#8B7355",
+  secondary: "#A0937D",
+  background: "#FDFBF7",
+  surface: "#F4E4C1",
+  text: "#4A4A4A",
+  textSecondary: "#666666",
+  border: "#E0E0E0",
+  white: "#FFFFFF",
+  action: {
+    hover: "#F5F5F5"
+  }
+};
 
-export const HtmlRenderer= ({
+export const HtmlRenderer = ({
   content,
   variant = "body2",
 }) => {
-  const theme = useTheme();
 
   // Check if content contains HTML tags
   const hasHtml = /<[^>]*>/.test(content);
@@ -19,67 +27,77 @@ export const HtmlRenderer= ({
   if (!hasHtml) {
     // Plain text - just render as is
     return (
-      <Typography
-        variant={variant}
-        sx={{
-          fontSizeariant === "body2" ? "15px" : "16px",
-          lineHeight.65,
-          letterSpacing: "0.3px",
+      <Text
+        style={{
+          fontSize: variant === "body2" ? 15 : 16,
+          lineHeight: 22,
+          letterSpacing: 0.3,
+          color: colors.text,
         }}
       >
         {content}
-      </Typography>
+      </Text>
     );
   }
 
-  // HTML content - render with styling
+  // HTML content - use WebView for HTML rendering
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: ${variant === "body2" ? "15px" : "16px"};
+            line-height: 1.65;
+            letter-spacing: 0.3px;
+            color: ${colors.text};
+            margin: 0;
+            padding: 8px;
+          }
+          p {
+            margin: 0 0 1em 0;
+            line-height: 1.7;
+          }
+          p:last-child { margin-bottom: 0; }
+          ul, ol {
+            margin: 0 0 1em 0;
+            padding-left: 1.5em;
+            line-height: 1.8;
+          }
+          li {
+            margin-bottom: 0.5em;
+            padding-left: 0.25em;
+          }
+          strong, b {
+            font-weight: 600;
+            color: ${colors.text};
+          }
+          em, i { font-style: italic; }
+          code {
+            background-color: ${colors.action.hover};
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+          }
+          a {
+            color: ${colors.primary};
+            text-decoration: underline;
+          }
+        </style>
+      </head>
+      <body>${content}</body>
+    </html>
+  `;
+
   return (
-    <Typography
-      component="div"
-      variant={variant}
-      sx={{
-        fontSizeariant === "body2" ? "15px" : "16px",
-        lineHeight.65,
-        letterSpacing: "0.3px",
-        wordSpacing: "0.05em",
-        " p": {
-          margin: 8,
-          marginBottom: "1em",
-          lineHeight.7,
-          ":last-child": {
-            marginBottom: 8,
-          },
-        },
-        " ul,  ol": {
-          marginTop: 8,
-          marginBottom: "1em",
-          paddingLeft: "1.5em",
-          lineHeight.8,
-        },
-        " li": {
-          marginBottom: "0.5em",
-          paddingLeft: "0.25em",
-        },
-        " strong,  b": {
-          fontWeight00,
-          colorheme.palette.text.primary,
-        },
-        " em,  i": {
-          fontStyle: "italic",
-        },
-        " code": {
-          backgroundColorheme.palette.action.hover,
-          padding: "2px 6px",
-          borderRadius: "4px",
-          fontFamily: "monospace",
-          fontSize: "0.9em",
-        },
-        " a": {
-          colorheme.palette.primary.main,
-          textDecoration: "underline",
-        },
-      }}
-      dangerouslySetInnerHTML={{ __htmlontent }}
+    <WebView
+      source={{ html: htmlContent }}
+      style={{ height: 200 }}
+      scrollEnabled={false}
+      showsVerticalScrollIndicator={false}
     />
   );
 };

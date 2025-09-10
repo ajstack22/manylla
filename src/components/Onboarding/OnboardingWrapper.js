@@ -1,11 +1,8 @@
 import React from "react";
 import OnboardingWizard from "./OnboardingWizard";
 
-interface OnboardingWrapperProps {
-  onComplete: (datany) => void;
-}
 
-const OnboardingWrapper= ({
+const OnboardingWrapper = ({
   onComplete,
 }) => {
   const handleStartFresh = () => {
@@ -15,7 +12,7 @@ const OnboardingWrapper= ({
     onComplete({
       mode: "fresh",
       childName,
-      dateOfBirthew Date(),
+      dateOfBirth: new Date(),
     });
   };
 
@@ -25,7 +22,7 @@ const OnboardingWrapper= ({
     });
   };
 
-  const handleJoinWithCode = (accessCodetring) => {
+  const handleJoinWithCode = (accessCode) => {
     onComplete({
       mode: "join",
       accessCode,

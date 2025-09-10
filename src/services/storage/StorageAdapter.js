@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export class StorageAdapter {
-  static async getItem(keytring)romise<string | null> {
+  static async getItem(key) {
     try {
       return await AsyncStorage.getItem(key);
     } catch (error) {
@@ -10,7 +10,7 @@ export class StorageAdapter {
     }
   }
 
-  static async setItem(keytring, valuetring)romise<void> {
+  static async setItem(key, value) {
     try {
       await AsyncStorage.setItem(key, value);
     } catch (error) {
@@ -19,7 +19,7 @@ export class StorageAdapter {
     }
   }
 
-  static async removeItem(keytring)romise<void> {
+  static async removeItem(key) {
     try {
       await AsyncStorage.removeItem(key);
     } catch (error) {
@@ -28,7 +28,7 @@ export class StorageAdapter {
     }
   }
 
-  static async clear()romise<void> {
+  static async clear() {
     try {
       await AsyncStorage.clear();
     } catch (error) {
@@ -37,27 +37,27 @@ export class StorageAdapter {
     }
   }
 
-  static async getAllKeys()romise<string[]> {
+  static async getAllKeys() {
     try {
       const keys = await AsyncStorage.getAllKeys();
-      return keys as string[];
+      return keys;
     } catch (error) {
       console.error("Error getting all keys:", error);
       return [];
     }
   }
 
-  static async multiGet(keystring[])romise<[string, string | null][]> {
+  static async multiGet(keys) {
     try {
       const results = await AsyncStorage.multiGet(keys);
-      return results as [string, string | null][];
+      return results;
     } catch (error) {
       console.error("Error getting multiple items:", error);
       return keys.map((key) => [key, null]);
     }
   }
 
-  static async multiSet(keyValuePairsstring, string][])romise<void> {
+  static async multiSet(keyValuePairs) {
     try {
       await AsyncStorage.multiSet(keyValuePairs);
     } catch (error) {
@@ -66,7 +66,7 @@ export class StorageAdapter {
     }
   }
 
-  static async multiRemove(keystring[])romise<void> {
+  static async multiRemove(keys) {
     try {
       await AsyncStorage.multiRemove(keys);
     } catch (error) {

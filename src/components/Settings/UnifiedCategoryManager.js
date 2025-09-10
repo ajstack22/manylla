@@ -12,18 +12,10 @@ import {
 } from "react-native";
 import DraggableFlatList, {
   ScaleDecorator,
-  RenderItemParams,
 } from "react-native-draggable-flatlist";
-import { CategoryConfig } from "../../types/ChildProfile";
 
-interface UnifiedCategoryManagerProps {
-  open;
-  onClose: () => void;
-  categories: CategoryConfig[];
-  onUpdate: (categories: CategoryConfig[]) => void;
-}
 
-export const UnifiedCategoryManager= ({
+export const UnifiedCategoryManager = ({
   open,
   onClose,
   categories,
@@ -43,7 +35,7 @@ export const UnifiedCategoryManager= ({
     );
   };
 
-  const handleDragEnd = ({ data }: { data: CategoryConfig[] }) => {
+  const handleDragEnd = ({ data }) => {
     const updatedCategories = data.map((item, index) => ({
       ...item,
       order: index + 1,
@@ -56,21 +48,17 @@ export const UnifiedCategoryManager= ({
     onClose();
   };
 
-  const renderItem = ({
-    item,
-    drag,
-    isActive,
-  }: RenderItemParams) => {
+  const renderItem = ({ item, drag, isActive }) => {
     return (
-      
+      <ScaleDecorator>
         <TouchableOpacity
           onLongPress={drag}
           disabled={isActive}
           style={[styles.categoryItem, isActive && styles.categoryItemActive]}
         >
-          
+          <View style={styles.categoryContent}>
             {/* Drag Handle */}
-            ☰
+            <Text style={styles.dragHandle}>☰</Text>
 
             {/* Color Indicator */}
             <View
@@ -78,26 +66,26 @@ export const UnifiedCategoryManager= ({
             />
 
             {/* Category Info */}
-            
-              
-                {item.displayName}
+            <View style={styles.categoryInfo}>
+              <View style={styles.categoryHeader}>
+                <Text style={styles.categoryName}>{item.displayName}</Text>
                 {item.isQuickInfo && (
-                  
-                    Priority
-                  
+                  <View style={styles.chip}>
+                    <Text style={styles.chipText}>Priority</Text>
+                  </View>
                 )}
                 {item.isCustom && (
-                  
-                    
+                  <View style={[styles.chip, styles.chipOutline]}>
+                    <Text style={[styles.chipText, styles.chipTextOutline]}>
                       Custom
-                    
-                  
+                    </Text>
+                  </View>
                 )}
-              
-              
+              </View>
+              <Text style={styles.categoryStatus}>
                 {item.isVisible ? "Visible in profile" : "Hidden from profile"}
-              
-            
+              </Text>
+            </View>
 
             {/* Visibility Toggle */}
             <Switch
@@ -106,9 +94,9 @@ export const UnifiedCategoryManager= ({
               trackColor={{ false: "#E0E0E0", true: "#8B7355" }}
               thumbColor={item.isVisible ? "#FFFFFF" : "#FAFAFA"}
             />
-          
-        
-      
+          </View>
+        </TouchableOpacity>
+      </ScaleDecorator>
     );
   };
 
@@ -119,25 +107,25 @@ export const UnifiedCategoryManager= ({
       presentationStyle="pageSheet"
       onRequestClose={onClose}
     >
-      
+      <SafeAreaView style={styles.container}>
         {/* Header */}
-        
-          🏷️ Manage Categories
-          
-            ✕
-          
-        
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>🏷️ Manage Categories</Text>
+          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+            <Text style={styles.closeButtonText}>✕</Text>
+          </TouchableOpacity>
+        </View>
 
         {/* Instructions */}
-        
-          
+        <View style={styles.instructions}>
+          <Text style={styles.instructionText}>
             Long press and drag to reorder categories. Toggle switches to
             show/hide in profile.
-          
-        
+          </Text>
+        </View>
 
         {/* Category List */}
-        
+        <View style={styles.listContainer}>
           <DraggableFlatList
             data={localCategories}
             onDragEnd={handleDragEnd}
@@ -145,19 +133,19 @@ export const UnifiedCategoryManager= ({
             renderItem={renderItem}
             showsVerticalScrollIndicator={false}
           />
-        
+        </View>
 
         {/* Footer Actions */}
-        
-          
-            Cancel
-          
-          
-            Save Changes
-          
-        
-      
-    
+        <View style={styles.footer}>
+          <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
+            <Text style={styles.cancelButtonText}>Cancel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+            <Text style={styles.saveButtonText}>Save Changes</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </Modal>
   );
 };
 

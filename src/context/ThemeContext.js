@@ -323,7 +323,7 @@ export const ThemeProvider = ({ children, initialThemeMode, onThemeChange }) => 
       }
     } catch (e) {
       // Material-UI not available, just use context
-      console.log("Material-UI not available, using plain context");
+      // Material-UI availability logging removed for production
     }
   }
 

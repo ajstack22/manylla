@@ -3,7 +3,6 @@ import React, {
   useContext,
   useState,
   useCallback,
-  ReactNode,
 } from "react";
 import { ThemedToast } from "../components/Toast/ThemedToast";
 import {
@@ -13,28 +12,7 @@ import {
   Palette as PaletteIcon,
 } from "@mui/icons-material";
 
-
-
-interface Toast {
-  idtring;
-  messagetring;
-  severity?oastSeverity;
-  duration?umber;
-}
-
-interface ToastContextType {
-  showToast: (
-    messagetring,
-    severity?oastSeverity,
-    duration?umber,
-  ) => void;
-  showSuccess: (messagetring) => void;
-  showError: (messagetring) => void;
-  showWarning: (messagetring) => void;
-  showInfo: (messagetring) => void;
-}
-
-const ToastContext = createContext<ToastContextType | undefined>(undefined);
+const ToastContext = createContext(undefined);
 
 export const useToast = () => {
   const context = useContext(ToastContext);
@@ -44,22 +22,14 @@ export const useToast = () => {
   return context;
 };
 
-interface ToastProviderProps {
-  childreneactNode;
-}
-
-export const ToastProvider= ({ children }) => {
-  const [, setToasts] = useState<Toast[]>([]);
-  const [currentToast, setCurrentToast] = useState<Toast | null>(null);
+export const ToastProvider = ({ children }) => {
+  const [, setToasts] = useState([]);
+  const [currentToast, setCurrentToast] = useState(null);
 
   const showToast = useCallback(
-    (
-      messagetring,
-      severityoastSeverity = "info",
-      durationumber = 3000,
-    ) => {
+    (message, severity = "info", duration = 3000) => {
       const id = Date.now().toString();
-      const newToastoast = { id, message, severity, duration };
+      const newToast = { id, message, severity, duration };
 
       setToasts((prev) => [...prev, newToast]);
 
@@ -72,28 +42,28 @@ export const ToastProvider= ({ children }) => {
   );
 
   const showSuccess = useCallback(
-    (messagetring) => {
+    (message) => {
       showToast(message, "success");
     },
     [showToast],
   );
 
   const showError = useCallback(
-    (messagetring) => {
+    (message) => {
       showToast(message, "error");
     },
     [showToast],
   );
 
   const showWarning = useCallback(
-    (messagetring) => {
+    (message) => {
       showToast(message, "warning");
     },
     [showToast],
   );
 
   const showInfo = useCallback(
-    (messagetring) => {
+    (message) => {
       showToast(message, "info");
     },
     [showToast],
@@ -132,7 +102,7 @@ export const ToastProvider= ({ children }) => {
         );
       case "info":
       default:
-        return <PaletteIcon sx={{ fontSize: "1.4rem", opacity.9 }} />;
+        return <PaletteIcon sx={{ fontSize: "1.4rem", opacity: 0.9 }} />;
     }
   };
 
@@ -141,7 +111,7 @@ export const ToastProvider= ({ children }) => {
       value={{ showToast, showSuccess, showError, showWarning, showInfo }}
     >
       {children}
-      {currentToast  (
+      {currentToast && (
         <ThemedToast
           open={true}
           message={currentToast.message}

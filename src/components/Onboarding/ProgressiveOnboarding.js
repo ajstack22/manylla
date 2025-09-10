@@ -34,31 +34,12 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
-interface ProgressiveOnboardingProps {
-  onComplete: (data: {
-    childNametring;
-    dateOfBirth?ate;
-    photo?tring;
-    mode: "fresh" | "demo" | "join";
-    accessCode?tring;
-  }) => void;
-}
-
-type OnboardingStep =
-  | "welcome"
-  | "choose-path"
-  | "child-info"
-  | "privacy"
-  | "ready";
-
-export const ProgressiveOnboarding= ({
-  onComplete,
-}) => {
-  const [currentStep, setCurrentStep] = useState<OnboardingStep>("welcome");
-  const [mode, setMode] = useState<"fresh" | "demo" | "join" | null>(null);
+export const ProgressiveOnboarding = ({ onComplete }) => {
+  const [currentStep, setCurrentStep] = useState("welcome");
+  const [mode, setMode] = useState(null);
   const [childName, setChildName] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
-  const [photo, setPhoto] = useState<string>("");
+  const [dateOfBirth, setDateOfBirth] = useState(null);
+  const [photo, setPhoto] = useState("");
   const [accessCode, setAccessCode] = useState("");
   const [showAccessCode, setShowAccessCode] = useState(false);
   const [nameError, setNameError] = useState(false);
@@ -75,7 +56,7 @@ export const ProgressiveOnboarding= ({
   };
 
   const handleNext = () => {
-    const stepOrdernboardingStep[] = [
+    const stepOrder = [
       "welcome",
       "choose-path",
       "child-info",
@@ -86,7 +67,7 @@ export const ProgressiveOnboarding= ({
     if (currentIndex < stepOrder.length - 1) {
       // Skip child-info if demo mode or join mode
       if (
-        (mode === "demo" || mode === "join") 
+        (mode === "demo" || mode === "join") &&
         stepOrder[currentIndex + 1] === "child-info"
       ) {
         setCurrentStep(stepOrder[currentIndex + 2]);
@@ -97,7 +78,7 @@ export const ProgressiveOnboarding= ({
   };
 
   const handleBack = () => {
-    const stepOrdernboardingStep[] = [
+    const stepOrder = [
       "welcome",
       "choose-path",
       "child-info",
@@ -108,7 +89,7 @@ export const ProgressiveOnboarding= ({
     if (currentIndex > 0) {
       // Skip child-info if demo mode or join mode when going back
       if (
-        (mode === "demo" || mode === "join") 
+        (mode === "demo" || mode === "join") &&
         stepOrder[currentIndex - 1] === "child-info"
       ) {
         setCurrentStep(stepOrder[currentIndex - 2]);
@@ -118,7 +99,7 @@ export const ProgressiveOnboarding= ({
     }
   };
 
-  const handleModeSelect = (selectedMode: "fresh" | "demo" | "join") => {
+  const handleModeSelect = (selectedMode) => {
     setMode(selectedMode);
     if (selectedMode === "join") {
       setShowAccessCode(true);
@@ -140,15 +121,15 @@ export const ProgressiveOnboarding= ({
 
   const handleFinish = () => {
     onComplete({
-      childNameode === "demo" ? "Ellie" hildName,
-      dateOfBirthode === "demo" ? undefined ateOfBirth || undefined,
-      photoode === "demo" ? "" hoto,
-      modeode || "fresh",
-      accessCodeode === "join" ? accessCode ndefined,
+      childName: mode === "demo" ? "Ellie" : childName,
+      dateOfBirth: mode === "demo" ? undefined : dateOfBirth || undefined,
+      photo: mode === "demo" ? "" : photo,
+      mode: mode || "fresh",
+      accessCode: mode === "join" ? accessCode : undefined,
     });
   };
 
-  const getStepNumber = ()umber => {
+  const getStepNumber = () => {
     if (mode === "demo" || mode === "join") {
       switch (currentStep) {
         case "welcome":
@@ -179,38 +160,38 @@ export const ProgressiveOnboarding= ({
     }
   };
 
-  const getTotalSteps = () => (mode === "demo" || mode === "join" ? 4 );
+  const getTotalSteps = () => (mode === "demo" || mode === "join" ? 4 : 5);
 
   return (
     <Box
       sx={{
         minHeight: "100vh",
-        backgroundColoranyllaColors.background,
-        py,
+        backgroundColor: manyllaColors.background,
+        py: 4,
       }}
     >
-      <Container maxWidth="sm" sx={{ px }}>
+      <Container maxWidth="sm" sx={{ px: 2 }}>
         {/* Progress indicator */}
-        <Box sx={{ mb }}>
+        <Box sx={{ mb: 3 }}>
           <Box
             sx={{
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              mb,
+              mb: 1,
             }}
           >
             <Typography
               variant="caption"
-              sx={{ coloranyllaColors.textSecondary }}
+              sx={{ color: manyllaColors.textSecondary }}
             >
               Step {getStepNumber() + 1} of {getTotalSteps()}
             </Typography>
-            {currentStep !== "welcome"  (
+            {currentStep !== "welcome" && (
               <IconButton
                 onClick={handleBack}
                 size="small"
-                sx={{ coloranyllaColors.text }}
+                sx={{ color: manyllaColors.text }}
               >
                 <ArrowBackIcon />
               </IconButton>
@@ -220,7 +201,7 @@ export const ProgressiveOnboarding= ({
             sx={{
               width: "100%",
               height: 2,
-              backgroundColoranyllaColors.border,
+              backgroundColor: manyllaColors.border,
               borderRadius: 8,
             }}
           >
@@ -228,7 +209,7 @@ export const ProgressiveOnboarding= ({
               sx={{
                 width: `${((getStepNumber() + 1) / getTotalSteps()) * 100}%`,
                 height: "100%",
-                backgroundColoranyllaColors.primary,
+                backgroundColor: manyllaColors.primary,
                 borderRadius: 8,
                 transition: "width 0.3s ease",
               }}
@@ -239,12 +220,12 @@ export const ProgressiveOnboarding= ({
         {/* Step Content */}
         <Fade in timeout={300}>
           <Box>
-            {currentStep === "welcome"  (
+            {currentStep === "welcome" && (
               <Paper
                 elevation={0}
                 sx={{
-                  p,
-                  backgroundColoranyllaColors.paper,
+                  p: 3,
+                  backgroundColor: manyllaColors.paper,
                   borderRadius: 8,
                   border: `1px solid ${manyllaColors.border}`,
                 }}
@@ -254,25 +235,25 @@ export const ProgressiveOnboarding= ({
                     sx={{
                       display: "inline-block",
                       position: "relative",
-                      mb,
+                      mb: 2,
                     }}
                   >
                     <Typography
                       variant="h3"
                       sx={{
-                        fontWeight00,
+                        fontWeight: 600,
                         background: `linear-gradient(135deg, ${manyllaColors.primary} 0%, ${manyllaColors.primaryDark} 100%)`,
                         backgroundClip: "text",
                         WebkitBackgroundClip: "text",
                         WebkitTextFillColor: "transparent",
                         letterSpacing: "-2px",
-                        lineHeight,
+                        lineHeight: 1,
                         fontSize: "48px",
                         display: "inline-block",
                         paddingBottom: "8px",
                         paddingTop: "4px",
                         position: "relative",
-                        zIndex,
+                        zIndex: 1,
                       }}
                     >
                       manylla
@@ -281,13 +262,13 @@ export const ProgressiveOnboarding= ({
                   <Typography
                     variant="h5"
                     gutterBottom
-                    sx={{ fontWeight00, coloranyllaColors.text }}
+                    sx={{ fontWeight: 600, color: manyllaColors.text }}
                   >
                     Welcome! Let's get started
                   </Typography>
                   <Typography
                     variant="body1"
-                    sx={{ mb, coloranyllaColors.textSecondary }}
+                    sx={{ mb: 2, color: manyllaColors.textSecondary }}
                   >
                     Your secure companion for managing your child's special
                     needs journey
@@ -295,10 +276,10 @@ export const ProgressiveOnboarding= ({
 
                   <Box
                     sx={{
-                      p,
-                      backgroundColoranyllaColors.background,
+                      p: 3,
+                      backgroundColor: manyllaColors.background,
                       borderRadius: 8,
-                      mb,
+                      mb: 2,
                       border: `1px solid ${manyllaColors.border}`,
                     }}
                   >
@@ -312,16 +293,16 @@ export const ProgressiveOnboarding= ({
                       >
                         <Box
                           sx={{
-                            minWidth0,
-                            minHeight0,
-                            width0,
-                            height: 0,
+                            minWidth: 30,
+                            minHeight: 30,
+                            width: 30,
+                            height: 30,
                             borderRadius: "50%",
-                            backgroundColoranyllaColors.primary,
+                            backgroundColor: manyllaColors.primary,
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            flexShrink,
+                            flexShrink: 0,
                           }}
                         >
                           <SecurityIcon sx={{ color: "white", fontSize: 12 }} />
@@ -329,13 +310,13 @@ export const ProgressiveOnboarding= ({
                         <Box>
                           <Typography
                             variant="subtitle2"
-                            sx={{ fontWeight00, coloranyllaColors.text }}
+                            sx={{ fontWeight: 600, color: manyllaColors.text }}
                           >
-                            Private  Secure
+                            Private Secure
                           </Typography>
                           <Typography
                             variant="body2"
-                            sx={{ coloranyllaColors.textSecondary }}
+                            sx={{ color: manyllaColors.textSecondary }}
                           >
                             Your data never leaves your device without
                             encryption
@@ -351,16 +332,16 @@ export const ProgressiveOnboarding= ({
                       >
                         <Box
                           sx={{
-                            minWidth0,
-                            minHeight0,
-                            width0,
-                            height: 0,
+                            minWidth: 30,
+                            minHeight: 30,
+                            width: 30,
+                            height: 30,
                             borderRadius: "50%",
                             backgroundColor: "#7B9EA8",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            flexShrink,
+                            flexShrink: 0,
                           }}
                         >
                           <CloudSyncIcon
@@ -370,13 +351,13 @@ export const ProgressiveOnboarding= ({
                         <Box>
                           <Typography
                             variant="subtitle2"
-                            sx={{ fontWeight00, coloranyllaColors.text }}
+                            sx={{ fontWeight: 600, color: manyllaColors.text }}
                           >
                             Multi-device Sync
                           </Typography>
                           <Typography
                             variant="body2"
-                            sx={{ coloranyllaColors.textSecondary }}
+                            sx={{ color: manyllaColors.textSecondary }}
                           >
                             Access from anywhere with your recovery phrase
                           </Typography>
@@ -391,16 +372,16 @@ export const ProgressiveOnboarding= ({
                       >
                         <Box
                           sx={{
-                            minWidth0,
-                            minHeight0,
-                            width0,
-                            height: 0,
+                            minWidth: 30,
+                            minHeight: 30,
+                            width: 30,
+                            height: 30,
                             borderRadius: "50%",
                             backgroundColor: "#8B9467",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            flexShrink,
+                            flexShrink: 0,
                           }}
                         >
                           <ShareIcon sx={{ color: "white", fontSize: 12 }} />
@@ -408,13 +389,13 @@ export const ProgressiveOnboarding= ({
                         <Box>
                           <Typography
                             variant="subtitle2"
-                            sx={{ fontWeight00, coloranyllaColors.text }}
+                            sx={{ fontWeight: 600, color: manyllaColors.text }}
                           >
                             Controlled Sharing
                           </Typography>
                           <Typography
                             variant="body2"
-                            sx={{ coloranyllaColors.textSecondary }}
+                            sx={{ color: manyllaColors.textSecondary }}
                           >
                             Share only what you want, when you want
                           </Typography>
@@ -430,11 +411,11 @@ export const ProgressiveOnboarding= ({
                     onClick={handleNext}
                     fullWidth
                     sx={{
-                      py.5,
-                      backgroundColoranyllaColors.primary,
+                      py: 1.5,
+                      backgroundColor: manyllaColors.primary,
                       color: "white",
                       ":hover": {
-                        backgroundColoranyllaColors.primaryDark,
+                        backgroundColor: manyllaColors.primaryDark,
                       },
                     }}
                   >
@@ -444,12 +425,12 @@ export const ProgressiveOnboarding= ({
               </Paper>
             )}
 
-            {currentStep === "choose-path"  (
+            {currentStep === "choose-path" && (
               <Paper
                 elevation={0}
                 sx={{
-                  p,
-                  backgroundColoranyllaColors.paper,
+                  p: 3,
+                  backgroundColor: manyllaColors.paper,
                   borderRadius: 8,
                   border: `1px solid ${manyllaColors.border}`,
                 }}
@@ -458,10 +439,10 @@ export const ProgressiveOnboarding= ({
                   variant="h5"
                   gutterBottom
                   sx={{
-                    fontWeight00,
+                    fontWeight: 600,
                     textAlign: "center",
-                    mb,
-                    coloranyllaColors.text,
+                    mb: 2,
+                    color: manyllaColors.text,
                   }}
                 >
                   How would you like to begin?
@@ -469,9 +450,9 @@ export const ProgressiveOnboarding= ({
                 <Typography
                   variant="body1"
                   sx={{
-                    mb,
+                    mb: 2,
                     textAlign: "center",
-                    coloranyllaColors.textSecondary,
+                    color: manyllaColors.textSecondary,
                   }}
                 >
                   You can always change this later
@@ -480,30 +461,30 @@ export const ProgressiveOnboarding= ({
                 <Stack spacing={2}>
                   <Paper
                     sx={{
-                      p,
+                      p: 3,
                       cursor: "pointer",
                       border: "2px solid",
                       borderColor:
                         mode === "fresh"
                           ? manyllaColors.primary
-                          anyllaColors.border,
-                      backgroundColoranyllaColors.paper,
-                      ":hover": { borderColoranyllaColors.primary },
+                          : manyllaColors.border,
+                      backgroundColor: manyllaColors.paper,
+                      ":hover": { borderColor: manyllaColors.primary },
                     }}
                     onClick={() => handleModeSelect("fresh")}
                   >
-                    <Box sx={{ display: "flex", alignItems: "center", gap }}>
-                      <AddIcon sx={{ coloranyllaColors.primary }} />
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                      <AddIcon sx={{ color: manyllaColors.primary }} />
                       <Box sx={{ flex: 1 }}>
                         <Typography
                           variant="subtitle1"
-                          sx={{ fontWeight00, coloranyllaColors.text }}
+                          sx={{ fontWeight: 600, color: manyllaColors.text }}
                         >
                           Start Fresh
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ coloranyllaColors.textSecondary }}
+                          sx={{ color: manyllaColors.textSecondary }}
                         >
                           Create a new profile for your child
                         </Typography>
@@ -513,30 +494,30 @@ export const ProgressiveOnboarding= ({
 
                   <Paper
                     sx={{
-                      p,
+                      p: 3,
                       cursor: "pointer",
                       border: "2px solid",
                       borderColor:
                         mode === "demo"
                           ? manyllaColors.primary
-                          anyllaColors.border,
-                      backgroundColoranyllaColors.paper,
-                      ":hover": { borderColoranyllaColors.primary },
+                          : manyllaColors.border,
+                      backgroundColor: manyllaColors.paper,
+                      ":hover": { borderColor: manyllaColors.primary },
                     }}
                     onClick={() => handleModeSelect("demo")}
                   >
-                    <Box sx={{ display: "flex", alignItems: "center", gap }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                       <PlayIcon sx={{ color: "#8B9467" }} />
                       <Box sx={{ flex: 1 }}>
                         <Typography
                           variant="subtitle1"
-                          sx={{ fontWeight00, coloranyllaColors.text }}
+                          sx={{ fontWeight: 600, color: manyllaColors.text }}
                         >
                           Try Demo
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ coloranyllaColors.textSecondary }}
+                          sx={{ color: manyllaColors.textSecondary }}
                         >
                           Explore with Ellie's example profile
                         </Typography>
@@ -546,29 +527,29 @@ export const ProgressiveOnboarding= ({
 
                   <Paper
                     sx={{
-                      p,
+                      p: 3,
                       cursor: "pointer",
                       border: "2px solid",
-                      borderColorhowAccessCode
+                      borderColor: showAccessCode
                         ? manyllaColors.primary
-                        anyllaColors.border,
-                      backgroundColoranyllaColors.paper,
-                      ":hover": { borderColoranyllaColors.primary },
+                        : manyllaColors.border,
+                      backgroundColor: manyllaColors.paper,
+                      ":hover": { borderColor: manyllaColors.primary },
                     }}
                     onClick={() => setShowAccessCode(!showAccessCode)}
                   >
-                    <Box sx={{ display: "flex", alignItems: "center", gap }}>
-                      <ShareIcon sx={{ coloranyllaColors.textSecondary }} />
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                      <ShareIcon sx={{ color: manyllaColors.textSecondary }} />
                       <Box sx={{ flex: 1 }}>
                         <Typography
                           variant="subtitle1"
-                          sx={{ fontWeight00, coloranyllaColors.text }}
+                          sx={{ fontWeight: 600, color: manyllaColors.text }}
                         >
                           Join with Code
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ coloranyllaColors.textSecondary }}
+                          sx={{ color: manyllaColors.textSecondary }}
                         >
                           Connect to an existing shared profile
                         </Typography>
@@ -577,7 +558,7 @@ export const ProgressiveOnboarding= ({
                   </Paper>
 
                   <Collapse in={showAccessCode}>
-                    <Box sx={{ mt }}>
+                    <Box sx={{ mt: 2 }}>
                       <Stack direction="row" spacing={1}>
                         <TextField
                           value={accessCode}
@@ -589,7 +570,7 @@ export const ProgressiveOnboarding= ({
                           size="small"
                           variant="filled"
                           inputProps={{
-                            maxLength,
+                            maxLength: 6,
                             style: {
                               textTransform: "uppercase",
                               letterSpacing: 1,
@@ -598,7 +579,7 @@ export const ProgressiveOnboarding= ({
                           sx={{
                             " .MuiFilledInput-root": {
                               backgroundColor: "white",
-                              coloranyllaColors.text,
+                              color: manyllaColors.text,
                               ":hover": {
                                 backgroundColor: "white",
                               },
@@ -614,13 +595,13 @@ export const ProgressiveOnboarding= ({
                           disabled={accessCode.length !== 6}
                           endIcon={<ArrowForwardIcon />}
                           sx={{
-                            backgroundColoranyllaColors.primary,
+                            backgroundColor: manyllaColors.primary,
                             color: "white",
                             ":hover": {
-                              backgroundColoranyllaColors.primaryDark,
+                              backgroundColor: manyllaColors.primaryDark,
                             },
                             ":disabled": {
-                              backgroundColoranyllaColors.border,
+                              backgroundColor: manyllaColors.border,
                             },
                           }}
                         >
@@ -633,12 +614,12 @@ export const ProgressiveOnboarding= ({
               </Paper>
             )}
 
-            {currentStep === "child-info"  mode === "fresh"  (
+            {currentStep === "child-info" && mode === "fresh" && (
               <Paper
                 elevation={0}
                 sx={{
-                  p,
-                  backgroundColoranyllaColors.paper,
+                  p: 3,
+                  backgroundColor: manyllaColors.paper,
                   borderRadius: 8,
                   border: `1px solid ${manyllaColors.border}`,
                 }}
@@ -647,10 +628,10 @@ export const ProgressiveOnboarding= ({
                   variant="h5"
                   gutterBottom
                   sx={{
-                    fontWeight00,
+                    fontWeight: 600,
                     textAlign: "center",
-                    mb,
-                    coloranyllaColors.text,
+                    mb: 2,
+                    color: manyllaColors.text,
                   }}
                 >
                   Tell us about your child
@@ -658,9 +639,9 @@ export const ProgressiveOnboarding= ({
                 <Typography
                   variant="body1"
                   sx={{
-                    mb,
+                    mb: 2,
                     textAlign: "center",
-                    coloranyllaColors.textSecondary,
+                    color: manyllaColors.textSecondary,
                   }}
                 >
                   This helps personalize your experience
@@ -669,17 +650,17 @@ export const ProgressiveOnboarding= ({
                 <Stack spacing={3}>
                   {/* Photo upload centered at the top */}
                   <Box
-                    sx={{ display: "flex", justifyContent: "center", mb }}
+                    sx={{ display: "flex", justifyContent: "center", mb: 2 }}
                   >
                     <IconButton
                       component="label"
                       sx={{
-                        p,
-                        width00,
-                        height: 00,
+                        p: 0,
+                        width: 100,
+                        height: 100,
                         ":hover": {
                           " .MuiAvatar-root": {
-                            opacity.9,
+                            opacity: 0.9,
                           },
                         },
                       }}
@@ -687,19 +668,19 @@ export const ProgressiveOnboarding= ({
                       <Avatar
                         src={photo}
                         sx={{
-                          width00,
-                          height: 00,
-                          bgcolorhoto ? "transparent" anyllaColors.border,
-                          coloranyllaColors.text,
+                          width: 100,
+                          height: 100,
+                          bgcolor: photo ? "transparent" : manyllaColors.border,
+                          color: manyllaColors.text,
                           fontSize: "2.5rem",
                           cursor: "pointer",
                           transition: "opacity 0.2s",
                         }}
                       >
-                        {photo ? null hildName ? (
+                        {photo ? null : childName ? (
                           childName[0].toUpperCase()
                         ) : (
-                          <AddAPhotoIcon sx={{ fontSize: 10 }} />
+                          <AddAPhotoIcon sx={{ fontSize: 40 }} />
                         )}
                       </Avatar>
                       <input
@@ -711,7 +692,7 @@ export const ProgressiveOnboarding= ({
                           if (file) {
                             const reader = new FileReader();
                             reader.onloadend = () => {
-                              setPhoto(reader.result as string);
+                              setPhoto(reader.result);
                             };
                             reader.readAsDataURL(file);
                           }
@@ -747,7 +728,7 @@ export const ProgressiveOnboarding= ({
                       sx={{
                         " .MuiFilledInput-root": {
                           backgroundColor: "white",
-                          coloranyllaColors.text,
+                          color: manyllaColors.text,
                           borderRadius: "12px",
                           ":hover": {
                             backgroundColor: "white",
@@ -760,10 +741,10 @@ export const ProgressiveOnboarding= ({
                           },
                         },
                         " .MuiInputLabel-root": {
-                          coloranyllaColors.textSecondary,
+                          color: manyllaColors.textSecondary,
                         },
                         " .MuiFormHelperText-root": {
-                          coloranyllaColors.textSecondary,
+                          color: manyllaColors.textSecondary,
                         },
                       }}
                     />
@@ -778,7 +759,7 @@ export const ProgressiveOnboarding= ({
                           " .MuiPickersFilledInput-root": {
                             backgroundColor: "white !important",
                             borderRadius: "12px",
-                            coloranyllaColors.text,
+                            color: manyllaColors.text,
                             ":hover": {
                               backgroundColor: "white !important",
                             },
@@ -795,7 +776,7 @@ export const ProgressiveOnboarding= ({
                           " .MuiPickersInputBase-root": {
                             backgroundColor: "white !important",
                             borderRadius: "12px",
-                            coloranyllaColors.text,
+                            color: manyllaColors.text,
                             "::before": {
                               display: "none !important",
                             },
@@ -804,10 +785,10 @@ export const ProgressiveOnboarding= ({
                             },
                           },
                           " .MuiPickersSectionList-sectionContent": {
-                            coloranyllaColors.text,
+                            color: manyllaColors.text,
                           },
                           " .MuiPickersInputBase-sectionContent": {
-                            coloranyllaColors.text,
+                            color: manyllaColors.text,
                           },
                           " .MuiPickersFilledInput-underline": {
                             ":before": {
@@ -818,24 +799,24 @@ export const ProgressiveOnboarding= ({
                             },
                           },
                           " .MuiInputLabel-root": {
-                            coloranyllaColors.textSecondary,
+                            color: manyllaColors.textSecondary,
                           },
                           " .MuiFormHelperText-root": {
-                            coloranyllaColors.textSecondary,
+                            color: manyllaColors.textSecondary,
                           },
                           " .MuiInputAdornment-root": {
-                            coloranyllaColors.text,
+                            color: manyllaColors.text,
                             " .MuiIconButton-root": {
-                              coloranyllaColors.text,
+                              color: manyllaColors.text,
                             },
                             " .MuiSvgIcon-root": {
-                              coloranyllaColors.text,
+                              color: manyllaColors.text,
                             },
                           },
                         }}
                         slotProps={{
                           textField: {
-                            fullWidthrue,
+                            fullWidth: true,
                             variant: "filled",
                             helperText:
                               "Helps track age-appropriate information",
@@ -849,11 +830,11 @@ export const ProgressiveOnboarding= ({
                     severity="info"
                     icon={<SecurityIcon />}
                     sx={{
-                      backgroundColoranyllaColors.background,
-                      coloranyllaColors.text,
+                      backgroundColor: manyllaColors.background,
+                      color: manyllaColors.text,
                       border: `1px solid ${manyllaColors.border}`,
                       " .MuiAlert-icon": {
-                        coloranyllaColors.primary,
+                        color: manyllaColors.primary,
                       },
                     }}
                   >
@@ -874,11 +855,11 @@ export const ProgressiveOnboarding= ({
                     }}
                     fullWidth
                     sx={{
-                      py.5,
-                      backgroundColoranyllaColors.primary,
+                      py: 1.5,
+                      backgroundColor: manyllaColors.primary,
                       color: "white",
                       ":hover": {
-                        backgroundColoranyllaColors.primaryDark,
+                        backgroundColor: manyllaColors.primaryDark,
                       },
                     }}
                   >
@@ -888,12 +869,12 @@ export const ProgressiveOnboarding= ({
               </Paper>
             )}
 
-            {currentStep === "privacy"  (
+            {currentStep === "privacy" && (
               <Paper
                 elevation={0}
                 sx={{
-                  p,
-                  backgroundColoranyllaColors.paper,
+                  p: 3,
+                  backgroundColor: manyllaColors.paper,
                   borderRadius: 8,
                   border: `1px solid ${manyllaColors.border}`,
                 }}
@@ -902,10 +883,10 @@ export const ProgressiveOnboarding= ({
                   variant="h5"
                   gutterBottom
                   sx={{
-                    fontWeight00,
+                    fontWeight: 600,
                     textAlign: "center",
-                    mb,
-                    coloranyllaColors.text,
+                    mb: 2,
+                    color: manyllaColors.text,
                   }}
                 >
                   Your Privacy Matters
@@ -914,32 +895,32 @@ export const ProgressiveOnboarding= ({
                 <Stack spacing={3}>
                   <Paper
                     sx={{
-                      p,
+                      p: 3,
                       border: "2px solid",
                       borderColor: "#8B9467",
-                      backgroundColoranyllaColors.paper,
+                      backgroundColor: manyllaColors.paper,
                     }}
                   >
                     <Box
-                      sx={{ display: "flex", alignItems: "flex-start", gap }}
+                      sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}
                     >
                       <CheckIcon
-                        sx={{ mt.5, fontSize: 18, color: "#8B9467" }}
+                        sx={{ mt: 2.5, fontSize: 18, color: "#8B9467" }}
                       />
                       <Box>
                         <Typography
                           variant="subtitle1"
                           sx={{
-                            fontWeight00,
-                            mb.5,
-                            coloranyllaColors.text,
+                            fontWeight: 600,
+                            mb: 0.5,
+                            color: manyllaColors.text,
                           }}
                         >
                           Zero-Knowledge Encryption
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ coloranyllaColors.textSecondary }}
+                          sx={{ color: manyllaColors.textSecondary }}
                         >
                           Your data is encrypted on your device. We never see
                           it.
@@ -950,32 +931,32 @@ export const ProgressiveOnboarding= ({
 
                   <Paper
                     sx={{
-                      p,
+                      p: 3,
                       border: "2px solid",
                       borderColor: "#7B9EA8",
-                      backgroundColoranyllaColors.paper,
+                      backgroundColor: manyllaColors.paper,
                     }}
                   >
                     <Box
-                      sx={{ display: "flex", alignItems: "flex-start", gap }}
+                      sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}
                     >
                       <CheckIcon
-                        sx={{ mt.5, fontSize: 18, color: "#7B9EA8" }}
+                        sx={{ mt: 2.5, fontSize: 18, color: "#7B9EA8" }}
                       />
                       <Box>
                         <Typography
                           variant="subtitle1"
                           sx={{
-                            fontWeight00,
-                            mb.5,
-                            coloranyllaColors.text,
+                            fontWeight: 600,
+                            mb: 0.5,
+                            color: manyllaColors.text,
                           }}
                         >
                           No Account Required
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ coloranyllaColors.textSecondary }}
+                          sx={{ color: manyllaColors.textSecondary }}
                         >
                           No emails, no passwords, no tracking. Just a recovery
                           phrase.
@@ -986,36 +967,36 @@ export const ProgressiveOnboarding= ({
 
                   <Paper
                     sx={{
-                      p,
+                      p: 3,
                       border: "2px solid",
-                      borderColoranyllaColors.primary,
-                      backgroundColoranyllaColors.paper,
+                      borderColor: manyllaColors.primary,
+                      backgroundColor: manyllaColors.paper,
                     }}
                   >
                     <Box
-                      sx={{ display: "flex", alignItems: "flex-start", gap }}
+                      sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}
                     >
                       <CheckIcon
                         sx={{
-                          mt.5,
+                          mt: 0.5,
                           fontSize: 18,
-                          coloranyllaColors.primary,
+                          color: manyllaColors.primary,
                         }}
                       />
                       <Box>
                         <Typography
                           variant="subtitle1"
                           sx={{
-                            fontWeight00,
-                            mb.5,
-                            coloranyllaColors.text,
+                            fontWeight: 600,
+                            mb: 0.5,
+                            color: manyllaColors.text,
                           }}
                         >
                           You Control Sharing
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ coloranyllaColors.textSecondary }}
+                          sx={{ color: manyllaColors.textSecondary }}
                         >
                           Share specific information with time limits and access
                           codes.
@@ -1032,11 +1013,11 @@ export const ProgressiveOnboarding= ({
                   onClick={handleNext}
                   fullWidth
                   sx={{
-                    mt,
-                    backgroundColoranyllaColors.primary,
+                    mt: 2,
+                    backgroundColor: manyllaColors.primary,
                     color: "white",
                     ":hover": {
-                      backgroundColoranyllaColors.primaryDark,
+                      backgroundColor: manyllaColors.primaryDark,
                     },
                   }}
                 >
@@ -1045,12 +1026,12 @@ export const ProgressiveOnboarding= ({
               </Paper>
             )}
 
-            {currentStep === "ready"  (
+            {currentStep === "ready" && (
               <Paper
                 elevation={0}
                 sx={{
-                  p,
-                  backgroundColoranyllaColors.paper,
+                  p: 3,
+                  backgroundColor: manyllaColors.paper,
                   borderRadius: 8,
                   textAlign: "center",
                   border: `1px solid ${manyllaColors.border}`,
@@ -1058,15 +1039,15 @@ export const ProgressiveOnboarding= ({
               >
                 <Box
                   sx={{
-                    width0,
-                    height: 0,
+                    width: 30,
+                    height: 30,
                     borderRadius: "50%",
                     backgroundColor: "#8B9467",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     margin: "0 auto",
-                    mb,
+                    mb: 2,
                   }}
                 >
                   <CheckIcon sx={{ fontSize: 18, color: "white" }} />
@@ -1075,13 +1056,13 @@ export const ProgressiveOnboarding= ({
                 <Typography
                   variant="h5"
                   gutterBottom
-                  sx={{ fontWeight00, coloranyllaColors.text }}
+                  sx={{ fontWeight: 600, color: manyllaColors.text }}
                 >
                   {mode === "demo" ? "Ready to Explore!" : "All Set!"}
                 </Typography>
                 <Typography
                   variant="body1"
-                  sx={{ mb, coloranyllaColors.textSecondary }}
+                  sx={{ mb: 2, color: manyllaColors.textSecondary }}
                 >
                   {mode === "demo"
                     ? "You'll be using Ellie's example profile to explore manylla"
@@ -1090,10 +1071,10 @@ export const ProgressiveOnboarding= ({
 
                 <Box
                   sx={{
-                    p,
-                    backgroundColoranyllaColors.background,
+                    p: 3,
+                    backgroundColor: manyllaColors.background,
                     borderRadius: 8,
-                    mb,
+                    mb: 2,
                     textAlign: "left",
                     border: `1px solid ${manyllaColors.border}`,
                   }}
@@ -1101,58 +1082,58 @@ export const ProgressiveOnboarding= ({
                   <Typography
                     variant="subtitle2"
                     gutterBottom
-                    sx={{ fontWeight00, coloranyllaColors.text }}
+                    sx={{ fontWeight: 600, color: manyllaColors.text }}
                   >
                     Quick tips to get started:
                   </Typography>
-                  <Stack spacing={1.5} sx={{ mt }}>
-                    <Box sx={{ display: "flex", alignItems: "center", gap }}>
+                  <Stack spacing={1.5} sx={{ mt: 2 }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                       <Box
                         sx={{
-                          width: 0,
+                          width: 6,
                           height: 2,
                           borderRadius: "50%",
-                          backgroundColoranyllaColors.primary,
-                          flexShrink,
+                          backgroundColor: manyllaColors.primary,
+                          flexShrink: 0,
                         }}
                       />
                       <Typography
                         variant="body2"
-                        sx={{ coloranyllaColors.text }}
+                        sx={{ color: manyllaColors.text }}
                       >
                         Add important information in Quick Info
                       </Typography>
                     </Box>
-                    <Box sx={{ display: "flex", alignItems: "center", gap }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                       <Box
                         sx={{
-                          width: 0,
+                          width: 6,
                           height: 2,
                           borderRadius: "50%",
-                          backgroundColoranyllaColors.primary,
-                          flexShrink,
+                          backgroundColor: manyllaColors.primary,
+                          flexShrink: 0,
                         }}
                       />
                       <Typography
                         variant="body2"
-                        sx={{ coloranyllaColors.text }}
+                        sx={{ color: manyllaColors.text }}
                       >
                         Track progress with Goals and Successes
                       </Typography>
                     </Box>
-                    <Box sx={{ display: "flex", alignItems: "center", gap }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                       <Box
                         sx={{
-                          width: 0,
+                          width: 6,
                           height: 2,
                           borderRadius: "50%",
-                          backgroundColoranyllaColors.primary,
-                          flexShrink,
+                          backgroundColor: manyllaColors.primary,
+                          flexShrink: 0,
                         }}
                       />
                       <Typography
                         variant="body2"
-                        sx={{ coloranyllaColors.text }}
+                        sx={{ color: manyllaColors.text }}
                       >
                         Enable sync to access from other devices
                       </Typography>
@@ -1166,11 +1147,11 @@ export const ProgressiveOnboarding= ({
                   onClick={handleFinish}
                   fullWidth
                   sx={{
-                    py.5,
-                    backgroundColoranyllaColors.primary,
+                    py: 1.5,
+                    backgroundColor: manyllaColors.primary,
                     color: "white",
                     ":hover": {
-                      backgroundColoranyllaColors.primaryDark,
+                      backgroundColor: manyllaColors.primaryDark,
                     },
                   }}
                 >
