@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manylla - Improved Ribbon Latch Icons</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --manila: #F4E4C1;
+            --manila-dark: #E8D4A8;
+            --manila-light: #FAF2E2;
+            --red-accent: #D32F2F;
+            --red-light: #EF5350;
+            --red-dark: #B71C1C;
+            --brown-start: #B8A398;
+            --brown-end: #A89185;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif;
+            background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 100%);
+            min-height: 100vh;
+            padding: 60px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #222;
+            margin-bottom: 16px;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 60px;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .icons-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+
+        .icon-card {
+            background: white;
+            border-radius: 20px;
+            padding: 48px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .icon-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+        }
+
+        .icon-wrapper {
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fafafa;
+            border-radius: 24px;
+            position: relative;
+        }
+
+        /* Icon 1: Geometric Y String */
+        .icon1 svg {
+            width: 80px;
+            height: 80px;
+        }
+
+        /* Icon 2: Circle with String */
+        .icon2 svg {
+            width: 80px;
+            height: 100px;
+        }
+
+        /* Icon 3: Abstract Fold */
+        .icon3 svg {
+            width: 80px;
+            height: 80px;
+        }
+
+        /* Icon 4: Minimalist Tie */
+        .icon4 svg {
+            width: 80px;
+            height: 80px;
+        }
+
+        /* Icon 5: Button & String */
+        .icon5 svg {
+            width: 90px;
+            height: 90px;
+        }
+
+        .label {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 12px;
+        }
+
+        .description {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.5;
+            max-width: 280px;
+            margin: 0 auto;
+        }
+
+        /* Application Examples */
+        .applications {
+            background: white;
+            border-radius: 24px;
+            padding: 60px;
+            margin-bottom: 60px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .app-title {
+            font-size: 2rem;
+            color: #222;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+        }
+
+        .app-example {
+            text-align: center;
+        }
+
+        .app-icon-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            border-radius: 27px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Different backgrounds for app icons */
+        .bg-gradient-1 {
+            background: linear-gradient(135deg, var(--manila) 0%, var(--manila-dark) 100%);
+        }
+
+        .bg-gradient-2 {
+            background: linear-gradient(135deg, #fff 0%, var(--manila-light) 100%);
+        }
+
+        .bg-solid {
+            background: var(--manila);
+        }
+
+        .bg-white {
+            background: white;
+            border: 2px solid var(--manila-dark);
+        }
+
+        .bg-red {
+            background: var(--red-accent);
+        }
+
+        .bg-dark {
+            background: #1a1a1a;
+        }
+
+        .app-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Size demonstrations */
+        .size-demo {
+            background: white;
+            border-radius: 24px;
+            padding: 60px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .size-demo-title {
+            font-size: 1.8rem;
+            color: #222;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .size-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .size-item {
+            text-align: center;
+        }
+
+        .size-label {
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* Design notes */
+        .design-notes {
+            background: linear-gradient(135deg, var(--manila-light) 0%, white 100%);
+            border-radius: 24px;
+            padding: 48px;
+            margin-top: 60px;
+            border: 1px solid var(--manila-dark);
+        }
+
+        .notes-title {
+            font-size: 1.5rem;
+            color: #222;
+            margin-bottom: 24px;
+        }
+
+        .notes-content {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .notes-content strong {
+            color: #222;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Refined Ribbon Latch Icons</h1>
+        <p class="subtitle">
+            Modern interpretations of the string-tie closure mechanism, designed with geometric precision and minimalist principles
+        </p>
+
+        <div class="icons-showcase">
+            <!-- Icon 1: Geometric Y String -->
+            <div class="icon-card">
+                <div class="icon-wrapper">
+                    <div class="icon1">
+                        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Main Y shape with rounded corners -->
+                            <path d="M 40 50 L 40 30" stroke="#D32F2F" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M 20 30 L 40 50" stroke="#D32F2F" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M 60 30 L 40 50" stroke="#D32F2F" stroke-width="6" stroke-linecap="round"/>
+                            <!-- Circle button at junction -->
+                            <circle cx="40" cy="30" r="8" fill="#D32F2F"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="label">Geometric Y</div>
+                <div class="description">Clean lines forming a Y with a button closure point, perfectly balanced and scalable</div>
+            </div>
+
+            <!-- Icon 2: Circle with String -->
+            <div class="icon-card">
+                <div class="icon-wrapper">
+                    <div class="icon2">
+                        <svg viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Main circle -->
+                            <circle cx="40" cy="35" r="28" fill="none" stroke="#D32F2F" stroke-width="5"/>
+                            <!-- String tail -->
+                            <path d="M 40 63 Q 40 75, 35 85 Q 33 88, 33 92" 
+                                  fill="none" stroke="#D32F2F" stroke-width="5" stroke-linecap="round"/>
+                            <path d="M 40 63 Q 40 75, 45 85 Q 47 88, 47 92" 
+                                  fill="none" stroke="#D32F2F" stroke-width="5" stroke-linecap="round"/>
+                            <!-- Center dot -->
+                            <circle cx="40" cy="35" r="4" fill="#D32F2F"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="label">String Loop</div>
+                <div class="description">Elegant circular closure with flowing string tails, inspired by wax seals</div>
+            </div>
+
+            <!-- Icon 3: Abstract Fold -->
+            <div class="icon-card">
+                <div class="icon-wrapper">
+                    <div class="icon3">
+                        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Envelope fold lines -->
+                            <path d="M 20 20 L 40 40 L 60 20" 
+                                  fill="none" stroke="#D32F2F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M 40 40 L 40 60" 
+                                  fill="none" stroke="#D32F2F" stroke-width="5" stroke-linecap="round"/>
+                            <!-- Corner dots -->
+                            <circle cx="20" cy="20" r="3" fill="#D32F2F"/>
+                            <circle cx="60" cy="20" r="3" fill="#D32F2F"/>
+                            <circle cx="40" cy="60" r="3" fill="#D32F2F"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="label">Envelope Fold</div>
+                <div class="description">Abstract representation of envelope flap with string anchor points</div>
+            </div>
+
+            <!-- Icon 4: Minimalist Tie -->
+            <div class="icon-card">
+                <div class="icon-wrapper">
+                    <div class="icon4">
+                        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Crossed strings -->
+                            <path d="M 25 25 L 55 55" stroke="#D32F2F" stroke-width="5" stroke-linecap="round"/>
+                            <path d="M 55 25 L 25 55" stroke="#D32F2F" stroke-width="5" stroke-linecap="round"/>
+                            <!-- Center knot -->
+                            <circle cx="40" cy="40" r="10" fill="white" stroke="#D32F2F" stroke-width="5"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="label">Cross Tie</div>
+                <div class="description">Minimalist crossed strings with central knot, suggesting secure closure</div>
+            </div>
+
+            <!-- Icon 5: Button & String -->
+            <div class="icon-card">
+                <div class="icon-wrapper">
+                    <div class="icon5">
+                        <svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Button -->
+                            <circle cx="45" cy="30" r="12" fill="none" stroke="#D32F2F" stroke-width="4"/>
+                            <!-- Button holes -->
+                            <circle cx="40" cy="30" r="2" fill="#D32F2F"/>
+                            <circle cx="50" cy="30" r="2" fill="#D32F2F"/>
+                            <!-- String wrapped around -->
+                            <path d="M 45 42 Q 30 50, 30 65 Q 30 70, 35 70 Q 40 70, 45 65 Q 50 70, 55 70 Q 60 70, 60 65 Q 60 50, 45 42"
+                                  fill="none" stroke="#D32F2F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="label">Button Closure</div>
+                <div class="description">Traditional button and string design, refined for digital application</div>
+            </div>
+        </div>
+
+        <!-- Application Examples -->
+        <div class="applications">
+            <h2 class="app-title">Icon Applications</h2>
+            <div class="app-grid">
+                <div class="app-example">
+                    <div class="app-icon-container bg-gradient-1">
+                        <svg width="60" height="60" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M 40 50 L 40 30" stroke="white" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M 20 30 L 40 50" stroke="white" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M 60 30 L 40 50" stroke="white" stroke-width="6" stroke-linecap="round"/>
+                            <circle cx="40" cy="30" r="8" fill="white"/>
+                        </svg>
+                    </div>
+                    <div class="app-label">iOS App Icon</div>
+                </div>
+
+                <div class="app-example">
+                    <div class="app-icon-container bg-white">
+                        <svg width="50" height="50" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M 40 50 L 40 30" stroke="#D32F2F" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M 20 30 L 40 50" stroke="#D32F2F" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M 60 30 L 40 50" stroke="#D32F2F" stroke-width="6" stroke-linecap="round"/>
+                            <circle cx="40" cy="30" r="8" fill="#D32F2F"/>
+                        </svg>
+                    </div>
+                    <div class="app-label">Web Favicon</div>
+                </div>
+
+                <div class="app-example">
+                    <div class="app-icon-container bg-red">
+                        <svg width="60" height="60" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M 40 50 L 40 30" stroke="white" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M 20 30 L 40 50" stroke="white" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M 60 30 L 40 50" stroke="white" stroke-width="6" stroke-linecap="round"/>
+                            <circle cx="40" cy="30" r="8" fill="white"/>
+                        </svg>
+                    </div>
+                    <div class="app-label">Android Icon</div>
+                </div>
+
+                <div class="app-example">
+                    <div class="app-icon-container bg-dark">
+                        <svg width="60" height="60" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M 40 50 L 40 30" stroke="#FF6B6B" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M 20 30 L 40 50" stroke="#FF6B6B" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M 60 30 L 40 50" stroke="#FF6B6B" stroke-width="6" stroke-linecap="round"/>
+                            <circle cx="40" cy="30" r="8" fill="#FF6B6B"/>
+                        </svg>
+                    </div>
+                    <div class="app-label">Dark Mode</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Size Demonstrations -->
+        <div class="size-demo">
+            <h2 class="size-demo-title">Scalability Test</h2>
+            <div class="size-row">
+                <div class="size-item">
+                    <svg width="16" height="16" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 40 50 L 40 30" stroke="#D32F2F" stroke-width="10" stroke-linecap="round"/>
+                        <path d="M 20 30 L 40 50" stroke="#D32F2F" stroke-width="10" stroke-linecap="round"/>
+                        <path d="M 60 30 L 40 50" stroke="#D32F2F" stroke-width="10" stroke-linecap="round"/>
+                        <circle cx="40" cy="30" r="12" fill="#D32F2F"/>
+                    </svg>
+                    <div class="size-label">16×16px</div>
+                </div>
+
+                <div class="size-item">
+                    <svg width="32" height="32" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 40 50 L 40 30" stroke="#D32F2F" stroke-width="8" stroke-linecap="round"/>
+                        <path d="M 20 30 L 40 50" stroke="#D32F2F" stroke-width="8" stroke-linecap="round"/>
+                        <path d="M 60 30 L 40 50" stroke="#D32F2F" stroke-width="8" stroke-linecap="round"/>
+                        <circle cx="40" cy="30" r="10" fill="#D32F2F"/>
+                    </svg>
+                    <div class="size-label">32×32px</div>
+                </div>
+
+                <div class="size-item">
+                    <svg width="64" height="64" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 40 50 L 40 30" stroke="#D32F2F" stroke-width="6" stroke-linecap="round"/>
+                        <path d="M 20 30 L 40 50" stroke="#D32F2F" stroke-width="6" stroke-linecap="round"/>
+                        <path d="M 60 30 L 40 50" stroke="#D32F2F" stroke-width="6" stroke-linecap="round"/>
+                        <circle cx="40" cy="30" r="8" fill="#D32F2F"/>
+                    </svg>
+                    <div class="size-label">64×64px</div>
+                </div>
+
+                <div class="size-item">
+                    <svg width="128" height="128" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 40 50 L 40 30" stroke="#D32F2F" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M 20 30 L 40 50" stroke="#D32F2F" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M 60 30 L 40 50" stroke="#D32F2F" stroke-width="5" stroke-linecap="round"/>
+                        <circle cx="40" cy="30" r="7" fill="#D32F2F"/>
+                    </svg>
+                    <div class="size-label">128×128px</div>
+                </div>
+
+                <div class="size-item">
+                    <svg width="256" height="256" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 40 50 L 40 30" stroke="#D32F2F" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M 20 30 L 40 50" stroke="#D32F2F" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M 60 30 L 40 50" stroke="#D32F2F" stroke-width="4" stroke-linecap="round"/>
+                        <circle cx="40" cy="30" r="6" fill="#D32F2F"/>
+                    </svg>
+                    <div class="size-label">256×256px</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Design Notes -->
+        <div class="design-notes">
+            <h3 class="notes-title">Design Improvements</h3>
+            <div class="notes-content">
+                <p><strong>Based on research of modern minimalist principles:</strong></p>
+                <ul style="margin: 20px 0; padding-left: 24px; line-height: 2;">
+                    <li>Used SVG for perfect scalability and crisp rendering at all sizes</li>
+                    <li>Applied geometric precision with consistent stroke weights and proportions</li>
+                    <li>Incorporated negative space effectively for visual breathing room</li>
+                    <li>Maintained single-color approach for maximum versatility</li>
+                    <li>Ensured icons work at extreme sizes (16px favicon to 512px app store)</li>
+                    <li>Created visual metaphors that connect to manila envelope string-tie closures</li>
+                    <li>Balanced abstract representation with recognizable forms</li>
+                </ul>
+                <p style="margin-top: 20px;">
+                    <strong>Recommended:</strong> The Geometric Y (Icon #1) successfully merges the letter "Y" with a string-tie closure visual, 
+                    creating a memorable mark that works across all applications while maintaining brand connection to the typographic logo.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

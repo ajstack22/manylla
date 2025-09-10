@@ -3,11 +3,12 @@ import { Container } from "@mui/material";
 import { ManyllaThemeProvider } from "./context/ThemeContext";
 import { SyncProvider, useSync } from "./context/SyncContext";
 import { ToastProvider } from "./context/ToastContext";
-import { Header } from "./components/Layout";
+import { Header, HEADER_HEIGHT } from "./components/Layout";
 import { LoadingSpinner } from "./components/Loading/LoadingSpinner";
 import { LoadingOverlay } from "./components/Loading/LoadingOverlay";
 import { StorageService } from "./services/storageService";
 import { ProfileOverview } from "./components/Profile/ProfileOverview";
+import { useHeaderProfileTransition } from "./hooks/useHeaderProfileTransition";
 import { EntryForm } from "./components/Forms/EntryForm";
 import { ShareDialogOptimized } from "./components/Sharing/ShareDialogOptimized";
 import { SharedView } from "./components/Sharing/SharedView";
@@ -158,6 +159,7 @@ const mockProfile: ChildProfile = {
 // Main App content that needs sync context
 function AppContent() {
   const { pushProfile, syncStatus } = useSync();
+  const { isProfileHidden, scrollY } = useHeaderProfileTransition();
   const [profile, setProfile] = useState<ChildProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -169,6 +171,7 @@ function AppContent() {
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [syncDialogOpen, setSyncDialogOpen] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [profileEditOpen, setProfileEditOpen] = useState(false);
   const [isSharedView, setIsSharedView] = useState(false);
   const [shareCode, setShareCode] = useState<string | null>(null);
   const [profileCreateOpen, setProfileCreateOpen] = useState(false);
@@ -534,9 +537,19 @@ function AppContent() {
           onCloseProfile={handleCloseProfile}
           onShare={() => setShareDialogOpen(true)}
           onCategoriesClick={() => setCategoriesOpen(true)}
+          onUpdateProfile={() => setProfileEditOpen(true)}
           syncStatus={syncStatus}
+          isProfileHidden={isProfileHidden}
+          profile={profile}
         />
-        <Container maxWidth="lg" sx={{ px: { xs: 1, sm: 2, md: 3 } }}>
+        <Container 
+          maxWidth="lg" 
+          sx={{ 
+            px: { xs: 1, sm: 2, md: 3 },
+            pt: `${HEADER_HEIGHT}px`, // Add top padding for fixed header
+            minHeight: '100vh', // Ensure content area is scrollable
+          }}
+        >
           <ProfileOverview
             profile={profile}
             onAddEntry={handleAddEntry}
@@ -545,6 +558,8 @@ function AppContent() {
             onShare={() => setShareDialogOpen(true)}
             onUpdateCategories={handleUpdateCategories}
             onUpdateProfile={handleUpdateProfile}
+            profileEditOpen={profileEditOpen}
+            setProfileEditOpen={setProfileEditOpen}
           />
         </Container>
         <EntryForm

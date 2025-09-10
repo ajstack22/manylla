@@ -19,6 +19,9 @@ interface HeaderProps {
   syncStatus?: "not-setup" | "synced" | "error";
 }
 
+// Define consistent header height for mobile
+export const HEADER_HEIGHT = 64;
+
 export const Header: React.FC<HeaderProps> = ({
   onMenuClick,
   onSyncClick,

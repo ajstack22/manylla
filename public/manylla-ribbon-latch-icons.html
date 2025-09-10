@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manylla - Red Ribbon Latch Icon Concepts</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Brand colors */
+            --manila: #F4E4C1;
+            --manila-dark: #E8D4A8;
+            --manila-light: #FAF2E2;
+            --red-accent: #D32F2F;
+            --red-light: #EF5350;
+            --red-dark: #B71C1C;
+            --brown-start: #B8A398;
+            --brown-end: #A89185;
+        }
+
+        body {
+            font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif;
+            background: linear-gradient(135deg, var(--manila-light) 0%, var(--manila) 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 50px;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .icons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            padding: 20px;
+            margin-bottom: 60px;
+        }
+
+        .icon-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .icon-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .icon-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Icon 1: Classic Y Ribbon */
+        .icon1 {
+            width: 80px;
+            height: 100px;
+            position: relative;
+        }
+
+        .icon1 .ribbon-y {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .icon1 .ribbon-y::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 40px;
+            background: var(--red-accent);
+            border-radius: 4px;
+        }
+
+        .icon1 .ribbon-y::after {
+            content: '';
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 8px;
+            background: var(--red-accent);
+            border-radius: 4px;
+        }
+
+        .icon1 .ribbon-ends {
+            position: absolute;
+            top: 35px;
+            width: 100%;
+            height: 65px;
+        }
+
+        .icon1 .ribbon-ends::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10px;
+            width: 8px;
+            height: 100%;
+            background: var(--red-accent);
+            transform: rotate(-15deg);
+            transform-origin: top center;
+            border-radius: 4px;
+        }
+
+        .icon1 .ribbon-ends::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 10px;
+            width: 8px;
+            height: 100%;
+            background: var(--red-accent);
+            transform: rotate(15deg);
+            transform-origin: top center;
+            border-radius: 4px;
+        }
+
+        /* Icon 2: Circular Seal */
+        .icon2 {
+            width: 100px;
+            height: 100px;
+            border: 4px solid var(--red-accent);
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .icon2::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px;
+            height: 70%;
+            background: var(--red-accent);
+        }
+
+        .icon2::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(90deg);
+            width: 4px;
+            height: 40%;
+            background: var(--red-accent);
+        }
+
+        .icon2 .seal-tails {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 30px;
+        }
+
+        .icon2 .seal-tails::before,
+        .icon2 .seal-tails::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--red-accent);
+        }
+
+        .icon2 .seal-tails::before {
+            left: 8px;
+            transform: rotate(-10deg);
+        }
+
+        .icon2 .seal-tails::after {
+            right: 8px;
+            transform: rotate(10deg);
+        }
+
+        /* Icon 3: Minimalist Loop */
+        .icon3 {
+            width: 100px;
+            height: 100px;
+            position: relative;
+        }
+
+        .icon3 .loop {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--red-accent);
+            border-radius: 50%;
+        }
+
+        .icon3 .tail {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 40px;
+            background: var(--red-accent);
+            border-radius: 2px;
+        }
+
+        /* Icon 4: Abstract Fold */
+        .icon4 {
+            width: 100px;
+            height: 100px;
+            position: relative;
+        }
+
+        .icon4 .fold-shape {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+        }
+
+        .icon4 .fold-shape::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 4px solid var(--red-accent);
+            border-radius: 4px;
+            transform: rotate(45deg);
+        }
+
+        .icon4 .fold-shape::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px;
+            height: 120%;
+            background: var(--red-accent);
+        }
+
+        /* Icon 5: Elegant Tie */
+        .icon5 {
+            width: 100px;
+            height: 100px;
+            position: relative;
+        }
+
+        .icon5 .tie-knot {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background: var(--red-accent);
+            border-radius: 50%;
+        }
+
+        .icon5 .tie-ribbon {
+            position: absolute;
+            top: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 50px;
+        }
+
+        .icon5 .tie-ribbon::before,
+        .icon5 .tie-ribbon::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 25px;
+            height: 100%;
+            background: var(--red-accent);
+            border-radius: 0 0 50% 50%;
+        }
+
+        .icon5 .tie-ribbon::before {
+            left: 0;
+            transform: rotate(-15deg);
+            transform-origin: top center;
+        }
+
+        .icon5 .tie-ribbon::after {
+            right: 0;
+            transform: rotate(15deg);
+            transform-origin: top center;
+        }
+
+        /* Variations section */
+        .variations-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-top: 60px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .variations-title {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .size-variations {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .size-variant {
+            text-align: center;
+        }
+
+        .size-label {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Different sizes */
+        .icon-small {
+            transform: scale(0.5);
+        }
+
+        .icon-medium {
+            transform: scale(0.75);
+        }
+
+        .icon-large {
+            transform: scale(1);
+        }
+
+        .label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .description {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* Color variations */
+        .color-variations {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .color-variant {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bg-manila {
+            background: var(--manila);
+        }
+
+        .bg-white {
+            background: white;
+            border: 1px solid #e0e0e0;
+        }
+
+        .bg-dark {
+            background: #121212;
+        }
+
+        .bg-gradient {
+            background: linear-gradient(135deg, var(--brown-start), var(--brown-end));
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Red Ribbon Latch Icons</h1>
+        <p class="subtitle">
+            Minimalist interpretations of a ribbon latch mechanism, inspired by the red "y" as a closure element for the manila envelope metaphor
+        </p>
+        
+        <div class="icons-grid">
+            <!-- Icon 1 -->
+            <div class="icon-card">
+                <div class="icon-container">
+                    <div class="icon1">
+                        <div class="ribbon-y"></div>
+                        <div class="ribbon-ends"></div>
+                    </div>
+                </div>
+                <div class="label">1. Classic Y Ribbon</div>
+                <div class="description">Forms a "Y" shape naturally, representing both the letter and a ribbon tie</div>
+            </div>
+
+            <!-- Icon 2 -->
+            <div class="icon-card">
+                <div class="icon-container">
+                    <div class="icon2">
+                        <div class="seal-tails"></div>
+                    </div>
+                </div>
+                <div class="label">2. Wax Seal</div>
+                <div class="description">Circular seal with ribbon tails, evoking traditional document security</div>
+            </div>
+
+            <!-- Icon 3 -->
+            <div class="icon-card">
+                <div class="icon-container">
+                    <div class="icon3">
+                        <div class="loop"></div>
+                        <div class="tail"></div>
+                    </div>
+                </div>
+                <div class="label">3. Simple Loop</div>
+                <div class="description">Minimalist circle with single tail, clean and modern</div>
+            </div>
+
+            <!-- Icon 4 -->
+            <div class="icon-card">
+                <div class="icon-container">
+                    <div class="icon4">
+                        <div class="fold-shape"></div>
+                    </div>
+                </div>
+                <div class="label">4. Envelope Fold</div>
+                <div class="description">Abstract diamond shape suggesting envelope closure</div>
+            </div>
+
+            <!-- Icon 5 -->
+            <div class="icon-card">
+                <div class="icon-container">
+                    <div class="icon5">
+                        <div class="tie-knot"></div>
+                        <div class="tie-ribbon"></div>
+                    </div>
+                </div>
+                <div class="label">5. Ribbon Bow</div>
+                <div class="description">Elegant bow tie shape, more decorative approach</div>
+            </div>
+        </div>
+
+        <!-- Variations Section -->
+        <div class="variations-section">
+            <h2 class="variations-title">Icon #1 at Different Scales</h2>
+            
+            <div class="size-variations">
+                <div class="size-variant">
+                    <div class="icon-container icon-small">
+                        <div class="icon1">
+                            <div class="ribbon-y"></div>
+                            <div class="ribbon-ends"></div>
+                        </div>
+                    </div>
+                    <div class="size-label">16x16px</div>
+                </div>
+
+                <div class="size-variant">
+                    <div class="icon-container icon-medium">
+                        <div class="icon1">
+                            <div class="ribbon-y"></div>
+                            <div class="ribbon-ends"></div>
+                        </div>
+                    </div>
+                    <div class="size-label">32x32px</div>
+                </div>
+
+                <div class="size-variant">
+                    <div class="icon-container icon-large">
+                        <div class="icon1">
+                            <div class="ribbon-y"></div>
+                            <div class="ribbon-ends"></div>
+                        </div>
+                    </div>
+                    <div class="size-label">64x64px</div>
+                </div>
+            </div>
+
+            <h2 class="variations-title">Background Contexts</h2>
+            <div class="color-variations">
+                <div class="color-variant bg-manila">
+                    <div class="icon1" style="transform: scale(0.4);">
+                        <div class="ribbon-y"></div>
+                        <div class="ribbon-ends"></div>
+                    </div>
+                </div>
+
+                <div class="color-variant bg-white">
+                    <div class="icon1" style="transform: scale(0.4);">
+                        <div class="ribbon-y"></div>
+                        <div class="ribbon-ends"></div>
+                    </div>
+                </div>
+
+                <div class="color-variant bg-dark">
+                    <div class="icon1" style="transform: scale(0.4); filter: brightness(1.3);">
+                        <div class="ribbon-y"></div>
+                        <div class="ribbon-ends"></div>
+                    </div>
+                </div>
+
+                <div class="color-variant bg-gradient">
+                    <div class="icon1" style="transform: scale(0.4);">
+                        <div class="ribbon-y"></div>
+                        <div class="ribbon-ends"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Implementation Notes -->
+        <div class="variations-section" style="margin-top: 40px;">
+            <h2 class="variations-title">Design Rationale</h2>
+            <p style="max-width: 800px; margin: 0 auto; line-height: 1.8; color: #555;">
+                These icons maintain the minimalist aesthetic while conveying the concept of a ribbon latch or string-tie closure system commonly found on manila envelopes. The red color (#D32F2F) ties back to the branded "y" accent, creating a cohesive visual language. Each design can work as a standalone app icon, a UI element for secure/private sections, or as part of the logo system.
+            </p>
+            <br>
+            <p style="max-width: 800px; margin: 0 auto; line-height: 1.8; color: #555;">
+                <strong>Icon #1 (Classic Y Ribbon)</strong> is recommended as it naturally forms the letter "Y" while clearly representing a tied ribbon, making it the perfect bridge between the typography and the envelope metaphor.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

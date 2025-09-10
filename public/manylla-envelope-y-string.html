@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manylla - Envelope with Y String</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --manila: #F4E4C1;
+            --manila-dark: #E8D4A8;
+            --manila-light: #FAF2E2;
+            --red-accent: #D32F2F;
+            --red-light: #EF5350;
+            --red-dark: #B71C1C;
+            --brown-start: #B8A398;
+            --brown-end: #A89185;
+            --brown-dark: #5D4037;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif;
+            background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 100%);
+            min-height: 100vh;
+            padding: 60px 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #222;
+            margin-bottom: 16px;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 60px;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* Main showcase */
+        .main-showcase {
+            background: white;
+            border-radius: 24px;
+            padding: 80px 40px;
+            margin-bottom: 60px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .main-icon {
+            width: 280px;
+            height: 392px;
+            margin: 0 auto 40px;
+        }
+
+        .y-letter {
+            font-family: "Atkinson Hyperlegible", sans-serif;
+            font-weight: 700;
+        }
+
+        .main-label {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 12px;
+        }
+
+        .main-description {
+            font-size: 1rem;
+            color: #666;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Section header */
+        .section-header {
+            font-size: 1.8rem;
+            color: #333;
+            margin: 60px 0 30px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Variations grid */
+        .variations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .variation-card {
+            background: white;
+            border-radius: 20px;
+            padding: 48px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .variation-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+        }
+
+        .icon-wrapper {
+            width: 140px;
+            height: 196px;
+            margin: 0 auto 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 8px;
+        }
+
+        .description {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Size demo */
+        .size-demo {
+            background: white;
+            border-radius: 24px;
+            padding: 60px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            margin-bottom: 60px;
+        }
+
+        .size-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .size-item {
+            text-align: center;
+        }
+
+        .size-label {
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* Application examples */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 30px;
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .app-example {
+            text-align: center;
+        }
+
+        .app-icon-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 16px;
+            border-radius: 27px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .app-label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* Backgrounds */
+        .bg-light {
+            background: #f8f8f8;
+        }
+
+        .bg-dark {
+            background: #1a1a1a;
+        }
+
+        .bg-white {
+            background: white;
+            border: 1px solid #e0e0e0;
+        }
+
+        .bg-gradient {
+            background: linear-gradient(135deg, #fff 0%, var(--manila-light) 100%);
+        }
+
+        .bg-solid {
+            background: var(--manila);
+        }
+
+        .bg-red {
+            background: var(--red-accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Envelope with "Y" as String</h1>
+        <p class="subtitle">
+            Minimalist envelope icon using the Manylla "y" letterform as the string-tie closure element
+        </p>
+
+        <!-- Main showcase -->
+        <div class="main-showcase">
+            <div class="main-icon">
+                <svg width="280" height="392" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Envelope body -->
+                    <rect x="0" y="0" width="100" height="140" rx="4" fill="#F4E4C1"/>
+                    
+                    <!-- Flap line at 20% -->
+                    <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                    
+                    <!-- Y letter as string -->
+                    <text x="50" y="35" 
+                          font-family="Atkinson Hyperlegible" 
+                          font-weight="700" 
+                          font-size="32" 
+                          fill="#D32F2F" 
+                          text-anchor="middle"
+                          dominant-baseline="middle">y</text>
+                </svg>
+            </div>
+            <div class="main-label">Primary Concept</div>
+            <div class="main-description">
+                The red "y" from the Manylla logo serves double duty as both a letter and the visual representation of the string-tie closure
+            </div>
+        </div>
+
+        <!-- Variations -->
+        <h2 class="section-header">Style Variations</h2>
+        <div class="variations-grid">
+            
+            <!-- Standard Y -->
+            <div class="variation-card">
+                <div class="icon-wrapper">
+                    <svg width="140" height="196" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                        <text x="50" y="35" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="700" 
+                              font-size="28" 
+                              fill="#D32F2F" 
+                              text-anchor="middle"
+                              dominant-baseline="middle">y</text>
+                    </svg>
+                </div>
+                <div class="label">Standard Position</div>
+                <div class="description">Y centered on flap line</div>
+            </div>
+
+            <!-- Y crossing flap -->
+            <div class="variation-card">
+                <div class="icon-wrapper">
+                    <svg width="140" height="196" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                        <text x="50" y="40" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="700" 
+                              font-size="40" 
+                              fill="#D32F2F" 
+                              text-anchor="middle"
+                              dominant-baseline="middle">y</text>
+                    </svg>
+                </div>
+                <div class="label">Large Y</div>
+                <div class="description">Prominent Y crossing the flap</div>
+            </div>
+
+            <!-- Rotated Y -->
+            <div class="variation-card">
+                <div class="icon-wrapper">
+                    <svg width="140" height="196" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                        <text x="50" y="35" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="700" 
+                              font-size="32" 
+                              fill="#D32F2F" 
+                              text-anchor="middle"
+                              dominant-baseline="middle"
+                              transform="rotate(-15 50 35)">y</text>
+                    </svg>
+                </div>
+                <div class="label">Angled Y</div>
+                <div class="description">Dynamic diagonal placement</div>
+            </div>
+
+            <!-- Multiple Y pattern -->
+            <div class="variation-card">
+                <div class="icon-wrapper">
+                    <svg width="140" height="196" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                        <text x="30" y="35" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="700" 
+                              font-size="20" 
+                              fill="#D32F2F" 
+                              text-anchor="middle"
+                              dominant-baseline="middle"
+                              opacity="0.5">y</text>
+                        <text x="50" y="35" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="700" 
+                              font-size="28" 
+                              fill="#D32F2F" 
+                              text-anchor="middle"
+                              dominant-baseline="middle">y</text>
+                        <text x="70" y="35" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="700" 
+                              font-size="20" 
+                              fill="#D32F2F" 
+                              text-anchor="middle"
+                              dominant-baseline="middle"
+                              opacity="0.5">y</text>
+                    </svg>
+                </div>
+                <div class="label">Triple Y</div>
+                <div class="description">Pattern suggesting wrapping</div>
+            </div>
+
+            <!-- Stylized Y -->
+            <div class="variation-card">
+                <div class="icon-wrapper">
+                    <svg width="140" height="196" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                        <text x="50" y="35" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="400" 
+                              font-size="36" 
+                              fill="#D32F2F" 
+                              text-anchor="middle"
+                              dominant-baseline="middle"
+                              font-style="italic">y</text>
+                    </svg>
+                </div>
+                <div class="label">Italic Y</div>
+                <div class="description">Elegant italic style</div>
+            </div>
+
+            <!-- Minimal Y -->
+            <div class="variation-card">
+                <div class="icon-wrapper">
+                    <svg width="140" height="196" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                        <text x="50" y="35" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="400" 
+                              font-size="24" 
+                              fill="#D32F2F" 
+                              text-anchor="middle"
+                              dominant-baseline="middle">y</text>
+                    </svg>
+                </div>
+                <div class="label">Subtle Y</div>
+                <div class="description">Lighter weight, smaller size</div>
+            </div>
+        </div>
+
+        <!-- Color Variations -->
+        <h2 class="section-header">Color Variations</h2>
+        <div class="variations-grid">
+            
+            <!-- White envelope -->
+            <div class="variation-card">
+                <div class="icon-wrapper">
+                    <svg width="140" height="196" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="white" stroke="#E0E0E0" stroke-width="1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E0E0E0" stroke-width="2"/>
+                        <text x="50" y="35" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="700" 
+                              font-size="28" 
+                              fill="#D32F2F" 
+                              text-anchor="middle"
+                              dominant-baseline="middle">y</text>
+                    </svg>
+                </div>
+                <div class="label">Clean White</div>
+                <div class="description">Minimalist white envelope</div>
+            </div>
+
+            <!-- Dark mode -->
+            <div class="variation-card">
+                <div class="icon-wrapper">
+                    <svg width="140" height="196" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#2C2C2C"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#1A1A1A" stroke-width="2"/>
+                        <text x="50" y="35" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="700" 
+                              font-size="28" 
+                              fill="#FF6B6B" 
+                              text-anchor="middle"
+                              dominant-baseline="middle">y</text>
+                    </svg>
+                </div>
+                <div class="label">Dark Mode</div>
+                <div class="description">Night-friendly version</div>
+            </div>
+
+            <!-- Inverted -->
+            <div class="variation-card">
+                <div class="icon-wrapper">
+                    <svg width="140" height="196" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#D32F2F"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#B71C1C" stroke-width="2"/>
+                        <text x="50" y="35" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="700" 
+                              font-size="28" 
+                              fill="white" 
+                              text-anchor="middle"
+                              dominant-baseline="middle">y</text>
+                    </svg>
+                </div>
+                <div class="label">Red Inverted</div>
+                <div class="description">Bold red background</div>
+            </div>
+        </div>
+
+        <!-- Size Demo -->
+        <h2 class="section-header">Scalability</h2>
+        <div class="size-demo">
+            <div class="size-row">
+                <div class="size-item">
+                    <svg width="24" height="34" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="8"/>
+                        <text x="50" y="38" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="700" 
+                              font-size="60" 
+                              fill="#D32F2F" 
+                              text-anchor="middle"
+                              dominant-baseline="middle">y</text>
+                    </svg>
+                    <div class="size-label">24px</div>
+                </div>
+
+                <div class="size-item">
+                    <svg width="48" height="67" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="2" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="4"/>
+                        <text x="50" y="36" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="700" 
+                              font-size="40" 
+                              fill="#D32F2F" 
+                              text-anchor="middle"
+                              dominant-baseline="middle">y</text>
+                    </svg>
+                    <div class="size-label">48px</div>
+                </div>
+
+                <div class="size-item">
+                    <svg width="96" height="134" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="3" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                        <text x="50" y="35" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="700" 
+                              font-size="32" 
+                              fill="#D32F2F" 
+                              text-anchor="middle"
+                              dominant-baseline="middle">y</text>
+                    </svg>
+                    <div class="size-label">96px</div>
+                </div>
+
+                <div class="size-item">
+                    <svg width="128" height="179" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                        <text x="50" y="35" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="700" 
+                              font-size="28" 
+                              fill="#D32F2F" 
+                              text-anchor="middle"
+                              dominant-baseline="middle">y</text>
+                    </svg>
+                    <div class="size-label">128px</div>
+                </div>
+
+                <div class="size-item">
+                    <svg width="192" height="269" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                        <text x="50" y="35" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="700" 
+                              font-size="26" 
+                              fill="#D32F2F" 
+                              text-anchor="middle"
+                              dominant-baseline="middle">y</text>
+                    </svg>
+                    <div class="size-label">256px</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Examples -->
+        <h2 class="section-header">Application Examples</h2>
+        <div class="app-grid">
+            <div class="app-example">
+                <div class="app-icon-container bg-light">
+                    <svg width="70" height="98" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                        <text x="50" y="35" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="700" 
+                              font-size="32" 
+                              fill="#D32F2F" 
+                              text-anchor="middle"
+                              dominant-baseline="middle">y</text>
+                    </svg>
+                </div>
+                <div class="app-label">iOS App</div>
+            </div>
+
+            <div class="app-example">
+                <div class="app-icon-container bg-dark">
+                    <svg width="70" height="98" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#2C2C2C"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#1A1A1A" stroke-width="2"/>
+                        <text x="50" y="35" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="700" 
+                              font-size="32" 
+                              fill="#FF6B6B" 
+                              text-anchor="middle"
+                              dominant-baseline="middle">y</text>
+                    </svg>
+                </div>
+                <div class="app-label">Dark Mode</div>
+            </div>
+
+            <div class="app-example">
+                <div class="app-icon-container bg-white">
+                    <svg width="70" height="98" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="white" stroke="#E0E0E0" stroke-width="1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E0E0E0" stroke-width="2"/>
+                        <text x="50" y="35" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="700" 
+                              font-size="32" 
+                              fill="#D32F2F" 
+                              text-anchor="middle"
+                              dominant-baseline="middle">y</text>
+                    </svg>
+                </div>
+                <div class="app-label">Web Favicon</div>
+            </div>
+
+            <div class="app-example">
+                <div class="app-icon-container bg-gradient">
+                    <svg width="70" height="98" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="white" fill-opacity="0.8"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E0E0E0" stroke-width="2"/>
+                        <text x="50" y="35" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="700" 
+                              font-size="32" 
+                              fill="#D32F2F" 
+                              text-anchor="middle"
+                              dominant-baseline="middle">y</text>
+                    </svg>
+                </div>
+                <div class="app-label">Android</div>
+            </div>
+
+            <div class="app-example">
+                <div class="app-icon-container bg-red">
+                    <svg width="70" height="98" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="white" fill-opacity="0.9"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="white" stroke-opacity="0.5" stroke-width="2"/>
+                        <text x="50" y="35" 
+                              font-family="Atkinson Hyperlegible" 
+                              font-weight="700" 
+                              font-size="32" 
+                              fill="#D32F2F" 
+                              text-anchor="middle"
+                              dominant-baseline="middle">y</text>
+                    </svg>
+                </div>
+                <div class="app-label">Badge</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

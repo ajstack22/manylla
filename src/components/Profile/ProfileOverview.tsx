@@ -24,6 +24,8 @@ interface ProfileOverviewProps {
   onShare?: () => void;
   onUpdateCategories?: (categories: CategoryConfig[]) => void;
   onUpdateProfile?: (updates: Partial<ChildProfile>) => void;
+  profileEditOpen?: boolean;
+  setProfileEditOpen?: (open: boolean) => void;
 }
 
 export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
@@ -34,8 +36,13 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
   onShare,
   onUpdateCategories,
   onUpdateProfile,
+  profileEditOpen: profileEditOpenProp,
+  setProfileEditOpen: setProfileEditOpenProp,
 }) => {
-  const [profileEditOpen, setProfileEditOpen] = useState(false);
+  // Use local state if not controlled by parent
+  const [profileEditOpenLocal, setProfileEditOpenLocal] = useState(false);
+  const profileEditOpen = profileEditOpenProp ?? profileEditOpenLocal;
+  const setProfileEditOpen = setProfileEditOpenProp ?? setProfileEditOpenLocal;
 
   const getEntriesByCategory = (category: string) =>
     profile.entries.filter((entry) => entry.category === category);

@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manylla - Button & Loop Ribbon Variations</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --manila: #F4E4C1;
+            --manila-dark: #E8D4A8;
+            --manila-light: #FAF2E2;
+            --red-accent: #D32F2F;
+            --red-light: #EF5350;
+            --red-dark: #B71C1C;
+            --brown-start: #B8A398;
+            --brown-end: #A89185;
+            --brown-dark: #5D4037;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif;
+            background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 100%);
+            min-height: 100vh;
+            padding: 60px 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #222;
+            margin-bottom: 16px;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 60px;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* Section headers */
+        .section-header {
+            font-size: 1.8rem;
+            color: #333;
+            margin: 60px 0 30px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Main concept */
+        .main-showcase {
+            background: white;
+            border-radius: 24px;
+            padding: 80px 40px;
+            margin-bottom: 60px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .main-icon {
+            width: 240px;
+            height: 336px;
+            margin: 0 auto 40px;
+        }
+
+        /* Variations grid */
+        .variations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .variation-card {
+            background: white;
+            border-radius: 20px;
+            padding: 48px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .variation-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+        }
+
+        .icon-wrapper {
+            width: 140px;
+            height: 196px;
+            margin: 0 auto 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 8px;
+        }
+
+        .description {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Color specs */
+        .color-specs {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e0e0e0;
+            text-align: left;
+        }
+
+        .color-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 0.85rem;
+        }
+
+        .color-swatch {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 12px;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .color-label {
+            color: #666;
+            flex: 1;
+        }
+
+        .color-value {
+            font-family: monospace;
+            color: #999;
+            font-size: 0.8rem;
+        }
+
+        /* Size demo */
+        .size-demo {
+            background: white;
+            border-radius: 24px;
+            padding: 60px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            margin-bottom: 60px;
+        }
+
+        .size-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .size-item {
+            text-align: center;
+        }
+
+        .size-label {
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* Application grid */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 30px;
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .app-example {
+            text-align: center;
+        }
+
+        .app-icon-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 16px;
+            border-radius: 27px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .app-label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .bg-light {
+            background: #f8f8f8;
+        }
+
+        .bg-dark {
+            background: #1a1a1a;
+        }
+
+        .bg-gradient {
+            background: linear-gradient(135deg, #fff 0%, var(--manila-light) 100%);
+        }
+
+        .bg-solid {
+            background: var(--manila);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Button & Loop Ribbon Variations</h1>
+        <p class="subtitle">
+            Envelope icon with button closure and infinity loop/figure-8 ribbon pattern in various color schemes
+        </p>
+
+        <!-- Main showcase -->
+        <div class="main-showcase">
+            <div class="main-icon">
+                <svg width="240" height="336" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Envelope body -->
+                    <rect x="0" y="0" width="100" height="140" rx="4" fill="#F4E4C1"/>
+                    
+                    <!-- Flap line -->
+                    <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                    
+                    <!-- Infinity/Loop ribbon -->
+                    <path d="M 50 28 
+                             Q 30 18, 25 28 
+                             Q 20 38, 30 43
+                             Q 40 48, 50 28
+                             Q 60 48, 70 43
+                             Q 80 38, 75 28
+                             Q 70 18, 50 28"
+                          fill="none" 
+                          stroke="#D32F2F" 
+                          stroke-width="3"
+                          stroke-linecap="round"/>
+                    
+                    <!-- Button at center -->
+                    <circle cx="50" cy="28" r="8" fill="#D32F2F"/>
+                    <circle cx="46" cy="26" r="1.5" fill="white"/>
+                    <circle cx="54" cy="26" r="1.5" fill="white"/>
+                    <circle cx="46" cy="30" r="1.5" fill="white"/>
+                    <circle cx="54" cy="30" r="1.5" fill="white"/>
+                </svg>
+            </div>
+            <div class="label">Primary Concept</div>
+            <div class="description">
+                Button with four holes and infinity loop ribbon pattern, creating a secure and elegant closure metaphor
+            </div>
+        </div>
+
+        <!-- Color Variations -->
+        <h2 class="section-header">Color Variations</h2>
+        <div class="variations-grid">
+            
+            <!-- Original -->
+            <div class="variation-card">
+                <div class="icon-wrapper">
+                    <svg width="140" height="196" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                        <path d="M 50 28 Q 30 18, 25 28 Q 20 38, 30 43 Q 40 48, 50 28 Q 60 48, 70 43 Q 80 38, 75 28 Q 70 18, 50 28"
+                              fill="none" stroke="#D32F2F" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="50" cy="28" r="7" fill="#D32F2F"/>
+                        <circle cx="47" cy="26" r="1.2" fill="white"/>
+                        <circle cx="53" cy="26" r="1.2" fill="white"/>
+                        <circle cx="47" cy="30" r="1.2" fill="white"/>
+                        <circle cx="53" cy="30" r="1.2" fill="white"/>
+                    </svg>
+                </div>
+                <div class="label">Classic Manila</div>
+                <div class="description">Original brand colors</div>
+                <div class="color-specs">
+                    <div class="color-item">
+                        <div class="color-swatch" style="background: #F4E4C1;"></div>
+                        <span class="color-label">Envelope</span>
+                        <span class="color-value">#F4E4C1</span>
+                    </div>
+                    <div class="color-item">
+                        <div class="color-swatch" style="background: #D32F2F;"></div>
+                        <span class="color-label">Ribbon</span>
+                        <span class="color-value">#D32F2F</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- White envelope, red ribbon -->
+            <div class="variation-card">
+                <div class="icon-wrapper">
+                    <svg width="140" height="196" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="white" stroke="#E0E0E0" stroke-width="1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E0E0E0" stroke-width="2"/>
+                        <path d="M 50 28 Q 30 18, 25 28 Q 20 38, 30 43 Q 40 48, 50 28 Q 60 48, 70 43 Q 80 38, 75 28 Q 70 18, 50 28"
+                              fill="none" stroke="#D32F2F" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="50" cy="28" r="7" fill="#D32F2F"/>
+                        <circle cx="47" cy="26" r="1.2" fill="white"/>
+                        <circle cx="53" cy="26" r="1.2" fill="white"/>
+                        <circle cx="47" cy="30" r="1.2" fill="white"/>
+                        <circle cx="53" cy="30" r="1.2" fill="white"/>
+                    </svg>
+                </div>
+                <div class="label">Clean White</div>
+                <div class="description">Minimalist white with red accent</div>
+                <div class="color-specs">
+                    <div class="color-item">
+                        <div class="color-swatch" style="background: white; border: 1px solid #ddd;"></div>
+                        <span class="color-label">Envelope</span>
+                        <span class="color-value">#FFFFFF</span>
+                    </div>
+                    <div class="color-item">
+                        <div class="color-swatch" style="background: #D32F2F;"></div>
+                        <span class="color-label">Ribbon</span>
+                        <span class="color-value">#D32F2F</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brown gradient envelope -->
+            <div class="variation-card">
+                <div class="icon-wrapper">
+                    <svg width="140" height="196" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="brownGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#B8A398"/>
+                                <stop offset="100%" style="stop-color:#A89185"/>
+                            </linearGradient>
+                        </defs>
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="url(#brownGrad)"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#8D6E63" stroke-width="2" opacity="0.5"/>
+                        <path d="M 50 28 Q 30 18, 25 28 Q 20 38, 30 43 Q 40 48, 50 28 Q 60 48, 70 43 Q 80 38, 75 28 Q 70 18, 50 28"
+                              fill="none" stroke="#D32F2F" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="50" cy="28" r="7" fill="#D32F2F"/>
+                        <circle cx="47" cy="26" r="1.2" fill="white"/>
+                        <circle cx="53" cy="26" r="1.2" fill="white"/>
+                        <circle cx="47" cy="30" r="1.2" fill="white"/>
+                        <circle cx="53" cy="30" r="1.2" fill="white"/>
+                    </svg>
+                </div>
+                <div class="label">Brown Gradient</div>
+                <div class="description">Sophisticated brown tones</div>
+                <div class="color-specs">
+                    <div class="color-item">
+                        <div class="color-swatch" style="background: linear-gradient(135deg, #B8A398, #A89185);"></div>
+                        <span class="color-label">Envelope</span>
+                        <span class="color-value">Gradient</span>
+                    </div>
+                    <div class="color-item">
+                        <div class="color-swatch" style="background: #D32F2F;"></div>
+                        <span class="color-label">Ribbon</span>
+                        <span class="color-value">#D32F2F</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dark mode -->
+            <div class="variation-card">
+                <div class="icon-wrapper">
+                    <svg width="140" height="196" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#2C2C2C"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#1A1A1A" stroke-width="2"/>
+                        <path d="M 50 28 Q 30 18, 25 28 Q 20 38, 30 43 Q 40 48, 50 28 Q 60 48, 70 43 Q 80 38, 75 28 Q 70 18, 50 28"
+                              fill="none" stroke="#FF6B6B" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="50" cy="28" r="7" fill="#FF6B6B"/>
+                        <circle cx="47" cy="26" r="1.2" fill="#2C2C2C"/>
+                        <circle cx="53" cy="26" r="1.2" fill="#2C2C2C"/>
+                        <circle cx="47" cy="30" r="1.2" fill="#2C2C2C"/>
+                        <circle cx="53" cy="30" r="1.2" fill="#2C2C2C"/>
+                    </svg>
+                </div>
+                <div class="label">Dark Mode</div>
+                <div class="description">Night-friendly version</div>
+                <div class="color-specs">
+                    <div class="color-item">
+                        <div class="color-swatch" style="background: #2C2C2C;"></div>
+                        <span class="color-label">Envelope</span>
+                        <span class="color-value">#2C2C2C</span>
+                    </div>
+                    <div class="color-item">
+                        <div class="color-swatch" style="background: #FF6B6B;"></div>
+                        <span class="color-label">Ribbon</span>
+                        <span class="color-value">#FF6B6B</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inverted -->
+            <div class="variation-card">
+                <div class="icon-wrapper">
+                    <svg width="140" height="196" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#D32F2F"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#B71C1C" stroke-width="2"/>
+                        <path d="M 50 28 Q 30 18, 25 28 Q 20 38, 30 43 Q 40 48, 50 28 Q 60 48, 70 43 Q 80 38, 75 28 Q 70 18, 50 28"
+                              fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="50" cy="28" r="7" fill="white"/>
+                        <circle cx="47" cy="26" r="1.2" fill="#D32F2F"/>
+                        <circle cx="53" cy="26" r="1.2" fill="#D32F2F"/>
+                        <circle cx="47" cy="30" r="1.2" fill="#D32F2F"/>
+                        <circle cx="53" cy="30" r="1.2" fill="#D32F2F"/>
+                    </svg>
+                </div>
+                <div class="label">Red Inverted</div>
+                <div class="description">Bold red background</div>
+                <div class="color-specs">
+                    <div class="color-item">
+                        <div class="color-swatch" style="background: #D32F2F;"></div>
+                        <span class="color-label">Envelope</span>
+                        <span class="color-value">#D32F2F</span>
+                    </div>
+                    <div class="color-item">
+                        <div class="color-swatch" style="background: white;"></div>
+                        <span class="color-label">Ribbon</span>
+                        <span class="color-value">#FFFFFF</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monochrome -->
+            <div class="variation-card">
+                <div class="icon-wrapper">
+                    <svg width="140" height="196" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#F0F0F0"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#D0D0D0" stroke-width="2"/>
+                        <path d="M 50 28 Q 30 18, 25 28 Q 20 38, 30 43 Q 40 48, 50 28 Q 60 48, 70 43 Q 80 38, 75 28 Q 70 18, 50 28"
+                              fill="none" stroke="#333333" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="50" cy="28" r="7" fill="#333333"/>
+                        <circle cx="47" cy="26" r="1.2" fill="white"/>
+                        <circle cx="53" cy="26" r="1.2" fill="white"/>
+                        <circle cx="47" cy="30" r="1.2" fill="white"/>
+                        <circle cx="53" cy="30" r="1.2" fill="white"/>
+                    </svg>
+                </div>
+                <div class="label">Monochrome</div>
+                <div class="description">Grayscale version</div>
+                <div class="color-specs">
+                    <div class="color-item">
+                        <div class="color-swatch" style="background: #F0F0F0;"></div>
+                        <span class="color-label">Envelope</span>
+                        <span class="color-value">#F0F0F0</span>
+                    </div>
+                    <div class="color-item">
+                        <div class="color-swatch" style="background: #333333;"></div>
+                        <span class="color-label">Ribbon</span>
+                        <span class="color-value">#333333</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loop Variations -->
+        <h2 class="section-header">Loop Pattern Variations</h2>
+        <div class="variations-grid">
+            
+            <!-- Tighter loops -->
+            <div class="variation-card">
+                <div class="icon-wrapper">
+                    <svg width="140" height="196" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                        <path d="M 50 28 
+                                 Q 35 20, 30 28 
+                                 Q 25 36, 35 40
+                                 Q 45 44, 50 28
+                                 Q 55 44, 65 40
+                                 Q 75 36, 70 28
+                                 Q 65 20, 50 28"
+                              fill="none" stroke="#D32F2F" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="50" cy="28" r="7" fill="#D32F2F"/>
+                        <circle cx="47" cy="26" r="1.2" fill="white"/>
+                        <circle cx="53" cy="26" r="1.2" fill="white"/>
+                        <circle cx="47" cy="30" r="1.2" fill="white"/>
+                        <circle cx="53" cy="30" r="1.2" fill="white"/>
+                    </svg>
+                </div>
+                <div class="label">Tight Loop</div>
+                <div class="description">Compact infinity pattern</div>
+            </div>
+
+            <!-- Figure 8 vertical -->
+            <div class="variation-card">
+                <div class="icon-wrapper">
+                    <svg width="140" height="196" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                        <path d="M 50 28 
+                                 Q 40 28, 40 18
+                                 Q 40 8, 50 8
+                                 Q 60 8, 60 18
+                                 Q 60 28, 50 28
+                                 Q 40 28, 40 38
+                                 Q 40 48, 50 48
+                                 Q 60 48, 60 38
+                                 Q 60 28, 50 28"
+                              fill="none" stroke="#D32F2F" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="50" cy="28" r="7" fill="#D32F2F"/>
+                        <circle cx="47" cy="26" r="1.2" fill="white"/>
+                        <circle cx="53" cy="26" r="1.2" fill="white"/>
+                        <circle cx="47" cy="30" r="1.2" fill="white"/>
+                        <circle cx="53" cy="30" r="1.2" fill="white"/>
+                    </svg>
+                </div>
+                <div class="label">Vertical Eight</div>
+                <div class="description">Figure-8 oriented vertically</div>
+            </div>
+
+            <!-- Simple crossing -->
+            <div class="variation-card">
+                <div class="icon-wrapper">
+                    <svg width="140" height="196" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                        <!-- Left loop -->
+                        <ellipse cx="35" cy="28" rx="15" ry="12" fill="none" stroke="#D32F2F" stroke-width="3"/>
+                        <!-- Right loop -->
+                        <ellipse cx="65" cy="28" rx="15" ry="12" fill="none" stroke="#D32F2F" stroke-width="3"/>
+                        <circle cx="50" cy="28" r="7" fill="#D32F2F"/>
+                        <circle cx="47" cy="26" r="1.2" fill="white"/>
+                        <circle cx="53" cy="26" r="1.2" fill="white"/>
+                        <circle cx="47" cy="30" r="1.2" fill="white"/>
+                        <circle cx="53" cy="30" r="1.2" fill="white"/>
+                    </svg>
+                </div>
+                <div class="label">Double Loop</div>
+                <div class="description">Symmetrical loop design</div>
+            </div>
+        </div>
+
+        <!-- Size Demo -->
+        <h2 class="section-header">Scalability</h2>
+        <div class="size-demo">
+            <div class="size-row">
+                <div class="size-item">
+                    <svg width="24" height="34" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="6"/>
+                        <path d="M 50 28 Q 30 18, 25 28 Q 20 38, 30 43 Q 40 48, 50 28 Q 60 48, 70 43 Q 80 38, 75 28 Q 70 18, 50 28"
+                              fill="none" stroke="#D32F2F" stroke-width="12" stroke-linecap="round"/>
+                        <circle cx="50" cy="28" r="16" fill="#D32F2F"/>
+                    </svg>
+                    <div class="size-label">24px</div>
+                </div>
+
+                <div class="size-item">
+                    <svg width="48" height="67" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="2" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="3"/>
+                        <path d="M 50 28 Q 30 18, 25 28 Q 20 38, 30 43 Q 40 48, 50 28 Q 60 48, 70 43 Q 80 38, 75 28 Q 70 18, 50 28"
+                              fill="none" stroke="#D32F2F" stroke-width="6" stroke-linecap="round"/>
+                        <circle cx="50" cy="28" r="10" fill="#D32F2F"/>
+                        <circle cx="46" cy="26" r="2" fill="white"/>
+                        <circle cx="54" cy="26" r="2" fill="white"/>
+                    </svg>
+                    <div class="size-label">48px</div>
+                </div>
+
+                <div class="size-item">
+                    <svg width="96" height="134" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="3" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                        <path d="M 50 28 Q 30 18, 25 28 Q 20 38, 30 43 Q 40 48, 50 28 Q 60 48, 70 43 Q 80 38, 75 28 Q 70 18, 50 28"
+                              fill="none" stroke="#D32F2F" stroke-width="4" stroke-linecap="round"/>
+                        <circle cx="50" cy="28" r="8" fill="#D32F2F"/>
+                        <circle cx="47" cy="26" r="1.5" fill="white"/>
+                        <circle cx="53" cy="26" r="1.5" fill="white"/>
+                        <circle cx="47" cy="30" r="1.5" fill="white"/>
+                        <circle cx="53" cy="30" r="1.5" fill="white"/>
+                    </svg>
+                    <div class="size-label">96px</div>
+                </div>
+
+                <div class="size-item">
+                    <svg width="192" height="269" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                        <path d="M 50 28 Q 30 18, 25 28 Q 20 38, 30 43 Q 40 48, 50 28 Q 60 48, 70 43 Q 80 38, 75 28 Q 70 18, 50 28"
+                              fill="none" stroke="#D32F2F" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="50" cy="28" r="7" fill="#D32F2F"/>
+                        <circle cx="47" cy="26" r="1.2" fill="white"/>
+                        <circle cx="53" cy="26" r="1.2" fill="white"/>
+                        <circle cx="47" cy="30" r="1.2" fill="white"/>
+                        <circle cx="53" cy="30" r="1.2" fill="white"/>
+                    </svg>
+                    <div class="size-label">192px</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Applications -->
+        <h2 class="section-header">Application Examples</h2>
+        <div class="app-grid">
+            <div class="app-example">
+                <div class="app-icon-container bg-light">
+                    <svg width="70" height="98" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#F4E4C1"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                        <path d="M 50 28 Q 30 18, 25 28 Q 20 38, 30 43 Q 40 48, 50 28 Q 60 48, 70 43 Q 80 38, 75 28 Q 70 18, 50 28"
+                              fill="none" stroke="#D32F2F" stroke-width="4" stroke-linecap="round"/>
+                        <circle cx="50" cy="28" r="8" fill="#D32F2F"/>
+                    </svg>
+                </div>
+                <div class="app-label">iOS App</div>
+            </div>
+
+            <div class="app-example">
+                <div class="app-icon-container bg-dark">
+                    <svg width="70" height="98" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="#2C2C2C"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#1A1A1A" stroke-width="2"/>
+                        <path d="M 50 28 Q 30 18, 25 28 Q 20 38, 30 43 Q 40 48, 50 28 Q 60 48, 70 43 Q 80 38, 75 28 Q 70 18, 50 28"
+                              fill="none" stroke="#FF6B6B" stroke-width="4" stroke-linecap="round"/>
+                        <circle cx="50" cy="28" r="8" fill="#FF6B6B"/>
+                    </svg>
+                </div>
+                <div class="app-label">Dark Mode</div>
+            </div>
+
+            <div class="app-example">
+                <div class="app-icon-container bg-gradient">
+                    <svg width="70" height="98" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="white" fill-opacity="0.8"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E0E0E0" stroke-width="2"/>
+                        <path d="M 50 28 Q 30 18, 25 28 Q 20 38, 30 43 Q 40 48, 50 28 Q 60 48, 70 43 Q 80 38, 75 28 Q 70 18, 50 28"
+                              fill="none" stroke="#D32F2F" stroke-width="4" stroke-linecap="round"/>
+                        <circle cx="50" cy="28" r="8" fill="#D32F2F"/>
+                    </svg>
+                </div>
+                <div class="app-label">Web Favicon</div>
+            </div>
+
+            <div class="app-example">
+                <div class="app-icon-container bg-solid">
+                    <svg width="70" height="98" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="100" height="140" rx="4" fill="white" stroke="#E8D4A8" stroke-width="2"/>
+                        <line x1="0" y1="28" x2="100" y2="28" stroke="#E8D4A8" stroke-width="2"/>
+                        <path d="M 50 28 Q 30 18, 25 28 Q 20 38, 30 43 Q 40 48, 50 28 Q 60 48, 70 43 Q 80 38, 75 28 Q 70 18, 50 28"
+                              fill="none" stroke="#D32F2F" stroke-width="4" stroke-linecap="round"/>
+                        <circle cx="50" cy="28" r="8" fill="#D32F2F"/>
+                    </svg>
+                </div>
+                <div class="app-label">Outlined</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

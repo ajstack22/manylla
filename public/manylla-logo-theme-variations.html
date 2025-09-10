@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manylla Logo - Theme Variations</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Manila colors */
+            --manila: #F4E4C1;
+            --manila-dark: #E8D4A8;
+            --manila-light: #FAF2E2;
+            
+            /* Browns for gradients */
+            --brown-light-mode-start: #B8A398;
+            --brown-light-mode-end: #A89185;
+            
+            --brown-dark-mode-start: #D4C4B0;
+            --brown-dark-mode-end: #C9B8A3;
+            
+            --brown-manylla-mode-start: #8D6E63;
+            --brown-manylla-mode-end: #6D4C41;
+            
+            /* Reds for Y */
+            --red-light-mode: #D32F2F;
+            --red-dark-mode: #FF6B6B;
+            --red-manylla-mode: #B71C1C;
+            
+            /* Background colors */
+            --bg-light: #FFFFFF;
+            --bg-dark: #121212;
+            --bg-manylla: #F4E4C1;
+        }
+
+        body {
+            font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 50px;
+            font-size: 2rem;
+        }
+
+        .theme-section {
+            margin-bottom: 60px;
+        }
+
+        .theme-header {
+            font-size: 1.5rem;
+            color: #555;
+            margin-bottom: 30px;
+            padding-left: 20px;
+            border-left: 4px solid #D32F2F;
+        }
+
+        .variations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        .variation-card {
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .variation-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Light Mode Card */
+        .light-mode-card {
+            background: var(--bg-light);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .light-mode-card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Dark Mode Card */
+        .dark-mode-card {
+            background: var(--bg-dark);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            color: #ffffff;
+        }
+
+        .dark-mode-card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Manylla Mode Card */
+        .manylla-mode-card {
+            background: var(--bg-manylla);
+            box-shadow: 0 4px 12px rgba(141, 110, 99, 0.2);
+        }
+
+        .manylla-mode-card:hover {
+            box-shadow: 0 8px 20px rgba(141, 110, 99, 0.3);
+        }
+
+        .logo-text {
+            font-family: "Atkinson Hyperlegible", sans-serif;
+            font-weight: 700;
+            font-size: 4rem;
+            display: inline-block;
+            margin: 20px 0;
+        }
+
+        /* Light Mode Logo */
+        .light-gradient {
+            background: linear-gradient(90deg, var(--brown-light-mode-start) 0%, var(--brown-light-mode-end) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .light-y {
+            color: var(--red-light-mode);
+            -webkit-text-fill-color: var(--red-light-mode);
+        }
+
+        /* Dark Mode Logo */
+        .dark-gradient {
+            background: linear-gradient(90deg, var(--brown-dark-mode-start) 0%, var(--brown-dark-mode-end) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .dark-y {
+            color: var(--red-dark-mode);
+            -webkit-text-fill-color: var(--red-dark-mode);
+        }
+
+        /* Manylla Mode Logo */
+        .manylla-gradient {
+            background: linear-gradient(90deg, var(--brown-manylla-mode-start) 0%, var(--brown-manylla-mode-end) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .manylla-y {
+            color: var(--red-manylla-mode);
+            -webkit-text-fill-color: var(--red-manylla-mode);
+        }
+
+        .specs {
+            margin-top: 30px;
+            text-align: left;
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode-card .spec-item {
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .spec-label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .dark-mode-card .spec-label {
+            color: #999;
+        }
+
+        .spec-value {
+            font-family: monospace;
+            color: #333;
+        }
+
+        .dark-mode-card .spec-value {
+            color: #ccc;
+        }
+
+        .manylla-mode-card .spec-label {
+            color: var(--brown-manylla-mode-start);
+        }
+
+        .manylla-mode-card .spec-value {
+            color: var(--brown-manylla-mode-end);
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-top: 60px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .comparison-item {
+            text-align: center;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .comparison-light {
+            background: var(--bg-light);
+            border: 2px solid #e0e0e0;
+        }
+
+        .comparison-dark {
+            background: var(--bg-dark);
+            border: 2px solid #333;
+        }
+
+        .comparison-manylla {
+            background: var(--bg-manylla);
+            border: 2px solid var(--manila-dark);
+        }
+
+        .comparison-label {
+            margin-top: 20px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .comparison-dark .comparison-label {
+            color: white;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
+            border-left: 4px solid var(--red-light-mode);
+            padding: 20px 30px;
+            margin: 40px 0;
+            border-radius: 8px;
+        }
+
+        .info-box h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+        }
+
+        .info-box p {
+            margin: 10px 0;
+            line-height: 1.6;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Manylla Logo - Theme Variations</h1>
+        
+        <div class="info-box">
+            <h3>Design Philosophy</h3>
+            <p>The logo adapts to each theme while maintaining brand consistency. The gradient subtly adjusts for optimal visibility, and the red "y" accent shifts to ensure proper contrast and visual harmony with each background.</p>
+        </div>
+
+        <!-- Individual Theme Sections -->
+        <div class="theme-section">
+            <h2 class="theme-header">Light Mode</h2>
+            <div class="variations-grid">
+                <div class="variation-card light-mode-card">
+                    <div class="logo-text">
+                        <span class="light-gradient">
+                            man<span class="light-y">y</span>lla
+                        </span>
+                    </div>
+                    <div class="specs">
+                        <div class="spec-item">
+                            <span class="spec-label">Gradient Start:</span>
+                            <span class="spec-value">#B8A398</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Gradient End:</span>
+                            <span class="spec-value">#A89185</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Y Color:</span>
+                            <span class="spec-value">#D32F2F</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Background:</span>
+                            <span class="spec-value">#FFFFFF</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Use Case:</span>
+                            <span class="spec-value">Default/Professional</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="theme-section">
+            <h2 class="theme-header">Dark Mode</h2>
+            <div class="variations-grid">
+                <div class="variation-card dark-mode-card">
+                    <div class="logo-text">
+                        <span class="dark-gradient">
+                            man<span class="dark-y">y</span>lla
+                        </span>
+                    </div>
+                    <div class="specs">
+                        <div class="spec-item">
+                            <span class="spec-label">Gradient Start:</span>
+                            <span class="spec-value">#D4C4B0</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Gradient End:</span>
+                            <span class="spec-value">#C9B8A3</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Y Color:</span>
+                            <span class="spec-value">#FF6B6B</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Background:</span>
+                            <span class="spec-value">#121212</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Use Case:</span>
+                            <span class="spec-value">Low Light/Accessibility</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="theme-section">
+            <h2 class="theme-header">Manylla Mode</h2>
+            <div class="variations-grid">
+                <div class="variation-card manylla-mode-card">
+                    <div class="logo-text">
+                        <span class="manylla-gradient">
+                            man<span class="manylla-y">y</span>lla
+                        </span>
+                    </div>
+                    <div class="specs">
+                        <div class="spec-item">
+                            <span class="spec-label">Gradient Start:</span>
+                            <span class="spec-value">#8D6E63</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Gradient End:</span>
+                            <span class="spec-value">#6D4C41</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Y Color:</span>
+                            <span class="spec-value">#B71C1C</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Background:</span>
+                            <span class="spec-value">#F4E4C1</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Use Case:</span>
+                            <span class="spec-value">Brand/Warm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Side by Side Comparison -->
+        <div class="comparison-section">
+            <h2 style="text-align: center; color: #333; margin-bottom: 10px;">Side-by-Side Comparison</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 30px;">
+                See how the logo adapts across all three theme modes
+            </p>
+            <div class="comparison-grid">
+                <div class="comparison-item comparison-light">
+                    <div class="logo-text" style="font-size: 2.5rem;">
+                        <span class="light-gradient">
+                            man<span class="light-y">y</span>lla
+                        </span>
+                    </div>
+                    <div class="comparison-label">Light Mode</div>
+                </div>
+                <div class="comparison-item comparison-dark">
+                    <div class="logo-text" style="font-size: 2.5rem;">
+                        <span class="dark-gradient">
+                            man<span class="dark-y">y</span>lla
+                        </span>
+                    </div>
+                    <div class="comparison-label">Dark Mode</div>
+                </div>
+                <div class="comparison-item comparison-manylla">
+                    <div class="logo-text" style="font-size: 2.5rem;">
+                        <span class="manylla-gradient">
+                            man<span class="manylla-y">y</span>lla
+                        </span>
+                    </div>
+                    <div class="comparison-label">Manylla Mode</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Implementation Notes -->
+        <div class="info-box" style="margin-top: 60px;">
+            <h3>Implementation Notes</h3>
+            <p><strong>Light Mode:</strong> Original subtle gradient with standard red accent. Best for professional contexts and maximum readability.</p>
+            <p><strong>Dark Mode:</strong> Lighter gradient colors for contrast against dark background. Brighter red for better visibility.</p>
+            <p><strong>Manylla Mode:</strong> Deeper, richer browns to complement the manila envelope background. Darker red for stronger presence.</p>
+            <p><strong>Transitions:</strong> When switching themes, consider a 0.3s transition on colors for smooth visual feedback.</p>
+        </div>
+    </div>
+</body>
+</html>
