@@ -50,8 +50,7 @@ export const QRCodeModal = ({
         title: "Shared Information Link",
         message: "Access shared information via this secure link",
       });
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   return (

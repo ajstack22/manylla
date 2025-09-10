@@ -76,7 +76,6 @@ class ManyllaMinimalSyncService {
    */
   async enableSync(recoveryPhrase, isNewSync = false) {
     try {
-
       // Validate recovery phrase format
       if (!recoveryPhrase || !recoveryPhrase.match(/^[a-f0-9]{32}$/)) {
         throw new Error("Invalid recovery phrase format");
@@ -114,7 +113,6 @@ class ManyllaMinimalSyncService {
    * Disable sync
    */
   async disableSync() {
-
     this.stopPullInterval();
     this.isEnabled = false;
     this.syncId = null;
@@ -122,7 +120,6 @@ class ManyllaMinimalSyncService {
 
     await AsyncStorage.removeItem("manylla_sync_enabled");
     await AsyncStorage.removeItem("manylla_recovery_phrase");
-
   }
 
   /**
@@ -186,8 +183,7 @@ class ManyllaMinimalSyncService {
 
     try {
       // TODO: Implement actual push to server when API is ready
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   /**
@@ -198,8 +194,7 @@ class ManyllaMinimalSyncService {
 
     try {
       // TODO: Implement actual pull from server when API is ready
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   /**
@@ -213,7 +208,6 @@ class ManyllaMinimalSyncService {
     this.pullInterval = setInterval(() => {
       this.pull();
     }, this.PULL_INTERVAL);
-
   }
 
   /**

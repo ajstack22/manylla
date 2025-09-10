@@ -9,10 +9,10 @@ import {
   Platform,
   Dimensions,
   Image,
-  Alert
+  Alert,
 } from "react-native";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 export const ProgressiveOnboarding = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState("welcome");
@@ -150,17 +150,17 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
     },
     scrollContainer: {
       paddingHorizontal: 16,
-      maxWidth: Platform.OS === 'web' ? 480 : width,
-      alignSelf: 'center',
-      width: '100%',
+      maxWidth: Platform.OS === "web" ? 480 : width,
+      alignSelf: "center",
+      width: "100%",
     },
     progressContainer: {
       marginBottom: 24,
     },
     progressHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       marginBottom: 8,
     },
     progressText: {
@@ -171,21 +171,21 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
       width: 32,
       height: 32,
       borderRadius: 16,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
     },
     backIcon: {
       fontSize: 18,
       color: manyllaColors.text,
     },
     progressBar: {
-      width: '100%',
+      width: "100%",
       height: 2,
       backgroundColor: manyllaColors.border,
       borderRadius: 8,
     },
     progressFill: {
-      height: '100%',
+      height: "100%",
       backgroundColor: manyllaColors.primary,
       borderRadius: 8,
     },
@@ -197,22 +197,22 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
       borderColor: manyllaColors.border,
     },
     centerText: {
-      textAlign: 'center',
+      textAlign: "center",
     },
     logoContainer: {
-      alignItems: 'center',
+      alignItems: "center",
       marginBottom: 16,
     },
     logo: {
       fontSize: 48,
-      fontWeight: '600',
+      fontWeight: "600",
       color: manyllaColors.primary,
       letterSpacing: -2,
       lineHeight: 48,
     },
     title: {
       fontSize: 24,
-      fontWeight: '600',
+      fontWeight: "600",
       color: manyllaColors.text,
       marginBottom: 8,
     },
@@ -230,25 +230,25 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
       borderColor: manyllaColors.border,
     },
     featureRow: {
-      flexDirection: 'row',
-      alignItems: 'flex-start',
+      flexDirection: "row",
+      alignItems: "flex-start",
       marginBottom: 20,
     },
     featureIcon: {
       width: 30,
       height: 30,
       borderRadius: 15,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       marginRight: 12,
     },
     featureIconText: {
       fontSize: 12,
-      color: 'white',
+      color: "white",
     },
     featureTitle: {
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
       color: manyllaColors.text,
       marginBottom: 4,
     },
@@ -261,12 +261,12 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
       borderRadius: 8,
       paddingVertical: 12,
       paddingHorizontal: 24,
-      alignItems: 'center',
+      alignItems: "center",
     },
     buttonText: {
       fontSize: 16,
-      fontWeight: '500',
-      color: 'white',
+      fontWeight: "500",
+      color: "white",
     },
     optionCard: {
       backgroundColor: manyllaColors.paper,
@@ -280,8 +280,8 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
       borderColor: manyllaColors.primary,
     },
     optionRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
     },
     optionIcon: {
       fontSize: 20,
@@ -292,7 +292,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
     },
     optionTitle: {
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
       color: manyllaColors.text,
       marginBottom: 4,
     },
@@ -301,12 +301,12 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
       color: manyllaColors.textSecondary,
     },
     codeInput: {
-      flexDirection: 'row',
+      flexDirection: "row",
       marginTop: 16,
     },
     textInput: {
       flex: 1,
-      backgroundColor: 'white',
+      backgroundColor: "white",
       borderRadius: 8,
       paddingHorizontal: 16,
       paddingVertical: 12,
@@ -318,8 +318,8 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
       backgroundColor: manyllaColors.primary,
       borderRadius: 8,
       paddingHorizontal: 16,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     infoAlert: {
       backgroundColor: manyllaColors.background,
@@ -337,7 +337,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView 
+      <ScrollView
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
@@ -348,20 +348,19 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
               Step {getStepNumber() + 1} of {getTotalSteps()}
             </Text>
             {currentStep !== "welcome" && (
-              <TouchableOpacity
-                style={styles.backButton}
-                onPress={handleBack}
-              >
+              <TouchableOpacity style={styles.backButton} onPress={handleBack}>
                 <Text style={styles.backIcon}>←</Text>
               </TouchableOpacity>
             )}
           </View>
           <View style={styles.progressBar}>
-            <View 
+            <View
               style={[
-                styles.progressFill, 
-                { width: `${((getStepNumber() + 1) / getTotalSteps()) * 100}%` }
-              ]} 
+                styles.progressFill,
+                {
+                  width: `${((getStepNumber() + 1) / getTotalSteps()) * 100}%`,
+                },
+              ]}
             />
           </View>
         </View>
@@ -377,12 +376,18 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
                 Welcome! Let's get started
               </Text>
               <Text style={[styles.subtitle, styles.centerText]}>
-                Your secure companion for managing your child's special needs journey
+                Your secure companion for managing your child's special needs
+                journey
               </Text>
 
               <View style={styles.featureContainer}>
                 <View style={styles.featureRow}>
-                  <View style={[styles.featureIcon, { backgroundColor: manyllaColors.primary }]}>
+                  <View
+                    style={[
+                      styles.featureIcon,
+                      { backgroundColor: manyllaColors.primary },
+                    ]}
+                  >
                     <Text style={styles.featureIconText}>🔒</Text>
                   </View>
                   <View>
@@ -392,9 +397,11 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
                     </Text>
                   </View>
                 </View>
-                
+
                 <View style={styles.featureRow}>
-                  <View style={[styles.featureIcon, { backgroundColor: '#7B9EA8' }]}>
+                  <View
+                    style={[styles.featureIcon, { backgroundColor: "#7B9EA8" }]}
+                  >
                     <Text style={styles.featureIconText}>☁️</Text>
                   </View>
                   <View>
@@ -404,9 +411,11 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
                     </Text>
                   </View>
                 </View>
-                
+
                 <View style={styles.featureRow}>
-                  <View style={[styles.featureIcon, { backgroundColor: '#8B9467' }]}>
+                  <View
+                    style={[styles.featureIcon, { backgroundColor: "#8B9467" }]}
+                  >
                     <Text style={styles.featureIconText}>📤</Text>
                   </View>
                   <View>
@@ -436,12 +445,19 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
               <TouchableOpacity
                 style={[
                   styles.optionCard,
-                  mode === "fresh" && styles.optionSelected
+                  mode === "fresh" && styles.optionSelected,
                 ]}
                 onPress={() => handleModeSelect("fresh")}
               >
                 <View style={styles.optionRow}>
-                  <Text style={[styles.optionIcon, { color: manyllaColors.primary }]}>➕</Text>
+                  <Text
+                    style={[
+                      styles.optionIcon,
+                      { color: manyllaColors.primary },
+                    ]}
+                  >
+                    ➕
+                  </Text>
                   <View style={styles.optionContent}>
                     <Text style={styles.optionTitle}>Start Fresh</Text>
                     <Text style={styles.optionDescription}>
@@ -454,12 +470,14 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
               <TouchableOpacity
                 style={[
                   styles.optionCard,
-                  mode === "demo" && styles.optionSelected
+                  mode === "demo" && styles.optionSelected,
                 ]}
                 onPress={() => handleModeSelect("demo")}
               >
                 <View style={styles.optionRow}>
-                  <Text style={[styles.optionIcon, { color: '#8B9467' }]}>▶️</Text>
+                  <Text style={[styles.optionIcon, { color: "#8B9467" }]}>
+                    ▶️
+                  </Text>
                   <View style={styles.optionContent}>
                     <Text style={styles.optionTitle}>Try Demo</Text>
                     <Text style={styles.optionDescription}>
@@ -472,12 +490,19 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
               <TouchableOpacity
                 style={[
                   styles.optionCard,
-                  showAccessCode && styles.optionSelected
+                  showAccessCode && styles.optionSelected,
                 ]}
                 onPress={() => setShowAccessCode(!showAccessCode)}
               >
                 <View style={styles.optionRow}>
-                  <Text style={[styles.optionIcon, { color: manyllaColors.textSecondary }]}>📤</Text>
+                  <Text
+                    style={[
+                      styles.optionIcon,
+                      { color: manyllaColors.textSecondary },
+                    ]}
+                  >
+                    📤
+                  </Text>
                   <View style={styles.optionContent}>
                     <Text style={styles.optionTitle}>Join with Code</Text>
                     <Text style={styles.optionDescription}>
@@ -485,7 +510,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
                     </Text>
                   </View>
                 </View>
-                
+
                 {showAccessCode && (
                   <View style={styles.codeInput}>
                     <TextInput
@@ -499,7 +524,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
                     <TouchableOpacity
                       style={[
                         styles.codeButton,
-                        accessCode.length !== 6 && { opacity: 0.5 }
+                        accessCode.length !== 6 && { opacity: 0.5 },
                       ]}
                       onPress={handleJoinWithCode}
                       disabled={accessCode.length !== 6}
@@ -518,11 +543,15 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
                 Your Privacy Matters
               </Text>
 
-              <View style={[styles.optionCard, { borderColor: '#8B9467' }]}>
+              <View style={[styles.optionCard, { borderColor: "#8B9467" }]}>
                 <View style={styles.optionRow}>
-                  <Text style={[styles.optionIcon, { color: '#8B9467' }]}>✅</Text>
+                  <Text style={[styles.optionIcon, { color: "#8B9467" }]}>
+                    ✅
+                  </Text>
                   <View style={styles.optionContent}>
-                    <Text style={styles.optionTitle}>Zero-Knowledge Encryption</Text>
+                    <Text style={styles.optionTitle}>
+                      Zero-Knowledge Encryption
+                    </Text>
                     <Text style={styles.optionDescription}>
                       Your data is encrypted on your device. We never see it.
                     </Text>
@@ -530,25 +559,41 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
                 </View>
               </View>
 
-              <View style={[styles.optionCard, { borderColor: '#7B9EA8' }]}>
+              <View style={[styles.optionCard, { borderColor: "#7B9EA8" }]}>
                 <View style={styles.optionRow}>
-                  <Text style={[styles.optionIcon, { color: '#7B9EA8' }]}>✅</Text>
+                  <Text style={[styles.optionIcon, { color: "#7B9EA8" }]}>
+                    ✅
+                  </Text>
                   <View style={styles.optionContent}>
                     <Text style={styles.optionTitle}>No Account Required</Text>
                     <Text style={styles.optionDescription}>
-                      No emails, no passwords, no tracking. Just a recovery phrase.
+                      No emails, no passwords, no tracking. Just a recovery
+                      phrase.
                     </Text>
                   </View>
                 </View>
               </View>
 
-              <View style={[styles.optionCard, { borderColor: manyllaColors.primary }]}>
+              <View
+                style={[
+                  styles.optionCard,
+                  { borderColor: manyllaColors.primary },
+                ]}
+              >
                 <View style={styles.optionRow}>
-                  <Text style={[styles.optionIcon, { color: manyllaColors.primary }]}>✅</Text>
+                  <Text
+                    style={[
+                      styles.optionIcon,
+                      { color: manyllaColors.primary },
+                    ]}
+                  >
+                    ✅
+                  </Text>
                   <View style={styles.optionContent}>
                     <Text style={styles.optionTitle}>You Control Sharing</Text>
                     <Text style={styles.optionDescription}>
-                      Share specific information with time limits and access codes.
+                      Share specific information with time limits and access
+                      codes.
                     </Text>
                   </View>
                 </View>
@@ -563,7 +608,16 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
           {currentStep === "ready" && (
             <View>
               <View style={styles.centerText}>
-                <View style={[styles.featureIcon, { backgroundColor: '#8B9467', alignSelf: 'center', marginBottom: 16 }]}>
+                <View
+                  style={[
+                    styles.featureIcon,
+                    {
+                      backgroundColor: "#8B9467",
+                      alignSelf: "center",
+                      marginBottom: 16,
+                    },
+                  ]}
+                >
                   <Text style={styles.featureIconText}>✅</Text>
                 </View>
 
@@ -581,9 +635,9 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
                     Quick tips to get started:
                   </Text>
                   <Text style={styles.infoText}>
-                    • Add important information in Quick Info{'\n'}
-                    • Track progress with Goals and Successes{'\n'}
-                    • Enable sync to access from other devices
+                    • Add important information in Quick Info{"\n"}• Track
+                    progress with Goals and Successes{"\n"}• Enable sync to
+                    access from other devices
                   </Text>
                 </View>
 

@@ -227,8 +227,7 @@ class ManyllaEncryptionService {
           dataBytes = compressed;
           isCompressed = true;
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     }
 
     // Generate nonce

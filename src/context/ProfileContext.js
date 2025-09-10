@@ -20,8 +20,7 @@ export const ProfileProvider = ({ children }) => {
           setCurrentProfile(parsedProfiles[0]);
         }
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const saveProfiles = async (newProfiles) => {

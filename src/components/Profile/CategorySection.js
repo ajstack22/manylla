@@ -4,7 +4,7 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Platform
+  Platform,
 } from "react-native";
 import { HtmlRenderer } from "../Forms/HtmlRenderer";
 import { useTheme } from "../../context/ThemeContext";
@@ -25,8 +25,8 @@ export const CategorySection = ({
       marginBottom: 24,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       marginBottom: 8,
       paddingBottom: 8,
       borderBottomWidth: 2,
@@ -34,59 +34,59 @@ export const CategorySection = ({
     },
     iconContainer: {
       marginRight: 8,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
     },
     title: {
       fontSize: 20,
-      fontWeight: '600',
+      fontWeight: "600",
       flex: 1,
-      color: '#333',
+      color: "#333",
     },
     entriesContainer: {
       gap: 16,
     },
     emptyCard: {
-      backgroundColor: colors.background.secondary || '#f5f5f5',
+      backgroundColor: colors.background.secondary || "#f5f5f5",
       borderRadius: 8,
       padding: 16,
     },
     emptyText: {
       fontSize: 14,
-      color: '#666',
-      textAlign: 'center',
+      color: "#666",
+      textAlign: "center",
     },
     entryCard: {
       borderLeftWidth: 4,
       borderLeftColor: color,
-      backgroundColor: '#ffffff',
+      backgroundColor: "#ffffff",
       borderRadius: 8,
       padding: 16,
-      shadowColor: '#000',
+      shadowColor: "#000",
       shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.1,
       shadowRadius: 4,
       elevation: 2,
     },
     entryHeader: {
-      flexDirection: 'row',
-      alignItems: 'flex-start',
+      flexDirection: "row",
+      alignItems: "flex-start",
       marginBottom: 8,
     },
     entryContent: {
       flex: 1,
     },
     entryActions: {
-      flexDirection: 'row',
+      flexDirection: "row",
       gap: 4,
     },
     actionButton: {
       width: 32,
       height: 32,
       borderRadius: 16,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'transparent',
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "transparent",
     },
     editButton: {
       opacity: 0.6,
@@ -95,22 +95,22 @@ export const CategorySection = ({
       opacity: 0.6,
     },
     deleteButtonHover: {
-      backgroundColor: '#ffebee',
+      backgroundColor: "#ffebee",
     },
     actionIcon: {
       fontSize: 16,
-      color: '#666',
+      color: "#666",
     },
     deleteIcon: {
       fontSize: 16,
-      color: '#d32f2f',
+      color: "#d32f2f",
     },
     entryDescription: {
       marginBottom: 8,
     },
     entryDate: {
       fontSize: 12,
-      color: '#666',
+      color: "#666",
       marginTop: 8,
     },
   });
@@ -127,11 +127,7 @@ export const CategorySection = ({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        {icon && (
-          <View style={[styles.iconContainer, { color }]}>
-            {icon}
-          </View>
-        )}
+        {icon && <View style={[styles.iconContainer, { color }]}>{icon}</View>}
         <Text style={styles.title}>{title}</Text>
       </View>
 

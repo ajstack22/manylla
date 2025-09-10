@@ -1,22 +1,26 @@
-import React, { lazy, Suspense } from 'react';
-import { Platform, View, ActivityIndicator } from 'react-native';
+import React, { lazy, Suspense } from "react";
+import { Platform, View, ActivityIndicator } from "react-native";
 
 // Simple lazy loading wrapper for web
 export const lazyLoad = (importFunc) => {
-  if (Platform.OS === 'web') {
+  if (Platform.OS === "web") {
     const LazyComponent = lazy(importFunc);
-    
+
     return (props) => (
-      <Suspense fallback={
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#A08670" />
-        </View>
-      }>
+      <Suspense
+        fallback={
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <ActivityIndicator size="large" color="#A08670" />
+          </View>
+        }
+      >
         <LazyComponent {...props} />
       </Suspense>
     );
   }
-  
+
   // For native, just return the component directly
   const Component = importFunc();
   return Component.default || Component;

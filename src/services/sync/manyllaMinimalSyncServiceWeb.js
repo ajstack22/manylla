@@ -229,8 +229,7 @@ class ManyllaMinimalSyncService {
     this.listeners.forEach((callback) => {
       try {
         callback(event, data);
-      } catch (error) {
-      }
+      } catch (error) {}
     });
   }
 

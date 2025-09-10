@@ -2,7 +2,7 @@ import React from "react";
 import { Dimensions, Platform } from "react-native";
 
 export const useMobileDialog = () => {
-  const { width } = Dimensions.get('window');
+  const { width } = Dimensions.get("window");
   const isMobile = width < 600; // Breakpoint equivalent to Material-UI sm
 
   const dialogProps = isMobile
@@ -13,7 +13,7 @@ export const useMobileDialog = () => {
         style: {
           margin: 0,
           maxHeight: "100%",
-          borderRadius: Platform.OS === 'ios' ? 12 : 8,
+          borderRadius: Platform.OS === "ios" ? 12 : 8,
           maxWidth: "100%",
         },
       }
@@ -21,9 +21,9 @@ export const useMobileDialog = () => {
         animationType: "fade",
         transparent: true,
         style: {
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'rgba(0,0,0,0.5)',
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "rgba(0,0,0,0.5)",
         },
       };
 
@@ -34,7 +34,7 @@ export const useMobileDialog = () => {
         presentationStyle: "formSheet",
         style: {
           margin: 0,
-          borderRadius: Platform.OS === 'ios' ? 12 : 8,
+          borderRadius: Platform.OS === "ios" ? 12 : 8,
           width: "100%",
           maxWidth: "100%",
           height: "100%",
@@ -45,9 +45,9 @@ export const useMobileDialog = () => {
         animationType: "fade",
         transparent: true,
         style: {
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'rgba(0,0,0,0.5)',
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "rgba(0,0,0,0.5)",
           maxWidth: 480,
         },
       };

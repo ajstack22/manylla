@@ -137,8 +137,7 @@ export const ThemeProvider = ({
           setTheme(initialThemeMode);
           setThemeMode(initialThemeMode);
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     };
     loadTheme();
   }, [initialThemeMode]);
@@ -152,8 +151,7 @@ export const ThemeProvider = ({
 
     try {
       await setStorageItem("manylla_theme", newTheme);
-    } catch (error) {
-    }
+    } catch (error) {}
 
     if (onThemeChange) {
       onThemeChange(newTheme);
@@ -179,18 +177,19 @@ export const ThemeProvider = ({
   const getThemeStyles = () => {
     return {
       borderRadius: 12,
-      fontFamily: 'Atkinson Hyperlegible, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif',
+      fontFamily:
+        "Atkinson Hyperlegible, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
       typography: {
-        h1: { fontSize: 40, fontWeight: '600' },
-        h2: { fontSize: 32, fontWeight: '600' },
-        h3: { fontSize: 24, fontWeight: '500' },
-        h4: { fontSize: 20, fontWeight: '500' },
-        h5: { fontSize: 18, fontWeight: '500' },
-        h6: { fontSize: 16, fontWeight: '500' },
-        body1: { fontSize: 16, fontWeight: '400' },
-        body2: { fontSize: 14, fontWeight: '400' },
-        caption: { fontSize: 12, fontWeight: '400' }
-      }
+        h1: { fontSize: 40, fontWeight: "600" },
+        h2: { fontSize: 32, fontWeight: "600" },
+        h3: { fontSize: 24, fontWeight: "500" },
+        h4: { fontSize: 20, fontWeight: "500" },
+        h5: { fontSize: 18, fontWeight: "500" },
+        h6: { fontSize: 16, fontWeight: "500" },
+        body1: { fontSize: 16, fontWeight: "400" },
+        body2: { fontSize: 14, fontWeight: "400" },
+        caption: { fontSize: 12, fontWeight: "400" },
+      },
     };
   };
 

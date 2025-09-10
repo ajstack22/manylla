@@ -73,7 +73,6 @@ export class StorageService {
         await AsyncStorage.removeItem(this.PROFILE_KEY);
         await AsyncStorage.removeItem("manylla_onboarding_completed");
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 }

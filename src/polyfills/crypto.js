@@ -8,8 +8,7 @@ if (Platform.OS !== "web") {
   try {
     // Use eval to prevent webpack from analyzing this require
     eval("require")("react-native-get-random-values");
-  } catch (e) {
-  }
+  } catch (e) {}
 }
 
 // Web already has crypto.getRandomValues

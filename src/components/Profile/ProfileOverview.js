@@ -7,14 +7,14 @@ import {
   StyleSheet,
   Platform,
   Image,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import { manyllaColors } from "../../theme/theme";
 import { CategorySection } from "./CategorySection";
 import { getVisibleCategories } from "../../utils/unifiedCategories";
 import { ProfileEditDialog } from "./ProfileEditDialog";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 export const ProfileOverview = ({
   profile,
@@ -69,55 +69,57 @@ export const ProfileOverview = ({
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      padding: Platform.OS === 'web' ? 24 : 16,
+      padding: Platform.OS === "web" ? 24 : 16,
     },
     profileCard: {
-      backgroundColor: '#FFFFFF',
+      backgroundColor: "#FFFFFF",
       borderRadius: 12,
-      padding: Platform.OS === 'web' ? 24 : 20,
-      marginBottom: Platform.OS === 'web' ? 24 : 16,
-      shadowColor: '#000',
+      padding: Platform.OS === "web" ? 24 : 20,
+      marginBottom: Platform.OS === "web" ? 24 : 16,
+      shadowColor: "#000",
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
       shadowRadius: 8,
       elevation: 3,
     },
     profileHeader: {
-      alignItems: 'center',
-      position: 'relative',
+      alignItems: "center",
+      position: "relative",
     },
     avatar: {
       width: 120,
       height: 120,
       borderRadius: 60,
       marginBottom: 16,
-      backgroundColor: profile.photo ? 'transparent' : manyllaColors.avatarDefaultBg,
+      backgroundColor: profile.photo
+        ? "transparent"
+        : manyllaColors.avatarDefaultBg,
     },
     avatarPlaceholder: {
       width: 120,
       height: 120,
       borderRadius: 60,
       backgroundColor: manyllaColors.avatarDefaultBg,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       marginBottom: 16,
     },
     avatarText: {
       fontSize: 48,
-      fontWeight: 'bold',
-      color: 'white',
+      fontWeight: "bold",
+      color: "white",
     },
     editButton: {
-      position: 'absolute',
+      position: "absolute",
       top: 0,
-      right: width > 600 ? 'calc(50% - 60px)' : '40%',
-      backgroundColor: '#FFFFFF',
+      right: width > 600 ? "calc(50% - 60px)" : "40%",
+      backgroundColor: "#FFFFFF",
       width: 32,
       height: 32,
       borderRadius: 16,
-      alignItems: 'center',
-      justifyContent: 'center',
-      shadowColor: '#000',
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: "#000",
       shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.2,
       shadowRadius: 4,
@@ -125,23 +127,23 @@ export const ProfileOverview = ({
     },
     editIcon: {
       fontSize: 16,
-      color: '#666',
+      color: "#666",
     },
     name: {
       fontSize: 28,
-      fontWeight: '600',
-      textAlign: 'center',
+      fontWeight: "600",
+      textAlign: "center",
       marginBottom: 8,
-      color: '#333',
+      color: "#333",
     },
     ageText: {
       fontSize: 14,
-      color: '#666',
-      textAlign: 'center',
+      color: "#666",
+      textAlign: "center",
       marginBottom: 8,
     },
     pronounsChip: {
-      backgroundColor: '#f0f0f0',
+      backgroundColor: "#f0f0f0",
       paddingHorizontal: 12,
       paddingVertical: 6,
       borderRadius: 16,
@@ -149,33 +151,33 @@ export const ProfileOverview = ({
     },
     pronounsText: {
       fontSize: 12,
-      color: '#666',
-      fontWeight: '500',
+      color: "#666",
+      fontWeight: "500",
     },
     content: {
-      position: 'relative',
+      position: "relative",
     },
     categoriesContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       marginBottom: 24,
     },
     categoryWrapper: {
-      width: Platform.OS === 'web' && width > 768 ? '48%' : '100%',
-      marginRight: Platform.OS === 'web' && width > 768 ? '2%' : 0,
+      width: Platform.OS === "web" && width > 768 ? "48%" : "100%",
+      marginRight: Platform.OS === "web" && width > 768 ? "2%" : 0,
       marginBottom: 16,
     },
     fab: {
-      position: 'fixed',
-      bottom: Platform.OS === 'web' ? 24 : 16,
-      right: Platform.OS === 'web' ? 24 : 16,
+      position: "fixed",
+      bottom: Platform.OS === "web" ? 24 : 16,
+      right: Platform.OS === "web" ? 24 : 16,
       width: 56,
       height: 56,
       borderRadius: 28,
       backgroundColor: manyllaColors.brown,
-      alignItems: 'center',
-      justifyContent: 'center',
-      shadowColor: '#000',
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: "#000",
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.3,
       shadowRadius: 8,
@@ -184,8 +186,8 @@ export const ProfileOverview = ({
     },
     fabIcon: {
       fontSize: 24,
-      color: 'white',
-      fontWeight: 'bold',
+      color: "white",
+      fontWeight: "bold",
     },
   });
 
@@ -194,17 +196,17 @@ export const ProfileOverview = ({
       <View style={styles.profileCard}>
         <View style={styles.profileHeader}>
           {profile.photo ? (
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => onUpdateProfile && setProfileEditOpen(true)}
             >
-              <Image 
-                source={{ uri: profile.photo }} 
+              <Image
+                source={{ uri: profile.photo }}
                 style={styles.avatar}
                 resizeMode="cover"
               />
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.avatarPlaceholder}
               onPress={() => onUpdateProfile && setProfileEditOpen(true)}
             >
@@ -213,7 +215,7 @@ export const ProfileOverview = ({
               </Text>
             </TouchableOpacity>
           )}
-          
+
           {onUpdateProfile && (
             <TouchableOpacity
               style={styles.editButton}
@@ -222,15 +224,15 @@ export const ProfileOverview = ({
               <Text style={styles.editIcon}>✏️</Text>
             </TouchableOpacity>
           )}
-          
+
           <Text style={styles.name}>
             {profile.preferredName || profile.name}
           </Text>
-          
+
           <Text style={styles.ageText}>
             Age: {calculateAge(profile.dateOfBirth)} years
           </Text>
-          
+
           {profile.pronouns && (
             <View style={styles.pronounsChip}>
               <Text style={styles.pronounsText}>{profile.pronouns}</Text>

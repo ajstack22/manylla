@@ -28,7 +28,6 @@ class ConflictResolver {
    * @returns {Object} Merged profile data
    */
   mergeProfiles(local, remote) {
-
     // Handle null/undefined cases
     if (!local || !local.timestamp) return remote;
     if (!remote || !remote.timestamp) return local;

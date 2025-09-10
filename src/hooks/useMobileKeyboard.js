@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { Dimensions, Platform, Keyboard } from "react-native";
 
 export const useMobileKeyboard = (options = {}) => {
-  const { width } = Dimensions.get('window');
+  const { width } = Dimensions.get("window");
   const isMobile = width < 600; // Breakpoint equivalent to Material-UI sm
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
@@ -16,28 +16,31 @@ export const useMobileKeyboard = (options = {}) => {
     let keyboardDidShowListener;
     let keyboardDidHideListener;
 
-    if (Platform.OS === 'ios') {
-      keyboardDidShowListener = Keyboard.addListener('keyboardWillShow', (e) => {
-        setIsKeyboardVisible(true);
-        setKeyboardHeight(e.endCoordinates.height);
-      });
-      keyboardDidHideListener = Keyboard.addListener('keyboardWillHide', () => {
+    if (Platform.OS === "ios") {
+      keyboardDidShowListener = Keyboard.addListener(
+        "keyboardWillShow",
+        (e) => {
+          setIsKeyboardVisible(true);
+          setKeyboardHeight(e.endCoordinates.height);
+        },
+      );
+      keyboardDidHideListener = Keyboard.addListener("keyboardWillHide", () => {
         setIsKeyboardVisible(false);
         setKeyboardHeight(0);
       });
     } else {
-      keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => {
+      keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", (e) => {
         setIsKeyboardVisible(true);
         setKeyboardHeight(e.endCoordinates.height);
       });
-      keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {
         setIsKeyboardVisible(false);
         setKeyboardHeight(0);
       });
     }
 
     // Fallback for web platform
-    if (Platform.OS === 'web') {
+    if (Platform.OS === "web") {
       let lastViewportHeight =
         window.visualViewport?.height || window.innerHeight;
 

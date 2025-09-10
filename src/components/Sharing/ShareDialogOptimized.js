@@ -211,8 +211,7 @@ export const ShareDialogOptimized = ({ open, onClose, profile }) => {
         message,
         title: subject,
       });
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const getSelectedEntriesCount = () => {

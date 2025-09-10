@@ -12,8 +12,7 @@ let MaterialIcons = null;
 if (Platform.OS !== "web") {
   try {
     MaterialIcons = require("react-native-vector-icons/MaterialIcons").default;
-  } catch (e) {
-  }
+  } catch (e) {}
 }
 
 // Web icons from Material-UI
