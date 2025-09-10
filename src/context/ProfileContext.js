@@ -64,6 +64,7 @@ export const ProfileProvider = ({ children }) => {
         profiles,
         currentProfile,
         setProfiles,
+        saveProfiles, // Added to allow saving profiles with persistence
         setCurrentProfile,
         addProfile,
         updateProfile,

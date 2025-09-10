@@ -32,7 +32,7 @@ const getIconForCategory = (categoryId) => {
 
 const OnboardingScreen = () => {
   const navigation = useNavigation();
-  const { setProfiles } = useProfiles();
+  const { saveProfiles, setCurrentProfile } = useProfiles();
 
   const handleStartFresh = async () => {
     // Create a new profile
@@ -46,7 +46,8 @@ const OnboardingScreen = () => {
       updatedAt: new Date(),
     };
 
-    await setProfiles([newProfile]);
+    await saveProfiles([newProfile]);
+    setCurrentProfile(newProfile);
     // Navigation will automatically update based on profile existence
   };
 
@@ -182,7 +183,8 @@ const OnboardingScreen = () => {
       updatedAt: new Date(),
     };
 
-    await setProfiles([demoProfile]);
+    await saveProfiles([demoProfile]);
+    setCurrentProfile(demoProfile);
     // Navigation will automatically update based on profile existence
   };
 
