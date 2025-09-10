@@ -1,5 +1,26 @@
 # Manylla Release Notes
 
+## Version 2025.09.10.4 - 2025-09-10
+Demo Data Display Fix
+
+### Fixed
+- **Category Overwrite Issue**: Fixed App.js overwriting stored profile categories on load
+  - Previously, the loaded profile's categories were being replaced with empty unifiedCategories
+  - Now preserves the complete stored profile with all its entries and categories
+  - Demo data now displays correctly with all 6 categories and 14 entries
+  
+### Technical
+- Updated App.js line 495-498 to preserve stored profile data
+- Removed unnecessary category replacement logic that was clearing entries
+- Created test page (test-demo-data.html) for validating demo data creation
+- No breaking changes
+
+### Validation
+- TypeScript files: 0 ✓
+- Platform-specific files: 0 ✓
+- Build: Success ✓
+- Prettier: Pass ✓
+
 ## Version 2025.09.10.3
 Demo Data & Profile Photo Fix
 

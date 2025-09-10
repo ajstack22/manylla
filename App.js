@@ -493,11 +493,8 @@ function AppContent() {
         const storedProfile = await StorageService.getProfile();
         
         if (onboardingCompleted && storedProfile && storedProfile.name) {
-          const updatedProfile = {
-            ...storedProfile,
-            categories: unifiedCategories
-          };
-          setProfile(updatedProfile);
+          // Preserve the stored profile with its entries and categories
+          setProfile(storedProfile);
           setShowOnboarding(false);
         } else {
           setShowOnboarding(true);
@@ -558,21 +555,158 @@ function AppContent() {
   };
 
   const handleOnboardingComplete = async (data) => {
-    // OnboardingScreen now handles demo mode creation
     if (data.mode === 'demo') {
-      // Demo profile is already created by OnboardingScreen
-      // Load the profile that was created (using correct method name)
-      const savedProfile = await StorageService.getProfile();
-      if (savedProfile) {
-        setProfile(savedProfile);
-      }
+      // Create demo profile with Ellie Thompson data
+      const demoProfile = {
+        id: 'demo-' + Date.now(),
+        name: 'Ellie Thompson',
+        preferredName: 'Ellie',
+        pronouns: 'she/her',
+        dateOfBirth: new Date('2018-06-15'),
+        photo: '/ellie.png',
+        categories: unifiedCategories.map(cat => ({
+          ...cat,
+          icon: cat.id === 'quick-info' ? 'info' : 
+                cat.id === 'daily-support' ? 'support' :
+                cat.id === 'health-therapy' ? 'health' :
+                cat.id === 'education-goals' ? 'education' :
+                cat.id === 'behavior-social' ? 'social' :
+                cat.id === 'family-resources' ? 'family' : 'folder'
+        })),
+        entries: [
+          // Quick Info entries
+          {
+            id: '1',
+            category: 'quick-info',
+            title: 'Communication',
+            description: 'Non-verbal when overwhelmed - uses AAC device with picture cards',
+            date: new Date(),
+            visibility: ['private']
+          },
+          {
+            id: '2',
+            category: 'quick-info',
+            title: 'Emergency Contact',
+            description: 'Mom (Emily) - 555-0123',
+            date: new Date(),
+            visibility: ['private']
+          },
+          {
+            id: '3',
+            category: 'quick-info',
+            title: 'Medical Alert',
+            description: 'Allergic to peanuts - carries EpiPen',
+            date: new Date(),
+            visibility: ['private']
+          },
+          // Daily Support entries
+          {
+            id: '4',
+            category: 'daily-support',
+            title: 'Sensory Needs',
+            description: 'Calms down with deep pressure, sensitive to loud noises',
+            date: new Date(),
+            visibility: ['private']
+          },
+          {
+            id: '5',
+            category: 'daily-support',
+            title: 'Daily Routine',
+            description: 'Loves trains and dinosaurs, needs structure for transitions',
+            date: new Date(),
+            visibility: ['private']
+          },
+          {
+            id: '6',
+            category: 'daily-support',
+            title: 'Comfort Items',
+            description: 'Blue weighted blanket and dinosaur stuffed animal help with anxiety',
+            date: new Date(),
+            visibility: ['private']
+          },
+          // Health & Therapy entries
+          {
+            id: '7',
+            category: 'health-therapy',
+            title: 'Medications',
+            description: 'Melatonin 3mg at bedtime for sleep',
+            date: new Date(),
+            visibility: ['private']
+          },
+          {
+            id: '8',
+            category: 'health-therapy',
+            title: 'Therapy Schedule',
+            description: 'Speech therapy Tuesdays, OT Thursdays at 3pm',
+            date: new Date(),
+            visibility: ['private']
+          },
+          // Education & Goals entries
+          {
+            id: '9',
+            category: 'education-goals',
+            title: 'IEP Goals',
+            description: 'Working on 2-word phrases and following 2-step directions',
+            date: new Date(),
+            visibility: ['private']
+          },
+          {
+            id: '10',
+            category: 'education-goals',
+            title: 'Learning Style',
+            description: 'Visual learner - responds well to picture cards and demonstrations',
+            date: new Date(),
+            visibility: ['private']
+          },
+          // Behavior & Social entries
+          {
+            id: '11',
+            category: 'behavior-social',
+            title: 'Triggers',
+            description: 'Loud unexpected noises, changes in routine without warning',
+            date: new Date(),
+            visibility: ['private']
+          },
+          {
+            id: '12',
+            category: 'behavior-social',
+            title: 'Social Preferences',
+            description: 'Prefers parallel play, working on turn-taking skills',
+            date: new Date(),
+            visibility: ['private']
+          },
+          // Family & Resources entries
+          {
+            id: '13',
+            category: 'family-resources',
+            title: 'Support Team',
+            description: 'Dr. Martinez (pediatrician), Ms. Johnson (special ed teacher)',
+            date: new Date(),
+            visibility: ['private']
+          },
+          {
+            id: '14',
+            category: 'family-resources',
+            title: 'Helpful Resources',
+            description: 'Local autism support group meets first Saturday of each month',
+            date: new Date(),
+            visibility: ['private']
+          },
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      
+      await StorageService.saveProfile(demoProfile);
       await AsyncStorage.setItem('manylla_onboarding_completed', 'true');
+      setProfile(demoProfile);
       setShowOnboarding(false);
+      showToast('Demo profile created successfully');
       return;
     }
     
-    // DEPRECATED - Remove this old demo creation code
-    if (false && data.mode === 'demo') {
+    // Handle other onboarding modes
+    if (false) { // Old code kept for reference
       // Create demo profile - Ellie's comprehensive example data
       const demoProfile = {
         id: '1',
