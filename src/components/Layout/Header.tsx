@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
-  AppBar,
   Toolbar,
   Typography,
   IconButton,
@@ -143,11 +142,17 @@ export const Header: React.FC<HeaderProps> = ({
   }, [isProfileHidden, profile, isMobile, isTablet, buttonDefinitions]);
 
   return (
-    <AppBar
-      position="fixed"
-      elevation={1}
+    <Box
+      component="header"
       sx={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        width: '100%',
         height: HEADER_HEIGHT,
+        display: 'flex',
+        alignItems: 'center',
         backgroundColor:
           theme.palette.mode === "light"
             ? theme.palette.primary.main + "0A" // 4% opacity of primary color
@@ -156,17 +161,17 @@ export const Header: React.FC<HeaderProps> = ({
         color: theme.palette.text.primary,
         boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
         backdropFilter: "blur(8px)",
-        zIndex: theme.zIndex.appBar,
-        top: 0,
-        left: 0,
-        right: 0,
+        WebkitBackdropFilter: "blur(8px)", // Safari support
+        zIndex: 1200, // Higher z-index to ensure it's above everything
       }}
     >
       <Toolbar
         ref={headerRef}
         sx={{
+          width: '100%',
           minHeight: HEADER_HEIGHT,
           height: HEADER_HEIGHT,
+          px: { xs: 1, sm: 2 },
         }}>
         {onMenuClick && (
           <IconButton
@@ -354,6 +359,6 @@ export const Header: React.FC<HeaderProps> = ({
           </>
         )}
       </Toolbar>
-    </AppBar>
+    </Box>
   );
 };

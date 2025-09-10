@@ -1,5 +1,19 @@
 /* Global styles for Manylla Web */
 
+/* Reset body margins and ensure proper scrolling */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Ensure root element takes full height */
+#root {
+  min-height: 100vh;
+  position: relative;
+}
+
 /* Apply Atkinson Hyperlegible font to all text elements */
 body, * {
   font-family: "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif !important;

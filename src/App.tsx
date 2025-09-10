@@ -547,7 +547,7 @@ function AppContent() {
           sx={{ 
             px: { xs: 1, sm: 2, md: 3 },
             pt: `${HEADER_HEIGHT}px`, // Add top padding for fixed header
-            minHeight: '100vh', // Ensure content area is scrollable
+            minHeight: '100vh', // Ensure content area is scrollable properly
           }}
         >
           <ProfileOverview
