@@ -145,6 +145,34 @@ const ProfileOverview = ({
     return () => subscription?.remove();
   }, []);
   
+  // Add scroll listener for web with throttling
+  useEffect(() => {
+    if (Platform.OS === 'web' && onScrollChange) {
+      let ticking = false;
+      let lastKnownScrollY = 0;
+      
+      const handleWebScroll = () => {
+        lastKnownScrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            const shouldHideProfile = lastKnownScrollY > 150;
+            onScrollChange(shouldHideProfile);
+            ticking = false;
+          });
+          ticking = true;
+        }
+      };
+
+      // Check initial scroll position
+      const initialScrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+      onScrollChange(initialScrollY > 150);
+      
+      window.addEventListener('scroll', handleWebScroll, { passive: true });
+      return () => window.removeEventListener('scroll', handleWebScroll);
+    }
+  }, [onScrollChange]);
+  
   if (!profile) {
     return (
       <View style={styles.emptyContainer}>
@@ -180,35 +208,6 @@ const ProfileOverview = ({
     .sort((a, b) => a.order - b.order);
   
   const visibleCategories = [...quickInfoCategories, ...regularCategories];
-
-  // Add scroll listener for web with throttling
-  useEffect(() => {
-    if (Platform.OS === 'web' && onScrollChange) {
-      let ticking = false;
-      let lastKnownScrollY = 0;
-      
-      const handleWebScroll = () => {
-        lastKnownScrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-        
-        if (!ticking) {
-          requestAnimationFrame(() => {
-            const shouldHideProfile = lastKnownScrollY > 150;
-            console.log('Web scroll:', { scrollY: lastKnownScrollY, shouldHideProfile });
-            onScrollChange(shouldHideProfile);
-            ticking = false;
-          });
-          ticking = true;
-        }
-      };
-
-      // Check initial scroll position
-      const initialScrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-      onScrollChange(initialScrollY > 150);
-      
-      window.addEventListener('scroll', handleWebScroll, { passive: true });
-      return () => window.removeEventListener('scroll', handleWebScroll);
-    }
-  }, [onScrollChange]);
   
   const isDesktop = windowWidth > 1024;
 

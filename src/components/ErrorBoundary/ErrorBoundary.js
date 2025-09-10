@@ -111,7 +111,7 @@ export class ErrorBoundary extends Component {
       });
 
       const isDevelopment =
-        __DEV__ ||
+        (typeof __DEV__ !== 'undefined' && __DEV__) ||
         (Platform.OS === "web" && process?.env?.NODE_ENV === "development");
 
       return (
