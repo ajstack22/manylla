@@ -18,11 +18,7 @@ import { defaultCategories } from "../../utils/defaultCategories";
 import { defaultQuickInfoPanels } from "../../utils/defaultQuickInfo";
 import { DatePicker } from "../DatePicker/DatePicker";
 
-export const ProfileCreateDialog = ({
-  open,
-  onClose,
-  onCreate,
-}) => {
+export const ProfileCreateDialog = ({ open, onClose, onCreate }) => {
   const { colors } = useTheme();
   const styles = getStyles(colors);
   const [activeStep, setActiveStep] = useState(0);
@@ -38,11 +34,11 @@ export const ProfileCreateDialog = ({
   const steps = ["Basic Info", "Photo"];
 
   const handlePhotoChange = () => {
-    if (Platform.OS === 'web') {
+    if (Platform.OS === "web") {
       // Web file input
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
       input.onchange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -59,12 +55,12 @@ export const ProfileCreateDialog = ({
     } else {
       // React Native image picker
       const options = {
-        mediaType: 'photo',
+        mediaType: "photo",
         includeBase64: true,
         maxHeight: 500,
         maxWidth: 500,
       };
-      
+
       launchImageLibrary(options, (response) => {
         if (response.assets && response.assets[0]) {
           const base64 = `data:${response.assets[0].type};base64,${response.assets[0].base64}`;
@@ -169,7 +165,9 @@ export const ProfileCreateDialog = ({
         <TextInput
           style={styles.input}
           value={formData.preferredName}
-          onChangeText={(text) => setFormData({ ...formData, preferredName: text })}
+          onChangeText={(text) =>
+            setFormData({ ...formData, preferredName: text })
+          }
           placeholder="What they like to be called"
           placeholderTextColor={colors.text.secondary}
         />
@@ -205,7 +203,7 @@ export const ProfileCreateDialog = ({
       <Text style={styles.photoDescription}>
         Add a photo to personalize the profile (optional)
       </Text>
-      
+
       <View style={styles.photoContainer}>
         {photoPreview ? (
           <Image source={{ uri: photoPreview }} style={styles.photoPreview} />
@@ -216,7 +214,7 @@ export const ProfileCreateDialog = ({
             </Text>
           </View>
         )}
-        
+
         <TouchableOpacity
           style={styles.photoButton}
           onPress={handlePhotoChange}
@@ -292,217 +290,218 @@ export const ProfileCreateDialog = ({
   );
 };
 
-const getStyles = (colors) => StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background.default,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: colors.primary,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: colors.background.paper,
-    flex: 1,
-    textAlign: "center",
-  },
-  closeButton: {
-    padding: 8,
-  },
-  closeButtonText: {
-    fontSize: 20,
-    color: colors.background.paper,
-  },
-  headerSpacer: {
-    width: 36,
-  },
-  stepIndicator: {
-    flexDirection: "row",
-    justifyContent: "center",
-    paddingVertical: 24,
-    paddingHorizontal: 16,
-    backgroundColor: colors.background.paper,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  stepContainer: {
-    alignItems: "center",
-    marginHorizontal: 24,
-  },
-  stepDot: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: colors.border,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 8,
-  },
-  stepDotActive: {
-    backgroundColor: colors.primary,
-  },
-  stepDotCompleted: {
-    backgroundColor: colors.success.main,
-  },
-  stepNumber: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: colors.text.secondary,
-  },
-  stepCheckmark: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.background.paper,
-  },
-  stepLabel: {
-    fontSize: 12,
-    color: colors.text.secondary,
-  },
-  stepLabelActive: {
-    color: colors.primary,
-    fontWeight: "600",
-  },
-  content: {
-    flex: 1,
-    padding: 16,
-  },
-  formSection: {
-    paddingVertical: 8,
-  },
-  inputGroup: {
-    marginBottom: 20,
-  },
-  inputLabel: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: colors.text.primary,
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    fontSize: 16,
-    color: colors.text.primary,
-    backgroundColor: colors.background.paper,
-  },
-  datePicker: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    backgroundColor: colors.background.paper,
-  },
-  helperText: {
-    fontSize: 12,
-    color: colors.text.secondary,
-    marginTop: 4,
-  },
-  photoSection: {
-    alignItems: "center",
-    paddingVertical: 24,
-  },
-  photoDescription: {
-    fontSize: 14,
-    color: colors.text.secondary,
-    textAlign: "center",
-    marginBottom: 24,
-  },
-  photoContainer: {
-    alignItems: "center",
-  },
-  photoPreview: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    marginBottom: 16,
-  },
-  photoPlaceholder: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: colors.primary,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 16,
-  },
-  photoPlaceholderText: {
-    fontSize: 48,
-    fontWeight: "600",
-    color: colors.background.paper,
-  },
-  photoButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: colors.primary,
-    borderRadius: 8,
-    backgroundColor: colors.background.paper,
-  },
-  photoButtonIcon: {
-    fontSize: 18,
-    marginRight: 8,
-  },
-  photoButtonText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: colors.primary,
-  },
-  actions: {
-    flexDirection: "row",
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-    backgroundColor: colors.background.paper,
-    gap: 12,
-  },
-  button: {
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  cancelButton: {
-    backgroundColor: colors.background.paper,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  cancelButtonText: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: colors.text.primary,
-  },
-  backButton: {
-    backgroundColor: colors.background.paper,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  backButtonText: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: colors.text.primary,
-  },
-  primaryButton: {
-    backgroundColor: colors.primary,
-  },
-  primaryButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.background.paper,
-  },
-  buttonDisabled: {
-    opacity: 0.5,
-  },
-});
+const getStyles = (colors) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background.default,
+    },
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      backgroundColor: colors.primary,
+      paddingHorizontal: 16,
+      paddingVertical: 16,
+    },
+    headerTitle: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: colors.background.paper,
+      flex: 1,
+      textAlign: "center",
+    },
+    closeButton: {
+      padding: 8,
+    },
+    closeButtonText: {
+      fontSize: 20,
+      color: colors.background.paper,
+    },
+    headerSpacer: {
+      width: 36,
+    },
+    stepIndicator: {
+      flexDirection: "row",
+      justifyContent: "center",
+      paddingVertical: 24,
+      paddingHorizontal: 16,
+      backgroundColor: colors.background.paper,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    stepContainer: {
+      alignItems: "center",
+      marginHorizontal: 24,
+    },
+    stepDot: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      backgroundColor: colors.border,
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 8,
+    },
+    stepDotActive: {
+      backgroundColor: colors.primary,
+    },
+    stepDotCompleted: {
+      backgroundColor: colors.success.main,
+    },
+    stepNumber: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: colors.text.secondary,
+    },
+    stepCheckmark: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: colors.background.paper,
+    },
+    stepLabel: {
+      fontSize: 12,
+      color: colors.text.secondary,
+    },
+    stepLabelActive: {
+      color: colors.primary,
+      fontWeight: "600",
+    },
+    content: {
+      flex: 1,
+      padding: 16,
+    },
+    formSection: {
+      paddingVertical: 8,
+    },
+    inputGroup: {
+      marginBottom: 20,
+    },
+    inputLabel: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: colors.text.primary,
+      marginBottom: 8,
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 8,
+      paddingHorizontal: 12,
+      paddingVertical: 12,
+      fontSize: 16,
+      color: colors.text.primary,
+      backgroundColor: colors.background.paper,
+    },
+    datePicker: {
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 8,
+      paddingHorizontal: 12,
+      paddingVertical: 12,
+      backgroundColor: colors.background.paper,
+    },
+    helperText: {
+      fontSize: 12,
+      color: colors.text.secondary,
+      marginTop: 4,
+    },
+    photoSection: {
+      alignItems: "center",
+      paddingVertical: 24,
+    },
+    photoDescription: {
+      fontSize: 14,
+      color: colors.text.secondary,
+      textAlign: "center",
+      marginBottom: 24,
+    },
+    photoContainer: {
+      alignItems: "center",
+    },
+    photoPreview: {
+      width: 120,
+      height: 120,
+      borderRadius: 60,
+      marginBottom: 16,
+    },
+    photoPlaceholder: {
+      width: 120,
+      height: 120,
+      borderRadius: 60,
+      backgroundColor: colors.primary,
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 16,
+    },
+    photoPlaceholderText: {
+      fontSize: 48,
+      fontWeight: "600",
+      color: colors.background.paper,
+    },
+    photoButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 20,
+      paddingVertical: 12,
+      borderWidth: 1,
+      borderColor: colors.primary,
+      borderRadius: 8,
+      backgroundColor: colors.background.paper,
+    },
+    photoButtonIcon: {
+      fontSize: 18,
+      marginRight: 8,
+    },
+    photoButtonText: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: colors.primary,
+    },
+    actions: {
+      flexDirection: "row",
+      paddingHorizontal: 16,
+      paddingVertical: 16,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+      backgroundColor: colors.background.paper,
+      gap: 12,
+    },
+    button: {
+      flex: 1,
+      paddingVertical: 12,
+      borderRadius: 8,
+      alignItems: "center",
+    },
+    cancelButton: {
+      backgroundColor: colors.background.paper,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    cancelButtonText: {
+      fontSize: 16,
+      fontWeight: "500",
+      color: colors.text.primary,
+    },
+    backButton: {
+      backgroundColor: colors.background.paper,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    backButtonText: {
+      fontSize: 16,
+      fontWeight: "500",
+      color: colors.text.primary,
+    },
+    primaryButton: {
+      backgroundColor: colors.primary,
+    },
+    primaryButtonText: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: colors.background.paper,
+    },
+    buttonDisabled: {
+      opacity: 0.5,
+    },
+  });

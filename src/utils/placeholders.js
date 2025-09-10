@@ -161,10 +161,7 @@ export const quickInfoPlaceholders = {
 };
 
 // Helper function to get placeholder for a category
-export const getPlaceholder = (
-  category,
-  field,
-) => {
+export const getPlaceholder = (category, field) => {
   const config =
     categoryPlaceholders[category] || quickInfoPlaceholders[category];
 
@@ -189,10 +186,7 @@ export const getRandomExample = (category) => {
 };
 
 // Helper function to format placeholder with example
-export const getPlaceholderWithExample = (
-  category,
-  field,
-) => {
+export const getPlaceholderWithExample = (category, field) => {
   const placeholder = getPlaceholder(category, field);
   const example = getRandomExample(category);
 

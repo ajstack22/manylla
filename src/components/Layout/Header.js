@@ -50,7 +50,7 @@ const Header = ({
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(
-    Dimensions.get("window").width || 0
+    Dimensions.get("window").width || 0,
   );
 
   useEffect(() => {
@@ -149,17 +149,17 @@ const Header = ({
   const headerContainerStyle = Platform.select({
     web: {
       ...styles.container,
-      position: 'fixed',
+      position: "fixed",
       top: 0,
       left: 0,
       right: 0,
       zIndex: 1000,
-      width: '100%',
+      width: "100%",
       // Add shadow for web
-      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
       // Backdrop blur for web
-      backdropFilter: 'blur(8px)',
-      WebkitBackdropFilter: 'blur(8px)',
+      backdropFilter: "blur(8px)",
+      WebkitBackdropFilter: "blur(8px)",
     },
     default: styles.container,
   });
@@ -170,50 +170,56 @@ const Header = ({
         <View style={styles.content}>
           <View style={styles.left}>
             {/* Transition between logo and profile with fade animation */}
-            {Platform.OS === 'web' ? (
+            {Platform.OS === "web" ? (
               <View style={styles.transitionContainer}>
                 {/* Manylla logo - fades out when profile is hidden */}
-                <View 
+                <View
                   style={[
                     styles.logoContainer,
                     styles.fadeContainer,
-                    { 
+                    {
                       opacity: profile && isProfileHidden ? 0 : 1,
-                      transition: 'opacity 0.3s ease-in-out',
-                      pointerEvents: profile && isProfileHidden ? 'none' : 'auto'
-                    }
+                      transition: "opacity 0.3s ease-in-out",
+                      pointerEvents:
+                        profile && isProfileHidden ? "none" : "auto",
+                    },
                   ]}
                 >
-                  <View style={[styles.logoAvatar, styles.logoAvatarPlaceholder]}>
+                  <View
+                    style={[styles.logoAvatar, styles.logoAvatarPlaceholder]}
+                  >
                     <Text style={styles.logoAvatarText}>m</Text>
                   </View>
-                  <Text style={styles.logo}>
-                    manylla
-                  </Text>
+                  <Text style={styles.logo}>manylla</Text>
                 </View>
-                
+
                 {/* Profile - fades in when profile is hidden */}
                 {profile && (
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     onPress={onEditProfile}
                     style={[
                       styles.profileButton,
                       styles.fadeContainer,
-                      { 
+                      {
                         opacity: isProfileHidden ? 1 : 0,
-                        transition: 'opacity 0.3s ease-in-out',
-                        pointerEvents: isProfileHidden ? 'auto' : 'none'
-                      }
+                        transition: "opacity 0.3s ease-in-out",
+                        pointerEvents: isProfileHidden ? "auto" : "none",
+                      },
                     ]}
                   >
                     <View style={styles.profileContent}>
                       {profile.photo ? (
-                        <Image 
-                          source={{ uri: profile.photo }} 
+                        <Image
+                          source={{ uri: profile.photo }}
                           style={styles.profileAvatar}
                         />
                       ) : (
-                        <View style={[styles.profileAvatar, styles.profileAvatarPlaceholder]}>
+                        <View
+                          style={[
+                            styles.profileAvatar,
+                            styles.profileAvatarPlaceholder,
+                          ]}
+                        >
                           <Text style={styles.profileAvatarText}>
                             {profile.name?.charAt(0)?.toUpperCase()}
                           </Text>
@@ -232,9 +238,7 @@ const Header = ({
                 <View style={[styles.logoAvatar, styles.logoAvatarPlaceholder]}>
                   <Text style={styles.logoAvatarText}>m</Text>
                 </View>
-                <Text style={styles.logo}>
-                  manylla
-                </Text>
+                <Text style={styles.logo}>manylla</Text>
               </View>
             )}
           </View>
@@ -248,15 +252,12 @@ const Header = ({
                     onPress={onCategoriesClick}
                     style={styles.iconButton}
                   >
-                    <LabelIcon size={24} color={colors.primary || '#A08670'} />
+                    <LabelIcon size={24} color={colors.primary || "#A08670"} />
                   </TouchableOpacity>
                 )}
                 {onShare && (
-                  <TouchableOpacity
-                    onPress={onShare}
-                    style={styles.iconButton}
-                  >
-                    <ShareIcon size={24} color={colors.primary || '#A08670'} />
+                  <TouchableOpacity onPress={onShare} style={styles.iconButton}>
+                    <ShareIcon size={24} color={colors.primary || "#A08670"} />
                   </TouchableOpacity>
                 )}
                 {onSyncClick && (
@@ -264,21 +265,21 @@ const Header = ({
                     onPress={onSyncClick}
                     style={styles.iconButton}
                   >
-                    <SyncIcon size={24} color={colors.primary || '#A08670'} />
+                    <SyncIcon size={24} color={colors.primary || "#A08670"} />
                   </TouchableOpacity>
                 )}
                 <TouchableOpacity
                   onPress={onThemeToggle}
                   style={styles.iconButton}
                 >
-                  <ThemeIcon size={24} color={colors.primary || '#A08670'} />
+                  <ThemeIcon size={24} color={colors.primary || "#A08670"} />
                 </TouchableOpacity>
                 {onCloseProfile && (
                   <TouchableOpacity
                     onPress={onCloseProfile}
                     style={styles.iconButton}
                   >
-                    <LogoutIcon size={24} color={colors.primary || '#A08670'} />
+                    <LogoutIcon size={24} color={colors.primary || "#A08670"} />
                   </TouchableOpacity>
                 )}
               </>
@@ -289,7 +290,7 @@ const Header = ({
                 onPress={() => setMenuOpen(true)}
                 style={styles.iconButton}
               >
-                <MenuIcon size={24} color={colors.primary || '#A08670'} />
+                <MenuIcon size={24} color={colors.primary || "#A08670"} />
               </TouchableOpacity>
             )}
           </View>
@@ -311,7 +312,7 @@ const Header = ({
                 onPress={() => setMenuOpen(false)}
                 style={styles.closeButton}
               >
-                <CloseIcon size={24} color={colors.primary || '#A08670'} />
+                <CloseIcon size={24} color={colors.primary || "#A08670"} />
               </TouchableOpacity>
             </View>
             <ScrollView style={styles.menuList}>
@@ -323,7 +324,7 @@ const Header = ({
                     style={styles.menuItem}
                     onPress={item.onPress}
                   >
-                    <Icon size={24} color={colors.primary || '#A08670'} />
+                    <Icon size={24} color={colors.primary || "#A08670"} />
                     <Text style={styles.menuItemText}>{item.label}</Text>
                   </TouchableOpacity>
                 );
@@ -343,7 +344,7 @@ const createStyles = (colors) =>
       backgroundColor: colors.background.paper,
       borderBottomWidth: 1,
       borderBottomColor: colors.divider,
-      justifyContent: 'center',
+      justifyContent: "center",
       ...Platform.select({
         ios: {
           paddingTop: 44, // Status bar height on iOS
@@ -361,25 +362,26 @@ const createStyles = (colors) =>
       alignItems: "center",
       justifyContent: "space-between",
       paddingHorizontal: 16,
-      height: '100%',
+      height: "100%",
     },
     left: {
       flexDirection: "row",
       alignItems: "center",
     },
     logoContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 8,
       height: 36, // Match avatar height for perfect alignment
     },
     logo: {
       fontSize: 24,
       fontWeight: "600",
-      color: colors.primary || '#A08670',
+      color: colors.primary || "#A08670",
       ...Platform.select({
         web: {
-          fontFamily: '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
+          fontFamily:
+            '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
         },
       }),
     },
@@ -389,49 +391,50 @@ const createStyles = (colors) =>
       borderRadius: 18,
     },
     logoAvatarPlaceholder: {
-      backgroundColor: colors.primary || '#A08670',
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: colors.primary || "#A08670",
+      justifyContent: "center",
+      alignItems: "center",
     },
     logoAvatarText: {
       color: colors.background.paper,
       fontSize: 20,
-      fontWeight: '600',
+      fontWeight: "600",
       ...Platform.select({
         web: {
-          fontFamily: '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
+          fontFamily:
+            '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
         },
       }),
     },
     transitionContainer: {
-      position: 'relative',
+      position: "relative",
       minHeight: 36, // Match avatar height
-      display: 'flex',
-      alignItems: 'center',
+      display: "flex",
+      alignItems: "center",
     },
     fadeContainer: {
-      position: 'absolute',
+      position: "absolute",
       left: 0,
-      top: '50%',
-      transform: [{ translateY: '-50%' }],
+      top: "50%",
+      transform: [{ translateY: "-50%" }],
     },
     profileButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       padding: 0, // Remove padding for better alignment
       borderRadius: 8,
       ...Platform.select({
         web: {
-          cursor: 'pointer',
-          ':hover': {
-            backgroundColor: colors.action?.hover || 'rgba(0,0,0,0.04)',
+          cursor: "pointer",
+          ":hover": {
+            backgroundColor: colors.action?.hover || "rgba(0,0,0,0.04)",
           },
         },
       }),
     },
     profileContent: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 8,
     },
     profileAvatar: {
@@ -440,23 +443,24 @@ const createStyles = (colors) =>
       borderRadius: 18,
     },
     profileAvatarPlaceholder: {
-      backgroundColor: colors.primary.light || '#A08670',
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: colors.primary.light || "#A08670",
+      justifyContent: "center",
+      alignItems: "center",
     },
     profileAvatarText: {
       color: colors.background.paper,
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
     },
     profileName: {
       fontSize: 24,
-      fontWeight: '600',
-      color: colors.primary || '#A08670',
+      fontWeight: "600",
+      color: colors.primary || "#A08670",
       maxWidth: 200,
       ...Platform.select({
         web: {
-          fontFamily: '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
+          fontFamily:
+            '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
         },
       }),
     },
@@ -470,10 +474,10 @@ const createStyles = (colors) =>
       borderRadius: 8,
       ...Platform.select({
         web: {
-          cursor: 'pointer',
-          transition: 'background-color 0.2s',
-          ':hover': {
-            backgroundColor: colors.action?.hover || 'rgba(0,0,0,0.04)',
+          cursor: "pointer",
+          transition: "background-color 0.2s",
+          ":hover": {
+            backgroundColor: colors.action?.hover || "rgba(0,0,0,0.04)",
           },
         },
       }),

@@ -129,130 +129,131 @@ export const QRCodeModal = ({
 
 const { width } = Dimensions.get("window");
 
-const getStyles = (colors) => StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalContainer: {
-    backgroundColor: colors.background.default,
-    borderRadius: 16,
-    marginHorizontal: 20,
-    minWidth: 320,
-    maxWidth: width - 40,
-    elevation: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: colors.text.primary,
-  },
-  closeButton: {
-    padding: 4,
-  },
-  closeButtonIcon: {
-    fontSize: 18,
-    color: colors.text.primary,
-  },
-  content: {
-    padding: 24,
-    alignItems: "center",
-  },
-  qrContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 24,
-  },
-  qrBackground: {
-    backgroundColor: colors.background.paper,
-    padding: 20,
-    borderRadius: 12,
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  description: {
-    fontSize: 14,
-    color: colors.text.secondary,
-    textAlign: "center",
-    lineHeight: 20,
-    marginBottom: 24,
-    paddingHorizontal: 16,
-  },
-  actions: {
-    width: "100%",
-    gap: 12,
-  },
-  button: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 14,
-    borderRadius: 8,
-    gap: 8,
-  },
-  shareButton: {
-    backgroundColor: colors.primary,
-  },
-  shareButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.background.paper,
-  },
-  buttonIcon: {
-    fontSize: 16,
-    color: colors.background.paper,
-    marginRight: 8,
-  },
-  downloadButton: {
-    backgroundColor: colors.background.paper,
-    borderWidth: 1,
-    borderColor: colors.primary,
-  },
-  downloadButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.primary,
-  },
-  downloadButtonIcon: {
-    fontSize: 16,
-    color: colors.primary,
-    marginRight: 8,
-  },
-  qrFallback: {
-    width: 200,
-    height: 200,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: colors.background.paper,
-    padding: 20,
-  },
-  qrFallbackText: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: colors.primary,
-    marginBottom: 10,
-  },
-  qrFallbackUrl: {
-    fontSize: 12,
-    color: colors.text.secondary,
-    textAlign: "center",
-  },
-});
+const getStyles = (colors) =>
+  StyleSheet.create({
+    overlay: {
+      flex: 1,
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    modalContainer: {
+      backgroundColor: colors.background.default,
+      borderRadius: 16,
+      marginHorizontal: 20,
+      minWidth: 320,
+      maxWidth: width - 40,
+      elevation: 8,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.25,
+      shadowRadius: 8,
+    },
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    title: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: colors.text.primary,
+    },
+    closeButton: {
+      padding: 4,
+    },
+    closeButtonIcon: {
+      fontSize: 18,
+      color: colors.text.primary,
+    },
+    content: {
+      padding: 24,
+      alignItems: "center",
+    },
+    qrContainer: {
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 24,
+    },
+    qrBackground: {
+      backgroundColor: colors.background.paper,
+      padding: 20,
+      borderRadius: 12,
+      elevation: 2,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+    },
+    description: {
+      fontSize: 14,
+      color: colors.text.secondary,
+      textAlign: "center",
+      lineHeight: 20,
+      marginBottom: 24,
+      paddingHorizontal: 16,
+    },
+    actions: {
+      width: "100%",
+      gap: 12,
+    },
+    button: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: 14,
+      borderRadius: 8,
+      gap: 8,
+    },
+    shareButton: {
+      backgroundColor: colors.primary,
+    },
+    shareButtonText: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: colors.background.paper,
+    },
+    buttonIcon: {
+      fontSize: 16,
+      color: colors.background.paper,
+      marginRight: 8,
+    },
+    downloadButton: {
+      backgroundColor: colors.background.paper,
+      borderWidth: 1,
+      borderColor: colors.primary,
+    },
+    downloadButtonText: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: colors.primary,
+    },
+    downloadButtonIcon: {
+      fontSize: 16,
+      color: colors.primary,
+      marginRight: 8,
+    },
+    qrFallback: {
+      width: 200,
+      height: 200,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: colors.background.paper,
+      padding: 20,
+    },
+    qrFallbackText: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: colors.primary,
+      marginBottom: 10,
+    },
+    qrFallbackUrl: {
+      fontSize: 12,
+      color: colors.text.secondary,
+      textAlign: "center",
+    },
+  });

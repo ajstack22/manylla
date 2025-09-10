@@ -1,4 +1,4 @@
-import '../../polyfills/crypto'; // Import crypto polyfill
+import "../../polyfills/crypto"; // Import crypto polyfill
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import nacl from "tweetnacl";
 import util from "tweetnacl-util";

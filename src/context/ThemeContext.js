@@ -102,7 +102,7 @@ const ThemeContext = createContext(undefined);
 
 // Platform-specific storage functions
 const getStorageItem = async (key) => {
-  if (Platform.OS === 'web') {
+  if (Platform.OS === "web") {
     return localStorage.getItem(key);
   } else {
     return await AsyncStorage.getItem(key);
@@ -110,14 +110,18 @@ const getStorageItem = async (key) => {
 };
 
 const setStorageItem = async (key, value) => {
-  if (Platform.OS === 'web') {
+  if (Platform.OS === "web") {
     localStorage.setItem(key, value);
   } else {
     await AsyncStorage.setItem(key, value);
   }
 };
 
-export const ThemeProvider = ({ children, initialThemeMode, onThemeChange }) => {
+export const ThemeProvider = ({
+  children,
+  initialThemeMode,
+  onThemeChange,
+}) => {
   const [theme, setTheme] = useState(initialThemeMode || "light");
   const [themeMode, setThemeMode] = useState(initialThemeMode || "light");
 
@@ -146,13 +150,13 @@ export const ThemeProvider = ({ children, initialThemeMode, onThemeChange }) => 
       theme === "light" ? "dark" : theme === "dark" ? "manylla" : "light";
     setTheme(newTheme);
     setThemeMode(newTheme);
-    
+
     try {
       await setStorageItem("manylla_theme", newTheme);
     } catch (error) {
       console.error("Error saving theme:", error);
     }
-    
+
     if (onThemeChange) {
       onThemeChange(newTheme);
     }
@@ -199,16 +203,18 @@ export const ThemeProvider = ({ children, initialThemeMode, onThemeChange }) => 
         },
         action: {
           active: colors.text.primary,
-          hover: theme === "light" 
-            ? manyllaColors.lightManilaAccent 
-            : theme === "manylla"
-              ? manyllaColors.manyllaAccent
-              : manyllaColors.darkAccent,
-          selected: theme === "light"
-            ? manyllaColors.lightManilaAccent
-            : theme === "manylla"
-              ? manyllaColors.manyllaAccent
-              : manyllaColors.darkAccent,
+          hover:
+            theme === "light"
+              ? manyllaColors.lightManilaAccent
+              : theme === "manylla"
+                ? manyllaColors.manyllaAccent
+                : manyllaColors.darkAccent,
+          selected:
+            theme === "light"
+              ? manyllaColors.lightManilaAccent
+              : theme === "manylla"
+                ? manyllaColors.manyllaAccent
+                : manyllaColors.darkAccent,
           disabled: colors.text.disabled,
           disabledBackground: "rgba(0, 0, 0, 0.12)",
         },
@@ -265,7 +271,7 @@ export const ThemeProvider = ({ children, initialThemeMode, onThemeChange }) => 
         MuiTextField: {
           styleOverrides: {
             root: {
-              '& .MuiOutlinedInput-root': {
+              "& .MuiOutlinedInput-root": {
                 borderRadius: 8,
               },
             },
@@ -308,7 +314,7 @@ export const ThemeProvider = ({ children, initialThemeMode, onThemeChange }) => 
         createTheme,
       } = require("@mui/material/styles");
       const CssBaseline = require("@mui/material/CssBaseline").default;
-      
+
       if (muiTheme) {
         const theme = createTheme(muiTheme);
 

@@ -29,9 +29,7 @@ const colors = {
   hover: "#F5F5F5",
 };
 
-export const SharedProfileView = ({
-  isAuthenticated = false,
-}) => {
+export const SharedProfileView = ({ isAuthenticated = false }) => {
   const [accessCode, setAccessCode] = useState("");
   const [isUnlocked, setIsUnlocked] = useState(isAuthenticated);
   const [error, setError] = useState("");

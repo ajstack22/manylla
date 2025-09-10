@@ -11,7 +11,6 @@ import {
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { HtmlRenderer } from "../Forms/HtmlRenderer";
 
-
 export const CategorySection = ({
   title,
   entries,

@@ -12,8 +12,8 @@ const colors = {
   white: "#FFFFFF",
   warning: {
     light: "#FFE0B2",
-    dark: "#E65100"
-  }
+    dark: "#E65100",
+  },
 };
 
 // Common medical and important terms to auto-highlight
@@ -63,7 +63,6 @@ export const HighlightedText = ({
   variant = "body2",
   highlightTerms = DEFAULT_HIGHLIGHT_TERMS,
 }) => {
-
   // Create regex pattern for highlighting
   const createHighlightRegex = () => {
     const terms = highlightTerms.map(

@@ -12,10 +12,7 @@ const colors = {
   white: "#FFFFFF",
 };
 
-export const LoadingOverlay = ({
-  open,
-  message = "Loading...",
-}) => {
+export const LoadingOverlay = ({ open, message = "Loading..." }) => {
   return (
     <Modal visible={open} transparent animationType="fade" statusBarTranslucent>
       <View style={styles.backdrop}>

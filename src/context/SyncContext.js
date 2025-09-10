@@ -38,7 +38,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
 
   // Platform-specific storage functions
   const getStorageItem = async (key) => {
-    if (Platform.OS === 'web') {
+    if (Platform.OS === "web") {
       return localStorage.getItem(key);
     } else {
       return await AsyncStorage.getItem(key);
@@ -46,7 +46,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
   };
 
   const setStorageItem = async (key, value) => {
-    if (Platform.OS === 'web') {
+    if (Platform.OS === "web") {
       localStorage.setItem(key, value);
     } else {
       await AsyncStorage.setItem(key, value);
@@ -54,7 +54,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
   };
 
   const removeStorageItem = async (key) => {
-    if (Platform.OS === 'web') {
+    if (Platform.OS === "web") {
       localStorage.removeItem(key);
     } else {
       await AsyncStorage.removeItem(key);
@@ -85,19 +85,20 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
     const initSync = async () => {
       try {
         // Check for sync enabled status (from .tsx version)
-        const enabled = await getStorageItem("manylla_sync_enabled") === "true";
+        const enabled =
+          (await getStorageItem("manylla_sync_enabled")) === "true";
         setSyncEnabled(enabled);
 
         // Check for existing recovery phrase
         const storedPhrase = await getStorageItem("manylla_recovery_phrase");
         const storedSyncId = await getStorageItem("manylla_sync_id");
-        
+
         if (storedPhrase) {
           setRecoveryPhrase(storedPhrase);
           if (storedSyncId) {
             setSyncId(storedSyncId);
           }
-          
+
           ManyllaEncryptionService.init(storedPhrase);
           setEncryptionReady(true);
 
@@ -105,7 +106,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
           if (enabled && ManyllaMinimalSyncService.enableSync) {
             await ManyllaMinimalSyncService.enableSync(storedPhrase, false);
           }
-          
+
           setSyncStatus(enabled ? "idle" : "not-setup");
 
           // Start sync polling if enabled
@@ -137,7 +138,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
       const phrase = ManyllaEncryptionService.generateRecoveryPhrase
         ? ManyllaEncryptionService.generateRecoveryPhrase()
         : ManyllaMinimalSyncService.generateRecoveryPhrase();
-      
+
       await setStorageItem("manylla_recovery_phrase", phrase);
       setRecoveryPhrase(phrase);
       ManyllaEncryptionService.init(phrase);
@@ -156,18 +157,18 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
       setSyncStatus("syncing");
 
       // Generate new or use existing recovery phrase
-      const phrase = existingPhrase || (
-        ManyllaEncryptionService.generateRecoveryPhrase
+      const phrase =
+        existingPhrase ||
+        (ManyllaEncryptionService.generateRecoveryPhrase
           ? ManyllaEncryptionService.generateRecoveryPhrase()
-          : ManyllaMinimalSyncService.generateRecoveryPhrase()
-      );
+          : ManyllaMinimalSyncService.generateRecoveryPhrase());
 
       // Enable sync with the service
       if (ManyllaMinimalSyncService.enableSync) {
         await ManyllaMinimalSyncService.enableSync(phrase, isNewSync);
       }
 
-      const syncIdValue = ManyllaMinimalSyncService.getSyncId 
+      const syncIdValue = ManyllaMinimalSyncService.getSyncId
         ? ManyllaMinimalSyncService.getSyncId()
         : `sync_${Date.now()}`;
 
@@ -182,7 +183,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
       setSyncId(syncIdValue);
       setLastSyncTime(new Date());
       setLastSync(new Date());
-      
+
       ManyllaEncryptionService.init(phrase);
       setEncryptionReady(true);
 
@@ -213,7 +214,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
 
       await setStorageItem("manylla_recovery_phrase", phrase);
       await setStorageItem("manylla_sync_enabled", "true");
-      
+
       setRecoveryPhrase(phrase);
       setSyncEnabled(true);
       ManyllaEncryptionService.init(phrase);
@@ -224,10 +225,10 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
         await ManyllaMinimalSyncService.enableSync(phrase, false);
       }
 
-      const syncIdValue = ManyllaMinimalSyncService.getSyncId 
+      const syncIdValue = ManyllaMinimalSyncService.getSyncId
         ? ManyllaMinimalSyncService.getSyncId()
         : `sync_${Date.now()}`;
-      
+
       await setStorageItem("manylla_sync_id", syncIdValue);
       setSyncId(syncIdValue);
 
@@ -253,7 +254,11 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
   const pushSync = useCallback(
     async (data) => {
       if (!encryptionReady || !recoveryPhrase) {
-        if (!syncEnabled || !ManyllaMinimalSyncService.isSyncEnabled || !ManyllaMinimalSyncService.isSyncEnabled()) {
+        if (
+          !syncEnabled ||
+          !ManyllaMinimalSyncService.isSyncEnabled ||
+          !ManyllaMinimalSyncService.isSyncEnabled()
+        ) {
           return;
         }
       }
@@ -263,8 +268,12 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
         setSyncStatus("syncing");
 
         // Use appropriate push method based on what's available
-        if (ManyllaEncryptionService.encryptSync && ManyllaMinimalSyncService.push) {
-          const encryptedData = await ManyllaEncryptionService.encryptSync(data);
+        if (
+          ManyllaEncryptionService.encryptSync &&
+          ManyllaMinimalSyncService.push
+        ) {
+          const encryptedData =
+            await ManyllaEncryptionService.encryptSync(data);
           await ManyllaMinimalSyncService.push(recoveryPhrase, encryptedData);
         } else if (ManyllaMinimalSyncService.pushData) {
           await ManyllaMinimalSyncService.pushData(data);
@@ -274,7 +283,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
         setLastSync(new Date());
         setLastSyncTime(new Date());
         setSyncError(null);
-        
+
         // Return to idle after brief success
         setTimeout(() => setSyncStatus("idle"), 2000);
       } catch (error) {
@@ -305,10 +314,15 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
       let decryptedData = null;
 
       // Use appropriate pull method based on what's available
-      if (ManyllaMinimalSyncService.pull && ManyllaEncryptionService.decryptSync) {
-        const encryptedData = await ManyllaMinimalSyncService.pull(recoveryPhrase);
+      if (
+        ManyllaMinimalSyncService.pull &&
+        ManyllaEncryptionService.decryptSync
+      ) {
+        const encryptedData =
+          await ManyllaMinimalSyncService.pull(recoveryPhrase);
         if (encryptedData) {
-          decryptedData = await ManyllaEncryptionService.decryptSync(encryptedData);
+          decryptedData =
+            await ManyllaEncryptionService.decryptSync(encryptedData);
         }
       } else if (ManyllaMinimalSyncService.pullData) {
         await ManyllaMinimalSyncService.pullData(true);
@@ -335,7 +349,11 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
 
   // Sync now (from .tsx version)
   const syncNow = async () => {
-    if (!syncEnabled || (ManyllaMinimalSyncService.isSyncEnabled && !ManyllaMinimalSyncService.isSyncEnabled())) {
+    if (
+      !syncEnabled ||
+      (ManyllaMinimalSyncService.isSyncEnabled &&
+        !ManyllaMinimalSyncService.isSyncEnabled())
+    ) {
       return;
     }
 
@@ -412,7 +430,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
       setLastSync(null);
       setEncryptionReady(false);
       setSyncError(null);
-      
+
       if (ManyllaMinimalSyncService.stopPolling) {
         ManyllaMinimalSyncService.stopPolling();
       }

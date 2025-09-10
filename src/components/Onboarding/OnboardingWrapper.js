@@ -1,10 +1,7 @@
 import React from "react";
 import OnboardingWizard from "./OnboardingWizard";
 
-
-const OnboardingWrapper = ({
-  onComplete,
-}) => {
+const OnboardingWrapper = ({ onComplete }) => {
   const handleStartFresh = () => {
     // For now, we'll prompt for a name in a simple way
     // In production, you'd want a proper form

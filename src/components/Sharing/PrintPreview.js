@@ -358,196 +358,197 @@ export const PrintPreview = ({
 
 const { width } = Dimensions.get("window");
 
-const getStyles = (colors) => StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background.default,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 0,
-    paddingVertical: 6,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-    backgroundColor: colors.background.paper,
-  },
-  headerLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 20,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: colors.text.primary,
-  },
-  closeButton: {
-    padding: 8,
-  },
-  closeButtonIcon: {
-    fontSize: 24,
-    color: colors.text.primary,
-  },
-  headerIcon: {
-    fontSize: 24,
-    color: colors.primary,
-    marginRight: 8,
-  },
-  downloadIcon: {
-    fontSize: 16,
-    color: colors.primary,
-    marginRight: 5,
-  },
-  printIcon: {
-    fontSize: 18,
-    color: colors.background.paper,
-    marginRight: 5,
-  },
-  previewContainer: {
-    flex: 1,
-    backgroundColor: colors.background.default,
-  },
-  previewContent: {
-    backgroundColor: colors.background.paper,
-    margin: 60,
-    padding: 40,
-    borderRadius: 8,
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  documentHeader: {
-    alignItems: "center",
-    marginBottom: 4,
-  },
-  documentTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: colors.text.primary,
-    textAlign: "center",
-    marginBottom: 8,
-  },
-  documentSubtitle: {
-    fontSize: 14,
-    color: colors.text.secondary,
-    textAlign: "center",
-  },
-  divider: {
-    height: 2,
-    backgroundColor: colors.border,
-    marginVertical: 6,
-  },
-  noteSection: {
-    backgroundColor: colors.background.default,
-    padding: 60,
-    borderRadius: 8,
-    marginBottom: 0,
-  },
-  noteText: {
-    fontSize: 14,
-    color: colors.text.primary,
-    fontStyle: "italic",
-    lineHeight: 20,
-  },
-  section: {
-    marginBottom: 4,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.text.primary,
-    marginBottom: 2,
-  },
-  quickInfoItems: {
-    marginLeft: 6,
-  },
-  quickInfoItem: {
-    fontSize: 14,
-    color: colors.text.primary,
-    lineHeight: 20,
-    marginBottom: 8,
-  },
-  bold: {
-    fontWeight: "bold",
-  },
-  entriesContainer: {
-    marginLeft: 6,
-  },
-  entry: {
-    marginBottom: 2,
-  },
-  entryTitle: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.text.primary,
-    marginBottom: 8,
-  },
-  entryDescription: {
-    fontSize: 14,
-    color: colors.text.primary,
-    lineHeight: 20,
-    marginLeft: 2,
-  },
-  documentFooter: {
-    marginTop: 2,
-    paddingTop: 6,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-    alignItems: "center",
-  },
-  footerText: {
-    fontSize: 12,
-    color: colors.text.secondary,
-    textAlign: "center",
-  },
-  actions: {
-    flexDirection: "row",
-    paddingHorizontal: 0,
-    paddingVertical: 6,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-    backgroundColor: colors.background.paper,
-    gap: 20,
-  },
-  button: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 4,
-    borderRadius: 8,
-    gap: 8,
-  },
-  cancelButton: {
-    backgroundColor: colors.background.paper,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  cancelButtonText: {
-    fontSize: 16,
-    color: colors.text.primary,
-    fontWeight: "500",
-  },
-  downloadButton: {
-    backgroundColor: colors.background.paper,
-    borderWidth: 1,
-    borderColor: colors.primary,
-  },
-  downloadButtonText: {
-    fontSize: 16,
-    color: colors.primary,
-    fontWeight: "600",
-  },
-  printButton: {
-    backgroundColor: colors.primary,
-  },
-  printButtonText: {
-    fontSize: 16,
-    color: colors.background.paper,
-    fontWeight: "600",
-  },
-});
+const getStyles = (colors) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background.default,
+    },
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingHorizontal: 0,
+      paddingVertical: 6,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+      backgroundColor: colors.background.paper,
+    },
+    headerLeft: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 20,
+    },
+    headerTitle: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: colors.text.primary,
+    },
+    closeButton: {
+      padding: 8,
+    },
+    closeButtonIcon: {
+      fontSize: 24,
+      color: colors.text.primary,
+    },
+    headerIcon: {
+      fontSize: 24,
+      color: colors.primary,
+      marginRight: 8,
+    },
+    downloadIcon: {
+      fontSize: 16,
+      color: colors.primary,
+      marginRight: 5,
+    },
+    printIcon: {
+      fontSize: 18,
+      color: colors.background.paper,
+      marginRight: 5,
+    },
+    previewContainer: {
+      flex: 1,
+      backgroundColor: colors.background.default,
+    },
+    previewContent: {
+      backgroundColor: colors.background.paper,
+      margin: 60,
+      padding: 40,
+      borderRadius: 8,
+      elevation: 2,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+    },
+    documentHeader: {
+      alignItems: "center",
+      marginBottom: 4,
+    },
+    documentTitle: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: colors.text.primary,
+      textAlign: "center",
+      marginBottom: 8,
+    },
+    documentSubtitle: {
+      fontSize: 14,
+      color: colors.text.secondary,
+      textAlign: "center",
+    },
+    divider: {
+      height: 2,
+      backgroundColor: colors.border,
+      marginVertical: 6,
+    },
+    noteSection: {
+      backgroundColor: colors.background.default,
+      padding: 60,
+      borderRadius: 8,
+      marginBottom: 0,
+    },
+    noteText: {
+      fontSize: 14,
+      color: colors.text.primary,
+      fontStyle: "italic",
+      lineHeight: 20,
+    },
+    section: {
+      marginBottom: 4,
+    },
+    sectionTitle: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: colors.text.primary,
+      marginBottom: 2,
+    },
+    quickInfoItems: {
+      marginLeft: 6,
+    },
+    quickInfoItem: {
+      fontSize: 14,
+      color: colors.text.primary,
+      lineHeight: 20,
+      marginBottom: 8,
+    },
+    bold: {
+      fontWeight: "bold",
+    },
+    entriesContainer: {
+      marginLeft: 6,
+    },
+    entry: {
+      marginBottom: 2,
+    },
+    entryTitle: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: colors.text.primary,
+      marginBottom: 8,
+    },
+    entryDescription: {
+      fontSize: 14,
+      color: colors.text.primary,
+      lineHeight: 20,
+      marginLeft: 2,
+    },
+    documentFooter: {
+      marginTop: 2,
+      paddingTop: 6,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+      alignItems: "center",
+    },
+    footerText: {
+      fontSize: 12,
+      color: colors.text.secondary,
+      textAlign: "center",
+    },
+    actions: {
+      flexDirection: "row",
+      paddingHorizontal: 0,
+      paddingVertical: 6,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+      backgroundColor: colors.background.paper,
+      gap: 20,
+    },
+    button: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: 4,
+      borderRadius: 8,
+      gap: 8,
+    },
+    cancelButton: {
+      backgroundColor: colors.background.paper,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    cancelButtonText: {
+      fontSize: 16,
+      color: colors.text.primary,
+      fontWeight: "500",
+    },
+    downloadButton: {
+      backgroundColor: colors.background.paper,
+      borderWidth: 1,
+      borderColor: colors.primary,
+    },
+    downloadButtonText: {
+      fontSize: 16,
+      color: colors.primary,
+      fontWeight: "600",
+    },
+    printButton: {
+      backgroundColor: colors.primary,
+    },
+    printButtonText: {
+      fontSize: 16,
+      color: colors.background.paper,
+      fontWeight: "600",
+    },
+  });

@@ -17,19 +17,16 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "react-native-image-picker";
 import { useTheme } from "../../context/ThemeContext";
 
-export const ProfileEditDialog = ({
-  open,
-  onClose,
-  profile,
-  onSave,
-}) => {
+export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
   const { colors } = useTheme();
   const [showDatePicker, setShowDatePicker] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     name: profile?.name || "",
     preferredName: profile?.preferredName || "",
-    dateOfBirth: profile?.dateOfBirth ? new Date(profile.dateOfBirth) : new Date(),
+    dateOfBirth: profile?.dateOfBirth
+      ? new Date(profile.dateOfBirth)
+      : new Date(),
     pronouns: profile?.pronouns || "",
     photo: profile?.photo || "",
   });
@@ -62,15 +59,15 @@ export const ProfileEditDialog = ({
         "Choose from where you want to select an image",
         [
           { text: "Cancel", style: "cancel" },
-          { 
-            text: "Take Photo", 
-            onPress: () => launchCamera() 
+          {
+            text: "Take Photo",
+            onPress: () => launchCamera(),
           },
-          { 
-            text: "Choose from Gallery", 
-            onPress: () => launchImageLibrary() 
+          {
+            text: "Choose from Gallery",
+            onPress: () => launchImageLibrary(),
           },
-        ]
+        ],
       );
     }
   };
@@ -183,11 +180,15 @@ export const ProfileEditDialog = ({
                   <Image source={{ uri: photoPreview }} style={styles.avatar} />
                 ) : (
                   <View style={styles.avatarPlaceholder}>
-                    <Icon name="person" size={50} color={colors.text.secondary} />
+                    <Icon
+                      name="person"
+                      size={50}
+                      color={colors.text.secondary}
+                    />
                   </View>
                 )}
               </View>
-              
+
               <TouchableOpacity
                 style={styles.photoButton}
                 onPress={handlePhotoSelect}
@@ -242,7 +243,7 @@ export const ProfileEditDialog = ({
                   Age: {calculateAge(formData.dateOfBirth)} years
                 </Text>
               </TouchableOpacity>
-              
+
               {showDatePicker && (
                 <DateTimePicker
                   value={formData.dateOfBirth}
@@ -276,16 +277,10 @@ export const ProfileEditDialog = ({
 
           {/* Footer Actions */}
           <View style={styles.modalFooter}>
-            <TouchableOpacity
-              style={styles.secondaryButton}
-              onPress={onClose}
-            >
+            <TouchableOpacity style={styles.secondaryButton} onPress={onClose}>
               <Text style={styles.secondaryButtonText}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.primaryButton}
-              onPress={handleSave}
-            >
+            <TouchableOpacity style={styles.primaryButton} onPress={handleSave}>
               <Text style={styles.primaryButtonText}>Save Profile</Text>
             </TouchableOpacity>
           </View>
@@ -295,247 +290,248 @@ export const ProfileEditDialog = ({
   );
 };
 
-const getStyles = (colors) => StyleSheet.create({
-  modalBackdrop: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: Platform.select({
-      web: 'rgba(0, 0, 0, 0.5)',
-      ios: 'rgba(0, 0, 0, 0.4)',
-      android: 'rgba(0, 0, 0, 0.5)',
-    }),
-    ...Platform.select({
-      web: {
-        backdropFilter: 'blur(4px)',
-        WebkitBackdropFilter: 'blur(4px)',
-      },
-      default: {}
-    }),
-    zIndex: 999,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContainer: {
-    backgroundColor: colors.background.paper,
-    borderRadius: 12,
-    maxWidth: Platform.select({
-      web: 600,
-      default: '90%',
-    }),
-    width: Platform.select({
-      web: 600,
-      default: '90%',
-    }),
-    maxHeight: Platform.select({
-      web: '80vh',
-      default: '80%',
-    }),
-    marginHorizontal: Platform.select({
-      web: 'auto',
-      default: 20,
-    }),
-    ...Platform.select({
-      web: {
-        boxShadow: `0 10px 40px ${colors.primary}26`,
-        border: `1px solid ${colors.border}`,
-      },
-      ios: {
-        shadowColor: colors.primary,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.15,
-        shadowRadius: 12,
-      },
-      android: {
-        elevation: 8,
-      },
-    }),
-    overflow: 'hidden',
-  },
-  modalHeader: {
-    backgroundColor: colors.primary,
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderBottomColor: Platform.select({
-      web: `${colors.primary}CC`,
-      default: colors.primary,
-    }),
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#FFFFFF',
-    fontFamily: Platform.select({
-      web: '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-      default: 'System',
-    }),
-    letterSpacing: 0.15,
-  },
-  modalCloseButton: {
-    padding: 8,
-    marginRight: -8,
-    borderRadius: 20,
-    ...Platform.select({
-      web: {
-        cursor: 'pointer',
-        transition: 'background-color 0.2s ease',
-      },
-      default: {}
-    }),
-  },
-  modalBody: {
-    padding: 20,
-    backgroundColor: colors.background.paper,
-    maxHeight: Platform.select({
-      web: 'calc(80vh - 140px)',
-      default: '70%',
-    }),
-  },
-  formField: {
-    marginVertical: 12,
-  },
-  modalLabel: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: colors.text.secondary,
-    marginBottom: 6,
-    letterSpacing: 0.1,
-  },
-  modalInput: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 6,
-    padding: 12,
-    fontSize: 16,
-    color: colors.text.primary,
-    backgroundColor: colors.background.paper,
-    ...Platform.select({
-      web: {
-        outline: 'none',
-        transition: 'border-color 0.2s ease',
-      },
-      default: {}
-    }),
-  },
-  photoSection: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  avatarContainer: {
-    marginBottom: 12,
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 2,
-    borderColor: colors.border,
-  },
-  avatarPlaceholder: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: colors.background.manila,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: colors.border,
-  },
-  photoButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 12,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: colors.primary,
-    backgroundColor: `${colors.primary}10`,
-    gap: 8,
-  },
-  photoButtonText: {
-    color: colors.primary,
-    fontSize: 15,
-    fontWeight: '500',
-  },
-  datePickerButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 6,
-    backgroundColor: colors.background.paper,
-    gap: 8,
-  },
-  datePickerText: {
-    fontSize: 16,
-    color: colors.text.primary,
-    flex: 1,
-  },
-  ageText: {
-    fontSize: 14,
-    color: colors.text.secondary,
-  },
-  modalFooter: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    padding: 16,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-    backgroundColor: colors.background.paper,
-    gap: 12,
-  },
-  primaryButton: {
-    backgroundColor: colors.primary,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 6,
-    minWidth: 100,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...Platform.select({
-      web: {
-        cursor: 'pointer',
-        transition: 'all 0.2s ease',
-      },
-      default: {}
-    }),
-  },
-  primaryButtonText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '600',
-    letterSpacing: 0.3,
-  },
-  secondaryButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: colors.border,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 6,
-    minWidth: 100,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...Platform.select({
-      web: {
-        cursor: 'pointer',
-        transition: 'all 0.2s ease',
-      },
-      default: {}
-    }),
-  },
-  secondaryButtonText: {
-    color: colors.text.primary,
-    fontSize: 15,
-    fontWeight: '500',
-    letterSpacing: 0.3,
-  },
-});
+const getStyles = (colors) =>
+  StyleSheet.create({
+    modalBackdrop: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: Platform.select({
+        web: "rgba(0, 0, 0, 0.5)",
+        ios: "rgba(0, 0, 0, 0.4)",
+        android: "rgba(0, 0, 0, 0.5)",
+      }),
+      ...Platform.select({
+        web: {
+          backdropFilter: "blur(4px)",
+          WebkitBackdropFilter: "blur(4px)",
+        },
+        default: {},
+      }),
+      zIndex: 999,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    modalContainer: {
+      backgroundColor: colors.background.paper,
+      borderRadius: 12,
+      maxWidth: Platform.select({
+        web: 600,
+        default: "90%",
+      }),
+      width: Platform.select({
+        web: 600,
+        default: "90%",
+      }),
+      maxHeight: Platform.select({
+        web: "80vh",
+        default: "80%",
+      }),
+      marginHorizontal: Platform.select({
+        web: "auto",
+        default: 20,
+      }),
+      ...Platform.select({
+        web: {
+          boxShadow: `0 10px 40px ${colors.primary}26`,
+          border: `1px solid ${colors.border}`,
+        },
+        ios: {
+          shadowColor: colors.primary,
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.15,
+          shadowRadius: 12,
+        },
+        android: {
+          elevation: 8,
+        },
+      }),
+      overflow: "hidden",
+    },
+    modalHeader: {
+      backgroundColor: colors.primary,
+      paddingVertical: 16,
+      paddingHorizontal: 20,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      borderBottomWidth: 1,
+      borderBottomColor: Platform.select({
+        web: `${colors.primary}CC`,
+        default: colors.primary,
+      }),
+    },
+    modalTitle: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: "#FFFFFF",
+      fontFamily: Platform.select({
+        web: '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        default: "System",
+      }),
+      letterSpacing: 0.15,
+    },
+    modalCloseButton: {
+      padding: 8,
+      marginRight: -8,
+      borderRadius: 20,
+      ...Platform.select({
+        web: {
+          cursor: "pointer",
+          transition: "background-color 0.2s ease",
+        },
+        default: {},
+      }),
+    },
+    modalBody: {
+      padding: 20,
+      backgroundColor: colors.background.paper,
+      maxHeight: Platform.select({
+        web: "calc(80vh - 140px)",
+        default: "70%",
+      }),
+    },
+    formField: {
+      marginVertical: 12,
+    },
+    modalLabel: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: colors.text.secondary,
+      marginBottom: 6,
+      letterSpacing: 0.1,
+    },
+    modalInput: {
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 6,
+      padding: 12,
+      fontSize: 16,
+      color: colors.text.primary,
+      backgroundColor: colors.background.paper,
+      ...Platform.select({
+        web: {
+          outline: "none",
+          transition: "border-color 0.2s ease",
+        },
+        default: {},
+      }),
+    },
+    photoSection: {
+      alignItems: "center",
+      marginBottom: 20,
+    },
+    avatarContainer: {
+      marginBottom: 12,
+    },
+    avatar: {
+      width: 100,
+      height: 100,
+      borderRadius: 50,
+      borderWidth: 2,
+      borderColor: colors.border,
+    },
+    avatarPlaceholder: {
+      width: 100,
+      height: 100,
+      borderRadius: 50,
+      backgroundColor: colors.background.manila,
+      alignItems: "center",
+      justifyContent: "center",
+      borderWidth: 2,
+      borderColor: colors.border,
+    },
+    photoButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: 12,
+      borderRadius: 6,
+      borderWidth: 1,
+      borderColor: colors.primary,
+      backgroundColor: `${colors.primary}10`,
+      gap: 8,
+    },
+    photoButtonText: {
+      color: colors.primary,
+      fontSize: 15,
+      fontWeight: "500",
+    },
+    datePickerButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      padding: 12,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 6,
+      backgroundColor: colors.background.paper,
+      gap: 8,
+    },
+    datePickerText: {
+      fontSize: 16,
+      color: colors.text.primary,
+      flex: 1,
+    },
+    ageText: {
+      fontSize: 14,
+      color: colors.text.secondary,
+    },
+    modalFooter: {
+      flexDirection: "row",
+      justifyContent: "flex-end",
+      alignItems: "center",
+      padding: 16,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+      backgroundColor: colors.background.paper,
+      gap: 12,
+    },
+    primaryButton: {
+      backgroundColor: colors.primary,
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      borderRadius: 6,
+      minWidth: 100,
+      alignItems: "center",
+      justifyContent: "center",
+      ...Platform.select({
+        web: {
+          cursor: "pointer",
+          transition: "all 0.2s ease",
+        },
+        default: {},
+      }),
+    },
+    primaryButtonText: {
+      color: "#FFFFFF",
+      fontSize: 15,
+      fontWeight: "600",
+      letterSpacing: 0.3,
+    },
+    secondaryButton: {
+      backgroundColor: "transparent",
+      borderWidth: 1,
+      borderColor: colors.border,
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      borderRadius: 6,
+      minWidth: 100,
+      alignItems: "center",
+      justifyContent: "center",
+      ...Platform.select({
+        web: {
+          cursor: "pointer",
+          transition: "all 0.2s ease",
+        },
+        default: {},
+      }),
+    },
+    secondaryButtonText: {
+      color: colors.text.primary,
+      fontSize: 15,
+      fontWeight: "500",
+      letterSpacing: 0.3,
+    },
+  });

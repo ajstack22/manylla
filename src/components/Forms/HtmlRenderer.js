@@ -12,15 +12,11 @@ const colors = {
   border: "#E0E0E0",
   white: "#FFFFFF",
   action: {
-    hover: "#F5F5F5"
-  }
+    hover: "#F5F5F5",
+  },
 };
 
-export const HtmlRenderer = ({
-  content,
-  variant = "body2",
-}) => {
-
+export const HtmlRenderer = ({ content, variant = "body2" }) => {
   // Check if content contains HTML tags
   const hasHtml = /<[^>]*>/.test(content);
 

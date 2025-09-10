@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,40 +8,40 @@ import {
   Platform,
   Modal,
   StyleSheet,
-} from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import { useTheme } from '../../context/ThemeContext';
-import { MarkdownField } from '../Forms/MarkdownField';
+} from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import { useTheme } from "../../context/ThemeContext";
+import { MarkdownField } from "../Forms/MarkdownField";
 
 const predefinedQuickInfoOptions = [
-  'Communication',
-  'Sensory',
-  'Medical',
-  'Dietary',
-  'Emergency',
-  'Medications',
-  'Allergies',
-  'Behaviors',
-  'Triggers',
-  'Calming Strategies',
-  'Sleep',
-  'Daily Routine',
-  'Custom...',
+  "Communication",
+  "Sensory",
+  "Medical",
+  "Dietary",
+  "Emergency",
+  "Medications",
+  "Allergies",
+  "Behaviors",
+  "Triggers",
+  "Calming Strategies",
+  "Sleep",
+  "Daily Routine",
+  "Custom...",
 ];
 
 const defaultColors = [
-  '#E74C3C',
-  '#3498DB',
-  '#2ECC71',
-  '#F39C12',
-  '#9B59B6',
-  '#1ABC9C',
-  '#E67E22',
-  '#34495E',
-  '#16A085',
-  '#27AE60',
-  '#8E44AD',
-  '#2980B9',
+  "#E74C3C",
+  "#3498DB",
+  "#2ECC71",
+  "#F39C12",
+  "#9B59B6",
+  "#1ABC9C",
+  "#E67E22",
+  "#34495E",
+  "#16A085",
+  "#27AE60",
+  "#8E44AD",
+  "#2980B9",
 ];
 
 export const UnifiedAddDialog = ({
@@ -52,26 +52,26 @@ export const UnifiedAddDialog = ({
   existingItems = [],
 }) => {
   const { theme } = useTheme();
-  const isWeb = Platform.OS === 'web';
-  
+  const isWeb = Platform.OS === "web";
+
   // Quick Info state
-  const [selectedOption, setSelectedOption] = useState('');
-  const [customName, setCustomName] = useState('');
-  const [value, setValue] = useState('');
-  const [privacyLevel, setPrivacyLevel] = useState('all');
+  const [selectedOption, setSelectedOption] = useState("");
+  const [customName, setCustomName] = useState("");
+  const [value, setValue] = useState("");
+  const [privacyLevel, setPrivacyLevel] = useState("all");
 
   // Category state
-  const [categoryName, setCategoryName] = useState('');
-  const [categoryColor, setCategoryColor] = useState('#3498DB');
+  const [categoryName, setCategoryName] = useState("");
+  const [categoryColor, setCategoryColor] = useState("#3498DB");
   const [showColorPicker, setShowColorPicker] = useState(false);
 
   const handleReset = () => {
-    setSelectedOption('');
-    setCustomName('');
-    setValue('');
-    setPrivacyLevel('all');
-    setCategoryName('');
-    setCategoryColor('#3498DB');
+    setSelectedOption("");
+    setCustomName("");
+    setValue("");
+    setPrivacyLevel("all");
+    setCategoryName("");
+    setCategoryColor("#3498DB");
     setShowColorPicker(false);
   };
 
@@ -81,10 +81,10 @@ export const UnifiedAddDialog = ({
   };
 
   const handleAdd = () => {
-    if (mode === 'quickInfo') {
+    if (mode === "quickInfo") {
       const displayName =
-        selectedOption === 'Custom...' ? customName : selectedOption;
-      const name = displayName.toLowerCase().replace(/\s+/g, '-');
+        selectedOption === "Custom..." ? customName : selectedOption;
+      const name = displayName.toLowerCase().replace(/\s+/g, "-");
 
       if (displayName && value) {
         onAdd({
@@ -102,7 +102,7 @@ export const UnifiedAddDialog = ({
       if (categoryName && categoryColor) {
         onAdd({
           id: `custom-${Date.now()}`,
-          name: categoryName.toLowerCase().replace(/\s+/g, '-'),
+          name: categoryName.toLowerCase().replace(/\s+/g, "-"),
           displayName: categoryName,
           color: categoryColor,
           order: existingItems.length + 1,
@@ -115,13 +115,13 @@ export const UnifiedAddDialog = ({
   };
 
   const isValid =
-    mode === 'quickInfo'
+    mode === "quickInfo"
       ? selectedOption &&
-        (selectedOption !== 'Custom...' || customName) &&
+        (selectedOption !== "Custom..." || customName) &&
         value
       : categoryName && categoryColor;
 
-  const privacyLevels = ['private', 'family', 'medical', 'education', 'all'];
+  const privacyLevels = ["private", "family", "medical", "education", "all"];
 
   const styles = StyleSheet.create({
     modal: {
@@ -129,9 +129,9 @@ export const UnifiedAddDialog = ({
       backgroundColor: theme.colors.background,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       padding: 16,
       borderBottomWidth: 1,
       borderBottomColor: theme.colors.border,
@@ -139,7 +139,7 @@ export const UnifiedAddDialog = ({
     },
     headerTitle: {
       fontSize: 18,
-      fontWeight: '600',
+      fontWeight: "600",
       color: theme.colors.text,
     },
     closeButton: {
@@ -158,7 +158,7 @@ export const UnifiedAddDialog = ({
     },
     label: {
       fontSize: 14,
-      fontWeight: '500',
+      fontWeight: "500",
       color: theme.colors.text,
       marginBottom: 8,
     },
@@ -178,8 +178,8 @@ export const UnifiedAddDialog = ({
       backgroundColor: theme.colors.surface,
     },
     privacyContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       gap: 8,
     },
     privacyButton: {
@@ -199,11 +199,11 @@ export const UnifiedAddDialog = ({
       color: theme.colors.text,
     },
     privacyButtonTextActive: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
     },
     colorGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
+      flexDirection: "row",
+      flexWrap: "wrap",
       gap: 12,
       marginTop: 8,
     },
@@ -224,18 +224,18 @@ export const UnifiedAddDialog = ({
       borderRadius: 8,
       borderWidth: 1,
       borderColor: theme.colors.border,
-      justifyContent: 'center',
-      alignItems: 'center',
-      background: 'linear-gradient(45deg, #ff0000, #00ff00, #0000ff)',
+      justifyContent: "center",
+      alignItems: "center",
+      background: "linear-gradient(45deg, #ff0000, #00ff00, #0000ff)",
     },
     customColorText: {
       fontSize: 20,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       color: theme.colors.text,
     },
     colorPickerRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 12,
       marginTop: 12,
     },
@@ -246,16 +246,16 @@ export const UnifiedAddDialog = ({
       padding: 16,
       borderRadius: 8,
       marginTop: 16,
-      alignItems: 'center',
+      alignItems: "center",
     },
     previewText: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
       fontSize: 14,
-      fontWeight: '500',
+      fontWeight: "500",
     },
     footer: {
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
+      flexDirection: "row",
+      justifyContent: "flex-end",
       gap: 12,
       padding: 16,
       borderTopWidth: 1,
@@ -268,7 +268,7 @@ export const UnifiedAddDialog = ({
       borderRadius: 8,
     },
     cancelButton: {
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
     },
     cancelButtonText: {
       color: theme.colors.text,
@@ -281,9 +281,9 @@ export const UnifiedAddDialog = ({
       backgroundColor: theme.colors.disabled,
     },
     addButtonText: {
-      color: '#FFFFFF',
+      color: "#FFFFFF",
       fontSize: 16,
-      fontWeight: '500',
+      fontWeight: "500",
     },
   });
 
@@ -292,12 +292,12 @@ export const UnifiedAddDialog = ({
       visible={open}
       onRequestClose={handleClose}
       animationType="slide"
-      presentationStyle={isWeb ? 'pageSheet' : 'fullScreen'}
+      presentationStyle={isWeb ? "pageSheet" : "fullScreen"}
     >
       <View style={styles.modal}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>
-            Add {mode === 'quickInfo' ? 'Quick Info' : 'Category'}
+            Add {mode === "quickInfo" ? "Quick Info" : "Category"}
           </Text>
           <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
             <Text style={styles.closeButtonText}>✕</Text>
@@ -305,7 +305,7 @@ export const UnifiedAddDialog = ({
         </View>
 
         <ScrollView style={styles.content}>
-          {mode === 'quickInfo' ? (
+          {mode === "quickInfo" ? (
             <>
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Select or create type</Text>
@@ -325,14 +325,18 @@ export const UnifiedAddDialog = ({
                     >
                       <Picker.Item label="Select type..." value="" />
                       {predefinedQuickInfoOptions.map((option) => (
-                        <Picker.Item key={option} label={option} value={option} />
+                        <Picker.Item
+                          key={option}
+                          label={option}
+                          value={option}
+                        />
                       ))}
                     </Picker>
                   </View>
                 )}
               </View>
 
-              {selectedOption === 'Custom...' && (
+              {selectedOption === "Custom..." && (
                 <View style={styles.inputContainer}>
                   <Text style={styles.label}>Custom panel name</Text>
                   <TextInput
@@ -370,7 +374,8 @@ export const UnifiedAddDialog = ({
                       <Text
                         style={[
                           styles.privacyButtonText,
-                          privacyLevel === level && styles.privacyButtonTextActive,
+                          privacyLevel === level &&
+                            styles.privacyButtonTextActive,
                         ]}
                       >
                         {level.charAt(0).toUpperCase() + level.slice(1)}
@@ -427,7 +432,7 @@ export const UnifiedAddDialog = ({
                           height: 40,
                           border: `1px solid ${theme.colors.border}`,
                           borderRadius: 4,
-                          cursor: 'pointer',
+                          cursor: "pointer",
                         }}
                       />
                     )}
@@ -441,9 +446,11 @@ export const UnifiedAddDialog = ({
                   </View>
                 )}
 
-                <View style={[styles.preview, { backgroundColor: categoryColor }]}>
+                <View
+                  style={[styles.preview, { backgroundColor: categoryColor }]}
+                >
                   <Text style={styles.previewText}>
-                    Preview: {categoryName || 'Category Name'}
+                    Preview: {categoryName || "Category Name"}
                   </Text>
                 </View>
               </View>
@@ -468,7 +475,7 @@ export const UnifiedAddDialog = ({
             disabled={!isValid}
           >
             <Text style={styles.addButtonText}>
-              Add {mode === 'quickInfo' ? 'Quick Info' : 'Category'}
+              Add {mode === "quickInfo" ? "Quick Info" : "Category"}
             </Text>
           </TouchableOpacity>
         </View>

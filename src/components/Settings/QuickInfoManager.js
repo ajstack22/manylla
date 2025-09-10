@@ -14,7 +14,6 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-
 const colors = {
   primary: "#8B7355",
   secondary: "#A0937D",
@@ -286,10 +285,7 @@ export const QuickInfoManager = ({
             >
               <Icon name="add" size={24} color={colors.primary} />
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={onClose}
-            >
+            <TouchableOpacity style={styles.closeButton} onPress={onClose}>
               <Icon name="close" size={24} color={colors.text} />
             </TouchableOpacity>
           </View>

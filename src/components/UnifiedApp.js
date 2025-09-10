@@ -25,7 +25,9 @@ let DateTimePicker = null;
 if (Platform.OS !== "web") {
   try {
     // Use eval to prevent webpack from analyzing this require
-    DateTimePicker = eval('require')("@react-native-community/datetimepicker").default;
+    DateTimePicker = eval("require")(
+      "@react-native-community/datetimepicker",
+    ).default;
   } catch (e) {
     // Fallback - DatePicker not available
   }

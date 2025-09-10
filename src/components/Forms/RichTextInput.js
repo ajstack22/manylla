@@ -21,8 +21,8 @@ const colors = {
   error: "#D32F2F",
   action: {
     hover: "#F5F5F5",
-    selected: "#E3F2FD"
-  }
+    selected: "#E3F2FD",
+  },
 };
 
 export const RichTextInput = ({
@@ -71,7 +71,7 @@ export const RichTextInput = ({
       ...prev,
       [command]: !prev[command],
     }));
-    
+
     if (textInputRef.current) {
       textInputRef.current.focus();
     }
@@ -95,13 +95,11 @@ export const RichTextInput = ({
       <Text
         style={[
           styles.label,
-          { color: isFocused ? colors.primary : colors.textSecondary }
+          { color: isFocused ? colors.primary : colors.textSecondary },
         ]}
       >
         {label}
-        {required && (
-          <Text style={{ color: colors.error }}> *</Text>
-        )}
+        {required && <Text style={{ color: colors.error }}> *</Text>}
       </Text>
 
       {/* Formatting Toolbar */}
@@ -109,7 +107,11 @@ export const RichTextInput = ({
         <TouchableOpacity
           style={[
             styles.formatButton,
-            { backgroundColor: activeFormats.bold ? colors.action.selected : "transparent" }
+            {
+              backgroundColor: activeFormats.bold
+                ? colors.action.selected
+                : "transparent",
+            },
           ]}
           onPress={() => applyFormat("bold")}
         >
@@ -118,7 +120,11 @@ export const RichTextInput = ({
         <TouchableOpacity
           style={[
             styles.formatButton,
-            { backgroundColor: activeFormats.italic ? colors.action.selected : "transparent" }
+            {
+              backgroundColor: activeFormats.italic
+                ? colors.action.selected
+                : "transparent",
+            },
           ]}
           onPress={() => applyFormat("italic")}
         >
@@ -127,7 +133,11 @@ export const RichTextInput = ({
         <TouchableOpacity
           style={[
             styles.formatButton,
-            { backgroundColor: activeFormats.code ? colors.action.selected : "transparent" }
+            {
+              backgroundColor: activeFormats.code
+                ? colors.action.selected
+                : "transparent",
+            },
           ]}
           onPress={() => applyFormat("code")}
         >
@@ -145,7 +155,7 @@ export const RichTextInput = ({
       <View
         style={[
           styles.editorContainer,
-          { borderColor: isFocused ? colors.primary : colors.border }
+          { borderColor: isFocused ? colors.primary : colors.border },
         ]}
       >
         {/* Placeholder is handled by TextInput */}
@@ -157,8 +167,8 @@ export const RichTextInput = ({
             {
               minHeight,
               maxHeight: multiline ? 300 : minHeight,
-              textAlignVertical: multiline ? "top" : "center"
-            }
+              textAlignVertical: multiline ? "top" : "center",
+            },
           ]}
           value={value}
           onChangeText={handleInput}
@@ -176,11 +186,7 @@ export const RichTextInput = ({
         />
       </View>
 
-      {helperText && (
-        <Text style={styles.helperText}>
-          {helperText}
-        </Text>
-      )}
+      {helperText && <Text style={styles.helperText}>{helperText}</Text>}
     </View>
   );
 };
