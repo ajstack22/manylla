@@ -136,6 +136,15 @@ const ProfileOverview = ({
   const [windowWidth, setWindowWidth] = useState(Dimensions.get('window').width);
   const scrollViewRef = useRef(null);
   
+  useEffect(() => {
+    const updateWidth = () => {
+      setWindowWidth(Dimensions.get('window').width);
+    };
+    
+    const subscription = Dimensions.addEventListener('change', updateWidth);
+    return () => subscription?.remove();
+  }, []);
+  
   if (!profile) {
     return (
       <View style={styles.emptyContainer}>
@@ -171,15 +180,6 @@ const ProfileOverview = ({
     .sort((a, b) => a.order - b.order);
   
   const visibleCategories = [...quickInfoCategories, ...regularCategories];
-  
-  useEffect(() => {
-    const updateWidth = () => {
-      setWindowWidth(Dimensions.get('window').width);
-    };
-    
-    const subscription = Dimensions.addEventListener('change', updateWidth);
-    return () => subscription?.remove();
-  }, []);
 
   // Add scroll listener for web with throttling
   useEffect(() => {

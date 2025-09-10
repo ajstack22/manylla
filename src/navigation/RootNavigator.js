@@ -54,7 +54,7 @@ const RootNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
-          headerShownalse,
+          headerShown: false,
           animation: "slide_from_right",
         }}
       >
