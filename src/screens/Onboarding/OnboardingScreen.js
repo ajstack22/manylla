@@ -13,6 +13,9 @@ import { useProfiles } from "@context/ProfileContext";
 // Components
 import { OnboardingWizard } from "@components/Onboarding";
 
+// Services
+import { StorageService } from "../../services/storage/storageService";
+
 // Utils and types
 import { ChildProfile } from "../../types/ChildProfile";
 import { unifiedCategories } from "../../utils/unifiedCategories";
@@ -61,7 +64,7 @@ const OnboardingScreen = () => {
     await AsyncStorage.removeItem("profiles");
     await AsyncStorage.removeItem("childProfile"); // Also clear old storage key
     await AsyncStorage.removeItem("manylla_profile"); // Clear any legacy keys
-    
+
     // Create a demo profile with sample data
     const demoProfile = {
       id: "demo-" + Date.now(),
@@ -188,8 +191,11 @@ const OnboardingScreen = () => {
       updatedAt: new Date(),
     };
 
+    // Save to both ProfileContext and StorageService for consistency
     await saveProfiles([demoProfile]);
     setCurrentProfile(demoProfile);
+    // Also save using StorageService so App.js can find it
+    await StorageService.saveProfile(demoProfile);
     // Navigation will automatically update based on profile existence
   };
 

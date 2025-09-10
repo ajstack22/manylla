@@ -561,8 +561,8 @@ function AppContent() {
     // OnboardingScreen now handles demo mode creation
     if (data.mode === 'demo') {
       // Demo profile is already created by OnboardingScreen
-      // Load the profile that was created
-      const savedProfile = await StorageService.loadProfile();
+      // Load the profile that was created (using correct method name)
+      const savedProfile = await StorageService.getProfile();
       if (savedProfile) {
         setProfile(savedProfile);
       }
