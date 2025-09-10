@@ -17,6 +17,19 @@ import { OnboardingWizard } from "@components/Onboarding";
 import { ChildProfile } from "../../types/ChildProfile";
 import { unifiedCategories } from "../../utils/unifiedCategories";
 
+// Helper function to map category IDs to icons
+const getIconForCategory = (categoryId) => {
+  const iconMap = {
+    "quick-info": "info",
+    "daily-support": "support",
+    "health-therapy": "health",
+    "education-goals": "education",
+    "behavior-social": "social",
+    "family-resources": "family",
+  };
+  return iconMap[categoryId] || "folder";
+};
+
 const OnboardingScreen = () => {
   const navigation = useNavigation();
   const { setProfiles } = useProfiles();
@@ -51,8 +64,11 @@ const OnboardingScreen = () => {
       pronouns: "she/her",
       dateOfBirth: new Date("2018-06-15"),
       photo: "/ellie.png",
-      // Use unified categories from the shared configuration
-      categories: [...unifiedCategories],
+      // Use unified categories from the shared configuration with icons added
+      categories: unifiedCategories.map((cat) => ({
+        ...cat,
+        icon: getIconForCategory(cat.id),
+      })),
       entries: [
         {
           id: "1",
