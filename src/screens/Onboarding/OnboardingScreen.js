@@ -5,7 +5,7 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 
 // Third-party libraries
-// (none in this file)
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Context/Hooks
 import { useProfiles } from "@context/ProfileContext";
@@ -57,6 +57,9 @@ const OnboardingScreen = () => {
   };
 
   const handleDemoMode = async () => {
+    // Clear any existing profiles first to ensure clean demo
+    await AsyncStorage.removeItem("profiles");
+    
     // Create a demo profile with sample data
     const demoProfile = {
       id: "demo-" + Date.now(),
