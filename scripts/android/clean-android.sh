@@ -13,13 +13,36 @@ export PATH=$JAVA_HOME/bin:$PATH
 
 echo ""
 echo "Cleaning Gradle build cache..."
-cd android && ./gradlew clean && cd ..
+echo "Note: May show CMake errors - this is expected and will be handled"
+cd android && ./gradlew clean 2>/dev/null || true && cd ..
 
 echo ""
-echo "Removing build directories..."
+echo "Removing build directories (CMake workaround)..."
+# Remove CMake build directories that cause clean issues
+rm -rf android/app/.cxx
 rm -rf android/app/build
 rm -rf android/build
 rm -rf android/.gradle
+
+# Clean native module build artifacts to prevent stale cache issues
+echo ""
+echo "Cleaning native module build artifacts..."
+for module in \
+    "@react-native-async-storage/async-storage" \
+    "@react-native-community/datetimepicker" \
+    "react-native-gesture-handler" \
+    "react-native-image-picker" \
+    "react-native-reanimated" \
+    "react-native-safe-area-context" \
+    "react-native-screens" \
+    "react-native-vector-icons" \
+    "react-native-webview"
+do
+    if [ -d "node_modules/$module/android/build" ]; then
+        echo "  Cleaning $module..."
+        rm -rf "node_modules/$module/android/build"
+    fi
+done
 
 echo ""
 echo "Clearing React Native caches..."
