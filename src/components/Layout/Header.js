@@ -232,44 +232,42 @@ const Header = ({
                   </TouchableOpacity>
                 )}
               </View>
-            ) : (
-              // Mobile: Show profile if available, otherwise show logo
-              profile ? (
-                <TouchableOpacity
-                  onPress={onEditProfile}
-                  style={styles.profileButton}
-                >
-                  <View style={styles.profileContent}>
-                    {profile.photo && profile.photo !== "default" ? (
-                      <Image
-                        source={{ uri: profile.photo }}
-                        style={styles.profileAvatar}
-                      />
-                    ) : (
-                      <View
-                        style={[
-                          styles.profileAvatar,
-                          styles.profileAvatarPlaceholder,
-                        ]}
-                      >
-                        <Text style={styles.profileAvatarText}>
-                          {profile.name?.charAt(0)?.toUpperCase()}
-                        </Text>
-                      </View>
-                    )}
-                    <Text style={styles.profileName} numberOfLines={1}>
-                      {profile.preferredName || profile.name}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ) : (
-                <View style={styles.logoContainer}>
-                  <View style={[styles.logoAvatar, styles.logoAvatarPlaceholder]}>
-                    <Text style={styles.logoAvatarText}>m</Text>
-                  </View>
-                  <Text style={styles.logo}>manylla</Text>
+            ) : // Mobile: Show profile if available, otherwise show logo
+            profile ? (
+              <TouchableOpacity
+                onPress={onEditProfile}
+                style={styles.profileButton}
+              >
+                <View style={styles.profileContent}>
+                  {profile.photo && profile.photo !== "default" ? (
+                    <Image
+                      source={{ uri: profile.photo }}
+                      style={styles.profileAvatar}
+                    />
+                  ) : (
+                    <View
+                      style={[
+                        styles.profileAvatar,
+                        styles.profileAvatarPlaceholder,
+                      ]}
+                    >
+                      <Text style={styles.profileAvatarText}>
+                        {profile.name?.charAt(0)?.toUpperCase()}
+                      </Text>
+                    </View>
+                  )}
+                  <Text style={styles.profileName} numberOfLines={1}>
+                    {profile.preferredName || profile.name}
+                  </Text>
                 </View>
-              )
+              </TouchableOpacity>
+            ) : (
+              <View style={styles.logoContainer}>
+                <View style={[styles.logoAvatar, styles.logoAvatarPlaceholder]}>
+                  <Text style={styles.logoAvatarText}>m</Text>
+                </View>
+                <Text style={styles.logo}>manylla</Text>
+              </View>
             )}
           </View>
 
