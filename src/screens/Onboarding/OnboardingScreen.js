@@ -55,6 +55,28 @@ const OnboardingScreen = ({ onComplete }) => {
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [photo, setPhoto] = useState("");
 
+  // Format date input with automatic slashes
+  const formatDateInput = (text) => {
+    // Remove all non-numeric characters
+    const cleaned = text.replace(/\D/g, '');
+    
+    // Apply MM/DD/YYYY format
+    let formatted = cleaned;
+    if (cleaned.length >= 3 && cleaned.length <= 4) {
+      formatted = `${cleaned.slice(0, 2)}/${cleaned.slice(2)}`;
+    } else if (cleaned.length >= 5) {
+      formatted = `${cleaned.slice(0, 2)}/${cleaned.slice(2, 4)}/${cleaned.slice(4, 8)}`;
+    }
+    
+    return formatted;
+  };
+
+  const handleDateChange = (text) => {
+    // Only allow numbers and forward slashes
+    const formatted = formatDateInput(text);
+    setDateOfBirth(formatted);
+  };
+
   const handleStartFresh = () => {
     setStep(1); // Go to child info page
   };
@@ -431,6 +453,13 @@ const OnboardingScreen = ({ onComplete }) => {
       marginTop: 10,
       marginBottom: 20,
     },
+    dateHint: {
+      fontSize: 11,
+      color: colors.text.secondary,
+      marginTop: -5,
+      marginBottom: 10,
+      fontStyle: "italic",
+    },
   });
 
   const ScrollComponent = Platform.OS === "web" ? View : ScrollView;
@@ -491,8 +520,16 @@ const OnboardingScreen = ({ onComplete }) => {
               placeholder="MM/DD/YYYY"
               placeholderTextColor={colors.text.disabled}
               value={dateOfBirth}
-              onChangeText={setDateOfBirth}
+              onChangeText={handleDateChange}
+              keyboardType={Platform.OS === 'web' ? 'default' : 'numeric'}
+              maxLength={10}
+              autoComplete="off"
             />
+            {Platform.OS === 'web' && dateOfBirth.length === 0 && (
+              <Text style={styles.dateHint}>
+                Type numbers and slashes will be added automatically
+              </Text>
+            )}
 
             <Text style={styles.helpText}>
               You can always add more details later
