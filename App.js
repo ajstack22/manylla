@@ -24,8 +24,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Shared imports
 import { ThemeProvider, SyncProvider, useSync, useTheme } from "./src/context";
-// Lazy load onboarding - only shown to new users
-const OnboardingScreen = lazy(() => import("./src/screens/Onboarding/OnboardingScreen"));
 import { StorageService } from "./src/services/storage/storageService";
 import { unifiedCategories } from "./src/utils/unifiedCategories";
 
@@ -39,6 +37,9 @@ import {
 // Import additional components
 import { ThemedToast } from "./src/components/Toast";
 import { LoadingOverlay } from "./src/components/Loading";
+import { Header, HEADER_HEIGHT } from "./src/components/Layout";
+// Lazy load onboarding - only shown to new users
+const OnboardingScreen = lazy(() => import("./src/screens/Onboarding/OnboardingScreen"));
 // Lazy load heavy sharing components
 const PrintPreview = lazy(() => 
   import("./src/components/Sharing").then(module => ({ 
@@ -50,7 +51,6 @@ const QRCodeModal = lazy(() =>
     default: module.QRCodeModal 
   }))
 );
-import { Header, HEADER_HEIGHT } from "./src/components/Layout";
 
 // Import Share and Sync dialogs - lazy loaded for better performance
 const ShareDialogOptimized = lazy(() => 
