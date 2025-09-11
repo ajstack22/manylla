@@ -1,5 +1,18 @@
 # Manylla Release Notes
 
+## Version 2025.09.10.16 - 2025-09-10
+Complete Photo Default Fix - App.js Component
+
+### Fixed
+- **App.js**: Added photo !== 'default' check in profile rendering (line 241)
+- Final component fix for legacy photo='default' 404 errors
+- All Image components across the app now properly filter 'default' values
+
+### Technical
+- Comprehensive fix covering all components: App.js, ProfileOverview.js, Header.js
+- No 404 errors will be generated from any profile photo rendering
+- Backward compatible with existing data
+
 ## Version 2025.09.10.15 - 2025-09-10
 Legacy Photo Data Fix - Handle Existing 'default' Values
 
