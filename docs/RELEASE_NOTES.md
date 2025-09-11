@@ -1,5 +1,46 @@
 # Manylla Release Notes
 
+## Version 2025.09.11.15 - 2025-09-11
+Android Technical Debt Resolution
+
+### Fixed
+- **CMake Clean Task Failure**
+  - Implemented workaround for gradle clean CMake errors
+  - Enhanced `clean-android.sh` with manual artifact removal
+  - Clean operation now completes successfully despite warnings
+
+- **Android Runtime Stability**
+  - Successfully tested on Pixel 9 emulator (API 36)
+  - Verified all native libraries load correctly
+  - No crashes or fatal errors detected
+  - Cold start time: ~1.1 seconds
+
+### Added
+- **APK Size Optimization**
+  - Enabled ProGuard for release builds
+  - Added comprehensive ProGuard rules for React Native
+  - Configured ABI splits (armeabi-v7a, arm64-v8a)
+  - Expected release APK size: 30-40MB (down from 75MB debug)
+
+### Changed
+- **Build Configuration**
+  - `enableProguardInReleaseBuilds` set to true
+  - Added `shrinkResources` for release builds
+  - Configured `packagingOptions` for native libraries
+  - Added `multiDexEnabled` for method count optimization
+
+### Technical Notes
+- Debug APK size: 75MB (includes all debug symbols)
+- Release APK with ProGuard: ~30-40MB (estimated)
+- Per-ABI APK with splits: ~20-25MB (estimated)
+- CMake clean errors are cosmetic and don't affect functionality
+
+### Documentation
+- Created comprehensive Android technical debt resolution report
+- Documented all workarounds and their rationale
+- Added testing commands and build variants guide
+- Updated ProGuard rules for all React Native dependencies
+
 ## Version 2025.09.11.14 - 2025-09-11  
 Android Platform Setup and Configuration
 
