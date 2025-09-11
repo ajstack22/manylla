@@ -1,5 +1,28 @@
 # Manylla Release Notes
 
+## Version 2025.09.11.11 - 2025-09-11
+ErrorBoundary Component Modernization
+
+### Changed
+- Modernized ErrorBoundary from class component to functional component with hooks
+- Created reusable error handling hooks (useErrorHandler, useErrorDisplay)
+- Enhanced error recovery with multiple recovery options
+- Improved error display with theme-aware styling
+
+### Added
+- `useErrorHandler` hook for centralized error management logic
+- `useErrorDisplay` hook for error UI state management
+- `ErrorFallback` functional component with enhanced error display
+- `ErrorRecovery` component with recovery options (clear storage, disable sync, reset app)
+- Preparation for React 19 migration with ErrorBoundary.future.js
+
+### Technical
+- Minimal class wrapper retained (required until React 19)
+- All logic extracted to hooks for better reusability
+- Theme-aware error UI that adapts to light/dark mode
+- Error count tracking with progressive recovery options
+- Ready for seamless migration to React 19's useErrorBoundary hook
+
 ## Version 2025.09.11.10 - 2025-09-11
 Comprehensive iOS Photo Display Fix
 
