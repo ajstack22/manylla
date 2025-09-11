@@ -1,5 +1,19 @@
 # Manylla Release Notes
 
+## Version 2025.09.11.8 - 2025-09-11
+iOS Profile Photo Display Fix
+
+### Fixed
+- iOS now correctly displays profile photos in header and profile overview
+- Relative image paths (like /ellie.png) now work on iOS by converting to absolute URLs
+- Both demo profile photos and user-uploaded photos display correctly on iOS
+
+### Technical
+- Modified Header.js and ProfileOverview.js to handle relative paths on iOS
+- Converts paths starting with "/" to full URLs (https://manylla.com/qual/...) for iOS platform
+- Base64 data URIs from user uploads continue to work as-is
+- No changes to web functionality - only iOS improvements
+
 ## Version 2025.09.11.7 - 2025-09-11
 Deployment of Vector Icons and iOS Header Fixes
 
