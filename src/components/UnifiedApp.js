@@ -62,7 +62,10 @@ export const EntryForm = ({
   category,
   entry,
   categories = [],
+  themeColors,
 }) => {
+  // Use theme colors if provided, otherwise fall back to default
+  const activeColors = themeColors || colors;
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(category || "");
@@ -221,6 +224,36 @@ export const EntryForm = ({
     </KeyboardAvoidingView>
   );
 
+  // Dynamic styles based on theme
+  const dynamicStyles = StyleSheet.create({
+    modalSafeArea: {
+      flex: 1,
+      backgroundColor: activeColors.background.paper,
+    },
+    modalHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: activeColors.border,
+      backgroundColor: activeColors.background.paper,
+    },
+    modalHeaderTitle: {
+      fontSize: 20,
+      fontWeight: "600",
+      color: activeColors.text.primary,
+    },
+    modalHeaderCloseButton: {
+      padding: 4,
+    },
+    modalCloseText: {
+      fontSize: 24,
+      color: activeColors.text.secondary,
+    },
+  });
+
   return (
     <Modal
       visible={visible}
@@ -229,16 +262,16 @@ export const EntryForm = ({
       onRequestClose={onClose}
       presentationStyle="formSheet"
     >
-      <SafeAreaView style={styles.modalSafeArea}>
-        <View style={styles.modalHeader}>
-          <Text style={styles.modalHeaderTitle}>
+      <SafeAreaView style={dynamicStyles.modalSafeArea}>
+        <View style={dynamicStyles.modalHeader}>
+          <Text style={dynamicStyles.modalHeaderTitle}>
             {entry ? "Edit Entry" : "Add Entry"}
           </Text>
           <TouchableOpacity
-            style={styles.modalHeaderCloseButton}
+            style={dynamicStyles.modalHeaderCloseButton}
             onPress={onClose}
           >
-            <Text style={styles.modalCloseText}>✕</Text>
+            <Text style={dynamicStyles.modalCloseText}>✕</Text>
           </TouchableOpacity>
         </View>
         {renderContent()}
@@ -248,7 +281,9 @@ export const EntryForm = ({
 };
 
 // Profile Edit Form Component
-export const ProfileEditForm = ({ visible, onClose, onSave, profile }) => {
+export const ProfileEditForm = ({ visible, onClose, onSave, profile, themeColors }) => {
+  // Use theme colors if provided, otherwise fall back to default
+  const activeColors = themeColors || colors;
   const [name, setName] = useState(profile?.name || "");
   const [preferredName, setPreferredName] = useState(
     profile?.preferredName || "",
@@ -354,6 +389,36 @@ export const ProfileEditForm = ({ visible, onClose, onSave, profile }) => {
     </ScrollView>
   );
 
+  // Dynamic styles based on theme
+  const dynamicStyles = StyleSheet.create({
+    modalSafeArea: {
+      flex: 1,
+      backgroundColor: activeColors.background.paper,
+    },
+    modalHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: activeColors.border,
+      backgroundColor: activeColors.background.paper,
+    },
+    modalHeaderTitle: {
+      fontSize: 20,
+      fontWeight: "600",
+      color: activeColors.text.primary,
+    },
+    modalHeaderCloseButton: {
+      padding: 4,
+    },
+    modalCloseText: {
+      fontSize: 24,
+      color: activeColors.text.secondary,
+    },
+  });
+
   return (
     <Modal
       visible={visible}
@@ -362,14 +427,14 @@ export const ProfileEditForm = ({ visible, onClose, onSave, profile }) => {
       onRequestClose={onClose}
       presentationStyle="formSheet"
     >
-      <SafeAreaView style={styles.modalSafeArea}>
-        <View style={styles.modalHeader}>
-          <Text style={styles.modalHeaderTitle}>Edit Profile</Text>
+      <SafeAreaView style={dynamicStyles.modalSafeArea}>
+        <View style={dynamicStyles.modalHeader}>
+          <Text style={dynamicStyles.modalHeaderTitle}>Edit Profile</Text>
           <TouchableOpacity
-            style={styles.modalHeaderCloseButton}
+            style={dynamicStyles.modalHeaderCloseButton}
             onPress={onClose}
           >
-            <Text style={styles.modalCloseText}>✕</Text>
+            <Text style={dynamicStyles.modalCloseText}>✕</Text>
           </TouchableOpacity>
         </View>
         {renderContent()}
@@ -379,8 +444,11 @@ export const ProfileEditForm = ({ visible, onClose, onSave, profile }) => {
 };
 
 // Category Manager Component
-export const CategoryManager = ({ visible, onClose, categories, onSave }) => {
+export const CategoryManager = ({ visible, onClose, categories, onSave, themeColors }) => {
   const [localCategories, setLocalCategories] = useState(categories || []);
+  
+  // Use theme colors if provided, otherwise fall back to default
+  const activeColors = themeColors || colors;
 
   const toggleCategory = (categoryId) => {
     setLocalCategories((prev) =>
@@ -442,8 +510,8 @@ export const CategoryManager = ({ visible, onClose, categories, onSave }) => {
               <Switch
                 value={category.isVisible}
                 onValueChange={() => toggleCategory(category.id)}
-                trackColor={{ false: colors.border, true: colors.primary }}
-                thumbColor={colors.background.paper}
+                trackColor={{ false: activeColors.border, true: activeColors.primary }}
+                thumbColor={activeColors.background.paper}
               />
 
               <View style={styles.categoryMoveButtons}>
@@ -492,6 +560,36 @@ export const CategoryManager = ({ visible, onClose, categories, onSave }) => {
     </View>
   );
 
+  // Dynamic styles based on theme
+  const dynamicStyles = StyleSheet.create({
+    modalSafeArea: {
+      flex: 1,
+      backgroundColor: activeColors.background.paper,
+    },
+    modalHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: activeColors.border,
+      backgroundColor: activeColors.background.paper,
+    },
+    modalHeaderTitle: {
+      fontSize: 20,
+      fontWeight: "600",
+      color: activeColors.text.primary,
+    },
+    modalHeaderCloseButton: {
+      padding: 4,
+    },
+    modalCloseText: {
+      fontSize: 24,
+      color: activeColors.text.secondary,
+    },
+  });
+
   return (
     <Modal
       visible={visible}
@@ -500,14 +598,14 @@ export const CategoryManager = ({ visible, onClose, categories, onSave }) => {
       onRequestClose={onClose}
       presentationStyle="formSheet"
     >
-      <SafeAreaView style={styles.modalSafeArea}>
-        <View style={styles.modalHeader}>
-          <Text style={styles.modalHeaderTitle}>Manage Categories</Text>
+      <SafeAreaView style={dynamicStyles.modalSafeArea}>
+        <View style={dynamicStyles.modalHeader}>
+          <Text style={dynamicStyles.modalHeaderTitle}>Manage Categories</Text>
           <TouchableOpacity
-            style={styles.modalHeaderCloseButton}
+            style={dynamicStyles.modalHeaderCloseButton}
             onPress={onClose}
           >
-            <Text style={styles.modalCloseText}>✕</Text>
+            <Text style={dynamicStyles.modalCloseText}>✕</Text>
           </TouchableOpacity>
         </View>
         {renderContent()}

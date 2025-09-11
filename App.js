@@ -1246,6 +1246,7 @@ function AppContent() {
         category={selectedCategory}
         entry={editingEntry}
         categories={unifiedCategories.filter((cat) => cat.isVisible)}
+        themeColors={colors}
       />
 
       {/* Profile Edit Modal */}
@@ -1254,11 +1255,13 @@ function AppContent() {
         onClose={() => setProfileEditOpen(false)}
         onSave={handleUpdateProfile}
         profile={profile}
+        themeColors={colors}
       />
 
       {/* Category Manager Modal */}
       <CategoryManager
         visible={categoriesOpen}
+        themeColors={colors}
         onClose={() => setCategoriesOpen(false)}
         onSave={async (updatedCategories) => {
           const updatedProfile = {
