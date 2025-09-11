@@ -1,5 +1,33 @@
 # Manylla Release Notes
 
+## Version 2025.09.10.12 - 2025-09-10
+Root Directory and Code Cleanup - Admin Tasks
+
+### Changed
+- **Root directory cleanup**: Removed clutter and improved organization
+  - Removed 5 App.js backup/test files (App.js.backup, App.simple.js, App.test.js, etc.)
+  - Removed 11 old migration and fix scripts (completed one-time scripts)
+  - Removed old directories: backup-before-unification/, build/
+  - Removed config-overrides.js (not needed for React Native Web)
+  - Root directory now clean with only essential files
+
+- **Code cleanup**: Fixed last console.log reference
+  - Removed console.log from comment in src/index.js line 17
+  - Fixed typo in URL (morettps -> more: https)
+  - Zero console.log references now in src/
+
+### Technical
+- Created comprehensive backup before cleanup (backups/admin-cleanup-20250910-195426.tar.gz)
+- Verified build still works after cleanup
+- No functional changes - purely organizational
+
+### Files Removed
+- App.js variants: App.js.backup, App.simple.js, App.test.js, App.test2.js, App.test3.js
+- Migration scripts: apply-schema.sh, consolidate-platform-files.sh, consolidate-unified.sh
+- Fix scripts: final-compliance-check.sh, fix-all-malformed-props.sh, fix-all-styles.sh, etc.
+- Directories: backup-before-unification/, build/
+- Config: config-overrides.js
+
 ## Version 2025.09.10.11 - 2025-09-10
 Production Deployment - Onboarding Consolidation
 

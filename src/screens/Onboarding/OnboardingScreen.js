@@ -16,7 +16,6 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Context/Hooks
-import { useProfiles } from "../../context/ProfileContext";
 import { useTheme } from "../../context/ThemeContext";
 
 // Components
@@ -49,7 +48,6 @@ const getIconForCategory = (categoryId) => {
 };
 
 const OnboardingScreen = ({ onComplete }) => {
-  const { saveProfiles, setCurrentProfile } = useProfiles();
   const { colors } = useTheme();
   const [step, setStep] = useState(0);
   const [accessCode, setAccessCode] = useState("");
@@ -95,9 +93,11 @@ const OnboardingScreen = ({ onComplete }) => {
       updatedAt: new Date(),
     };
 
-    await saveProfiles([newProfile]);
-    setCurrentProfile(newProfile);
-    // Navigation will automatically update based on profile existence
+    // This path is only for navigation usage, not App.js usage
+    // await saveProfiles([newProfile]);
+    // await setCurrentProfile(newProfile);
+    // For now, just save to storage directly
+    await StorageService.saveProfile(newProfile);
   };
 
   const handleJoinWithCode = async (code) => {
@@ -249,12 +249,9 @@ const OnboardingScreen = ({ onComplete }) => {
       updatedAt: new Date(),
     };
 
-    // Save to both ProfileContext and StorageService for consistency
-    await saveProfiles([demoProfile]);
-    setCurrentProfile(demoProfile);
-    // Also save using StorageService so App.js can find it
+    // This path is only for navigation usage, not App.js usage
+    // Save using StorageService
     await StorageService.saveProfile(demoProfile);
-    // Navigation will automatically update based on profile existence
   };
 
   // Styles
