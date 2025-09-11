@@ -12,7 +12,7 @@ import { useTheme } from "../../context/ThemeContext";
 
 /**
  * ThemedModal - A unified modal component with consistent styling
- * 
+ *
  * @param {boolean} visible - Whether the modal is visible
  * @param {function} onClose - Function to call when closing the modal
  * @param {string} title - Title to display in the header
@@ -45,9 +45,9 @@ export const ThemedModal = ({
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerSpacer} />
-          
+
           <Text style={styles.headerTitle}>{title}</Text>
-          
+
           {showCloseButton ? (
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
               <Text style={styles.closeButtonText}>✕</Text>
@@ -58,9 +58,7 @@ export const ThemedModal = ({
         </View>
 
         {/* Content */}
-        <View style={styles.content}>
-          {children}
-        </View>
+        <View style={styles.content}>{children}</View>
       </SafeAreaView>
     </Modal>
   );
@@ -68,7 +66,7 @@ export const ThemedModal = ({
 
 const getStyles = (colors, theme, headerStyle) => {
   const isHeaderPrimary = headerStyle === "primary";
-  
+
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -78,7 +76,9 @@ const getStyles = (colors, theme, headerStyle) => {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      backgroundColor: isHeaderPrimary ? colors.primary : colors.background.paper,
+      backgroundColor: isHeaderPrimary
+        ? colors.primary
+        : colors.background.paper,
       paddingHorizontal: 16,
       paddingVertical: Platform.select({
         ios: 16,
@@ -92,16 +92,17 @@ const getStyles = (colors, theme, headerStyle) => {
         ios: {
           shadowColor: colors.text.primary,
           shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: theme === 'dark' ? 0.3 : 0.1,
+          shadowOpacity: theme === "dark" ? 0.3 : 0.1,
           shadowRadius: 3,
         },
         android: {
           elevation: 3,
         },
         web: {
-          boxShadow: theme === 'dark' 
-            ? `0 2px 4px rgba(255,255,255,0.1)` 
-            : `0 2px 4px rgba(0,0,0,0.1)`,
+          boxShadow:
+            theme === "dark"
+              ? `0 2px 4px rgba(255,255,255,0.1)`
+              : `0 2px 4px rgba(0,0,0,0.1)`,
         },
       }),
     },

@@ -478,7 +478,6 @@ export const ShareDialogOptimized = ({ open, onClose, profile }) => {
       headerStyle="primary"
       presentationStyle="pageSheet"
     >
-
       {step === "configure" ? renderConfigureStep() : renderCompleteStep()}
     </ThemedModal>
   );

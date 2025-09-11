@@ -70,7 +70,7 @@ export const EntryForm = ({
   const [selectedCategory, setSelectedCategory] = useState(category || "");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  
+
   // Create dynamic styles based on active colors
   const dynamicStyles = createDynamicStyles(activeColors);
 
@@ -130,7 +130,8 @@ export const EntryForm = ({
                 key={cat.id}
                 style={[
                   dynamicStyles.categoryChip,
-                  selectedCategory === cat.name && dynamicStyles.categoryChipActive,
+                  selectedCategory === cat.name &&
+                    dynamicStyles.categoryChipActive,
                   {
                     backgroundColor:
                       selectedCategory === cat.name
@@ -188,7 +189,9 @@ export const EntryForm = ({
             style={dynamicStyles.dateButton}
             onPress={() => setShowDatePicker(true)}
           >
-            <Text style={dynamicStyles.dateText}>{date.toLocaleDateString()}</Text>
+            <Text style={dynamicStyles.dateText}>
+              {date.toLocaleDateString()}
+            </Text>
           </TouchableOpacity>
           {showDatePicker && Platform.OS !== "web" && DateTimePicker && (
             <DateTimePicker
@@ -240,7 +243,13 @@ export const EntryForm = ({
 };
 
 // Profile Edit Form Component
-export const ProfileEditForm = ({ visible, onClose, onSave, profile, themeColors }) => {
+export const ProfileEditForm = ({
+  visible,
+  onClose,
+  onSave,
+  profile,
+  themeColors,
+}) => {
   // Use theme colors if provided, otherwise fall back to default
   const activeColors = themeColors || colors;
   const [name, setName] = useState(profile?.name || "");
@@ -252,7 +261,7 @@ export const ProfileEditForm = ({ visible, onClose, onSave, profile, themeColors
     profile?.dateOfBirth ? new Date(profile.dateOfBirth) : new Date(),
   );
   const [showDatePicker, setShowDatePicker] = useState(false);
-  
+
   // Create dynamic styles based on active colors
   const dynamicStyles = createDynamicStyles(activeColors);
 
@@ -365,12 +374,18 @@ export const ProfileEditForm = ({ visible, onClose, onSave, profile, themeColors
 };
 
 // Category Manager Component
-export const CategoryManager = ({ visible, onClose, categories, onSave, themeColors }) => {
+export const CategoryManager = ({
+  visible,
+  onClose,
+  categories,
+  onSave,
+  themeColors,
+}) => {
   const [localCategories, setLocalCategories] = useState(categories || []);
-  
+
   // Use theme colors if provided, otherwise fall back to default
   const activeColors = themeColors || colors;
-  
+
   // Create dynamic styles based on active colors
   const dynamicStyles = createDynamicStyles(activeColors);
 
@@ -434,7 +449,10 @@ export const CategoryManager = ({ visible, onClose, categories, onSave, themeCol
               <Switch
                 value={category.isVisible}
                 onValueChange={() => toggleCategory(category.id)}
-                trackColor={{ false: activeColors.border, true: activeColors.primary }}
+                trackColor={{
+                  false: activeColors.border,
+                  true: activeColors.primary,
+                }}
                 thumbColor={activeColors.background.paper}
               />
 
@@ -498,186 +516,187 @@ export const CategoryManager = ({ visible, onClose, categories, onSave, themeCol
 };
 
 // Function to create dynamic styles based on theme colors
-const createDynamicStyles = (activeColors) => StyleSheet.create({
-  modalSafeArea: {
-    flex: 1,
-    backgroundColor: activeColors.background.paper,
-  },
-  modalHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: activeColors.border,
-    backgroundColor: activeColors.background.paper,
-  },
-  modalHeaderTitle: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: activeColors.text.primary,
-  },
-  modalHeaderCloseButton: {
-    padding: 4,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: Platform.OS === "web" ? 20 : 0,
-  },
-  modalCloseText: {
-    fontSize: 24,
-    color: activeColors.text.secondary,
-  },
-  formContainer: {
-    flex: 1,
-  },
-  formContentContainer: {
-    padding: 20,
-  },
-  inputGroup: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: activeColors.text.secondary,
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: activeColors.border,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 16,
-    color: activeColors.text.primary,
-    backgroundColor: activeColors.background.default,
-  },
-  textArea: {
-    minHeight: 120,
-    textAlignVertical: "top",
-  },
-  categoryScroll: {
-    flexDirection: "row",
-    marginTop: 8,
-  },
-  categoryChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    marginRight: 8,
-    borderWidth: 1,
-    borderColor: activeColors.border,
-  },
-  categoryChipActive: {
-    borderColor: "transparent",
-  },
-  categoryChipText: {
-    fontSize: 14,
-    color: activeColors.text.secondary,
-  },
-  categoryChipTextActive: {
-    color: "white",
-    fontWeight: "600",
-  },
-  dateButton: {
-    borderWidth: 1,
-    borderColor: activeColors.border,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    backgroundColor: activeColors.background.default,
-  },
-  dateText: {
-    fontSize: 16,
-    color: activeColors.text.primary,
-  },
-  formActions: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    marginTop: 24,
-    gap: 12,
-  },
-  button: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 8,
-    minWidth: 100,
-    alignItems: "center",
-  },
-  buttonPrimary: {
-    backgroundColor: activeColors.primary,
-  },
-  buttonPrimaryText: {
-    color: "white",
-    fontWeight: "600",
-    fontSize: 16,
-  },
-  buttonCancel: {
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: activeColors.border,
-  },
-  buttonCancelText: {
-    color: activeColors.text.secondary,
-    fontSize: 16,
-  },
-  categoryList: {
-    maxHeight: 400,
-  },
-  categoryItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: activeColors.border,
-  },
-  categoryItemLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1,
-  },
-  categoryColorDot: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    marginRight: 12,
-  },
-  categoryItemName: {
-    fontSize: 16,
-    color: activeColors.text.primary,
-  },
-  categoryItemActions: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
-  categoryMoveButtons: {
-    flexDirection: "row",
-    gap: 40,
-  },
-  moveButton: {
-    width: 28,
-    height: 28,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: activeColors.background.manila,
-    borderRadius: 4,
-  },
-  moveButtonDisabled: {
-    opacity: 0.3,
-  },
-  moveButtonText: {
-    fontSize: 16,
-    color: activeColors.text.primary,
-    fontWeight: "bold",
-  },
-});
+const createDynamicStyles = (activeColors) =>
+  StyleSheet.create({
+    modalSafeArea: {
+      flex: 1,
+      backgroundColor: activeColors.background.paper,
+    },
+    modalHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: activeColors.border,
+      backgroundColor: activeColors.background.paper,
+    },
+    modalHeaderTitle: {
+      fontSize: 20,
+      fontWeight: "600",
+      color: activeColors.text.primary,
+    },
+    modalHeaderCloseButton: {
+      padding: 4,
+    },
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: "rgba(0,0,0,0.5)",
+      justifyContent: "center",
+      alignItems: "center",
+      paddingHorizontal: Platform.OS === "web" ? 20 : 0,
+    },
+    modalCloseText: {
+      fontSize: 24,
+      color: activeColors.text.secondary,
+    },
+    formContainer: {
+      flex: 1,
+    },
+    formContentContainer: {
+      padding: 20,
+    },
+    inputGroup: {
+      marginBottom: 20,
+    },
+    label: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: activeColors.text.secondary,
+      marginBottom: 8,
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: activeColors.border,
+      borderRadius: 8,
+      paddingHorizontal: 12,
+      paddingVertical: 10,
+      fontSize: 16,
+      color: activeColors.text.primary,
+      backgroundColor: activeColors.background.default,
+    },
+    textArea: {
+      minHeight: 120,
+      textAlignVertical: "top",
+    },
+    categoryScroll: {
+      flexDirection: "row",
+      marginTop: 8,
+    },
+    categoryChip: {
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      borderRadius: 20,
+      marginRight: 8,
+      borderWidth: 1,
+      borderColor: activeColors.border,
+    },
+    categoryChipActive: {
+      borderColor: "transparent",
+    },
+    categoryChipText: {
+      fontSize: 14,
+      color: activeColors.text.secondary,
+    },
+    categoryChipTextActive: {
+      color: "white",
+      fontWeight: "600",
+    },
+    dateButton: {
+      borderWidth: 1,
+      borderColor: activeColors.border,
+      borderRadius: 8,
+      paddingHorizontal: 12,
+      paddingVertical: 10,
+      backgroundColor: activeColors.background.default,
+    },
+    dateText: {
+      fontSize: 16,
+      color: activeColors.text.primary,
+    },
+    formActions: {
+      flexDirection: "row",
+      justifyContent: "flex-end",
+      marginTop: 24,
+      gap: 12,
+    },
+    button: {
+      paddingHorizontal: 20,
+      paddingVertical: 12,
+      borderRadius: 8,
+      minWidth: 100,
+      alignItems: "center",
+    },
+    buttonPrimary: {
+      backgroundColor: activeColors.primary,
+    },
+    buttonPrimaryText: {
+      color: "white",
+      fontWeight: "600",
+      fontSize: 16,
+    },
+    buttonCancel: {
+      backgroundColor: "transparent",
+      borderWidth: 1,
+      borderColor: activeColors.border,
+    },
+    buttonCancelText: {
+      color: activeColors.text.secondary,
+      fontSize: 16,
+    },
+    categoryList: {
+      maxHeight: 400,
+    },
+    categoryItem: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingVertical: 12,
+      borderBottomWidth: 1,
+      borderBottomColor: activeColors.border,
+    },
+    categoryItemLeft: {
+      flexDirection: "row",
+      alignItems: "center",
+      flex: 1,
+    },
+    categoryColorDot: {
+      width: 16,
+      height: 16,
+      borderRadius: 8,
+      marginRight: 12,
+    },
+    categoryItemName: {
+      fontSize: 16,
+      color: activeColors.text.primary,
+    },
+    categoryItemActions: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+    },
+    categoryMoveButtons: {
+      flexDirection: "row",
+      gap: 40,
+    },
+    moveButton: {
+      width: 28,
+      height: 28,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: activeColors.background.manila,
+      borderRadius: 4,
+    },
+    moveButtonDisabled: {
+      opacity: 0.3,
+    },
+    moveButtonText: {
+      fontSize: 16,
+      color: activeColors.text.primary,
+      fontWeight: "bold",
+    },
+  });
 
 // Create default styles with default colors (for backward compatibility)
 const styles = createDynamicStyles(colors);

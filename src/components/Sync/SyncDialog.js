@@ -576,7 +576,6 @@ export const SyncDialog = ({ open, onClose }) => {
       headerStyle="primary"
       presentationStyle="pageSheet"
     >
-
       {renderContent()}
     </ThemedModal>
   );
