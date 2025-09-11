@@ -230,11 +230,9 @@ describe("Integration Scenarios", () => {
     ErrorHandler.log(error, { context: "api call" });
 
     // In production, this would not log
-    // Check based on environment
+    // For testing, we always check the spy was called in dev mode
     const isDevelopment = process.env.NODE_ENV !== "production";
-    if (isDevelopment) {
-      expect(logSpy).toHaveBeenCalled();
-    }
+    expect(logSpy).toHaveBeenCalledTimes(isDevelopment ? 1 : 0);
 
     logSpy.mockRestore();
   });
