@@ -1,5 +1,19 @@
 # Manylla Release Notes
 
+## Version 2025.09.10.15 - 2025-09-10
+Legacy Photo Data Fix - Handle Existing 'default' Values
+
+### Fixed
+- **ProfileOverview.js**: Added check for photo !== 'default' before rendering Image
+- **Header.js**: Added check for photo !== 'default' before rendering Image
+- Prevents 404 errors from legacy profiles with photo='default' stored in database
+- Gracefully handles existing data without requiring migration
+
+### Technical
+- Complete fix for photo='default' issue across all components
+- Handles both new profiles (prevented at source) and old profiles (filtered at display)
+- No data migration required - backward compatible
+
 ## Version 2025.09.10.14 - 2025-09-10
 Console.log Cleanup - Code Standards Compliance
 
