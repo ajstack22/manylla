@@ -175,7 +175,14 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
             <View style={styles.photoSection}>
               <View style={styles.avatarContainer}>
                 {photoPreview ? (
-                  <Image source={{ uri: photoPreview }} style={styles.avatar} />
+                  <Image 
+                    source={{ 
+                      uri: Platform.OS === 'ios' && photoPreview.startsWith('/') 
+                        ? `https://manylla.com/qual${photoPreview}` // Convert relative path to absolute URL for iOS
+                        : photoPreview 
+                    }} 
+                    style={styles.avatar} 
+                  />
                 ) : (
                   <View style={styles.avatarPlaceholder}>
                     <Icon
