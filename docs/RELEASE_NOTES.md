@@ -1,5 +1,16 @@
 # Manylla Release Notes
 
+## Version 2025.09.10.24 - 2025-09-11
+Production Deployment - Optimized Dependencies
+
+### Changes Deployed
+- 866 packages removed from dependencies
+- 100MB reduction in node_modules (1.5GB → 1.4GB)  
+- Lazy loading for 5 components (Onboarding, Share, Sync, Print, QR)
+- Code splitting with separate chunk files
+- Zero security vulnerabilities
+- Improved initial load performance
+
 ## Version 2025.09.10.23 - 2025-09-11
 Actual Deployment - Package Optimizations Live
 
