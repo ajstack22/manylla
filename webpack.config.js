@@ -131,6 +131,8 @@ module.exports = {
         { from: 'public/manifest.json', to: 'manifest.json', noErrorOnMissing: true },
         { from: 'public/robots.txt', to: 'robots.txt', noErrorOnMissing: true },
         { from: 'public/global-styles.css', to: 'global-styles.css', noErrorOnMissing: true },
+        { from: 'public/vector-icons.css', to: 'vector-icons.css', noErrorOnMissing: true },
+        { from: 'node_modules/react-native-vector-icons/Fonts', to: 'fonts' },
       ],
     }),
     ...(isProduction ? [
