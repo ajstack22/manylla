@@ -58,8 +58,8 @@ const OnboardingScreen = ({ onComplete }) => {
   // Format date input with automatic slashes
   const formatDateInput = (text) => {
     // Remove all non-numeric characters
-    const cleaned = text.replace(/\D/g, '');
-    
+    const cleaned = text.replace(/\D/g, "");
+
     // Apply MM/DD/YYYY format
     let formatted = cleaned;
     if (cleaned.length >= 3 && cleaned.length <= 4) {
@@ -67,7 +67,7 @@ const OnboardingScreen = ({ onComplete }) => {
     } else if (cleaned.length >= 5) {
       formatted = `${cleaned.slice(0, 2)}/${cleaned.slice(2, 4)}/${cleaned.slice(4, 8)}`;
     }
-    
+
     return formatted;
   };
 
@@ -496,7 +496,10 @@ const OnboardingScreen = ({ onComplete }) => {
               }}
               activeOpacity={0.7}
             >
-              <PersonIcon size={40} color={photo ? colors.primary : colors.text.secondary} />
+              <PersonIcon
+                size={40}
+                color={photo ? colors.primary : colors.text.secondary}
+              />
             </TouchableOpacity>
             <Text style={styles.photoLabel}>
               {photo ? "Photo selected" : "Tap to add photo"}
@@ -521,11 +524,11 @@ const OnboardingScreen = ({ onComplete }) => {
               placeholderTextColor={colors.text.disabled}
               value={dateOfBirth}
               onChangeText={handleDateChange}
-              keyboardType={Platform.OS === 'web' ? 'default' : 'numeric'}
+              keyboardType={Platform.OS === "web" ? "default" : "numeric"}
               maxLength={10}
               autoComplete="off"
             />
-            {Platform.OS === 'web' && dateOfBirth.length === 0 && (
+            {Platform.OS === "web" && dateOfBirth.length === 0 && (
               <Text style={styles.dateHint}>
                 Type numbers and slashes will be added automatically
               </Text>
