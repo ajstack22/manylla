@@ -230,7 +230,9 @@ describe("Integration Scenarios", () => {
     ErrorHandler.log(error, { context: "api call" });
 
     // In production, this would not log
-    if (process.env.NODE_ENV !== "production") {
+    // Check based on environment
+    const isDevelopment = process.env.NODE_ENV !== "production";
+    if (isDevelopment) {
       expect(logSpy).toHaveBeenCalled();
     }
 

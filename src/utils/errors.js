@@ -113,7 +113,7 @@ export const ErrorHandler = {
         timestamp: error.timestamp || new Date().toISOString(),
       });
     }
-    
+
     // In production, errors should be sent to tracking service:
     // if (window.Sentry) {
     //   window.Sentry.captureException(error, { extra: context });
