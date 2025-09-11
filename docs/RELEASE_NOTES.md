@@ -1,5 +1,13 @@
 # Manylla Release Notes
 
+## Version 2025.09.11.7 - 2025-09-11
+Deployment of Vector Icons and iOS Header Fixes
+
+### Deployed
+- All fixes from v2025.09.11.6 now live on qual environment
+- Vector icons displaying correctly on web
+- iOS header showing profile information properly
+
 ## Version 2025.09.11.6 - 2025-09-11
 React Native Vector Icons & iOS Header Profile Display Fix
 
