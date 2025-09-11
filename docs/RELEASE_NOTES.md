@@ -1,5 +1,42 @@
 # Manylla Release Notes
 
+## Version 2025.09.11.14 - 2025-09-11  
+Android Platform Setup and Configuration
+
+### Added
+- **Android Development Environment**
+  - Java 17 configuration (required for Android builds, replacing Java 24)
+  - Android SDK and NDK setup (NDK 27.1.12297006)
+  - Gradle 8.14.3 configuration with optimizations
+  - Android build scripts in `scripts/android/`
+    - `run-android.sh` - Launch app with Java 17 enforcement
+    - `build-android.sh` - Create debug/release APKs and AABs
+    - `clean-android.sh` - Clean build artifacts and caches
+
+- **Android Build Configuration**
+  - Updated `android/build.gradle` with React Native 0.80.1 compatibility
+  - Enhanced `android/gradle.properties` with performance optimizations
+  - 16 KB page size compliance for Android 16
+  - Architecture optimization (arm64-v8a, armeabi-v7a only)
+
+### Changed
+- Build tools version updated to 35.0.0
+- Target SDK updated to 35 (Android 15)
+- Kotlin version updated to 2.1.20
+- JVM memory increased to 8192m for builds
+- Enabled Gradle parallel builds and caching
+
+### Technical Notes
+- Requires Java 17 (NOT Java 24) for Android builds
+- Emulators available: Pixel_9, Pixel_9_Pro_XL, Pixel_Tablet
+- Build output optimized for ARM architectures only (smaller APK)
+- New Architecture and Hermes enabled for performance
+
+### Known Issues
+- react-native-safe-area-context v4.14.0 has compatibility issues with RN 0.80.1
+  - Compilation error in RNCSafeAreaViewShadowNode.cpp
+  - Requires library update or patch for full Android support
+
 ## Version 2025.09.11.13 - 2025-01-11
 Comprehensive Error Handling System (Story 012)
 
