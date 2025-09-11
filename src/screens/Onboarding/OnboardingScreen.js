@@ -610,13 +610,14 @@ const OnboardingScreen = ({ onComplete }) => {
               {isProcessingPhoto ? (
                 <Text style={styles.loadingText}>Processing...</Text>
               ) : photo ? (
-                <Image 
-                  source={{ 
-                    uri: Platform.OS === 'ios' && photo.startsWith('/') 
-                      ? `https://manylla.com/qual${photo}` // Convert relative path to absolute URL for iOS
-                      : photo 
-                  }} 
-                  style={styles.photoImage} 
+                <Image
+                  source={{
+                    uri:
+                      Platform.OS === "ios" && photo.startsWith("/")
+                        ? `https://manylla.com/qual${photo}` // Convert relative path to absolute URL for iOS
+                        : photo,
+                  }}
+                  style={styles.photoImage}
                 />
               ) : (
                 <PersonIcon size={40} color={colors.text.secondary} />

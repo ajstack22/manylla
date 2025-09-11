@@ -206,13 +206,14 @@ export const ProfileCreateDialog = ({ open, onClose, onCreate }) => {
 
       <View style={styles.photoContainer}>
         {photoPreview ? (
-          <Image 
-            source={{ 
-              uri: Platform.OS === 'ios' && photoPreview.startsWith('/') 
-                ? `https://manylla.com/qual${photoPreview}` // Convert relative path to absolute URL for iOS
-                : photoPreview 
-            }} 
-            style={styles.photoPreview} 
+          <Image
+            source={{
+              uri:
+                Platform.OS === "ios" && photoPreview.startsWith("/")
+                  ? `https://manylla.com/qual${photoPreview}` // Convert relative path to absolute URL for iOS
+                  : photoPreview,
+            }}
+            style={styles.photoPreview}
           />
         ) : (
           <View style={styles.photoPlaceholder}>
