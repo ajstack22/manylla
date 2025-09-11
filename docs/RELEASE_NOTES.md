@@ -1,5 +1,22 @@
 # Manylla Release Notes
 
+## Version 2025.09.10.18 - 2025-09-10
+EntryForm Component Improvements - Fixed Correct Component
+
+### Fixed
+- Added Quick Info category selector to entry form for Quick Info entries
+- Removed unnecessary "Share With" visibility options from entry form
+- Fixed the ACTUAL EntryForm component used by the app (in UnifiedApp.js)
+
+### Technical
+- Updated EntryForm in src/components/UnifiedApp.js (the actual component in use)
+- Added isQuickInfo and quickInfoCategories props support
+- Removed visibility state management and UI from the correct component
+- Cleaned up unused visibility-related styles
+- Updated App.js to pass required props to EntryForm
+- Deleted unused duplicate EntryForm.js from Forms directory
+- Category selector now shows appropriate categories based on entry type
+
 ## Version 2025.09.10.17 - 2025-09-10
 REVISED: Onboarding UX - Date and Photo Pickers with Mobile Limitations
 

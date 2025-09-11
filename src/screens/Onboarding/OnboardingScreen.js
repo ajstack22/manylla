@@ -663,7 +663,8 @@ const OnboardingScreen = ({ onComplete }) => {
                   border: `1px solid ${colors.border}`,
                   backgroundColor: colors.background.secondary,
                   color: colors.text.primary,
-                  width: "100%",
+                  width: "auto",
+                  alignSelf: "stretch",
                   marginBottom: 15,
                   fontFamily:
                     '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',

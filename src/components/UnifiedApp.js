@@ -62,13 +62,17 @@ export const EntryForm = ({
   category,
   entry,
   categories = [],
+  isQuickInfo = false,
+  quickInfoCategories = [],
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(category || "");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [visibility, setVisibility] = useState(["private"]);
+
+  // Determine which categories to show
+  const categoriesToShow = isQuickInfo ? quickInfoCategories : categories;
 
   useEffect(() => {
     if (entry) {
@@ -76,14 +80,12 @@ export const EntryForm = ({
       setDescription(entry.description || "");
       setSelectedCategory(entry.category || category || "");
       setDate(entry.date ? new Date(entry.date) : new Date());
-      setVisibility(entry.visibility || ["private"]);
     } else {
       // Reset for new entry
       setTitle("");
       setDescription("");
       setSelectedCategory(category || "");
       setDate(new Date());
-      setVisibility(["private"]);
     }
   }, [entry, category, visible]);
 
@@ -98,7 +100,6 @@ export const EntryForm = ({
       description: description.trim(),
       category: selectedCategory,
       date,
-      visibility,
     });
 
     // Reset form
@@ -118,13 +119,15 @@ export const EntryForm = ({
       >
         {/* Category Selector */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Category</Text>
+          <Text style={styles.label}>
+            {isQuickInfo ? "Quick Info Category" : "Category"}
+          </Text>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             style={styles.categoryScroll}
           >
-            {categories.map((cat) => (
+            {categoriesToShow.map((cat) => (
               <TouchableOpacity
                 key={cat.id}
                 style={[
@@ -202,39 +205,6 @@ export const EntryForm = ({
               }}
             />
           )}
-        </View>
-
-        {/* Visibility Options */}
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Share With</Text>
-          <View style={styles.visibilityOptions}>
-            {["family", "medical", "education"].map((option) => (
-              <TouchableOpacity
-                key={option}
-                style={[
-                  styles.visibilityChip,
-                  visibility.includes(option) && styles.visibilityChipActive,
-                ]}
-                onPress={() => {
-                  if (visibility.includes(option)) {
-                    setVisibility(visibility.filter((v) => v !== option));
-                  } else {
-                    setVisibility([...visibility, option]);
-                  }
-                }}
-              >
-                <Text
-                  style={[
-                    styles.visibilityChipText,
-                    visibility.includes(option) &&
-                      styles.visibilityChipTextActive,
-                  ]}
-                >
-                  {option.charAt(0).toUpperCase() + option.slice(1)}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
         </View>
 
         {/* Action Buttons */}
@@ -651,32 +621,6 @@ const styles = StyleSheet.create({
   dateText: {
     fontSize: 16,
     color: colors.text.primary,
-  },
-  visibilityOptions: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-  },
-  visibilityChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.background.default,
-    marginRight: 8,
-    marginBottom: 8,
-  },
-  visibilityChipActive: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
-  },
-  visibilityChipText: {
-    fontSize: 14,
-    color: colors.text.secondary,
-  },
-  visibilityChipTextActive: {
-    color: "white",
   },
   formActions: {
     flexDirection: "row",

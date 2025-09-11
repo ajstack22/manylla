@@ -1,6 +1,6 @@
 // Export web versions for web build
 // Metro will handle .native resolution for mobile
-export { EntryForm } from "./EntryForm";
+// EntryForm is exported from UnifiedApp.js, not from Forms
 export { SmartTextInput } from "./SmartTextInput";
 export { MarkdownField } from "./MarkdownField";
 export { RichTextInput } from "./RichTextInput";
