@@ -1,5 +1,20 @@
 # Manylla Release Notes
 
+## Version 2025.09.11.10 - 2025-09-11
+Comprehensive iOS Photo Display Fix
+
+### Fixed
+- Profile photos now display correctly in ALL locations on iOS
+- Fixed photo display in ProfileEditDialog modal
+- Fixed photo display in ProfileCreateDialog modal  
+- Fixed photo display in OnboardingScreen
+- All Image components now properly handle relative paths on iOS
+
+### Technical
+- Applied iOS URL conversion to all Image components displaying profile photos
+- Consistent fix across 5 components (Header, ProfileOverview, ProfileEditDialog, ProfileCreateDialog, OnboardingScreen)
+- No changes to web functionality - iOS-specific improvements only
+
 ## Version 2025.09.11.9 - 2025-09-11
 Complete iOS Profile Photo Fix
 
