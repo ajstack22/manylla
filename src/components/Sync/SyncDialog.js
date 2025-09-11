@@ -655,7 +655,7 @@ const getStyles = (colors) =>
       marginBottom: 16,
       ...Platform.select({
         ios: {
-          shadowColor: "#000",
+          shadowColor: colors.text.primary,
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.1,
           shadowRadius: 4,

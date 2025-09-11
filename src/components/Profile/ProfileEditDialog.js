@@ -166,7 +166,7 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Edit Profile</Text>
             <TouchableOpacity onPress={onClose} style={styles.modalCloseButton}>
-              <Icon name="close" size={24} color="#FFFFFF" />
+              <Icon name="close" size={24} color={colors.text.primary} />
             </TouchableOpacity>
           </View>
 
@@ -364,7 +364,7 @@ const getStyles = (colors) =>
     modalTitle: {
       fontSize: 18,
       fontWeight: "600",
-      color: "#FFFFFF",
+      color: colors.text.primary,
       fontFamily: Platform.select({
         web: '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
         default: "System",
@@ -503,7 +503,7 @@ const getStyles = (colors) =>
       }),
     },
     primaryButtonText: {
-      color: "#FFFFFF",
+      color: colors.text.primary,
       fontSize: 15,
       fontWeight: "600",
       letterSpacing: 0.3,

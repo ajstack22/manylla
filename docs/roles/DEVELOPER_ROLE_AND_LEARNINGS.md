@@ -608,6 +608,91 @@ build/      // ❌ WRONG
 - **Learning**: Don't trust depcheck blindly - verify with build tests
 - **Better Approach**: Remove suspicious packages one at a time and test
 
+### 2025-09-11 - Category Icon Display Issues (Prompt Pack 01-004)
+
+#### The "label" Text Mystery
+- **Problem**: Category headers showing "label" text instead of Material Icons
+- **Initial Assumptions**: Simple icon rendering issue
+- **Actual Complexity**: Multiple interconnected problems across 4 files
+
+#### Root Cause Discovery Journey
+1. **First attempts failed** - Changes to CategorySection.js had no effect
+2. **Webpack cache suspected** - Cleared with `rm -rf node_modules/.cache/webpack/`
+3. **Still no effect** - This led to deeper investigation
+4. **BREAKTHROUGH**: Found `src/components/Profile/index.js` was importing non-existent .tsx files!
+   ```javascript
+   // WRONG - These files don't exist!
+   export const CategorySection = Platform.OS === "web"
+     ? require("./CategorySection.tsx").CategorySection
+     : require("./CategorySection.native.tsx").CategorySection;
+   ```
+5. **Fixed import** to use actual .js file
+6. **New problem**: App.js had its own ProfileOverview component overriding the imported one
+7. **Found hardcoded "label"** text in App.js lines 500-511 for web platform
+
+#### Multiple Issues Fixed
+- **App.js**: 
+  - Had local ProfileOverview component (lines 158-625) overriding imported one
+  - Was hardcoding "label" text for web platform
+  - Importing native Icon instead of cross-platform IconProvider
+- **CategorySection.js**: Had hardcoded emoji instead of Icon component
+- **index.js**: Importing non-existent .tsx files
+- **IconProvider.js**: Missing several MUI icon imports
+
+#### TypeScript in JavaScript Project (Again!)
+- **Issue**: Deployment blocked by TypeScript errors
+- **Error**: Cannot find type definition file for 'react' and 'react-dom'
+- **Solution**: `npm install --save-dev @types/react @types/react-dom`
+- **Learning**: Even pure JS projects need type definitions for tooling
+
+#### Theme-Aware Styling Complexity
+- **Initial Fix**: Hardcoded colors (#f5f5f5, #ffffff)
+- **Problem**: Looked terrible in dark mode
+- **Iteration 1**: Used theme-aware colors but they didn't exist
+- **Iteration 2**: Had to pass theme to createStyles function
+- **Final Solution**:
+  ```javascript
+  backgroundColor: (() => {
+    if (theme === 'dark') return '#1F1F1F';
+    else if (theme === 'light') return '#F8F8F8';
+    else return colors.background.secondary;
+  })()
+  ```
+
+#### Quick Info Panel Special Case
+- **Issue**: Header shading not extending to rounded corners
+- **Cause**: `paddingVertical: 6` preventing header from reaching edges
+- **Solution**: Removed padding, kept `overflow: "hidden"`
+- **Learning**: Container padding interferes with child background extension
+
+#### Deployment Process Learnings
+- **Test files block deployment** - Must remove or commit all test HTML files
+- **Prettier auto-fixes** during deployment - Changes get included in deployment commit
+- **Multiple deployment attempts** common when fixing validation issues
+- **Pre-commit hooks** scan for sensitive data patterns (tokens, passwords)
+
+#### Effective Debugging Strategy
+1. **Create test HTML files** to isolate issues
+2. **Add console.logs** at multiple levels to trace execution
+3. **Check browser console** for actual rendering
+4. **Verify webpack compilation** - Look for "compiled successfully"
+5. **Search broadly** - Issue might be in unexpected files (like App.js)
+
+#### Time Investment
+- **Total time**: ~3 hours
+- **Root cause discovery**: ~90 minutes
+- **Fixing all issues**: ~60 minutes  
+- **Theme/styling iterations**: ~30 minutes
+- **Key insight**: When changes don't take effect, something is blocking them (cache, imports, overrides)
+
+#### Prevention for Future
+- Always check for:
+  - Import errors in index.js files
+  - Local components overriding imported ones
+  - Platform.OS conditionals that might exclude web
+  - Webpack cache when changes don't appear
+  - Browser console for actual errors
+
 ---
-*Last Updated: 2025-09-11 (Package Optimization)*
+*Last Updated: 2025-09-11 (Category Icons & Package Optimization)*
 *Role: Developer*

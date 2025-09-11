@@ -388,7 +388,7 @@ export const ShareDialogOptimized = ({ open, onClose, profile }) => {
         disabled={selectedCategories.length === 0 || loading}
       >
         {loading ? (
-          <ActivityIndicator color="#FFFFFF" />
+          <ActivityIndicator color={colors.text.primary} />
         ) : (
           <Text style={styles.primaryButtonText}>Generate Share Link</Text>
         )}

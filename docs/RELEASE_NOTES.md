@@ -1,5 +1,22 @@
 # Manylla Release Notes
 
+## Version 2025.09.11.4 - 2025-09-11
+Modal Theme Consistency Fix
+
+### Fixed
+- Dialog components now properly follow the selected theme (light/dark/manylla)
+- Improved visual consistency across all modal dialogs
+- Fixed text contrast issues in dark mode dialogs
+- Removed hardcoded white colors that were causing visibility issues
+
+### Technical
+- Updated ProfileEditDialog.js to use theme colors for icons and text
+- Updated ShareDialogOptimized.js to use theme colors for loading indicator
+- Updated SyncDialog.js to use theme colors for shadows
+- Updated CategoryManager.js modal to use theme colors for all elements
+- Replaced all hardcoded #FFFFFF colors with theme.colors.text.primary
+- No breaking changes - purely visual improvements
+
 ## Version 2025.09.11.3 - 2025-09-11
 Working Area UI Improvements - Category Icons
 

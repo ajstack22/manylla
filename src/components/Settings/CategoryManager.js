@@ -141,7 +141,7 @@ export const CategoryManager = ({ visible, onClose, categories, onUpdate }) => {
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Manage Categories</Text>
             <TouchableOpacity onPress={onClose} style={styles.modalCloseButton}>
-              <Icon name="close" size={24} color="#FFFFFF" />
+              <Icon name="close" size={24} color={colors.text.primary} />
             </TouchableOpacity>
           </View>
 
@@ -170,7 +170,7 @@ export const CategoryManager = ({ visible, onClose, categories, onUpdate }) => {
                     style={styles.confirmAddButton}
                     onPress={handleAddCategory}
                   >
-                    <Icon name="check" size={20} color="#FFFFFF" />
+                    <Icon name="check" size={20} color={colors.text.primary} />
                   </TouchableOpacity>
                 </View>
               )}
@@ -286,7 +286,7 @@ const getStyles = (colors) =>
     modalTitle: {
       fontSize: 18,
       fontWeight: "600",
-      color: "#FFFFFF",
+      color: colors.text.primary,
       fontFamily: Platform.select({
         web: '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
         default: "System",
@@ -465,7 +465,7 @@ const getStyles = (colors) =>
       }),
     },
     primaryButtonText: {
-      color: "#FFFFFF",
+      color: colors.text.primary,
       fontSize: 15,
       fontWeight: "600",
       letterSpacing: 0.3,
