@@ -1,5 +1,18 @@
 # Manylla Release Notes
 
+## Version 2025.09.11.9 - 2025-09-11
+Complete iOS Profile Photo Fix
+
+### Fixed
+- Demo profile photo (ellie.png) now properly displays on iOS
+- Added ellie.png to webpack build process so it's available in production
+- iOS can now load both demo photos and user-uploaded photos correctly
+
+### Technical
+- Updated webpack.config.js to copy ellie.png to build directory
+- Previous URL conversion for iOS now works with the deployed image file
+- File size: 1.46 MB (ellie.png added to build assets)
+
 ## Version 2025.09.11.8 - 2025-09-11
 iOS Profile Photo Display Fix
 
