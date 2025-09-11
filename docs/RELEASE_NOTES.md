@@ -1,5 +1,17 @@
 # Manylla Release Notes
 
+## Version 2025.09.10.25 - 2025-09-11
+MUI Compatibility Fix and Webpack Optimization
+
+### Changes
+- Downgraded MUI from v7 to v6.5.0 for better compatibility
+- Removed unused @react-native/new-app-screen dependency
+- Optimized webpack chunking strategy:
+  - Separate MUI components into dedicated chunk
+  - Separate React ecosystem into its own chunk
+  - Improved code splitting for better load performance
+- Fixed compatibility issues with existing components
+
 ## Version 2025.09.10.24 - 2025-09-11
 Production Deployment - Optimized Dependencies
 
