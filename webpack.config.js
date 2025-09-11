@@ -165,11 +165,29 @@ module.exports = {
     minimize: isProduction,
     splitChunks: {
       chunks: 'all',
+      maxInitialRequests: 6,
+      maxAsyncRequests: 4,
       cacheGroups: {
+        // Separate MUI components into their own chunk
+        mui: {
+          test: /[\\/]node_modules[\\/]@mui[\\/]/,
+          name: 'mui',
+          priority: 30,
+          chunks: 'all',
+        },
+        // Separate React ecosystem into its own chunk
+        react: {
+          test: /[\\/]node_modules[\\/](react|react-dom|react-native)[\\/]/,
+          name: 'react',
+          priority: 20,
+          chunks: 'all',
+        },
+        // Separate other vendor libraries
         vendor: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
           priority: -10,
+          chunks: 'all',
         },
         default: {
           minChunks: 2,
