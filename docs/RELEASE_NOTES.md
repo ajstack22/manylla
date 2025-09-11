@@ -1,5 +1,43 @@
 # Manylla Release Notes
 
+## Version 2025.09.10.19 - 2025-09-11
+Package Optimization and Code Splitting
+
+### Performance Improvements
+- Reduced node_modules from 1.5GB to 1.4GB (100MB reduction)
+- Removed 866 unused packages from dependencies
+- Implemented lazy loading for heavy components
+- Added code splitting for on-demand loading
+
+### Technical Changes
+- **Removed unused packages**:
+  - Development: react-scripts, react-app-rewired, multiple @types packages
+  - Libraries: date-fns, dayjs, uuid, qrcode, ajv
+  - Markdown: @uiw/react-md-editor, react-markdown, remark-gfm
+  - React Native: Various unused RN packages
+  - DnD Kit: @dnd-kit/core, @dnd-kit/sortable, @dnd-kit/utilities
+  
+- **Implemented code splitting**:
+  - OnboardingScreen: Lazy loaded (only for new users)
+  - ShareDialogOptimized: Loaded on demand
+  - SyncDialog: Loaded on demand
+  - PrintPreview: Loaded on demand
+  - QRCodeModal: Loaded on demand
+  
+- **Kept required packages**:
+  - @mui/icons-material (used in IconProvider)
+  - @mui/material (required peer dependency)
+  - @emotion packages (required for MUI)
+  - typescript & ts-loader (required for gesture handler)
+  - babel-plugin-react-native-web (required for web build)
+
+### Build Impact
+- Main bundle: 110KB (down from monolithic bundle)
+- Vendor bundle: 7.8MB (optimized)
+- Created 3 chunk files for lazy-loaded components
+- Build warnings eliminated
+- No vulnerabilities in dependencies
+
 ## Version 2025.09.10.18 - 2025-09-10
 EntryForm Component Improvements - Fixed Correct Component
 

@@ -8,7 +8,7 @@
  * Release notes must be updated before deployment
  */
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, lazy, Suspense } from "react";
 import {
   View,
   ScrollView,
@@ -24,7 +24,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Shared imports
 import { ThemeProvider, SyncProvider, useSync, useTheme } from "./src/context";
-import OnboardingScreen from "./src/screens/Onboarding/OnboardingScreen";
+// Lazy load onboarding - only shown to new users
+const OnboardingScreen = lazy(() => import("./src/screens/Onboarding/OnboardingScreen"));
 import { StorageService } from "./src/services/storage/storageService";
 import { unifiedCategories } from "./src/utils/unifiedCategories";
 
@@ -38,12 +39,30 @@ import {
 // Import additional components
 import { ThemedToast } from "./src/components/Toast";
 import { LoadingOverlay } from "./src/components/Loading";
-import { PrintPreview, QRCodeModal } from "./src/components/Sharing";
+// Lazy load heavy sharing components
+const PrintPreview = lazy(() => 
+  import("./src/components/Sharing").then(module => ({ 
+    default: module.PrintPreview 
+  }))
+);
+const QRCodeModal = lazy(() => 
+  import("./src/components/Sharing").then(module => ({ 
+    default: module.QRCodeModal 
+  }))
+);
 import { Header, HEADER_HEIGHT } from "./src/components/Layout";
 
-// Import Share and Sync dialogs
-import { ShareDialogOptimized } from "./src/components/Sharing";
-import { SyncDialog } from "./src/components/Sync";
+// Import Share and Sync dialogs - lazy loaded for better performance
+const ShareDialogOptimized = lazy(() => 
+  import("./src/components/Sharing").then(module => ({ 
+    default: module.ShareDialogOptimized 
+  }))
+);
+const SyncDialog = lazy(() => 
+  import("./src/components/Sync").then(module => ({ 
+    default: module.SyncDialog 
+  }))
+);
 
 // Icon imports - must be after other imports due to conditional requires
 let EditIcon, DeleteIcon;
@@ -1182,7 +1201,11 @@ function AppContent() {
 
   // Show onboarding if needed
   if (showOnboarding) {
-    return <OnboardingScreen onComplete={handleOnboardingComplete} />;
+    return (
+      <Suspense fallback={<LoadingOverlay message="Loading..." />}>
+        <OnboardingScreen onComplete={handleOnboardingComplete} />
+      </Suspense>
+    );
   }
 
   // Main app view
@@ -1260,46 +1283,54 @@ function AppContent() {
 
       {/* Share Dialog */}
       {shareDialogOpen && (
-        <ShareDialogOptimized
-          open={shareDialogOpen}
-          onClose={() => setShareDialogOpen(false)}
-          profile={profile}
-          onShareLinkGenerated={setShareLink}
-          onShowQR={() => {
-            setShareDialogOpen(false);
-            setQRCodeOpen(true);
-          }}
-        />
+        <Suspense fallback={<LoadingOverlay message="Loading..." />}>
+          <ShareDialogOptimized
+            open={shareDialogOpen}
+            onClose={() => setShareDialogOpen(false)}
+            profile={profile}
+            onShareLinkGenerated={setShareLink}
+            onShowQR={() => {
+              setShareDialogOpen(false);
+              setQRCodeOpen(true);
+            }}
+          />
+        </Suspense>
       )}
 
       {/* Sync Dialog */}
       {syncDialogOpen && (
-        <SyncDialog
-          open={syncDialogOpen}
-          onClose={() => setSyncDialogOpen(false)}
-          profile={profile}
-        />
+        <Suspense fallback={<LoadingOverlay message="Loading..." />}>
+          <SyncDialog
+            open={syncDialogOpen}
+            onClose={() => setSyncDialogOpen(false)}
+            profile={profile}
+          />
+        </Suspense>
       )}
 
       {/* Print Preview */}
       {printPreviewOpen && (
-        <PrintPreview
-          visible={printPreviewOpen}
-          onClose={() => setPrintPreviewOpen(false)}
-          profile={profile}
-          categories={unifiedCategories}
-          entries={profile?.entries || []}
-        />
+        <Suspense fallback={<LoadingOverlay message="Loading..." />}>
+          <PrintPreview
+            visible={printPreviewOpen}
+            onClose={() => setPrintPreviewOpen(false)}
+            profile={profile}
+            categories={unifiedCategories}
+            entries={profile?.entries || []}
+          />
+        </Suspense>
       )}
 
       {/* QR Code Modal */}
       {qrCodeOpen && (
-        <QRCodeModal
-          visible={qrCodeOpen}
-          onClose={() => setQRCodeOpen(false)}
-          data={shareLink || ""}
-          title="Scan to View Profile"
-        />
+        <Suspense fallback={<LoadingOverlay message="Loading..." />}>
+          <QRCodeModal
+            visible={qrCodeOpen}
+            onClose={() => setQRCodeOpen(false)}
+            data={shareLink || ""}
+            title="Scan to View Profile"
+          />
+        </Suspense>
       )}
 
       {/* Toast Notification */}
