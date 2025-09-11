@@ -136,7 +136,7 @@ export const CategorySection = ({
   };
 
   const iconName = getCategoryIcon(title);
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>

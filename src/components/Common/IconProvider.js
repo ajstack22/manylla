@@ -81,7 +81,7 @@ if (Platform.OS === "web") {
     CheckCircle: require("@mui/icons-material/CheckCircle").default,
     Error: require("@mui/icons-material/Error").default,
     Info: require("@mui/icons-material/Info").default,
-    
+
     // Additional icons for categories
     TrendingUp: require("@mui/icons-material/TrendingUp").default,
     People: require("@mui/icons-material/People").default,
