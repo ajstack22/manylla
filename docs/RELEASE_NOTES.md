@@ -1,5 +1,29 @@
 # Manylla Release Notes
 
+## Version 2025.09.10.8 - 2025-09-10
+Consolidate Duplicate Onboarding Components
+
+### Fixed
+- **Duplicate onboarding components**: Consolidated OnboardingScreen and OnboardingWizard
+  - Removed code duplication that caused maintenance issues
+  - Fixed potential confusion about which component to modify
+  - Simplified onboarding architecture
+  - Maintained backward compatibility with App.js
+
+### Technical
+- Merged OnboardingWizard UI into OnboardingScreen component
+- Created compatibility export in components/Onboarding/index.js for App.js
+- Removed unused OnboardingWrapper.js component
+- Updated all imports and references
+- No breaking changes - functionality preserved
+
+### Validation
+- TypeScript files: 0 ✓
+- Platform-specific files: 0 ✓
+- Build: Success ✓
+- Prettier: Pass ✓
+- All onboarding flows tested and working
+
 ## Version 2025.09.10.7 - 2025-09-10
 Fix Missing Resources in Production Build
 
