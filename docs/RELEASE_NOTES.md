@@ -1,5 +1,15 @@
 # Manylla Release Notes
 
+## Version 2025.09.10.21 - 2025-09-11
+Deployment of Optimized Build
+
+### Deployed
+- All optimizations from v2025.09.10.19 now live on qual
+- Code splitting active for improved load times
+- Reduced dependencies for smaller footprint
+- 100MB reduction in node_modules size
+- Lazy loading implemented for better performance
+
 ## Version 2025.09.10.20 - 2025-09-11
 Deployment of Optimized Build
 
