@@ -10,6 +10,7 @@ import {
   ScrollView,
   StyleSheet,
   Platform,
+  Image,
 } from "react-native";
 
 // Third-party libraries
@@ -53,9 +54,32 @@ const OnboardingScreen = ({ onComplete }) => {
   const [accessCode, setAccessCode] = useState("");
   const [childName, setChildName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
-  const [photo, setPhoto] = useState("");
+  const [photo, setPhoto] = useState(null); // Standardized to null as empty value
+  const [isProcessingPhoto, setIsProcessingPhoto] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // Format date input with automatic slashes
+  // Maximum file size (5MB)
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
+  const VALID_IMAGE_TYPES = [
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/gif",
+    "image/webp",
+  ];
+
+  // Format date for display (MM/DD/YYYY)
+  const formatDateForDisplay = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    const year = date.getFullYear();
+    return `${month}/${day}/${year}`;
+  };
+
+  // Format date input with automatic slashes for mobile
   const formatDateInput = (text) => {
     // Remove all non-numeric characters
     const cleaned = text.replace(/\D/g, "");
@@ -71,10 +95,69 @@ const OnboardingScreen = ({ onComplete }) => {
     return formatted;
   };
 
-  const handleDateChange = (text) => {
-    // Only allow numbers and forward slashes
-    const formatted = formatDateInput(text);
-    setDateOfBirth(formatted);
+  // Handle photo picker functionality with proper validation
+  const handlePhotoPicker = () => {
+    setErrorMessage(""); // Clear any previous errors
+
+    if (Platform.OS === "web") {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          // Validate file type
+          if (!VALID_IMAGE_TYPES.includes(file.type)) {
+            setErrorMessage(
+              "Please select a valid image file (JPEG, PNG, GIF, or WebP)",
+            );
+            return;
+          }
+
+          // Validate file size
+          if (file.size > MAX_FILE_SIZE) {
+            setErrorMessage("Image size must be less than 5MB");
+            return;
+          }
+
+          setIsProcessingPhoto(true);
+          const reader = new FileReader();
+
+          reader.onload = (e) => {
+            setPhoto(e.target.result);
+            setIsProcessingPhoto(false);
+          };
+
+          reader.onerror = () => {
+            setErrorMessage("Failed to read image file");
+            setIsProcessingPhoto(false);
+          };
+
+          reader.readAsDataURL(file);
+        }
+      };
+      input.click();
+    } else {
+      // TECH DEBT: Mobile photo picker not yet implemented
+      // TODO: Integrate react-native-image-picker library for mobile photo selection
+      // Current workaround: Users can add photos later via web interface
+      // Impact: Mobile users cannot add photos during onboarding
+      // Priority: HIGH - affects all mobile users
+      setErrorMessage(
+        "Photo selection is currently only available on web. You can add photos later.",
+      );
+    }
+  };
+
+  // Handle date change for both web and mobile
+  const handleDateChange = (value) => {
+    if (Platform.OS === "web") {
+      setDateOfBirth(value);
+    } else {
+      // Mobile text input with formatting
+      const formatted = formatDateInput(value);
+      setDateOfBirth(formatted);
+    }
   };
 
   const handleStartFresh = () => {
@@ -82,10 +165,11 @@ const OnboardingScreen = ({ onComplete }) => {
   };
 
   const handleChildInfoSubmit = async () => {
+    // Clear any previous errors
+    setErrorMessage("");
+
     if (!childName.trim()) {
-      if (Platform.OS === "web") {
-        alert("Please enter the child's name");
-      }
+      setErrorMessage("Please enter the child's name");
       return;
     }
 
@@ -95,7 +179,7 @@ const OnboardingScreen = ({ onComplete }) => {
         mode: "fresh",
         childName: childName.trim(),
         dateOfBirth: dateOfBirth || undefined,
-        photo: photo || undefined,
+        photo: photo || null, // Standardized to null
       });
       return;
     }
@@ -105,7 +189,7 @@ const OnboardingScreen = ({ onComplete }) => {
       id: Date.now().toString(),
       name: childName.trim(),
       dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : new Date(),
-      photo: photo || undefined,
+      photo: photo || null, // Standardized to null
       categories: unifiedCategories.map((cat) => ({
         ...cat,
         icon: getIconForCategory(cat.id),
@@ -460,6 +544,38 @@ const OnboardingScreen = ({ onComplete }) => {
       marginBottom: 10,
       fontStyle: "italic",
     },
+    photoImage: {
+      width: 96,
+      height: 96,
+      borderRadius: 48,
+    },
+    inputText: {
+      color: colors.text.primary,
+      fontSize: 16,
+    },
+    placeholderText: {
+      color: colors.text.disabled,
+      fontSize: 16,
+    },
+    clearPhotoButton: {
+      marginTop: 5,
+    },
+    clearPhotoText: {
+      color: colors.primary,
+      fontSize: 14,
+    },
+    errorText: {
+      color: colors.error || "#f44336",
+      fontSize: 14,
+      marginTop: 5,
+      marginBottom: 10,
+      textAlign: "center",
+    },
+    loadingText: {
+      color: colors.text.secondary,
+      fontSize: 14,
+      fontStyle: "italic",
+    },
   });
 
   const ScrollComponent = Platform.OS === "web" ? View : ScrollView;
@@ -487,22 +603,41 @@ const OnboardingScreen = ({ onComplete }) => {
           <View style={styles.photoSection}>
             <TouchableOpacity
               style={[styles.photoButton, photo && styles.photoButtonSelected]}
-              onPress={() => {
-                setPhoto(photo ? "" : null);
-                if (Platform.OS === "web") {
-                  // Photo toggle handled silently
-                }
-              }}
+              onPress={handlePhotoPicker}
               activeOpacity={0.7}
+              disabled={isProcessingPhoto}
             >
-              <PersonIcon
-                size={40}
-                color={photo ? colors.primary : colors.text.secondary}
-              />
+              {isProcessingPhoto ? (
+                <Text style={styles.loadingText}>Processing...</Text>
+              ) : photo ? (
+                <Image source={{ uri: photo }} style={styles.photoImage} />
+              ) : (
+                <PersonIcon size={40} color={colors.text.secondary} />
+              )}
             </TouchableOpacity>
             <Text style={styles.photoLabel}>
-              {photo ? "Photo selected" : "Tap to add photo"}
+              {isProcessingPhoto
+                ? "Processing photo..."
+                : photo
+                  ? "Photo selected"
+                  : "Tap to add photo"}
             </Text>
+            {photo && !isProcessingPhoto && (
+              <TouchableOpacity
+                onPress={() => {
+                  setPhoto(null);
+                  setErrorMessage("");
+                }}
+                style={styles.clearPhotoButton}
+              >
+                <Text style={styles.clearPhotoText}>Clear photo</Text>
+              </TouchableOpacity>
+            )}
+            {Platform.OS !== "web" && (
+              <Text style={styles.dateHint}>
+                Photo selection coming soon for mobile
+              </Text>
+            )}
           </View>
 
           <View style={styles.formSection}>
@@ -517,25 +652,54 @@ const OnboardingScreen = ({ onComplete }) => {
             />
 
             <Text style={styles.label}>Date of Birth</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="MM/DD/YYYY"
-              placeholderTextColor={colors.text.disabled}
-              value={dateOfBirth}
-              onChangeText={handleDateChange}
-              keyboardType={Platform.OS === "web" ? "default" : "numeric"}
-              maxLength={10}
-              autoComplete="off"
-            />
-            {Platform.OS === "web" && dateOfBirth.length === 0 && (
+            {Platform.OS === "web" ? (
+              <input
+                type="date"
+                className="date-input"
+                style={{
+                  padding: "12px 15px",
+                  fontSize: "16px",
+                  borderRadius: "8px",
+                  border: `1px solid ${colors.border}`,
+                  backgroundColor: colors.background.secondary,
+                  color: colors.text.primary,
+                  width: "100%",
+                  marginBottom: 15,
+                  fontFamily:
+                    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                  WebkitAppearance: "none",
+                  MozAppearance: "none",
+                  appearance: "none",
+                }}
+                value={dateOfBirth}
+                onChange={(e) => handleDateChange(e.target.value)}
+                max={new Date().toISOString().split("T")[0]}
+              />
+            ) : (
+              <TextInput
+                style={styles.input}
+                placeholder="MM/DD/YYYY"
+                placeholderTextColor={colors.text.disabled}
+                value={dateOfBirth}
+                onChangeText={handleDateChange}
+                keyboardType="numeric"
+                maxLength={10}
+                autoComplete="off"
+              />
+            )}
+            {Platform.OS !== "web" && dateOfBirth.length === 0 && (
               <Text style={styles.dateHint}>
                 Type numbers and slashes will be added automatically
               </Text>
             )}
 
-            <Text style={styles.helpText}>
-              You can always add more details later
-            </Text>
+            {errorMessage ? (
+              <Text style={styles.errorText}>{errorMessage}</Text>
+            ) : (
+              <Text style={styles.helpText}>
+                You can always add more details later
+              </Text>
+            )}
 
             <TouchableOpacity
               style={[styles.button, !childName.trim() && { opacity: 0.5 }]}

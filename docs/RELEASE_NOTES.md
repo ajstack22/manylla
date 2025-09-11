@@ -1,5 +1,48 @@
 # Manylla Release Notes
 
+## Version 2025.09.10.17 - 2025-09-10
+REVISED: Onboarding UX - Date and Photo Pickers with Mobile Limitations
+
+### Added
+- **Web Platform - FULL FUNCTIONALITY**:
+  - HTML5 date picker with native calendar interface
+  - Complete photo upload with file picker dialog
+  - File size validation (max 5MB)
+  - Image format validation (JPEG, PNG, GIF, WebP only)
+  - Real-time preview of selected photos
+  - Loading states during image processing
+  - Clear photo button to remove selection
+
+- **Mobile Platform - PARTIAL FUNCTIONALITY**:
+  - ✅ Date picker: Functional text input with automatic MM/DD/YYYY formatting
+  - ⚠️ Photo picker: **NOT YET AVAILABLE** - Shows informative message
+  - Mobile users can add photos later via web interface
+  - See `docs/TECH_DEBT.md` for implementation roadmap
+
+- **Error Handling**:
+  - Replaced browser alert() with inline error messages
+  - FileReader error recovery
+  - User-friendly validation messages
+
+### Fixed
+- Mobile date input now functional (was completely broken)
+- Removed misleading photo toggle that did nothing
+- Standardized photo state to use null consistently
+- Added comprehensive validation before processing
+
+### Known Limitations
+- **Mobile Photo Upload**: Not implemented - tracked as high priority tech debt
+- **Workaround**: Mobile users can complete onboarding without photo, add later on web
+
+### Technical
+- OnboardingScreen.js: Proper implementation with clear mobile limitations
+- Added tech debt documentation in `docs/TECH_DEBT.md`
+- TODO comments added in code for mobile photo implementation
+- Platform implementations:
+  - Web: Full feature parity
+  - Mobile: Date input only, photo pending
+- Maintains unified codebase architecture (no .native.js files)
+
 ## Version 2025.09.10.16 - 2025-09-10
 Complete Photo Default Fix - App.js Component
 
