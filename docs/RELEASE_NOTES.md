@@ -1,5 +1,14 @@
 # Manylla Release Notes
 
+## Version 2025.09.10.23 - 2025-09-11
+Actual Deployment - Package Optimizations Live
+
+### Deployed to Qual
+- Successfully deployed optimized build to https://manylla.com/qual/
+- Package count reduced by 866 packages
+- Code splitting active with lazy loading
+- Performance improvements in production
+
 ## Version 2025.09.10.22 - 2025-09-11
 Final Deployment - Optimized Dependencies and Code Splitting
 
