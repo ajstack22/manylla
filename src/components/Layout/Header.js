@@ -255,7 +255,8 @@ const Header = ({
                         <Image
                           source={{
                             uri:
-                              Platform.OS === "ios" && profile.photo.startsWith("/")
+                              Platform.OS === "ios" &&
+                              profile.photo.startsWith("/")
                                 ? `https://manylla.com/qual${profile.photo}` // Convert relative path to absolute URL for iOS
                                 : profile.photo,
                           }}
@@ -280,7 +281,9 @@ const Header = ({
                   </TouchableOpacity>
                 ) : (
                   <View style={styles.logoContainer}>
-                    <View style={[styles.logoAvatar, styles.logoAvatarPlaceholder]}>
+                    <View
+                      style={[styles.logoAvatar, styles.logoAvatarPlaceholder]}
+                    >
                       <Text style={styles.logoAvatarText}>m</Text>
                     </View>
                     <Text style={styles.logo}>manylla</Text>
