@@ -81,6 +81,18 @@ if (Platform.OS === "web") {
     CheckCircle: require("@mui/icons-material/CheckCircle").default,
     Error: require("@mui/icons-material/Error").default,
     Info: require("@mui/icons-material/Info").default,
+    
+    // Additional icons for categories
+    TrendingUp: require("@mui/icons-material/TrendingUp").default,
+    People: require("@mui/icons-material/People").default,
+    Flag: require("@mui/icons-material/Flag").default,
+    Star: require("@mui/icons-material/Star").default,
+    FitnessCenter: require("@mui/icons-material/FitnessCenter").default,
+    ChatBubble: require("@mui/icons-material/ChatBubble").default,
+    Lightbulb: require("@mui/icons-material/Lightbulb").default,
+    Today: require("@mui/icons-material/Today").default,
+    Healing: require("@mui/icons-material/Healing").default,
+    ContactPhone: require("@mui/icons-material/ContactPhone").default,
     CheckBox: require("@mui/icons-material/CheckBox").default,
     CheckBoxOutlineBlank: require("@mui/icons-material/CheckBoxOutlineBlank")
       .default,

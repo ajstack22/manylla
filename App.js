@@ -21,7 +21,8 @@ import {
   Dimensions,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Icon from "react-native-vector-icons/MaterialIcons";
+// Use cross-platform Icon from IconProvider instead
+import Icon from "./src/components/Common/IconProvider";
 
 // Shared imports
 import { ThemeProvider, SyncProvider, useSync, useTheme } from "./src/context";
@@ -149,32 +150,9 @@ const defaultColors = {
 };
 
 // Helper function to get icon for category
-const getCategoryIcon = (categoryName) => {
-  // Check for keywords in the name (case-insensitive)
-  const nameLower = categoryName.toLowerCase();
-  
-  // Direct matches
-  if (nameLower.includes("quick") && nameLower.includes("info")) return "info";
-  if (nameLower.includes("medical")) return "local-hospital";
-  if (nameLower.includes("health")) return "local-hospital";
-  if (nameLower.includes("therapy")) return "healing";
-  if (nameLower.includes("education")) return "school";
-  if (nameLower.includes("school")) return "school";
-  if (nameLower.includes("goals")) return "flag";
-  if (nameLower.includes("behavioral")) return "psychology";
-  if (nameLower.includes("behavior")) return "psychology";
-  if (nameLower.includes("social")) return "people";
-  if (nameLower.includes("communication")) return "chat";
-  if (nameLower.includes("daily")) return "today";
-  if (nameLower.includes("support")) return "support";
-  if (nameLower.includes("emergency")) return "warning";
-  if (nameLower.includes("document")) return "folder";
-  if (nameLower.includes("contact")) return "contacts";
-  if (nameLower.includes("family")) return "family-restroom";
-  if (nameLower.includes("resource")) return "library-books";
-  
-  // Default icon
-  return "label";
+const getCategoryIcon = (categoryTitle) => {
+  // Always return Label icon for all categories
+  return "Label";
 };
 
 // Profile Overview Component
@@ -361,33 +339,13 @@ const ProfileOverview = ({
                     }
                   >
                     <View style={styles.categoryHeader}>
-                      {Platform.OS === "web" ? (
-                        <Text
-                          style={{
-                            fontFamily: "Material Icons",
-                            fontSize: 20,
-                            color: quickInfoCategory?.color || "#9B59B6",
-                            marginRight: 8,
-                            opacity: 0.8,
-                          }}
-                        >
-                          {getCategoryIcon("quick-info")}
-                        </Text>
-                      ) : (
-                        <Icon
-                          name={getCategoryIcon("quick-info")}
-                          size={20}
-                          color={quickInfoCategory?.color || "#9B59B6"}
-                          style={{ marginRight: 8, opacity: 0.8 }}
-                        />
-                      )}
+                      <Icon
+                        name={getCategoryIcon("quick-info")}
+                        size={20}
+                        color={quickInfoCategory?.color || "#9B59B6"}
+                        style={{ marginRight: 8, opacity: 0.8 }}
+                      />
                       <Text style={styles.categoryTitle}>Quick Info</Text>
-                      <TouchableOpacity
-                        onPress={() => onAddEntry("quick-info")}
-                        style={styles.addButton}
-                      >
-                        <Text style={styles.addButtonText}>+</Text>
-                      </TouchableOpacity>
                     </View>
                     <View
                       style={[
@@ -520,35 +478,15 @@ const ProfileOverview = ({
                   return (
                     <View key={category.id} style={categoryStyle}>
                       <View style={styles.categoryHeader}>
-                        {Platform.OS === "web" ? (
-                          <Text
-                            style={{
-                              fontFamily: "Material Icons",
-                              fontSize: 20,
-                              color: category.color,
-                              marginRight: 8,
-                              opacity: 0.8,
-                            }}
-                          >
-                            {getCategoryIcon(category.displayName)}
-                          </Text>
-                        ) : (
-                          <Icon
-                            name={getCategoryIcon(category.displayName)}
-                            size={20}
-                            color={category.color}
-                            style={{ marginRight: 8, opacity: 0.8 }}
-                          />
-                        )}
+                        <Icon
+                          name={getCategoryIcon(category.displayName)}
+                          size={20}
+                          color={category.color}
+                          style={{ marginRight: 8, opacity: 0.8 }}
+                        />
                         <Text style={styles.categoryTitle}>
                           {category.displayName}
                         </Text>
-                        <TouchableOpacity
-                          onPress={() => onAddEntry(category.name)}
-                          style={styles.addButton}
-                        >
-                          <Text style={styles.addButtonText}>+</Text>
-                        </TouchableOpacity>
                       </View>
                       <View style={styles.categoryContent}>
                         {entries.length === 0 ? (
@@ -674,7 +612,7 @@ function AppContent() {
   const { colors, theme, toggleTheme } = useTheme();
 
   // Create styles based on current theme colors
-  const styles = createStyles(colors);
+  const styles = createStyles(colors, theme);
 
   const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -1405,7 +1343,7 @@ function AppContent() {
 }
 
 // Create styles function that accepts colors
-const createStyles = (colors) => {
+const createStyles = (colors, theme) => {
   // Base text style with Atkinson Hyperlegible font
   const baseTextStyle =
     Platform.OS === "web"
@@ -1573,6 +1511,11 @@ const createStyles = (colors) => {
       width: "100%",
       marginHorizontal: 0,
       marginTop: 12,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: colors.border,
+      overflow: "hidden", // For proper border radius clipping
+      backgroundColor: colors.background.paper,
     },
     quickInfoDesktop: {
       // Standalone styles for desktop Quick Info (not inheriting from categorySection)
@@ -1586,7 +1529,7 @@ const createStyles = (colors) => {
       borderWidth: 1,
       borderColor: colors.border,
       overflow: "hidden", // For proper border radius clipping
-      paddingVertical: 6, // Add 12px total to match height difference
+      // Removed paddingVertical to allow header to extend to edges
     },
     quickInfoContentDesktop: {
       flex: 1,
@@ -1602,7 +1545,17 @@ const createStyles = (colors) => {
       alignItems: "center",
       paddingHorizontal: 16,
       paddingVertical: 12,
-      backgroundColor: colors.background.secondary,
+      backgroundColor: (() => {
+        // Create proper shading for each theme
+        if (theme === 'dark') {
+          return '#1F1F1F'; // Slightly darker than dark paper (#2A2A2A)
+        } else if (theme === 'light') {
+          return '#F8F8F8'; // Slightly gray tinted for light mode
+        } else {
+          // Manylla theme already has good distinction
+          return colors.background.secondary || '#F2E6D5';
+        }
+      })(),
       borderBottomWidth: 1,
       borderBottomColor: colors.border,
     },
@@ -1637,7 +1590,8 @@ const createStyles = (colors) => {
     categoryContent: {
       paddingHorizontal: 16,
       paddingBottom: 16,
-      paddingTop: 4,
+      paddingTop: 8,
+      backgroundColor: colors.background.paper || colors.background.default,
     },
     emptyCategory: {
       color: colors.text.disabled,

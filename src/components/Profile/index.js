@@ -1,21 +1,5 @@
-import { Platform } from "react-native";
-
-export const CategorySection =
-  Platform.OS === "web"
-    ? require("./CategorySection.tsx").CategorySection
-    : require("./CategorySection.native.tsx").CategorySection;
-
-export const ProfileOverview =
-  Platform.OS === "web"
-    ? require("./ProfileOverview.tsx").ProfileOverview
-    : require("./ProfileOverview.native").default;
-
-export const ProfileEditDialog =
-  Platform.OS === "web"
-    ? require("./ProfileEditDialog").ProfileEditDialog
-    : require("./ProfileEditDialog.native").ProfileEditDialog;
-
-export const ProfileCreateDialog =
-  Platform.OS === "web"
-    ? require("./ProfileCreateDialog").ProfileCreateDialog
-    : require("./ProfileCreateDialog.native").ProfileCreateDialog;
+// Use the unified .js files for all platforms
+export { CategorySection } from "./CategorySection";
+export { ProfileOverview } from "./ProfileOverview";
+export { ProfileEditDialog } from "./ProfileEditDialog";
+export { ProfileCreateDialog } from "./ProfileCreateDialog";
