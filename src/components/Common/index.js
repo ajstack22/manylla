@@ -23,12 +23,8 @@ export {
   PaletteIcon,
 } from "./IconProvider";
 
-// Modal exports
-export {
-  default as UnifiedModal,
-  ModalCard,
-  ModalSection,
-} from "./UnifiedModal";
+// Modal exports - ONLY ONE MODAL SYSTEM
+export { default as ThemedModal } from "./ThemedModal";
 
 // Theme exports
 export { default as ThemeSwitcher } from "./ThemeSwitcher";

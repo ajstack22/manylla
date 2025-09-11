@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import {
-  Modal,
   View,
   Text,
   TextInput,
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  SafeAreaView,
   Alert,
   ActivityIndicator,
   Platform,
   Clipboard,
 } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
+import { ThemedModal } from "../Common";
 import { useSync } from "../../context/SyncContext";
 import {
   generateInviteCode,
@@ -570,26 +569,16 @@ export const SyncDialog = ({ open, onClose }) => {
   };
 
   return (
-    <Modal
+    <ThemedModal
       visible={open}
-      animationType="slide"
+      onClose={onClose}
+      title="Backup & Sync"
+      headerStyle="primary"
       presentationStyle="pageSheet"
-      onRequestClose={onClose}
     >
-      <SafeAreaView style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>✕</Text>
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Backup & Sync</Text>
-          <View style={styles.headerSpacer} />
-        </View>
 
-        {/* Content */}
-        {renderContent()}
-      </SafeAreaView>
-    </Modal>
+      {renderContent()}
+    </ThemedModal>
   );
 };
 

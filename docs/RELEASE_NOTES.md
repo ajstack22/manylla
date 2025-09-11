@@ -1,5 +1,33 @@
 # Manylla Release Notes
 
+## Version 2025.09.11.5 - 2025-09-11
+TRUE Modal Centralization - Single Modal System
+
+### Added
+- ThemedModal component as THE ONLY modal system in the app
+- Dynamic theme-aware shadows (adjusts for dark mode)
+- Centralized modal header with right-aligned close button (per user request)
+
+### Fixed
+- All modals now respond to theme changes properly
+- Text is now legible in dark mode (was using static colors)
+- Fixed modal aesthetic inconsistency across the app
+- Resolved architectural issue with duplicate modal components
+
+### Removed
+- DELETED UnifiedModal.js (255 lines of unused code)
+- Removed UnifiedModal exports from Common/index.js
+- Eliminated modal system fragmentation
+
+### Technical
+- Created `/src/components/Common/ThemedModal.js` as THE single modal component
+- Refactored all components to use dynamic styles based on activeColors
+- Updated EntryForm, ProfileEditForm, CategoryManager to use createDynamicStyles
+- Fixed hardcoded shadows to be theme-aware
+- Zero direct Modal imports from react-native
+- Zero UnifiedModal usage (deleted)
+- 17 ThemedModal usages (complete adoption)
+
 ## Version 2025.09.11.4 - 2025-09-11
 Modal Theme Consistency Fix
 

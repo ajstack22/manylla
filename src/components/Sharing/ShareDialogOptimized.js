@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {
-  Modal,
   View,
   Text,
   ScrollView,
   TouchableOpacity,
   Share,
   StyleSheet,
-  SafeAreaView,
   TextInput,
   Alert,
   Switch,
@@ -18,6 +16,7 @@ import {
 import nacl from "tweetnacl";
 import util from "tweetnacl-util";
 import { useTheme } from "../../context/ThemeContext";
+import { ThemedModal } from "../Common";
 import { API_ENDPOINTS } from "../../config/api";
 
 const sharePresets = [
@@ -472,26 +471,16 @@ export const ShareDialogOptimized = ({ open, onClose, profile }) => {
   );
 
   return (
-    <Modal
+    <ThemedModal
       visible={open}
-      animationType="slide"
+      onClose={onClose}
+      title={step === "configure" ? "Create Share Link" : "Share Created!"}
+      headerStyle="primary"
       presentationStyle="pageSheet"
-      onRequestClose={onClose}
     >
-      <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>✕</Text>
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>
-            {step === "configure" ? "Create Share Link" : "Share Created!"}
-          </Text>
-          <View style={styles.headerSpacer} />
-        </View>
 
-        {step === "configure" ? renderConfigureStep() : renderCompleteStep()}
-      </SafeAreaView>
-    </Modal>
+      {step === "configure" ? renderConfigureStep() : renderCompleteStep()}
+    </ThemedModal>
   );
 };
 

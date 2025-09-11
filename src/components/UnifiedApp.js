@@ -10,7 +10,6 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Modal,
   Platform,
   Alert,
   StyleSheet,
@@ -18,8 +17,8 @@ import {
   Switch,
   FlatList,
   Dimensions,
-  SafeAreaView,
 } from "react-native";
+import { ThemedModal } from "./Common";
 // DatePicker handled through platform-specific implementations
 let DateTimePicker = null;
 if (Platform.OS !== "web") {
@@ -71,6 +70,9 @@ export const EntryForm = ({
   const [selectedCategory, setSelectedCategory] = useState(category || "");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  
+  // Create dynamic styles based on active colors
+  const dynamicStyles = createDynamicStyles(activeColors);
 
   useEffect(() => {
     if (entry) {
@@ -112,37 +114,37 @@ export const EntryForm = ({
       style={{ flex: 1 }}
     >
       <ScrollView
-        style={styles.formContainer}
-        contentContainerStyle={styles.formContentContainer}
+        style={dynamicStyles.formContainer}
+        contentContainerStyle={dynamicStyles.formContentContainer}
       >
         {/* Category Selector */}
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Category</Text>
+        <View style={dynamicStyles.inputGroup}>
+          <Text style={dynamicStyles.label}>Category</Text>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            style={styles.categoryScroll}
+            style={dynamicStyles.categoryScroll}
           >
             {categories.map((cat) => (
               <TouchableOpacity
                 key={cat.id}
                 style={[
-                  styles.categoryChip,
-                  selectedCategory === cat.name && styles.categoryChipActive,
+                  dynamicStyles.categoryChip,
+                  selectedCategory === cat.name && dynamicStyles.categoryChipActive,
                   {
                     backgroundColor:
                       selectedCategory === cat.name
                         ? cat.color
-                        : colors.background.manila,
+                        : activeColors.background.manila,
                   },
                 ]}
                 onPress={() => setSelectedCategory(cat.name)}
               >
                 <Text
                   style={[
-                    styles.categoryChipText,
+                    dynamicStyles.categoryChipText,
                     selectedCategory === cat.name &&
-                      styles.categoryChipTextActive,
+                      dynamicStyles.categoryChipTextActive,
                   ]}
                 >
                   {cat.displayName}
@@ -153,26 +155,26 @@ export const EntryForm = ({
         </View>
 
         {/* Title Input */}
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Title *</Text>
+        <View style={dynamicStyles.inputGroup}>
+          <Text style={dynamicStyles.label}>Title *</Text>
           <TextInput
-            style={styles.input}
+            style={dynamicStyles.input}
             value={title}
             onChangeText={setTitle}
             placeholder="Enter a title..."
-            placeholderTextColor={colors.text.disabled}
+            placeholderTextColor={activeColors.text.disabled}
           />
         </View>
 
         {/* Description Input */}
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Description</Text>
+        <View style={dynamicStyles.inputGroup}>
+          <Text style={dynamicStyles.label}>Description</Text>
           <TextInput
-            style={[styles.input, styles.textArea]}
+            style={[dynamicStyles.input, dynamicStyles.textArea]}
             value={description}
             onChangeText={setDescription}
             placeholder="Add details..."
-            placeholderTextColor={colors.text.disabled}
+            placeholderTextColor={activeColors.text.disabled}
             multiline
             numberOfLines={5}
             textAlignVertical="top"
@@ -180,13 +182,13 @@ export const EntryForm = ({
         </View>
 
         {/* Date Picker */}
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Date</Text>
+        <View style={dynamicStyles.inputGroup}>
+          <Text style={dynamicStyles.label}>Date</Text>
           <TouchableOpacity
-            style={styles.dateButton}
+            style={dynamicStyles.dateButton}
             onPress={() => setShowDatePicker(true)}
           >
-            <Text style={styles.dateText}>{date.toLocaleDateString()}</Text>
+            <Text style={dynamicStyles.dateText}>{date.toLocaleDateString()}</Text>
           </TouchableOpacity>
           {showDatePicker && Platform.OS !== "web" && DateTimePicker && (
             <DateTimePicker
@@ -204,18 +206,18 @@ export const EntryForm = ({
         </View>
 
         {/* Action Buttons */}
-        <View style={styles.formActions}>
+        <View style={dynamicStyles.formActions}>
           <TouchableOpacity
-            style={[styles.button, styles.buttonCancel]}
+            style={[dynamicStyles.button, dynamicStyles.buttonCancel]}
             onPress={onClose}
           >
-            <Text style={styles.buttonCancelText}>Cancel</Text>
+            <Text style={dynamicStyles.buttonCancelText}>Cancel</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.button, styles.buttonPrimary]}
+            style={[dynamicStyles.button, dynamicStyles.buttonPrimary]}
             onPress={handleSubmit}
           >
-            <Text style={styles.buttonPrimaryText}>
+            <Text style={dynamicStyles.buttonPrimaryText}>
               {entry ? "Update" : "Save"}
             </Text>
           </TouchableOpacity>
@@ -224,59 +226,16 @@ export const EntryForm = ({
     </KeyboardAvoidingView>
   );
 
-  // Dynamic styles based on theme
-  const dynamicStyles = StyleSheet.create({
-    modalSafeArea: {
-      flex: 1,
-      backgroundColor: activeColors.background.paper,
-    },
-    modalHeader: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      paddingHorizontal: 20,
-      paddingVertical: 16,
-      borderBottomWidth: 1,
-      borderBottomColor: activeColors.border,
-      backgroundColor: activeColors.background.paper,
-    },
-    modalHeaderTitle: {
-      fontSize: 20,
-      fontWeight: "600",
-      color: activeColors.text.primary,
-    },
-    modalHeaderCloseButton: {
-      padding: 4,
-    },
-    modalCloseText: {
-      fontSize: 24,
-      color: activeColors.text.secondary,
-    },
-  });
-
   return (
-    <Modal
+    <ThemedModal
       visible={visible}
-      animationType="slide"
-      transparent={false}
-      onRequestClose={onClose}
+      onClose={onClose}
+      title={entry ? "Edit Entry" : "Add Entry"}
+      headerStyle="primary"
       presentationStyle="formSheet"
     >
-      <SafeAreaView style={dynamicStyles.modalSafeArea}>
-        <View style={dynamicStyles.modalHeader}>
-          <Text style={dynamicStyles.modalHeaderTitle}>
-            {entry ? "Edit Entry" : "Add Entry"}
-          </Text>
-          <TouchableOpacity
-            style={dynamicStyles.modalHeaderCloseButton}
-            onPress={onClose}
-          >
-            <Text style={dynamicStyles.modalCloseText}>✕</Text>
-          </TouchableOpacity>
-        </View>
-        {renderContent()}
-      </SafeAreaView>
-    </Modal>
+      {renderContent()}
+    </ThemedModal>
   );
 };
 
@@ -293,6 +252,9 @@ export const ProfileEditForm = ({ visible, onClose, onSave, profile, themeColors
     profile?.dateOfBirth ? new Date(profile.dateOfBirth) : new Date(),
   );
   const [showDatePicker, setShowDatePicker] = useState(false);
+  
+  // Create dynamic styles based on active colors
+  const dynamicStyles = createDynamicStyles(activeColors);
 
   const handleSubmit = () => {
     if (!name.trim()) {
@@ -311,49 +273,49 @@ export const ProfileEditForm = ({ visible, onClose, onSave, profile, themeColors
 
   const renderContent = () => (
     <ScrollView
-      style={styles.formContainer}
-      contentContainerStyle={styles.formContentContainer}
+      style={dynamicStyles.formContainer}
+      contentContainerStyle={dynamicStyles.formContentContainer}
     >
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Name *</Text>
+      <View style={dynamicStyles.inputGroup}>
+        <Text style={dynamicStyles.label}>Name *</Text>
         <TextInput
-          style={styles.input}
+          style={dynamicStyles.input}
           value={name}
           onChangeText={setName}
           placeholder="Full name"
-          placeholderTextColor={colors.text.disabled}
+          placeholderTextColor={activeColors.text.disabled}
         />
       </View>
 
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Preferred Name</Text>
+      <View style={dynamicStyles.inputGroup}>
+        <Text style={dynamicStyles.label}>Preferred Name</Text>
         <TextInput
-          style={styles.input}
+          style={dynamicStyles.input}
           value={preferredName}
           onChangeText={setPreferredName}
           placeholder="What they like to be called"
-          placeholderTextColor={colors.text.disabled}
+          placeholderTextColor={activeColors.text.disabled}
         />
       </View>
 
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Pronouns</Text>
+      <View style={dynamicStyles.inputGroup}>
+        <Text style={dynamicStyles.label}>Pronouns</Text>
         <TextInput
-          style={styles.input}
+          style={dynamicStyles.input}
           value={pronouns}
           onChangeText={setPronouns}
           placeholder="e.g., she/her, he/him, they/them"
-          placeholderTextColor={colors.text.disabled}
+          placeholderTextColor={activeColors.text.disabled}
         />
       </View>
 
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Date of Birth</Text>
+      <View style={dynamicStyles.inputGroup}>
+        <Text style={dynamicStyles.label}>Date of Birth</Text>
         <TouchableOpacity
-          style={styles.dateButton}
+          style={dynamicStyles.dateButton}
           onPress={() => setShowDatePicker(true)}
         >
-          <Text style={styles.dateText}>
+          <Text style={dynamicStyles.dateText}>
             {dateOfBirth.toLocaleDateString()}
           </Text>
         </TouchableOpacity>
@@ -372,74 +334,33 @@ export const ProfileEditForm = ({ visible, onClose, onSave, profile, themeColors
         )}
       </View>
 
-      <View style={styles.formActions}>
+      <View style={dynamicStyles.formActions}>
         <TouchableOpacity
-          style={[styles.button, styles.buttonCancel]}
+          style={[dynamicStyles.button, dynamicStyles.buttonCancel]}
           onPress={onClose}
         >
-          <Text style={styles.buttonCancelText}>Cancel</Text>
+          <Text style={dynamicStyles.buttonCancelText}>Cancel</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.button, styles.buttonPrimary]}
+          style={[dynamicStyles.button, dynamicStyles.buttonPrimary]}
           onPress={handleSubmit}
         >
-          <Text style={styles.buttonPrimaryText}>Save</Text>
+          <Text style={dynamicStyles.buttonPrimaryText}>Save</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
   );
 
-  // Dynamic styles based on theme
-  const dynamicStyles = StyleSheet.create({
-    modalSafeArea: {
-      flex: 1,
-      backgroundColor: activeColors.background.paper,
-    },
-    modalHeader: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      paddingHorizontal: 20,
-      paddingVertical: 16,
-      borderBottomWidth: 1,
-      borderBottomColor: activeColors.border,
-      backgroundColor: activeColors.background.paper,
-    },
-    modalHeaderTitle: {
-      fontSize: 20,
-      fontWeight: "600",
-      color: activeColors.text.primary,
-    },
-    modalHeaderCloseButton: {
-      padding: 4,
-    },
-    modalCloseText: {
-      fontSize: 24,
-      color: activeColors.text.secondary,
-    },
-  });
-
   return (
-    <Modal
+    <ThemedModal
       visible={visible}
-      animationType="slide"
-      transparent={false}
-      onRequestClose={onClose}
+      onClose={onClose}
+      title="Edit Profile"
+      headerStyle="primary"
       presentationStyle="formSheet"
     >
-      <SafeAreaView style={dynamicStyles.modalSafeArea}>
-        <View style={dynamicStyles.modalHeader}>
-          <Text style={dynamicStyles.modalHeaderTitle}>Edit Profile</Text>
-          <TouchableOpacity
-            style={dynamicStyles.modalHeaderCloseButton}
-            onPress={onClose}
-          >
-            <Text style={dynamicStyles.modalCloseText}>✕</Text>
-          </TouchableOpacity>
-        </View>
-        {renderContent()}
-      </SafeAreaView>
-    </Modal>
+      {renderContent()}
+    </ThemedModal>
   );
 };
 
@@ -449,6 +370,9 @@ export const CategoryManager = ({ visible, onClose, categories, onSave, themeCol
   
   // Use theme colors if provided, otherwise fall back to default
   const activeColors = themeColors || colors;
+  
+  // Create dynamic styles based on active colors
+  const dynamicStyles = createDynamicStyles(activeColors);
 
   const toggleCategory = (categoryId) => {
     setLocalCategories((prev) =>
@@ -490,23 +414,23 @@ export const CategoryManager = ({ visible, onClose, categories, onSave, themeCol
   };
 
   const renderContent = () => (
-    <View style={[styles.formContainer, { padding: 20 }]}>
-      <ScrollView style={styles.categoryList}>
+    <View style={[dynamicStyles.formContainer, { padding: 20 }]}>
+      <ScrollView style={dynamicStyles.categoryList}>
         {localCategories.map((category, index) => (
-          <View key={category.id} style={styles.categoryItem}>
-            <View style={styles.categoryItemLeft}>
+          <View key={category.id} style={dynamicStyles.categoryItem}>
+            <View style={dynamicStyles.categoryItemLeft}>
               <View
                 style={[
-                  styles.categoryColorDot,
+                  dynamicStyles.categoryColorDot,
                   { backgroundColor: category.color },
                 ]}
               />
-              <Text style={styles.categoryItemName}>
+              <Text style={dynamicStyles.categoryItemName}>
                 {category.displayName}
               </Text>
             </View>
 
-            <View style={styles.categoryItemActions}>
+            <View style={dynamicStyles.categoryItemActions}>
               <Switch
                 value={category.isVisible}
                 onValueChange={() => toggleCategory(category.id)}
@@ -514,28 +438,28 @@ export const CategoryManager = ({ visible, onClose, categories, onSave, themeCol
                 thumbColor={activeColors.background.paper}
               />
 
-              <View style={styles.categoryMoveButtons}>
+              <View style={dynamicStyles.categoryMoveButtons}>
                 <TouchableOpacity
                   onPress={() => moveCategory(category.id, "up")}
                   disabled={index === 0}
                   style={[
-                    styles.moveButton,
-                    index === 0 && styles.moveButtonDisabled,
+                    dynamicStyles.moveButton,
+                    index === 0 && dynamicStyles.moveButtonDisabled,
                   ]}
                 >
-                  <Text style={styles.moveButtonText}>↑</Text>
+                  <Text style={dynamicStyles.moveButtonText}>↑</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
                   onPress={() => moveCategory(category.id, "down")}
                   disabled={index === localCategories.length - 1}
                   style={[
-                    styles.moveButton,
+                    dynamicStyles.moveButton,
                     index === localCategories.length - 1 &&
-                      styles.moveButtonDisabled,
+                      dynamicStyles.moveButtonDisabled,
                   ]}
                 >
-                  <Text style={styles.moveButtonText}>↓</Text>
+                  <Text style={dynamicStyles.moveButtonText}>↓</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -543,82 +467,41 @@ export const CategoryManager = ({ visible, onClose, categories, onSave, themeCol
         ))}
       </ScrollView>
 
-      <View style={styles.formActions}>
+      <View style={dynamicStyles.formActions}>
         <TouchableOpacity
-          style={[styles.button, styles.buttonCancel]}
+          style={[dynamicStyles.button, dynamicStyles.buttonCancel]}
           onPress={onClose}
         >
-          <Text style={styles.buttonCancelText}>Cancel</Text>
+          <Text style={dynamicStyles.buttonCancelText}>Cancel</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.button, styles.buttonPrimary]}
+          style={[dynamicStyles.button, dynamicStyles.buttonPrimary]}
           onPress={handleSave}
         >
-          <Text style={styles.buttonPrimaryText}>Save</Text>
+          <Text style={dynamicStyles.buttonPrimaryText}>Save</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 
-  // Dynamic styles based on theme
-  const dynamicStyles = StyleSheet.create({
-    modalSafeArea: {
-      flex: 1,
-      backgroundColor: activeColors.background.paper,
-    },
-    modalHeader: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      paddingHorizontal: 20,
-      paddingVertical: 16,
-      borderBottomWidth: 1,
-      borderBottomColor: activeColors.border,
-      backgroundColor: activeColors.background.paper,
-    },
-    modalHeaderTitle: {
-      fontSize: 20,
-      fontWeight: "600",
-      color: activeColors.text.primary,
-    },
-    modalHeaderCloseButton: {
-      padding: 4,
-    },
-    modalCloseText: {
-      fontSize: 24,
-      color: activeColors.text.secondary,
-    },
-  });
-
   return (
-    <Modal
+    <ThemedModal
       visible={visible}
-      animationType="slide"
-      transparent={false}
-      onRequestClose={onClose}
+      onClose={onClose}
+      title="Manage Categories"
+      headerStyle="primary"
       presentationStyle="formSheet"
     >
-      <SafeAreaView style={dynamicStyles.modalSafeArea}>
-        <View style={dynamicStyles.modalHeader}>
-          <Text style={dynamicStyles.modalHeaderTitle}>Manage Categories</Text>
-          <TouchableOpacity
-            style={dynamicStyles.modalHeaderCloseButton}
-            onPress={onClose}
-          >
-            <Text style={dynamicStyles.modalCloseText}>✕</Text>
-          </TouchableOpacity>
-        </View>
-        {renderContent()}
-      </SafeAreaView>
-    </Modal>
+      {renderContent()}
+    </ThemedModal>
   );
 };
 
-// Styles
-const styles = StyleSheet.create({
+// Function to create dynamic styles based on theme colors
+const createDynamicStyles = (activeColors) => StyleSheet.create({
   modalSafeArea: {
     flex: 1,
-    backgroundColor: colors.background.paper,
+    backgroundColor: activeColors.background.paper,
   },
   modalHeader: {
     flexDirection: "row",
@@ -627,13 +510,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-    backgroundColor: colors.background.paper,
+    borderBottomColor: activeColors.border,
+    backgroundColor: activeColors.background.paper,
   },
   modalHeaderTitle: {
     fontSize: 20,
     fontWeight: "600",
-    color: colors.text.primary,
+    color: activeColors.text.primary,
   },
   modalHeaderCloseButton: {
     padding: 4,
@@ -647,7 +530,7 @@ const styles = StyleSheet.create({
   },
   modalCloseText: {
     fontSize: 24,
-    color: colors.text.secondary,
+    color: activeColors.text.secondary,
   },
   formContainer: {
     flex: 1,
@@ -661,18 +544,18 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "600",
-    color: colors.text.secondary,
+    color: activeColors.text.secondary,
     marginBottom: 8,
   },
   input: {
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: activeColors.border,
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 16,
-    color: colors.text.primary,
-    backgroundColor: colors.background.default,
+    color: activeColors.text.primary,
+    backgroundColor: activeColors.background.default,
   },
   textArea: {
     minHeight: 120,
@@ -688,14 +571,14 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginRight: 8,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: activeColors.border,
   },
   categoryChipActive: {
     borderColor: "transparent",
   },
   categoryChipText: {
     fontSize: 14,
-    color: colors.text.secondary,
+    color: activeColors.text.secondary,
   },
   categoryChipTextActive: {
     color: "white",
@@ -703,15 +586,15 @@ const styles = StyleSheet.create({
   },
   dateButton: {
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: activeColors.border,
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    backgroundColor: colors.background.default,
+    backgroundColor: activeColors.background.default,
   },
   dateText: {
     fontSize: 16,
-    color: colors.text.primary,
+    color: activeColors.text.primary,
   },
   formActions: {
     flexDirection: "row",
@@ -727,7 +610,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonPrimary: {
-    backgroundColor: colors.primary,
+    backgroundColor: activeColors.primary,
   },
   buttonPrimaryText: {
     color: "white",
@@ -737,10 +620,10 @@ const styles = StyleSheet.create({
   buttonCancel: {
     backgroundColor: "transparent",
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: activeColors.border,
   },
   buttonCancelText: {
-    color: colors.text.secondary,
+    color: activeColors.text.secondary,
     fontSize: 16,
   },
   categoryList: {
@@ -752,7 +635,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    borderBottomColor: activeColors.border,
   },
   categoryItemLeft: {
     flexDirection: "row",
@@ -767,7 +650,7 @@ const styles = StyleSheet.create({
   },
   categoryItemName: {
     fontSize: 16,
-    color: colors.text.primary,
+    color: activeColors.text.primary,
   },
   categoryItemActions: {
     flexDirection: "row",
@@ -783,7 +666,7 @@ const styles = StyleSheet.create({
     height: 28,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.background.manila,
+    backgroundColor: activeColors.background.manila,
     borderRadius: 4,
   },
   moveButtonDisabled: {
@@ -791,10 +674,13 @@ const styles = StyleSheet.create({
   },
   moveButtonText: {
     fontSize: 16,
-    color: colors.text.primary,
+    color: activeColors.text.primary,
     fontWeight: "bold",
   },
 });
+
+// Create default styles with default colors (for backward compatibility)
+const styles = createDynamicStyles(colors);
 
 export default {
   EntryForm,
