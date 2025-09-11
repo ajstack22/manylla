@@ -1,5 +1,19 @@
 # Manylla Release Notes
 
+## Version 2025.09.11.3 - 2025-09-11
+Working Area UI Improvements - Category Icons
+
+### Changed
+- Added label icons to category headers for visual consistency
+- Icons now appear in all category sections in the working area
+- Icons dynamically match category type (medical, education, etc.)
+- Removed unused icon prop from CategorySection component
+
+### Technical
+- Updated CategorySection.js with getCategoryIcon function
+- Added MaterialIcons for category identification
+- Icons use theme colors and proper opacity styling
+
 ## Version 2025.09.11.2 - 2025-09-11
 MUI Compatibility Fix and Webpack Optimization - Production Deployment
 

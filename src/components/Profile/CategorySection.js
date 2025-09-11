@@ -6,8 +6,38 @@ import {
   StyleSheet,
   Platform,
 } from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import { HtmlRenderer } from "../Forms/HtmlRenderer";
 import { useTheme } from "../../context/ThemeContext";
+
+// Helper function to get icon for category
+const getCategoryIcon = (categoryTitle) => {
+  // Check for keywords in the title (case-insensitive)
+  const titleLower = categoryTitle.toLowerCase();
+
+  // Direct matches
+  if (titleLower.includes("quick info")) return "info";
+  if (titleLower.includes("medical")) return "local-hospital";
+  if (titleLower.includes("health")) return "local-hospital";
+  if (titleLower.includes("therapy")) return "healing";
+  if (titleLower.includes("education")) return "school";
+  if (titleLower.includes("school")) return "school";
+  if (titleLower.includes("goals")) return "flag";
+  if (titleLower.includes("behavioral")) return "psychology";
+  if (titleLower.includes("behavior")) return "psychology";
+  if (titleLower.includes("social")) return "people";
+  if (titleLower.includes("communication")) return "chat";
+  if (titleLower.includes("daily")) return "today";
+  if (titleLower.includes("support")) return "support";
+  if (titleLower.includes("emergency")) return "warning";
+  if (titleLower.includes("document")) return "folder";
+  if (titleLower.includes("contact")) return "contacts";
+  if (titleLower.includes("family")) return "family-restroom";
+  if (titleLower.includes("resource")) return "library-books";
+
+  // Default icon
+  return "label";
+};
 
 export const CategorySection = ({
   title,
@@ -36,6 +66,10 @@ export const CategorySection = ({
       marginRight: 8,
       alignItems: "center",
       justifyContent: "center",
+    },
+    categoryIcon: {
+      marginRight: 8,
+      opacity: 0.8,
     },
     title: {
       fontSize: 20,
@@ -127,7 +161,12 @@ export const CategorySection = ({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        {icon && <View style={[styles.iconContainer, { color }]}>{icon}</View>}
+        <Icon
+          name={getCategoryIcon(title)}
+          size={20}
+          color={color || colors.primary}
+          style={styles.categoryIcon}
+        />
         <Text style={styles.title}>{title}</Text>
       </View>
 
