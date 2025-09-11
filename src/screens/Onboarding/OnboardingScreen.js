@@ -490,8 +490,7 @@ const OnboardingScreen = ({ onComplete }) => {
               onPress={() => {
                 setPhoto(photo ? "" : null);
                 if (Platform.OS === "web") {
-                  // Provide feedback for web users
-                  console.log("Photo selection toggled");
+                  // Photo toggle handled silently
                 }
               }}
               activeOpacity={0.7}
