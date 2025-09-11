@@ -1,5 +1,32 @@
 # Manylla Release Notes
 
+## Version 2025.09.10.10 - 2025-09-10
+Production Deployment - Onboarding Consolidation Complete
+
+### Changed
+- **Onboarding Architecture**: Successfully consolidated into single component
+  - OnboardingScreen.js (577 lines) now handles all onboarding functionality
+  - Deleted OnboardingWizard.js and index.js (eliminated duplication)
+  - App.js imports OnboardingScreen directly
+  - Clean separation: UI returns mode to App.js, App.js handles profile creation
+
+### Fixed
+- **Color Consistency**: Updated all 15 files from #8B7355 to #A08670
+  - Consistent manila envelope theme throughout application
+
+### Technical
+- Single onboarding component architecture achieved
+- No duplicate implementations remain
+- Direct imports with no compatibility layers
+- All functionality preserved and tested
+
+### Validation
+- TypeScript files: 0 ✓
+- Platform-specific files: 0 ✓
+- Build: Success ✓
+- Prettier: Pass ✓
+- Component consolidation: Complete ✓
+
 ## Version 2025.09.10.9 - 2025-09-10
 Fixed Onboarding Architecture Issues
 
