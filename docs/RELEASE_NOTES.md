@@ -1,5 +1,21 @@
 # Manylla Release Notes
 
+## Version 2025.09.10.13 - 2025-09-10
+Critical Photo Bug Fix - Production Issue
+
+### Fixed
+- **CRITICAL: Photo "default" bug**: Fixed OnboardingScreen photo toggle causing 404 errors
+  - Line 491: Changed setPhoto(photo ? "" : "default") to setPhoto(photo ? "" : null)
+  - The word "default" was being treated as a photo URL, causing 404 requests
+  - Photo value should only be null, empty string, or actual base64/URL
+  - Eliminates browser console errors during onboarding
+
+### Technical
+- Searched entire codebase to ensure no other "default" photo values exist
+- Verified other uses of "default" are legitimate (keyboard types, date picker displays)
+- No breaking changes - maintains existing photo handling logic
+- Critical production bug resolved
+
 ## Version 2025.09.10.12 - 2025-09-10
 Root Directory and Code Cleanup - Admin Tasks
 

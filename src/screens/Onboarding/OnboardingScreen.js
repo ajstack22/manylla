@@ -488,7 +488,7 @@ const OnboardingScreen = ({ onComplete }) => {
             <TouchableOpacity
               style={[styles.photoButton, photo && styles.photoButtonSelected]}
               onPress={() => {
-                setPhoto(photo ? "" : "default");
+                setPhoto(photo ? "" : null);
                 if (Platform.OS === "web") {
                   // Provide feedback for web users
                   console.log("Photo selection toggled");
