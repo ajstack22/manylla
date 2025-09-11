@@ -6,7 +6,7 @@
  * - Card-based content sections
  * - iOS panel expansion fixes
  * Manylla aesthetics:
- * - Manila brown headers (#8B7355)
+ * - Manila brown headers (#A08670)
  * - Warm paper backgrounds
  * - Atkinson Hyperlegible font
  */
@@ -160,7 +160,7 @@ const createStyles = (colors) =>
       paddingHorizontal: 16,
       paddingVertical: 12,
       minHeight: 56,
-      backgroundColor: colors.primary || "#8B7355", // Manylla brown
+      backgroundColor: colors.primary || "#A08670", // Manylla brown
       elevation: 2,
       shadowColor: "#000",
       shadowOffset: { width: 0, height: 2 },

@@ -35,7 +35,7 @@ if (Platform.OS !== "web") {
 
 // Color constants (manila envelope theme)
 export const colors = {
-  primary: "#8B7355",
+  primary: "#A08670",
   secondary: "#6B5D54",
   background: {
     default: "#FDFBF7",

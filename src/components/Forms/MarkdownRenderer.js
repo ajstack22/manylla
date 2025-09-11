@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View, ScrollView } from "react-native";
 
 const colors = {
-  primary: "#8B7355",
+  primary: "#A08670",
   secondary: "#A0937D",
   background: "#FDFBF7",
   surface: "#F4E4C1",

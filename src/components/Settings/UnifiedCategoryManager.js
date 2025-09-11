@@ -90,7 +90,7 @@ export const UnifiedCategoryManager = ({
             <Switch
               value={item.isVisible}
               onValueChange={() => handleToggleVisibility(item.id)}
-              trackColor={{ false: "#E0E0E0", true: "#8B7355" }}
+              trackColor={{ false: "#E0E0E0", true: "#A08670" }}
               thumbColor={item.isVisible ? "#FFFFFF" : "#FAFAFA"}
             />
           </View>
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     }),
   },
   categoryItemActive: {
-    borderColor: "#8B7355",
+    borderColor: "#A08670",
     backgroundColor: "#FAFAFA",
   },
   categoryContent: {
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
     color: "#666",
   },
   chip: {
-    backgroundColor: "#8B7355",
+    backgroundColor: "#A08670",
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 12,
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
   chipOutline: {
     backgroundColor: "transparent",
     borderWidth: 1,
-    borderColor: "#8B7355",
+    borderColor: "#A08670",
   },
   chipText: {
     fontSize: 11,
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   chipTextOutline: {
-    color: "#8B7355",
+    color: "#A08670",
   },
   footer: {
     flexDirection: "row",
@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     borderRadius: 8,
-    backgroundColor: "#8B7355",
+    backgroundColor: "#A08670",
     alignItems: "center",
   },
   saveButtonText: {

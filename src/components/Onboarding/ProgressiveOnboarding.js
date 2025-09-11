@@ -31,7 +31,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
     text: "#3D2F1F", // Dark brown text
     textSecondary: "#5D4A37", // Medium brown for secondary text
     border: "#A68B5B", // Darker manila for borders
-    primary: "#8B7355", // Medium brown for primary actions
+    primary: "#A08670", // Medium brown for primary actions
     primaryDark: "#6B5745", // Darker brown for hover states
   };
 

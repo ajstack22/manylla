@@ -1,5 +1,83 @@
 # Manylla Release Notes
 
+## Version 2025.09.10.9 - 2025-09-10
+Fixed Onboarding Architecture Issues
+
+### Fixed
+- **Proper component separation**: Created minimal OnboardingWizard (362 lines) for App.js UI needs
+  - OnboardingWizard now handles UI presentation only
+  - App.js handles all profile creation and business logic
+  - OnboardingScreen remains for native navigation use
+  - Clear separation of concerns established
+
+- **Color consistency**: Fixed all 15 files using wrong color
+  - Changed #8B7355 to #A08670 throughout codebase
+  - Updated in Loading, Forms, Profile, Settings, and Common components
+  - Consistent manila envelope theme now applied
+
+### Technical
+- Created minimal OnboardingWizard.js (362 lines) that returns mode selection to App.js
+- Maintained OnboardingScreen.js for RootNavigator/native navigation
+- Simple index.js export (2 lines) for clean imports
+- No duplicate logic - clear separation between UI and business logic
+
+### Validation
+- TypeScript files: 0 ✓
+- Platform-specific files: 0 ✓
+- Build: Success ✓
+- Prettier: Pass ✓
+- Color consistency: Fixed all 15 files ✓
+
+## Version 2025.09.10.8 - 2025-09-10
+Major Documentation Cleanup - Removed Obsolete Files
+
+### Changed
+- **Comprehensive documentation cleanup**: Streamlined /docs directory for current architecture
+  - Removed 29 obsolete documentation files
+  - Eliminated all mobile-specific documentation (project is now unified)
+  - Removed all old phase planning documents (Phase 1-4 completed)
+  - Cleaned up duplicate deployment and architecture guides
+  - Reduced documentation files from 99 to 70 (30% reduction)
+
+### Technical
+- Created full backup before cleanup (docs-backup-20250910-192806.tar.gz)
+- Focused on keeping only current, production-relevant documentation
+- Preserved essential docs: WORKING_AGREEMENTS, RELEASE_NOTES, active prompts
+- No code changes required
+
+### Directories Removed
+- `docs/mobile/` - Mobile-specific docs (obsolete with unified codebase)
+- `docs/setup/` - Old setup instructions (now in main documentation)
+
+### Files Removed from /docs/archive/
+- All MANYLLA_MOBILE_*.md files (7 files) - React Native migration completed
+- All MOBILE_*.md files (5 files) - Mobile development completed
+- PHASE_4_PLANNING.md - Phase 4 completed
+- COMPONENT_MIGRATION_DIRECTIVE.md - Migration completed
+- CROSS_PLATFORM_MIGRATION_REPORT.md - Migration completed
+- REACT_NATIVE_MIGRATION_PROMPT_PACK.md - Migration completed
+
+### Files Removed from /docs/sync/
+- PHASE_1_COMPLETION_REPORT.md - Phase 1 completed
+- PHASE_3_COMPLETION_SUMMARY.md - Phase 3 completed
+- SECURITY_HARDENING_MASTER_PLAN.md.backup - Backup file
+
+### Files Removed from /docs/archive/prompts/
+- 01_PHASE1_CRITICAL.md - Phase 1 completed
+- 02_PHASE2_ENHANCED_UX.md - Phase 2 completed
+- 03_PHASE3_POLISH.md - Phase 3 completed
+
+### Files Removed from /docs/deployment/
+- DEPLOYMENT.md - Duplicate/outdated
+- 04_DEPLOYMENT_GUIDE.md - Superseded by DEPLOYMENT_PROCESS_v3.md
+- API_DEPLOYMENT.md - Outdated (not modified in 30+ days)
+- DEPLOY_NOTES.md - Old notes, content in RELEASE_NOTES.md
+- DEPLOYMENT_CHECKLIST.md - Outdated checklist from January
+
+### Files Removed from /docs/architecture/
+- 00_ARCHITECTURE.md - Generic/superseded by UNIFIED_APP_ARCHITECTURE.md
+- 03_IMPLEMENTATION_GUIDE.md - Outdated implementation guide
+
 ## Version 2025.09.10.8 - 2025-09-10
 Consolidate Duplicate Onboarding Components
 
@@ -63,7 +141,7 @@ Demo Data Fix - Production Deployment
   - Creates Ellie Thompson profile with all 6 categories
   - Includes 14 demo entries across all categories
   - Profile photo correctly set to /ellie.png
-  
+
 ### Technical
 - Fixed handleOnboardingComplete to create demo profile when mode='demo'
 - Removed profile overwrite that was clearing stored data
@@ -85,7 +163,7 @@ Demo Data Display Fix
   - Previously, the loaded profile's categories were being replaced with empty unifiedCategories
   - Now preserves the complete stored profile with all its entries and categories
   - Demo data now displays correctly with all 6 categories and 14 entries
-  
+
 ### Technical
 - Updated App.js line 495-498 to preserve stored profile data
 - Removed unnecessary category replacement logic that was clearing entries
@@ -106,7 +184,7 @@ Demo Data & Profile Photo Fix
   - All 6 unified categories now appear: Quick Info, Daily Support, Health & Therapy, Education & Goals, Behavior & Social, Family & Resources
   - Added comprehensive demo entries across all categories (14 total entries)
   - Demo profile now properly initialized with complete sample data
-  
+
 ### 🖼️ Profile Photo Fixed
 - **Demo Profile Photo**: Added working profile photo for demo mode
   - Uses Ellie Thompson as consistent demo character
@@ -317,7 +395,7 @@ React Native Phase 1 Complete - Unified Cross-Platform Architecture
 
 ### 🎨 UI/UX Refinements
 - **Subtle Category Theming**: Replaced full colored headers with elegant 4px color strips
-- **Responsive Grid Layout**: 
+- **Responsive Grid Layout**:
   - Desktop: 3 columns for optimal use of screen space
   - Tablet: 2 columns for comfortable touch targets
   - Mobile: Single column for easy scrolling
