@@ -1229,17 +1229,7 @@ function AppContent() {
         onSave={handleSaveEntry}
         category={selectedCategory}
         entry={editingEntry}
-        categories={unifiedCategories.filter(
-          (cat) => !cat.isQuickInfo && cat.isVisible,
-        )}
-        isQuickInfo={
-          selectedCategory &&
-          unifiedCategories.find((cat) => cat.name === selectedCategory)
-            ?.isQuickInfo
-        }
-        quickInfoCategories={unifiedCategories.filter(
-          (cat) => cat.isQuickInfo && cat.isVisible,
-        )}
+        categories={unifiedCategories.filter((cat) => cat.isVisible)}
       />
 
       {/* Profile Edit Modal */}

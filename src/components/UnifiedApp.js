@@ -62,17 +62,12 @@ export const EntryForm = ({
   category,
   entry,
   categories = [],
-  isQuickInfo = false,
-  quickInfoCategories = [],
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(category || "");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-
-  // Determine which categories to show
-  const categoriesToShow = isQuickInfo ? quickInfoCategories : categories;
 
   useEffect(() => {
     if (entry) {
@@ -119,15 +114,13 @@ export const EntryForm = ({
       >
         {/* Category Selector */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>
-            {isQuickInfo ? "Quick Info Category" : "Category"}
-          </Text>
+          <Text style={styles.label}>Category</Text>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             style={styles.categoryScroll}
           >
-            {categoriesToShow.map((cat) => (
+            {categories.map((cat) => (
               <TouchableOpacity
                 key={cat.id}
                 style={[
