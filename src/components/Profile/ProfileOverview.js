@@ -200,10 +200,11 @@ export const ProfileOverview = ({
               onPress={() => onUpdateProfile && setProfileEditOpen(true)}
             >
               <Image
-                source={{ 
-                  uri: Platform.OS === 'ios' && profile.photo.startsWith('/') 
-                    ? `https://manylla.com/qual${profile.photo}` // Convert relative path to absolute URL for iOS
-                    : profile.photo 
+                source={{
+                  uri:
+                    Platform.OS === "ios" && profile.photo.startsWith("/")
+                      ? `https://manylla.com/qual${profile.photo}` // Convert relative path to absolute URL for iOS
+                      : profile.photo,
                 }}
                 style={styles.avatar}
                 resizeMode="cover"
