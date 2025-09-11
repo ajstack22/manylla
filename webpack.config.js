@@ -128,6 +128,7 @@ module.exports = {
         { from: 'public/favicon.svg', to: 'favicon.svg', noErrorOnMissing: true },
         { from: 'public/logo192.png', to: 'logo192.png', noErrorOnMissing: true },
         { from: 'public/logo512.png', to: 'logo512.png', noErrorOnMissing: true },
+        { from: 'public/ellie.png', to: 'ellie.png', noErrorOnMissing: true },
         { from: 'public/manifest.json', to: 'manifest.json', noErrorOnMissing: true },
         { from: 'public/robots.txt', to: 'robots.txt', noErrorOnMissing: true },
         { from: 'public/global-styles.css', to: 'global-styles.css', noErrorOnMissing: true },
