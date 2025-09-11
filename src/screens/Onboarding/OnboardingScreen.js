@@ -29,15 +29,14 @@ import {
   CloseIcon,
 } from "../../components/Common";
 
-// Import Ellie image for React Native
-const EllieImage = Platform.OS !== "web" ? require("../../ellie.png") : null;
-
 // Services
 import { StorageService } from "../../services/storage/storageService";
 
 // Utils and types
-import { ChildProfile } from "../../types/ChildProfile";
 import { unifiedCategories } from "../../utils/unifiedCategories";
+
+// Import Ellie image for React Native
+const EllieImage = Platform.OS !== "web" ? require("../../ellie.png") : null;
 
 // Helper function to map category IDs to icons
 const getIconForCategory = (categoryId) => {
