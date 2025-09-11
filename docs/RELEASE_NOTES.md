@@ -1,5 +1,26 @@
 # Manylla Release Notes
 
+## Version 2025.09.11.12 - 2025-09-11
+String Tie Logo Design Implementation
+
+### Added
+- New string tie-inspired logo design with red border (#CC0000)
+- Offset ring effect with white gap between logo and red border
+- Consistent string tie design across all components:
+  - Header logo ("m" avatar)
+  - Profile avatars
+  - Favicon (all formats: SVG, ICO, PNG)
+
+### Changed
+- Updated Header component with box-shadow for offset ring effect
+- Improved animation timing for smoother logo/profile transitions
+- Favicon redesigned with Manylla brown (#A08670), manila text (#F4E4C1), and red border
+
+### Technical
+- String tie border consistent across all theme modes (light/dark/manylla)
+- Fixed animation overlap issue between logo and profile transitions
+- Updated favicon generation scripts for new design
+
 ## Version 2025.09.11.11 - 2025-09-11
 ErrorBoundary Component Modernization
 

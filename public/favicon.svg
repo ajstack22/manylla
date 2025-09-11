@@ -1,6 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Manila background -->
-  <rect width="32" height="32" fill="#C4A66B"/>
-  <!-- Lowercase 'm' in Atkinson Hyperlegible -->
-  <text x="16" y="20" font-family="Atkinson Hyperlegible, sans-serif" font-size="20" font-weight="700" fill="#3D2F1F" text-anchor="middle" dominant-baseline="middle">m</text>
+  <!-- Brown circle background -->
+  <circle cx="16" cy="16" r="14" fill="#A08670"/>
+  
+  <!-- White gap ring -->
+  <circle cx="16" cy="16" r="14" fill="none" stroke="white" stroke-width="1.5"/>
+  
+  <!-- Red string tie border -->
+  <circle cx="16" cy="16" r="15.5" fill="none" stroke="#CC0000" stroke-width="1"/>
+  
+  <!-- Manila 'm' in serif font -->
+  <text x="16" y="16" font-family="Georgia, serif" font-size="18" font-weight="500" fill="#F4E4C1" text-anchor="middle" dominant-baseline="middle" dy="1">m</text>
 </svg>
