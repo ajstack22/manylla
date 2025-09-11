@@ -11,7 +11,6 @@ const clearCorruptedStorage = async () => {
         key.startsWith("manylla_profile_") || key === "manylla_all_profiles",
     );
     await AsyncStorage.multiRemove(profileKeys);
-    console.log("Cleared corrupted storage");
   } catch (error) {
     console.error("Failed to clear storage:", error);
   }
@@ -21,7 +20,6 @@ const clearCorruptedStorage = async () => {
 const resetAppState = async () => {
   try {
     await AsyncStorage.clear();
-    console.log("Reset app state");
   } catch (error) {
     console.error("Failed to reset app state:", error);
   }
@@ -58,7 +56,7 @@ const getErrorMessage = (error) => {
 // Helper function to send error report (placeholder for future implementation)
 const sendErrorReport = async (errorData) => {
   // In the future, this could send to an error tracking service
-  console.log("Error report:", errorData);
+  // Error report would be sent here
 
   // For now, just log to console
   if (Platform.OS === "web" && typeof window !== "undefined") {

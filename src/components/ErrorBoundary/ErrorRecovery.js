@@ -14,7 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const clearLocalStorage = async () => {
   try {
     await AsyncStorage.clear();
-    console.log("Local storage cleared");
+    // Local storage cleared
   } catch (error) {
     console.error("Failed to clear local storage:", error);
     throw error;
@@ -24,7 +24,7 @@ const clearLocalStorage = async () => {
 const disableSync = async () => {
   try {
     await AsyncStorage.setItem("manylla_sync_disabled", "true");
-    console.log("Sync disabled");
+    // Sync disabled
   } catch (error) {
     console.error("Failed to disable sync:", error);
     throw error;
@@ -39,7 +39,7 @@ const resetApplication = async () => {
     // Reset to initial state
     await AsyncStorage.setItem("manylla_onboarding_complete", "false");
 
-    console.log("Application reset");
+    // Application reset
   } catch (error) {
     console.error("Failed to reset application:", error);
     throw error;

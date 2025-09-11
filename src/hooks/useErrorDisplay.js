@@ -5,7 +5,7 @@ import { Platform } from "react-native";
 const showToast = (message, type) => {
   if (Platform.OS === "web" && typeof window !== "undefined") {
     // Could use a toast library in the future
-    console.log(`[${type.toUpperCase()}]: ${message}`);
+    // Toast message would be shown here
   }
 };
 
@@ -64,7 +64,7 @@ export const useErrorDisplay = (error, errorInfo) => {
       };
 
       // In a real app, this would send to an error tracking service
-      console.log("Sending error report:", reportData);
+      // Error report would be sent here
 
       // Simulate sending report
       await new Promise((resolve) => setTimeout(resolve, 500));
