@@ -1,7 +1,7 @@
 # Manylla Release Notes
 
-## Version 2025.09.10.25 - 2025-09-11
-MUI Compatibility Fix and Webpack Optimization
+## Version 2025.09.11.1 - 2025-09-11
+MUI Compatibility Fix and Webpack Optimization - New Day Deployment
 
 ### Changes
 - Downgraded MUI from v7 to v6.5.0 for better compatibility
@@ -11,6 +11,10 @@ MUI Compatibility Fix and Webpack Optimization
   - Separate React ecosystem into its own chunk
   - Improved code splitting for better load performance
 - Fixed compatibility issues with existing components
+- New day deployment (first build of 2025.09.11)
+
+## Version 2025.09.10.25 - 2025-09-11
+[Prepared but not deployed - superseded by v2025.09.11.1]
 
 ## Version 2025.09.10.24 - 2025-09-11
 Production Deployment - Optimized Dependencies
