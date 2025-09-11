@@ -1,5 +1,23 @@
 # Manylla Release Notes
 
+## Version 2025.09.11.19 - 2025-09-11
+Final Android UI/UX Validation Build
+
+### Summary
+Pre-peer review deployment for Android platform adaptations validation
+
+### Included Changes
+- Complete Android platform UI/UX adaptations from v2025.09.11.18
+- Header safe area fixes and StatusBar handling
+- Ellie image loading corrections
+- Prettier formatting applied to modified files
+
+### Testing
+- Ready for validation in qual environment
+- All Android adaptations should be testable on web platform
+- Verify header positioning and transitions
+- Check text visibility in all input fields
+
 ## Version 2025.09.11.18 - 2025-09-11
 Android Platform UI/UX Complete Implementation
 
