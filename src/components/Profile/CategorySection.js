@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Platform,
 } from "react-native";
+import { getShadowStyle } from "../../utils/platformStyles";
 import Icon, { LabelIcon } from "../Common/IconProvider";
 import { HtmlRenderer } from "../Forms/HtmlRenderer";
 import { useTheme } from "../../context/ThemeContext";
@@ -73,11 +74,7 @@ export const CategorySection = ({
       backgroundColor: "#ffffff",
       borderRadius: 8,
       padding: 16,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 2,
+      ...getShadowStyle(2),
     },
     entryHeader: {
       flexDirection: "row",

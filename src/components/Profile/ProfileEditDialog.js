@@ -16,6 +16,11 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "react-native-image-picker";
 import { useTheme } from "../../context/ThemeContext";
+import {
+  getTextStyle,
+  getScrollViewProps,
+  getShadowStyle,
+} from "../../utils/platformStyles";
 
 export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
   const { colors } = useTheme();
@@ -170,7 +175,7 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
             </TouchableOpacity>
           </View>
 
-          <ScrollView style={styles.modalBody}>
+          <ScrollView style={styles.modalBody} {...getScrollViewProps()}>
             {/* Profile Photo */}
             <View style={styles.photoSection}>
               <View style={styles.avatarContainer}>
@@ -210,7 +215,11 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
             <View style={styles.formField}>
               <Text style={styles.modalLabel}>Name *</Text>
               <TextInput
-                style={styles.modalInput}
+                style={[
+                  styles.modalInput,
+                  getTextStyle("input"),
+                  Platform.OS === "android" && { color: "#000000" },
+                ]}
                 value={formData.name}
                 onChangeText={(value) =>
                   setFormData({ ...formData, name: value })
@@ -224,7 +233,11 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
             <View style={styles.formField}>
               <Text style={styles.modalLabel}>Preferred Name</Text>
               <TextInput
-                style={styles.modalInput}
+                style={[
+                  styles.modalInput,
+                  getTextStyle("input"),
+                  Platform.OS === "android" && { color: "#000000" },
+                ]}
                 value={formData.preferredName}
                 onChangeText={(value) =>
                   setFormData({ ...formData, preferredName: value })
@@ -270,7 +283,11 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
             <View style={styles.formField}>
               <Text style={styles.modalLabel}>Pronouns</Text>
               <TextInput
-                style={styles.modalInput}
+                style={[
+                  styles.modalInput,
+                  getTextStyle("input"),
+                  Platform.OS === "android" && { color: "#000000" },
+                ]}
                 value={formData.pronouns}
                 onChangeText={(value) =>
                   setFormData({ ...formData, pronouns: value })

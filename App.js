@@ -19,11 +19,15 @@ import {
   Alert,
   Image,
   Dimensions,
+  StatusBar,
+  SafeAreaView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // Use cross-platform Icon from IconProvider instead
 import Icon from "./src/components/Common/IconProvider";
 
+// Platform utilities
+import { getStatusBarHeight } from "./src/utils/platformStyles";
 // Shared imports
 import { ThemeProvider, SyncProvider, useSync, useTheme } from "./src/context";
 import { StorageService } from "./src/services/storage/storageService";
@@ -636,6 +640,15 @@ function AppContent() {
   const [loadingMessage, setLoadingMessage] = useState("");
   const [isProfileHidden, setIsProfileHidden] = useState(false);
 
+  // Configure StatusBar for Android
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      StatusBar.setBackgroundColor('transparent');
+      StatusBar.setTranslucent(true);
+      StatusBar.setBarStyle(theme === 'dark' ? 'light-content' : 'dark-content');
+    }
+  }, [theme]);
+
   // Load initial data
   useEffect(() => {
     const loadInitialData = async () => {
@@ -1203,7 +1216,7 @@ function AppContent() {
 
   // Main app view
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Header
         onSyncClick={() => setSyncDialogOpen(true)}
         onCloseProfile={handleLogout}
@@ -1341,7 +1354,7 @@ function AppContent() {
       {operationLoading && (
         <LoadingOverlay visible={operationLoading} message={loadingMessage} />
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 

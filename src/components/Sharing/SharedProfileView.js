@@ -9,7 +9,9 @@ import {
   Alert,
   Image,
   Dimensions,
+  Platform,
 } from "react-native";
+import { getTextStyle } from "../../utils/platformStyles";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { ChildProfile, Entry } from "../../types/ChildProfile";
 
@@ -105,6 +107,8 @@ export const SharedProfileView = ({ isAuthenticated = false }) => {
                 style={[
                   styles.accessCodeInput,
                   error ? styles.inputError : null,
+                  getTextStyle("input"),
+                  Platform.OS === "android" && { color: "#000000" },
                 ]}
                 value={accessCode}
                 onChangeText={(text) => {
@@ -112,6 +116,9 @@ export const SharedProfileView = ({ isAuthenticated = false }) => {
                   if (error) setError("");
                 }}
                 placeholder="Enter 6-character code"
+                placeholderTextColor={
+                  Platform.OS === "android" ? "#999" : undefined
+                }
                 placeholderTextColor={colors.textSecondary}
                 autoCapitalize="characters"
                 maxLength={6}

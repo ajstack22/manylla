@@ -18,6 +18,7 @@ import {
   FlatList,
   Dimensions,
 } from "react-native";
+import { getTextStyle } from "../utils/platformStyles";
 import { ThemedModal } from "./Common";
 // DatePicker handled through platform-specific implementations
 let DateTimePicker = null;
@@ -159,11 +160,17 @@ export const EntryForm = ({
         <View style={dynamicStyles.inputGroup}>
           <Text style={dynamicStyles.label}>Title *</Text>
           <TextInput
-            style={dynamicStyles.input}
+            style={[
+              dynamicStyles.input,
+              getTextStyle("input"),
+              Platform.OS === "android" && { color: "#000000" },
+            ]}
             value={title}
             onChangeText={setTitle}
             placeholder="Enter a title..."
-            placeholderTextColor={activeColors.text.disabled}
+            placeholderTextColor={
+              Platform.OS === "android" ? "#999" : activeColors.text.disabled
+            }
           />
         </View>
 
@@ -171,11 +178,18 @@ export const EntryForm = ({
         <View style={dynamicStyles.inputGroup}>
           <Text style={dynamicStyles.label}>Description</Text>
           <TextInput
-            style={[dynamicStyles.input, dynamicStyles.textArea]}
+            style={[
+              dynamicStyles.input,
+              dynamicStyles.textArea,
+              getTextStyle("input"),
+              Platform.OS === "android" && { color: "#000000" },
+            ]}
             value={description}
             onChangeText={setDescription}
             placeholder="Add details..."
-            placeholderTextColor={activeColors.text.disabled}
+            placeholderTextColor={
+              Platform.OS === "android" ? "#999" : activeColors.text.disabled
+            }
             multiline
             numberOfLines={5}
             textAlignVertical="top"
@@ -288,22 +302,34 @@ export const ProfileEditForm = ({
       <View style={dynamicStyles.inputGroup}>
         <Text style={dynamicStyles.label}>Name *</Text>
         <TextInput
-          style={dynamicStyles.input}
+          style={[
+            dynamicStyles.input,
+            getTextStyle("input"),
+            Platform.OS === "android" && { color: "#000000" },
+          ]}
           value={name}
           onChangeText={setName}
           placeholder="Full name"
-          placeholderTextColor={activeColors.text.disabled}
+          placeholderTextColor={
+            Platform.OS === "android" ? "#999" : activeColors.text.disabled
+          }
         />
       </View>
 
       <View style={dynamicStyles.inputGroup}>
         <Text style={dynamicStyles.label}>Preferred Name</Text>
         <TextInput
-          style={dynamicStyles.input}
+          style={[
+            dynamicStyles.input,
+            getTextStyle("input"),
+            Platform.OS === "android" && { color: "#000000" },
+          ]}
           value={preferredName}
           onChangeText={setPreferredName}
           placeholder="What they like to be called"
-          placeholderTextColor={activeColors.text.disabled}
+          placeholderTextColor={
+            Platform.OS === "android" ? "#999" : activeColors.text.disabled
+          }
         />
       </View>
 

@@ -18,6 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Context/Hooks
 import { useTheme } from "../../context/ThemeContext";
+import { getTextStyle, getScrollViewProps } from "../../utils/platformStyles";
 
 // Components
 import {
@@ -583,7 +584,10 @@ const OnboardingScreen = ({ onComplete }) => {
   // Render child info step
   if (step === 1) {
     return (
-      <ScrollComponent style={styles.container}>
+      <ScrollComponent
+        {...(Platform.OS !== "web" ? getScrollViewProps() : {})}
+        style={styles.container}
+      >
         <View style={styles.scrollContent}>
           <View style={styles.stepHeader}>
             <TouchableOpacity
@@ -651,9 +655,15 @@ const OnboardingScreen = ({ onComplete }) => {
           <View style={styles.formSection}>
             <Text style={styles.label}>Child's Name *</Text>
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                getTextStyle("input"),
+                Platform.OS === "android" && { color: "#000000" },
+              ]}
               placeholder="Enter name"
-              placeholderTextColor={colors.text.disabled}
+              placeholderTextColor={
+                Platform.OS === "android" ? "#999" : colors.text.disabled
+              }
               value={childName}
               onChangeText={setChildName}
               autoFocus={Platform.OS === "web"}
@@ -686,9 +696,15 @@ const OnboardingScreen = ({ onComplete }) => {
               />
             ) : (
               <TextInput
-                style={styles.input}
+                style={[
+                  styles.input,
+                  getTextStyle("input"),
+                  Platform.OS === "android" && { color: "#000000" },
+                ]}
                 placeholder="MM/DD/YYYY"
-                placeholderTextColor={colors.text.disabled}
+                placeholderTextColor={
+                  Platform.OS === "android" ? "#999" : colors.text.disabled
+                }
                 value={dateOfBirth}
                 onChangeText={handleDateChange}
                 keyboardType="numeric"
@@ -726,7 +742,10 @@ const OnboardingScreen = ({ onComplete }) => {
 
   // Render welcome step (step 0)
   return (
-    <ScrollComponent style={styles.container}>
+    <ScrollComponent
+      {...(Platform.OS !== "web" ? getScrollViewProps() : {})}
+      style={styles.container}
+    >
       <View style={styles.scrollContent}>
         <View style={styles.logo}>
           <MenuIcon size={60} color={colors.primary} />
@@ -774,9 +793,15 @@ const OnboardingScreen = ({ onComplete }) => {
 
         <View style={styles.inputContainer}>
           <TextInput
-            style={styles.input}
+            style={[
+              styles.input,
+              getTextStyle("input"),
+              Platform.OS === "android" && { color: "#000000" },
+            ]}
             placeholder="Enter access code"
-            placeholderTextColor={colors.text.disabled}
+            placeholderTextColor={
+              Platform.OS === "android" ? "#999" : colors.text.disabled
+            }
             value={accessCode}
             onChangeText={setAccessCode}
             autoCapitalize="characters"

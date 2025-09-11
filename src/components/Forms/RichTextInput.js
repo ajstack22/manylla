@@ -6,8 +6,10 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
+  Platform,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { getTextStyle } from "../../utils/platformStyles";
 
 const colors = {
   primary: "#A08670",
@@ -169,6 +171,8 @@ export const RichTextInput = ({
               maxHeight: multiline ? 300 : minHeight,
               textAlignVertical: multiline ? "top" : "center",
             },
+            getTextStyle("input"), // Force black text on Android
+            Platform.OS === "android" && { color: "#000000" }, // Extra insurance
           ]}
           value={value}
           onChangeText={handleInput}
@@ -178,7 +182,9 @@ export const RichTextInput = ({
           }}
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
-          placeholderTextColor={colors.textSecondary}
+          placeholderTextColor={
+            Platform.OS === "android" ? "#999" : colors.textSecondary
+          }
           multiline={multiline}
           numberOfLines={multiline ? rows : 1}
           autoFocus={autoFocus}

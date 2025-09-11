@@ -13,6 +13,7 @@ import {
   Modal,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { getNumColumns, getCardWidth } from "../../utils/platformStyles";
 
 const colors = {
   primary: "#A08670",
@@ -34,6 +35,7 @@ export const QuickInfoManager = ({
   quickInfoPanels,
   onUpdate,
 }) => {
+  const numColumns = getNumColumns();
   const [panels, setPanels] = useState(quickInfoPanels);
   const [editingPanel, setEditingPanel] = useState(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -302,6 +304,8 @@ export const QuickInfoManager = ({
             data={panels.sort((a, b) => a.order - b.order)}
             renderItem={renderPanelItem}
             keyExtractor={(item) => item.id}
+            numColumns={numColumns}
+            key={numColumns}
             style={styles.panelsList}
             showsVerticalScrollIndicator={false}
           />

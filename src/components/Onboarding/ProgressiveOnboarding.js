@@ -11,6 +11,7 @@ import {
   Image,
   Alert,
 } from "react-native";
+import { getTextStyle, getScrollViewProps } from "../../utils/platformStyles";
 
 const { width } = Dimensions.get("window");
 
@@ -337,10 +338,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        style={styles.scrollContainer}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView {...getScrollViewProps()} style={styles.scrollContainer}>
         {/* Progress indicator */}
         <View style={styles.progressContainer}>
           <View style={styles.progressHeader}>
@@ -514,10 +512,17 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
                 {showAccessCode && (
                   <View style={styles.codeInput}>
                     <TextInput
-                      style={styles.textInput}
+                      style={[
+                        styles.textInput,
+                        getTextStyle("input"),
+                        Platform.OS === "android" && { color: "#000000" },
+                      ]}
                       value={accessCode}
                       onChangeText={(text) => setAccessCode(text.toUpperCase())}
                       placeholder="Enter 6-digit code"
+                      placeholderTextColor={
+                        Platform.OS === "android" ? "#999" : undefined
+                      }
                       maxLength={6}
                       autoCapitalize="characters"
                     />

@@ -14,10 +14,12 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useTheme } from "../../context/ThemeContext";
+import { getNumColumns, getCardWidth } from "../../utils/platformStyles";
 
 export const CategoryManager = ({ visible, onClose, categories, onUpdate }) => {
   const { colors } = useTheme();
   const [categoryList, setCategoryList] = useState(categories);
+  const numColumns = getNumColumns();
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
 
@@ -181,6 +183,8 @@ export const CategoryManager = ({ visible, onClose, categories, onUpdate }) => {
               data={categoryList}
               renderItem={renderCategoryItem}
               keyExtractor={(item) => item.id}
+              numColumns={numColumns}
+              key={numColumns}
               ItemSeparatorComponent={() => <View style={styles.separator} />}
               ListEmptyComponent={
                 <View style={styles.emptyState}>

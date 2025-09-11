@@ -11,6 +11,7 @@ import {
   Platform,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { getTextStyle } from "../../utils/platformStyles";
 
 // Interface definitions removed - using plain JavaScript
 
@@ -189,6 +190,8 @@ export const SmartTextInput = ({
               maxHeight: multiline ? maxHeight : minHeight,
               textAlignVertical: multiline ? "top" : "center",
             },
+            getTextStyle("input"), // Force black text on Android
+            Platform.OS === "android" && { color: "#000000" }, // Extra insurance
           ]}
           value={value}
           onChangeText={handleChange}
@@ -196,7 +199,9 @@ export const SmartTextInput = ({
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
-          placeholderTextColor={colors.textSecondary}
+          placeholderTextColor={
+            Platform.OS === "android" ? "#999" : colors.textSecondary
+          }
           multiline={multiline}
           numberOfLines={multiline ? rows : 1}
           autoFocus={autoFocus}

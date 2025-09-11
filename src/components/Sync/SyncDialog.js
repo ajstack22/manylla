@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
 import { ThemedModal } from "../Common";
+import { getTextStyle } from "../../utils/platformStyles";
 import { useSync } from "../../context/SyncContext";
 import {
   generateInviteCode,
@@ -352,11 +353,18 @@ export const SyncDialog = ({ open, onClose }) => {
       <View style={styles.inputGroup}>
         <Text style={styles.inputLabel}>Invite Code or Backup Code</Text>
         <TextInput
-          style={[styles.input, styles.codeInput]}
+          style={[
+            styles.input,
+            styles.codeInput,
+            getTextStyle("input"), // Force black text on Android
+            Platform.OS === "android" && { color: "#000000" }, // Extra insurance
+          ]}
           value={joinPhrase}
           onChangeText={setJoinPhrase}
           placeholder="XXXX-XXXX or 32-character code"
-          placeholderTextColor={colors.text.secondary}
+          placeholderTextColor={
+            Platform.OS === "android" ? "#999" : colors.text.secondary
+          }
           autoCapitalize="characters"
         />
         <Text style={styles.helperText}>

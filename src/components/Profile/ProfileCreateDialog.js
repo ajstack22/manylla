@@ -17,6 +17,7 @@ import { useTheme } from "../../context/ThemeContext";
 import { defaultCategories } from "../../utils/defaultCategories";
 import { defaultQuickInfoPanels } from "../../utils/defaultQuickInfo";
 import { DatePicker } from "../DatePicker/DatePicker";
+import { getTextStyle, getScrollViewProps } from "../../utils/platformStyles";
 
 export const ProfileCreateDialog = ({ open, onClose, onCreate }) => {
   const { colors } = useTheme();

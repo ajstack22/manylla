@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Platform,
 } from "react-native";
+import { getScrollViewProps } from "../../utils/platformStyles";
 import { useTheme } from "../../context/ThemeContext";
 import { useErrorDisplay } from "../../hooks/useErrorDisplay";
 
@@ -79,7 +80,7 @@ export const ErrorFallback = ({
         </View>
 
         {showDetails && (
-          <ScrollView style={styles.errorDetails}>
+          <ScrollView {...getScrollViewProps()} style={styles.errorDetails}>
             {error?.message && (
               <View style={styles.detailSection}>
                 <Text style={styles.detailTitle}>Error Message:</Text>

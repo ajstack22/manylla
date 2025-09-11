@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
+import { getTextStyle } from "../../utils/platformStyles";
 
 const DatePicker = ({ value, onChange, label, ...props }) => {
   if (Platform.OS === "web") {
@@ -34,14 +35,19 @@ const DatePicker = ({ value, onChange, label, ...props }) => {
         value={value}
         onChangeText={onChange}
         placeholder="MM/DD/YYYY"
-        style={{
-          padding: 12,
-          fontSize: 16,
-          borderRadius: 8,
-          borderWidth: 1,
-          borderColor: "#E0E0E0",
-          backgroundColor: "#FFFFFF",
-        }}
+        placeholderTextColor={Platform.OS === "android" ? "#999" : undefined}
+        style={[
+          {
+            padding: 12,
+            fontSize: 16,
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: "#E0E0E0",
+            backgroundColor: "#FFFFFF",
+          },
+          getTextStyle("input"),
+          Platform.OS === "android" && { color: "#000000" },
+        ]}
         {...props}
       />
     );

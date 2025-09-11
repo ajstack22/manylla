@@ -12,6 +12,7 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { useTheme } from "../../context/ThemeContext";
 import { MarkdownField } from "../Forms/MarkdownField";
+import { getScrollViewProps, getTextStyle } from "../../utils/platformStyles";
 
 const predefinedQuickInfoOptions = [
   "Communication",
@@ -304,7 +305,7 @@ export const UnifiedAddDialog = ({
           </TouchableOpacity>
         </View>
 
-        <ScrollView style={styles.content}>
+        <ScrollView style={styles.content} {...getScrollViewProps()}>
           {mode === "quickInfo" ? (
             <>
               <View style={styles.inputContainer}>

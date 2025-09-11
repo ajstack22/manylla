@@ -13,6 +13,7 @@ import {
   Clipboard,
   ActivityIndicator,
 } from "react-native";
+import { getTextStyle } from "../../utils/platformStyles";
 import nacl from "tweetnacl";
 import util from "tweetnacl-util";
 import { useTheme } from "../../context/ThemeContext";
@@ -417,7 +418,11 @@ export const ShareDialogOptimized = ({ open, onClose, profile }) => {
         <Text style={styles.linkCardTitle}>Share Link</Text>
         <View style={styles.linkInputContainer}>
           <TextInput
-            style={styles.linkInput}
+            style={[
+              styles.linkInput,
+              getTextStyle("input"),
+              Platform.OS === "android" && { color: "#000000" },
+            ]}
             value={generatedLink}
             editable={false}
             multiline

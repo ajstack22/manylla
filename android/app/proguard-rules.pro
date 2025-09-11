@@ -16,7 +16,8 @@
 -keep class com.facebook.hermes.** { *; }
 -keep class com.facebook.jni.** { *; }
 
-# Keep our application class
+# Keep our application class (correct package name)
+-keep class com.manylla.** { *; }
 -keep class com.manyllamobile.** { *; }
 
 # Hermes
@@ -32,6 +33,15 @@
 # Reanimated
 -keep class com.swmansion.reanimated.** { *; }
 -keep class com.facebook.react.turbomodule.** { *; }
+
+# Fabric (New Architecture)
+-keep class com.facebook.react.fabric.** { *; }
+-keep class com.facebook.react.bridge.** { *; }
+-keep class com.facebook.react.config.** { *; }
+
+# TweetNaCl encryption library
+-keep class com.tweetnacl.** { *; }
+-keep class nacl.** { *; }
 
 # Gesture Handler
 -keep class com.swmansion.gesturehandler.** { *; }

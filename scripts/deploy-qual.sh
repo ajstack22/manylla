@@ -579,15 +579,21 @@ else
 fi
 echo
 
-# Android Device Deployment
+# Android Device Deployment and Testing
 echo -e "${BLUE}Android Device Deployment${NC}"
 echo "──────────────────────────"
 
-# Check for connected Android devices
-ANDROID_DEVICES=$(adb devices 2>/dev/null | grep -v "List of devices" | grep "device$" || echo "")
+# Check for connected Android devices (including emulators)
+ANDROID_DEVICES=$(adb devices 2>/dev/null | grep -v "List of devices" | grep -E "device$|emulator" || echo "")
 if [ -n "$ANDROID_DEVICES" ]; then
     echo "Found connected Android devices:"
     echo "$ANDROID_DEVICES"
+    
+    # Run Android clean script if available
+    if [ -f "$SCRIPT_DIR/android/clean-android.sh" ]; then
+        echo -e "${YELLOW}🧹 Cleaning Android build artifacts...${NC}"
+        "$SCRIPT_DIR/android/clean-android.sh" || show_warning "Clean script failed"
+    fi
     
     # Build Android APK
     echo -e "${YELLOW}🔨 Building Android APK...${NC}"
@@ -596,17 +602,39 @@ if [ -n "$ANDROID_DEVICES" ]; then
         cd ..
     }
     
-    if [ -f "android/app/build/outputs/apk/debug/app-debug.apk" ]; then
+    # Determine correct APK path based on ABI splits
+    APK_PATH=""
+    if [ -f "android/app/build/outputs/apk/debug/app-arm64-v8a-debug.apk" ]; then
+        APK_PATH="android/app/build/outputs/apk/debug/app-arm64-v8a-debug.apk"
+    elif [ -f "android/app/build/outputs/apk/debug/app-debug.apk" ]; then
+        APK_PATH="android/app/build/outputs/apk/debug/app-debug.apk"
+    fi
+    
+    if [ -n "$APK_PATH" ]; then
         # Deploy to each connected device
         while IFS= read -r line; do
             DEVICE_ID=$(echo "$line" | awk '{print $1}')
             if [ -n "$DEVICE_ID" ]; then
                 echo -e "${YELLOW}📱 Installing on device $DEVICE_ID...${NC}"
-                adb -s "$DEVICE_ID" install -r android/app/build/outputs/apk/debug/app-debug.apk 2>/dev/null || \
+                # Use correct package name for Manylla
+                adb -s "$DEVICE_ID" uninstall com.manyllamobile 2>/dev/null || true
+                adb -s "$DEVICE_ID" install -r "$APK_PATH" 2>/dev/null || \
                     show_warning "Failed to install on $DEVICE_ID"
+                
+                # Run basic tests if test script available
+                if [ -f "$SCRIPT_DIR/android/debug-android.sh" ]; then
+                    echo -e "${YELLOW}🧪 Running Android tests on $DEVICE_ID...${NC}"
+                    "$SCRIPT_DIR/android/debug-android.sh" info || true
+                fi
             fi
         done <<< "$ANDROID_DEVICES"
         echo -e "${GREEN}✅ Android deployment attempted${NC}"
+        
+        # Run Jest tests for Android if available
+        if [ -d "__tests__/android" ]; then
+            echo -e "${YELLOW}🧪 Running Android Jest tests...${NC}"
+            npm test -- __tests__/android/ --passWithNoTests || show_warning "Android tests failed"
+        fi
     fi
 else
     echo "No Android devices connected - skipping Android deployment"

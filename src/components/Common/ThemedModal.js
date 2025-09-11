@@ -9,6 +9,7 @@ import {
   Platform,
 } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
+import { getShadowStyle } from "../../utils/platformStyles";
 
 /**
  * ThemedModal - A unified modal component with consistent styling
@@ -88,16 +89,8 @@ const getStyles = (colors, theme, headerStyle) => {
       borderBottomWidth: isHeaderPrimary ? 0 : 1,
       borderBottomColor: isHeaderPrimary ? "transparent" : colors.border,
       // Add subtle shadow for depth
+      ...getShadowStyle(3),
       ...Platform.select({
-        ios: {
-          shadowColor: colors.text.primary,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: theme === "dark" ? 0.3 : 0.1,
-          shadowRadius: 3,
-        },
-        android: {
-          elevation: 3,
-        },
         web: {
           boxShadow:
             theme === "dark"
