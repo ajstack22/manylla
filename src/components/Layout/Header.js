@@ -208,7 +208,7 @@ const Header = ({
                     ]}
                   >
                     <View style={styles.profileContent}>
-                      {profile.photo ? (
+                      {profile.photo && profile.photo !== "default" ? (
                         <Image
                           source={{ uri: profile.photo }}
                           style={styles.profileAvatar}

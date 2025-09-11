@@ -195,7 +195,7 @@ export const ProfileOverview = ({
     <ScrollView style={styles.container}>
       <View style={styles.profileCard}>
         <View style={styles.profileHeader}>
-          {profile.photo ? (
+          {profile.photo && profile.photo !== "default" ? (
             <TouchableOpacity
               onPress={() => onUpdateProfile && setProfileEditOpen(true)}
             >
