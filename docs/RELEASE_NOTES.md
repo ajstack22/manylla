@@ -1,12 +1,14 @@
 # Manylla Release Notes
 
 ## Version 2025.09.11.6 - 2025-09-11
-React Native Vector Icons Web Font Configuration
+React Native Vector Icons & iOS Header Profile Display Fix
 
 ### Fixed
 - React Native Vector Icons now display correctly on web
 - Fixed missing icon font files issue that was preventing proper icon rendering
 - Icons now work without Material-UI dependency
+- **iOS Header now displays profile information** - Previously always showed "manylla" text
+- Profile photo and name now appear in header on iOS devices/simulator
 
 ### Technical
 - Added font file copying to webpack configuration (copies all icon fonts to web/build/fonts/)
@@ -14,7 +16,8 @@ React Native Vector Icons Web Font Configuration
 - Updated index.html to include vector-icons.css stylesheet
 - Icons now load from local font files instead of relying on external dependencies
 - Fonts included: MaterialIcons, MaterialCommunityIcons, FontAwesome, Ionicons, Feather, AntDesign, Entypo, EvilIcons, Foundation, Octicons, SimpleLineIcons, Zocial, Fontisto
-- No breaking changes - purely build configuration improvement
+- Fixed Header.js to show profile on mobile platforms (was web-only before)
+- No breaking changes - purely display improvements
 
 ## Version 2025.09.11.5 - 2025-09-11
 TRUE Modal Centralization - Single Modal System
