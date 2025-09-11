@@ -1,5 +1,17 @@
 # Manylla Release Notes
 
+## Version 2025.09.10.14 - 2025-09-10
+Console.log Cleanup - Code Standards Compliance
+
+### Fixed
+- Removed console.log from OnboardingScreen photo toggle (line 494)
+- Ensures compliance with project standards (max 5 console.logs in src/)
+
+### Technical
+- Silent photo toggle behavior maintained
+- No functional changes, only logging cleanup
+- Meets peer review requirements for clean deployment
+
 ## Version 2025.09.10.13 - 2025-09-10
 Critical Photo Bug Fix - Production Issue
 
