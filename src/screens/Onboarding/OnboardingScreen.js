@@ -401,6 +401,11 @@ const OnboardingScreen = ({ onComplete }) => {
       borderColor: colors.border,
       marginBottom: 10,
     },
+    photoButtonSelected: {
+      borderColor: colors.primary,
+      borderStyle: "solid",
+      backgroundColor: colors.background.paper,
+    },
     photoIcon: {
       fontSize: 40,
     },
@@ -452,12 +457,21 @@ const OnboardingScreen = ({ onComplete }) => {
 
           <View style={styles.photoSection}>
             <TouchableOpacity
-              style={styles.photoButton}
-              onPress={() => setPhoto("default")}
+              style={[styles.photoButton, photo && styles.photoButtonSelected]}
+              onPress={() => {
+                setPhoto(photo ? "" : "default");
+                if (Platform.OS === "web") {
+                  // Provide feedback for web users
+                  console.log("Photo selection toggled");
+                }
+              }}
+              activeOpacity={0.7}
             >
-              <PersonIcon size={40} color={colors.text.secondary} />
+              <PersonIcon size={40} color={photo ? colors.primary : colors.text.secondary} />
             </TouchableOpacity>
-            <Text style={styles.photoLabel}>Tap to add photo</Text>
+            <Text style={styles.photoLabel}>
+              {photo ? "Photo selected" : "Tap to add photo"}
+            </Text>
           </View>
 
           <View style={styles.formSection}>
