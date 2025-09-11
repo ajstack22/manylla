@@ -1,6 +1,13 @@
 import { useState, useCallback, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
+import {
+  ErrorHandler,
+  StorageError,
+  SyncError,
+  NetworkError,
+} from "../utils/errors";
+import { getErrorMessage } from "../utils/errorMessages";
 
 // Helper function to clear corrupted storage
 const clearCorruptedStorage = async () => {
@@ -26,43 +33,26 @@ const resetAppState = async () => {
 };
 
 // Helper function to get user-friendly error message
-const getErrorMessage = (error) => {
-  if (!error) return "An unknown error occurred";
-
-  // Check for specific error types
-  if (
-    error.code === "STORAGE_ERROR" ||
-    error.message?.includes("AsyncStorage")
-  ) {
-    return "There was a problem accessing your local data. You may need to clear storage and start fresh.";
-  }
-
-  if (error.code === "SYNC_ERROR" || error.message?.includes("sync")) {
-    return "There was a problem syncing your data. You can continue using the app offline.";
-  }
-
-  if (error.code === "NETWORK_ERROR" || error.message?.includes("fetch")) {
-    return "Network connection issue. Please check your internet connection.";
-  }
-
-  if (error.message?.includes("undefined") || error.message?.includes("null")) {
-    return "Something unexpected happened. The app encountered missing data.";
-  }
-
-  // Default message
-  return "An unexpected error occurred. Please try again or reload the app.";
+const getUserMessage = (error) => {
+  return ErrorHandler.getUserMessage(error);
 };
 
-// Helper function to send error report (placeholder for future implementation)
+// Helper function to send error report
 const sendErrorReport = async (errorData) => {
-  // In the future, this could send to an error tracking service
-  // Error report would be sent here
+  // Normalize the error first
+  const normalizedError = ErrorHandler.normalize(errorData.error);
 
-  // For now, just log to console
+  // Log with context
+  ErrorHandler.log(normalizedError, {
+    userReport: true,
+    ...errorData,
+  });
+
+  // In the future, this could send to an error tracking service
   if (Platform.OS === "web" && typeof window !== "undefined") {
     // Could integrate with Sentry or similar service here
     if (window.Sentry) {
-      window.Sentry.captureException(new Error(errorData.error), {
+      window.Sentry.captureException(normalizedError, {
         contexts: {
           error: errorData,
         },
@@ -86,29 +76,29 @@ export const useErrorHandler = () => {
   }, []);
 
   const logError = useCallback((error, errorInfo) => {
+    // Normalize error to our AppError type
+    const normalizedError = ErrorHandler.normalize(error);
+
+    // Log using centralized handler
+    ErrorHandler.log(normalizedError, {
+      errorInfo,
+      component: "ErrorBoundary",
+      timestamp: new Date().toISOString(),
+    });
+
     // Log to service
     if (
       Platform.OS === "web" &&
       typeof window !== "undefined" &&
       window.Sentry
     ) {
-      window.Sentry.captureException(error, {
+      window.Sentry.captureException(normalizedError, {
         contexts: { react: errorInfo },
       });
     }
 
-    // Log to console in dev
-    const isDevelopment =
-      (typeof global !== "undefined" && global.__DEV__) ||
-      (Platform.OS === "web" && process?.env?.NODE_ENV === "development");
-
-    if (isDevelopment) {
-      console.error("Error caught:", error);
-      console.error("Error info:", errorInfo);
-    }
-
     // Store for display
-    setError(error);
+    setError(normalizedError);
     setErrorInfo(errorInfo);
     setErrorCount((prev) => prev + 1);
   }, []);
@@ -145,7 +135,7 @@ export const useErrorHandler = () => {
     logError,
     resetError,
     recoverError,
-    getErrorMessage,
+    getErrorMessage: getUserMessage,
     sendErrorReport,
   };
 };

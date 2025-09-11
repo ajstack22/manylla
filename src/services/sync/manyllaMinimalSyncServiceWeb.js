@@ -3,6 +3,13 @@ import util from "tweetnacl-util";
 import manyllaEncryptionService from "./manyllaEncryptionService";
 import conflictResolver from "./conflictResolver";
 import { API_ENDPOINTS } from "../../config/api";
+import {
+  SyncError,
+  NetworkError,
+  AuthError,
+  ErrorHandler,
+} from "../../utils/errors";
+import { getErrorMessage } from "../../utils/errorMessages";
 
 class ManyllaMinimalSyncService {
   constructor() {
@@ -24,7 +31,7 @@ class ManyllaMinimalSyncService {
   // Initialize with recovery phrase
   async init(recoveryPhrase) {
     if (!recoveryPhrase || recoveryPhrase.length !== 32) {
-      throw new Error("Invalid recovery phrase");
+      throw new AuthError("Invalid recovery phrase format", "INVALID_CODE");
     }
 
     // Initialize encryption
@@ -36,8 +43,18 @@ class ManyllaMinimalSyncService {
     this.syncId = util.encodeBase64(hash.slice(0, 16));
 
     // Test sync health
-    const isHealthy = await this.checkHealth();
-    if (!isHealthy) {
+    try {
+      const isHealthy = await this.checkHealth();
+      if (!isHealthy) {
+        // Don't throw error, just log it
+        ErrorHandler.log(new NetworkError("Sync service unavailable"), {
+          recoverable: true,
+          context: "init",
+        });
+      }
+    } catch (error) {
+      // Don't fail init if health check fails
+      ErrorHandler.log(error, { context: "init health check" });
     }
 
     return true;
@@ -56,6 +73,10 @@ class ManyllaMinimalSyncService {
       const data = await response.json();
       return data.status === "healthy";
     } catch (error) {
+      ErrorHandler.log(new NetworkError(error.message), {
+        context: "health check",
+        recoverable: true,
+      });
       return false;
     }
   }
@@ -63,7 +84,10 @@ class ManyllaMinimalSyncService {
   // Push data to sync endpoint
   async push(data) {
     if (!this.syncId || !manyllaEncryptionService.isInitialized()) {
-      throw new Error("Sync not initialized");
+      throw new SyncError(
+        "Sync not initialized. Please enable sync first.",
+        false,
+      );
     }
 
     // Cancel any pending push
@@ -99,7 +123,18 @@ class ManyllaMinimalSyncService {
               });
 
               if (!response.ok) {
-                throw new Error(`Push failed: ${response.statusText}`);
+                if (response.status === 401) {
+                  throw new AuthError(
+                    "Invalid sync credentials",
+                    "UNAUTHORIZED",
+                  );
+                }
+                if (response.status >= 500) {
+                  throw new NetworkError(
+                    `Server error: ${response.statusText}`,
+                  );
+                }
+                throw new SyncError(`Push failed: ${response.statusText}`);
               }
 
               const result = await response.json();
@@ -109,7 +144,7 @@ class ManyllaMinimalSyncService {
                 return;
               }
 
-              throw new Error(result.error || "Push failed");
+              throw new SyncError(result.error || "Push failed");
             } catch (error) {
               lastError = error;
               if (i < this.MAX_RETRIES - 1) {
@@ -118,10 +153,17 @@ class ManyllaMinimalSyncService {
             }
           }
 
-          throw lastError;
+          const finalError = ErrorHandler.normalize(lastError);
+          throw finalError;
         } catch (error) {
-          this.notifyListeners("push-error", error);
-          reject(error);
+          const normalizedError = ErrorHandler.normalize(error);
+          ErrorHandler.log(normalizedError, {
+            context: "push",
+            syncId: this.syncId,
+            retries: this.MAX_RETRIES,
+          });
+          this.notifyListeners("push-error", normalizedError);
+          reject(normalizedError);
         }
       }, this.PUSH_DEBOUNCE);
     });
@@ -130,7 +172,10 @@ class ManyllaMinimalSyncService {
   // Pull data from sync endpoint
   async pull() {
     if (!this.syncId || !manyllaEncryptionService.isInitialized()) {
-      throw new Error("Sync not initialized");
+      throw new SyncError(
+        "Sync not initialized. Please enable sync first.",
+        false,
+      );
     }
 
     try {
@@ -145,7 +190,13 @@ class ManyllaMinimalSyncService {
       );
 
       if (!response.ok) {
-        throw new Error(`Pull failed: ${response.statusText}`);
+        if (response.status === 401) {
+          throw new AuthError("Invalid sync credentials", "UNAUTHORIZED");
+        }
+        if (response.status >= 500) {
+          throw new NetworkError(`Server error: ${response.statusText}`);
+        }
+        throw new SyncError(`Pull failed: ${response.statusText}`);
       }
 
       const result = await response.json();
@@ -155,7 +206,7 @@ class ManyllaMinimalSyncService {
           // No sync data exists yet
           return null;
         }
-        throw new Error(result.error || "Pull failed");
+        throw new SyncError(result.error || "Pull failed");
       }
 
       if (!result.data) {
@@ -187,8 +238,13 @@ class ManyllaMinimalSyncService {
       }
       return decrypted;
     } catch (error) {
-      this.notifyListeners("pull-error", error);
-      throw error;
+      const normalizedError = ErrorHandler.normalize(error);
+      ErrorHandler.log(normalizedError, {
+        context: "pull",
+        syncId: this.syncId,
+      });
+      this.notifyListeners("pull-error", normalizedError);
+      throw normalizedError;
     }
   }
 
@@ -199,12 +255,22 @@ class ManyllaMinimalSyncService {
     this.isPolling = true;
 
     // Initial pull
-    this.pull().catch(() => {});
+    this.pull().catch((error) => {
+      ErrorHandler.log(error, {
+        context: "initial pull",
+        recoverable: true,
+      });
+    });
 
     // Set up interval
     this.pollInterval = setInterval(() => {
       if (this.syncId && manyllaEncryptionService.isInitialized()) {
-        this.pull().catch(() => {});
+        this.pull().catch((error) => {
+          ErrorHandler.log(error, {
+            context: "poll",
+            recoverable: true,
+          });
+        });
       }
     }, this.POLL_INTERVAL);
   }
@@ -229,7 +295,12 @@ class ManyllaMinimalSyncService {
     this.listeners.forEach((callback) => {
       try {
         callback(event, data);
-      } catch (error) {}
+      } catch (error) {
+        ErrorHandler.log(error, {
+          context: "listener callback",
+          event,
+        });
+      }
     });
   }
 

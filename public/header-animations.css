@@ -1,0 +1,24 @@
+/* String tie border styles for Manylla logo */
+
+/* The logo and profile avatars already have the ring via box-shadow in JS */
+/* This CSS file ensures no interference with the parent container transitions */
+
+.logo-avatar-animated,
+.profile-avatar-animated {
+  /* Don't add any transitions here - let parent container handle it */
+}
+
+/* Ensure smooth inheritance of parent transitions */
+.fadeContainer .logo-avatar-animated,
+.fadeContainer .profile-avatar-animated {
+  /* Child elements inherit the parent's opacity transition */
+  transition: inherit;
+}
+
+/* Accessibility: Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

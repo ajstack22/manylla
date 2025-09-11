@@ -187,6 +187,7 @@ const Header = ({
                 >
                   <View
                     style={[styles.logoAvatar, styles.logoAvatarPlaceholder]}
+                    className="logo-avatar-animated"
                   >
                     <Text style={styles.logoAvatarText}>m</Text>
                   </View>
@@ -225,6 +226,7 @@ const Header = ({
                             styles.profileAvatar,
                             styles.profileAvatarPlaceholder,
                           ]}
+                          className="profile-avatar-animated"
                         >
                           <Text style={styles.profileAvatarText}>
                             {profile.name?.charAt(0)?.toUpperCase()}
@@ -433,6 +435,12 @@ const createStyles = (colors) =>
       backgroundColor: colors.primary || "#A08670",
       justifyContent: "center",
       alignItems: "center",
+      boxShadow: "0 0 0 3px " + colors.background.paper + ", 0 0 0 5px #CC0000",
+      ...Platform.select({
+        web: {
+          position: "relative",
+        },
+      }),
     },
     logoAvatarText: {
       color: colors.background.paper,
@@ -485,6 +493,12 @@ const createStyles = (colors) =>
       backgroundColor: colors.primary.light || "#A08670",
       justifyContent: "center",
       alignItems: "center",
+      boxShadow: "0 0 0 3px " + colors.background.paper + ", 0 0 0 5px #CC0000",
+      ...Platform.select({
+        web: {
+          position: "relative",
+        },
+      }),
     },
     profileAvatarText: {
       color: colors.background.paper,

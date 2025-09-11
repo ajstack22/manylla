@@ -10,13 +10,20 @@ import {
 import { useErrorHandler } from "../../hooks/useErrorHandler";
 import { ErrorFallback } from "./ErrorFallback";
 import { ErrorRecovery } from "./ErrorRecovery";
+import { ErrorHandler } from "../../utils/errors";
 
 // Minimal class component wrapper (required until React 19)
 // This will be replaced with useErrorBoundary hook when React 19 is released
 class ErrorBoundaryClass extends Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false, error: null, errorInfo: null };
+    this.state = {
+      hasError: false,
+      error: null,
+      errorInfo: null,
+      errorCount: 0,
+      lastErrorTime: null,
+    };
   }
 
   static getDerivedStateFromError(error) {
@@ -24,19 +31,35 @@ class ErrorBoundaryClass extends Component {
   }
 
   componentDidCatch(error, errorInfo) {
+    // Normalize the error to our AppError type
+    const normalizedError = ErrorHandler.normalize(error);
+
+    // Log error with context
+    ErrorHandler.log(normalizedError, {
+      componentStack: errorInfo?.componentStack,
+      errorBoundary: true,
+      timestamp: new Date().toISOString(),
+    });
+
     // Delegate to callback from functional wrapper
-    this.props.onError?.(error, errorInfo);
+    this.props.onError?.(normalizedError, errorInfo);
 
     // Update state with error info
-    this.setState({ errorInfo });
+    this.setState({
+      error: normalizedError,
+      errorInfo,
+      errorCount: (this.state.errorCount || 0) + 1,
+    });
   }
 
   resetError = () => {
-    this.setState({
+    // Keep error count for tracking multiple errors
+    this.setState((prevState) => ({
       hasError: false,
       error: null,
       errorInfo: null,
-    });
+      lastErrorTime: prevState.error ? new Date().toISOString() : null,
+    }));
   };
 
   render() {
@@ -50,12 +73,31 @@ class ErrorBoundaryClass extends Component {
         });
       }
 
-      // Default fallback if none provided
+      // Default fallback with user-friendly message
+      const userMessage = ErrorHandler.getUserMessage(this.state.error);
       return (
         <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 20,
+          }}
         >
-          <Text>Something went wrong</Text>
+          <Text style={{ fontSize: 18, marginBottom: 10 }}>⚠️ Oops!</Text>
+          <Text style={{ textAlign: "center", marginBottom: 20 }}>
+            {userMessage}
+          </Text>
+          <TouchableOpacity
+            onPress={this.resetError}
+            style={{
+              padding: 10,
+              backgroundColor: "#A08670",
+              borderRadius: 4,
+            }}
+          >
+            <Text style={{ color: "white" }}>Try Again</Text>
+          </TouchableOpacity>
         </View>
       );
     }

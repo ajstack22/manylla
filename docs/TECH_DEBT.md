@@ -2,6 +2,62 @@
 
 ## High Priority
 
+### 0. Error Handling System Integration
+**Date Identified**: 2025-01-11  
+**Component**: Error handling infrastructure (Story 012)  
+**Status**: Partially Complete  
+**Priority**: HIGH  
+
+**Current State**:
+- Error classification system created (`src/utils/errors.js`) ✅
+- Error messages centralized (`src/utils/errorMessages.js`) ✅  
+- Error boundary enhanced ✅
+- Form recovery hook created but NOT integrated (`src/hooks/useFormWithRecovery.js`) ⚠️
+- Toast manager created but NOT integrated (`src/components/Toast/ToastManager.js`) ⚠️
+- 12 console.error statements remain (should be 0 in production) ⚠️
+
+**Impact**:
+- Forms don't have draft recovery capability
+- Toasts don't use enhanced error handling
+- Console errors will appear in production builds
+- No error analytics or monitoring
+
+**Required Actions**:
+1. **Immediate (Before Production)**:
+   - Replace all console.error with ErrorHandler.log()
+   - Configure production error tracking service (Sentry/Bugsnag)
+   - Set up error analytics dashboard
+   
+2. **Integration Work**:
+   - Integrate useFormWithRecovery in all forms:
+     - Profile creation form
+     - Entry editing forms  
+     - Settings forms
+   - Replace existing toast usage with ToastManager:
+     - Import showToast from ToastManager
+     - Update all toast calls to use new API
+     - Remove old toast implementations
+   
+3. **Error Tracking Service**:
+   ```javascript
+   // In production ErrorHandler.log():
+   if (window.Sentry && process.env.NODE_ENV === 'production') {
+     window.Sentry.captureException(error, { 
+       extra: context,
+       tags: { code: error.code }
+     });
+   }
+   ```
+
+**Estimated Effort**: 
+- Console.error cleanup: 2 hours
+- Form integration: 4 hours
+- Toast integration: 2 hours  
+- Error tracking setup: 2 hours
+- Total: ~10 hours
+
+## High Priority
+
 ### 1. Mobile Photo Picker Implementation
 **Date Identified**: 2025-09-10  
 **Component**: `src/screens/Onboarding/OnboardingScreen.js` (lines 141-149)  

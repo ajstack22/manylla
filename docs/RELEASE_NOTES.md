@@ -1,5 +1,54 @@
 # Manylla Release Notes
 
+## Version 2025.01.11.1 - 2025-01-11
+Comprehensive Error Handling System (Story 012)
+
+### Added
+- **Error Classification System** (`src/utils/errors.js`)
+  - Base AppError class with user-friendly messages
+  - Specialized error types: NetworkError, ValidationError, SyncError, StorageError, AuthError, EncryptionError
+  - ErrorHandler utility for normalization and logging
+  - Recovery options built into error types
+
+- **Centralized Error Messages** (`src/utils/errorMessages.js`)
+  - User-friendly error messages organized by category
+  - Support for parameterized messages
+  - Helper functions for safe message retrieval
+
+- **Enhanced Error Boundary**
+  - Automatic error normalization
+  - Error count tracking for multiple failures
+  - User-friendly fallback UI with recovery options
+
+- **Form Recovery Hook** (`src/hooks/useFormWithRecovery.js`)
+  - Automatic draft saving for forms
+  - 24-hour draft recovery
+  - Field-level validation with error handling
+  - Network failure handling with local save fallback
+
+- **Enhanced Toast Manager** (`src/components/Toast/ToastManager.js`)
+  - Error-specific toast handling
+  - Retry actions for recoverable errors
+  - Persistent toasts for critical errors
+  - Type-based duration and icons
+
+### Changed
+- Updated sync service with proper error types and handling
+- Enhanced error boundary to use new error system
+- Improved error logging with production safety
+
+### Technical Notes
+- All error types extend AppError base class
+- Console.error wrapped with NODE_ENV check for production
+- Error normalization ensures consistent handling
+- Test suite with 28 passing tests
+
+### Known Issues (See TECH_DEBT.md)
+- Form recovery hook created but not yet integrated
+- Toast manager created but not yet integrated  
+- 12 console.error statements to be replaced with ErrorHandler
+- Production error tracking service to be configured
+
 ## Version 2025.09.11.12 - 2025-09-11
 String Tie Logo Design Implementation
 
