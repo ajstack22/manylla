@@ -24,7 +24,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Shared imports
 import { ThemeProvider, SyncProvider, useSync, useTheme } from './src/context';
-import { OnboardingWizard } from './src/components/Onboarding';
+import OnboardingScreen from './src/screens/Onboarding/OnboardingScreen';
 import { StorageService } from './src/services/storage/storageService';
 import { unifiedCategories } from './src/utils/unifiedCategories';
 
@@ -1006,7 +1006,7 @@ function AppContent() {
 
   // Show onboarding if needed
   if (showOnboarding) {
-    return <OnboardingWizard onComplete={handleOnboardingComplete} />;
+    return <OnboardingScreen onComplete={handleOnboardingComplete} />;
   }
 
   // Main app view

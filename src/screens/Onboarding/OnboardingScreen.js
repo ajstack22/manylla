@@ -11,13 +11,12 @@ import {
   StyleSheet,
   Platform,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 
 // Third-party libraries
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Context/Hooks
-import { useProfiles } from "@context/ProfileContext";
+import { useProfiles } from "../../context/ProfileContext";
 import { useTheme } from "../../context/ThemeContext";
 
 // Components
@@ -49,8 +48,7 @@ const getIconForCategory = (categoryId) => {
   return iconMap[categoryId] || "folder";
 };
 
-const OnboardingScreen = () => {
-  const navigation = useNavigation();
+const OnboardingScreen = ({ onComplete }) => {
   const { saveProfiles, setCurrentProfile } = useProfiles();
   const { colors } = useTheme();
   const [step, setStep] = useState(0);
@@ -71,7 +69,18 @@ const OnboardingScreen = () => {
       return;
     }
 
-    // Create a new profile with the entered information
+    // If onComplete prop provided (App.js usage), just return the data
+    if (onComplete) {
+      onComplete({
+        mode: "fresh",
+        childName: childName.trim(),
+        dateOfBirth: dateOfBirth || undefined,
+        photo: photo || undefined,
+      });
+      return;
+    }
+
+    // Otherwise handle profile creation directly (navigation usage)
     const newProfile = {
       id: Date.now().toString(),
       name: childName.trim(),
@@ -92,11 +101,23 @@ const OnboardingScreen = () => {
   };
 
   const handleJoinWithCode = async (code) => {
-    // TODO: Implement joining with sync code
-    // This will eventually sync with the server using the provided code
+    // If onComplete prop provided (App.js usage), just return the data
+    if (onComplete) {
+      onComplete({
+        mode: "join",
+        accessCode: code,
+      });
+      return;
+    }
+    // TODO: Implement joining with sync code for navigation usage
   };
 
   const handleDemoMode = async () => {
+    // If onComplete prop provided (App.js usage), just return the mode
+    if (onComplete) {
+      onComplete({ mode: "demo" });
+      return;
+    }
     // Clear any existing profiles first to ensure clean demo
     await AsyncStorage.removeItem("profiles");
     await AsyncStorage.removeItem("childProfile"); // Also clear old storage key
