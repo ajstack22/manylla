@@ -29,6 +29,9 @@ import {
   CloseIcon,
 } from "../../components/Common";
 
+// Import Ellie image for React Native
+const EllieImage = Platform.OS !== 'web' ? require('../../ellie.png') : null;
+
 // Services
 import { StorageService } from "../../services/storage/storageService";
 
@@ -237,7 +240,7 @@ const OnboardingScreen = ({ onComplete }) => {
       preferredName: "Ellie",
       pronouns: "she/her",
       dateOfBirth: new Date("2018-06-15"),
-      photo: "/ellie.png",
+      photo: Platform.OS === 'web' ? "/ellie.png" : Image.resolveAssetSource(EllieImage).uri,
       // Use unified categories from the shared configuration with icons added
       categories: unifiedCategories.map((cat) => ({
         ...cat,

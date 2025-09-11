@@ -23,12 +23,14 @@ import {
   LightModeIcon,
   PaletteIcon,
 } from "../Common";
+import { getStatusBarHeight } from "../../utils/platformStyles";
 
 // Define consistent header height
+const statusBarHeight = getStatusBarHeight();
 export const HEADER_HEIGHT = Platform.select({
   web: 64,
   ios: 88, // Account for status bar
-  android: 56,
+  android: 56 + statusBarHeight, // Add status bar height
   default: 56,
 });
 
@@ -240,47 +242,51 @@ const Header = ({
                   </TouchableOpacity>
                 )}
               </View>
-            ) : // Mobile: Show profile if available, otherwise show logo
-            profile ? (
-              <TouchableOpacity
-                onPress={onEditProfile}
-                style={styles.profileButton}
-              >
-                <View style={styles.profileContent}>
-                  {profile.photo && profile.photo !== "default" ? (
-                    <Image
-                      source={{
-                        uri:
-                          Platform.OS === "ios" && profile.photo.startsWith("/")
-                            ? `https://manylla.com/qual${profile.photo}` // Convert relative path to absolute URL for iOS
-                            : profile.photo,
-                      }}
-                      style={styles.profileAvatar}
-                    />
-                  ) : (
-                    <View
-                      style={[
-                        styles.profileAvatar,
-                        styles.profileAvatarPlaceholder,
-                      ]}
-                    >
-                      <Text style={styles.profileAvatarText}>
-                        {profile.name?.charAt(0)?.toUpperCase()}
+            ) : (
+              // Mobile: Show profile when scrolled, otherwise show logo
+              <>
+                {profile && isProfileHidden ? (
+                  <TouchableOpacity
+                    onPress={onEditProfile}
+                    style={styles.profileButton}
+                  >
+                    <View style={styles.profileContent}>
+                      {profile.photo && profile.photo !== "default" ? (
+                        <Image
+                          source={{
+                            uri:
+                              Platform.OS === "ios" && profile.photo.startsWith("/")
+                                ? `https://manylla.com/qual${profile.photo}` // Convert relative path to absolute URL for iOS
+                                : profile.photo,
+                          }}
+                          style={styles.profileAvatar}
+                        />
+                      ) : (
+                        <View
+                          style={[
+                            styles.profileAvatar,
+                            styles.profileAvatarPlaceholder,
+                          ]}
+                        >
+                          <Text style={styles.profileAvatarText}>
+                            {profile.name?.charAt(0)?.toUpperCase()}
+                          </Text>
+                        </View>
+                      )}
+                      <Text style={styles.profileName} numberOfLines={1}>
+                        {profile.preferredName || profile.name}
                       </Text>
                     </View>
-                  )}
-                  <Text style={styles.profileName} numberOfLines={1}>
-                    {profile.preferredName || profile.name}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            ) : (
-              <View style={styles.logoContainer}>
-                <View style={[styles.logoAvatar, styles.logoAvatarPlaceholder]}>
-                  <Text style={styles.logoAvatarText}>m</Text>
-                </View>
-                <Text style={styles.logo}>manylla</Text>
-              </View>
+                  </TouchableOpacity>
+                ) : (
+                  <View style={styles.logoContainer}>
+                    <View style={[styles.logoAvatar, styles.logoAvatarPlaceholder]}>
+                      <Text style={styles.logoAvatarText}>m</Text>
+                    </View>
+                    <Text style={styles.logo}>manylla</Text>
+                  </View>
+                )}
+              </>
             )}
           </View>
 
@@ -391,7 +397,7 @@ const createStyles = (colors) =>
           paddingTop: 44, // Status bar height on iOS
         },
         android: {
-          paddingTop: 0,
+          paddingTop: statusBarHeight, // Use actual status bar height
         },
         web: {
           paddingTop: 0,
