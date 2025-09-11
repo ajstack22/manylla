@@ -210,7 +210,11 @@ const Header = ({
                     <View style={styles.profileContent}>
                       {profile.photo && profile.photo !== "default" ? (
                         <Image
-                          source={{ uri: profile.photo }}
+                          source={{ 
+                            uri: Platform.OS === 'ios' && profile.photo.startsWith('/') 
+                              ? `https://manylla.com/qual${profile.photo}` // Convert relative path to absolute URL for iOS
+                              : profile.photo 
+                          }}
                           style={styles.profileAvatar}
                         />
                       ) : (
@@ -241,7 +245,11 @@ const Header = ({
                 <View style={styles.profileContent}>
                   {profile.photo && profile.photo !== "default" ? (
                     <Image
-                      source={{ uri: profile.photo }}
+                      source={{ 
+                        uri: Platform.OS === 'ios' && profile.photo.startsWith('/') 
+                          ? `https://manylla.com/qual${profile.photo}` // Convert relative path to absolute URL for iOS
+                          : profile.photo 
+                      }}
                       style={styles.profileAvatar}
                     />
                   ) : (
