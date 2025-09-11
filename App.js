@@ -21,6 +21,7 @@ import {
   Dimensions,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 // Shared imports
 import { ThemeProvider, SyncProvider, useSync, useTheme } from "./src/context";
@@ -145,6 +146,35 @@ const defaultColors = {
   error: "#F44336",
   warning: "#FF9800",
   info: "#2196F3",
+};
+
+// Helper function to get icon for category
+const getCategoryIcon = (categoryName) => {
+  // Check for keywords in the name (case-insensitive)
+  const nameLower = categoryName.toLowerCase();
+  
+  // Direct matches
+  if (nameLower.includes("quick") && nameLower.includes("info")) return "info";
+  if (nameLower.includes("medical")) return "local-hospital";
+  if (nameLower.includes("health")) return "local-hospital";
+  if (nameLower.includes("therapy")) return "healing";
+  if (nameLower.includes("education")) return "school";
+  if (nameLower.includes("school")) return "school";
+  if (nameLower.includes("goals")) return "flag";
+  if (nameLower.includes("behavioral")) return "psychology";
+  if (nameLower.includes("behavior")) return "psychology";
+  if (nameLower.includes("social")) return "people";
+  if (nameLower.includes("communication")) return "chat";
+  if (nameLower.includes("daily")) return "today";
+  if (nameLower.includes("support")) return "support";
+  if (nameLower.includes("emergency")) return "warning";
+  if (nameLower.includes("document")) return "folder";
+  if (nameLower.includes("contact")) return "contacts";
+  if (nameLower.includes("family")) return "family-restroom";
+  if (nameLower.includes("resource")) return "library-books";
+  
+  // Default icon
+  return "label";
 };
 
 // Profile Overview Component
@@ -331,15 +361,26 @@ const ProfileOverview = ({
                     }
                   >
                     <View style={styles.categoryHeader}>
-                      <View
-                        style={[
-                          styles.categoryColorStrip,
-                          {
-                            backgroundColor:
-                              quickInfoCategory?.color || "#9B59B6",
-                          },
-                        ]}
-                      />
+                      {Platform.OS === "web" ? (
+                        <Text
+                          style={{
+                            fontFamily: "Material Icons",
+                            fontSize: 20,
+                            color: quickInfoCategory?.color || "#9B59B6",
+                            marginRight: 8,
+                            opacity: 0.8,
+                          }}
+                        >
+                          {getCategoryIcon("quick-info")}
+                        </Text>
+                      ) : (
+                        <Icon
+                          name={getCategoryIcon("quick-info")}
+                          size={20}
+                          color={quickInfoCategory?.color || "#9B59B6"}
+                          style={{ marginRight: 8, opacity: 0.8 }}
+                        />
+                      )}
                       <Text style={styles.categoryTitle}>Quick Info</Text>
                       <TouchableOpacity
                         onPress={() => onAddEntry("quick-info")}
@@ -479,12 +520,26 @@ const ProfileOverview = ({
                   return (
                     <View key={category.id} style={categoryStyle}>
                       <View style={styles.categoryHeader}>
-                        <View
-                          style={[
-                            styles.categoryColorStrip,
-                            { backgroundColor: category.color },
-                          ]}
-                        />
+                        {Platform.OS === "web" ? (
+                          <Text
+                            style={{
+                              fontFamily: "Material Icons",
+                              fontSize: 20,
+                              color: category.color,
+                              marginRight: 8,
+                              opacity: 0.8,
+                            }}
+                          >
+                            {getCategoryIcon(category.displayName)}
+                          </Text>
+                        ) : (
+                          <Icon
+                            name={getCategoryIcon(category.displayName)}
+                            size={20}
+                            color={category.color}
+                            style={{ marginRight: 8, opacity: 0.8 }}
+                          />
+                        )}
                         <Text style={styles.categoryTitle}>
                           {category.displayName}
                         </Text>
