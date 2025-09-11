@@ -238,7 +238,7 @@ const ProfileOverview = ({
         <View style={[styles.profileCard, isDesktop && styles.profileCardDesktop]}>
           <TouchableOpacity onPress={() => onEditProfile && onEditProfile()}>
             <View style={styles.avatarContainer}>
-              {profile.photo ? (
+              {profile.photo && profile.photo !== "default" ? (
                 <Image source={{ uri: profile.photo }} style={styles.avatar} />
               ) : (
                 <View style={[styles.avatar, styles.avatarPlaceholder]}>
