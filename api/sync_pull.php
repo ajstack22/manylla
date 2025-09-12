@@ -78,10 +78,13 @@ try {
         // Check if data is newer than requested timestamp
         if ($since > 0 && $data['timestamp'] <= $since) {
             // No new data since requested timestamp
-            sendSuccess([
-                'encrypted_blob' => null,
-                'message' => 'No new data since timestamp'
+            // No new data since requested timestamp
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => true,
+                'data' => null
             ]);
+            exit;
         } else {
             // Update device last seen if device_id provided
             if ($device_id) {
@@ -103,20 +106,23 @@ try {
                 ]);
             }
             
-            sendSuccess([
-                'encrypted_blob' => $data['encrypted_blob'],
-                'blob_hash' => $data['blob_hash'],
-                'version' => $data['version'],
-                'timestamp' => intval($data['timestamp']),
-                'updated_at' => $data['updated_at']
+            // Mobile app expects 'data' field directly
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => true,
+                'data' => $data['encrypted_blob']
             ]);
+            exit;
         }
     } else {
         // No data found for this sync_id
-        sendSuccess([
-            'encrypted_blob' => null,
-            'message' => 'No data found for sync_id'
+        // No data found for this sync_id
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true,
+            'data' => null
         ]);
+        exit;
     }
     
 } catch (Exception $e) {
