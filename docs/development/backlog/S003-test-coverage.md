@@ -1,5 +1,10 @@
 # Story S003: Comprehensive Test Coverage Implementation
 
+## Recommended Roles for Adversarial Review
+**Primary:** Developer, Peer Reviewer  
+**Secondary:** Admin (security review), Web Platform Expert  
+**Optional:** iOS/Android Experts (for platform-specific tests)
+
 ## Overview
 Implement comprehensive test coverage for the Manylla application, focusing on critical paths, data integrity, and security features. Currently only 1 test file exists (App.test.js), leaving the application vulnerable to regressions and making refactoring dangerous.
 

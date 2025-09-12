@@ -9,7 +9,6 @@ import {
   AuthError,
   ErrorHandler,
 } from "../../utils/errors";
-import { getErrorMessage } from "../../utils/errorMessages";
 
 class ManyllaMinimalSyncService {
   constructor() {
@@ -420,4 +419,5 @@ class ManyllaMinimalSyncService {
 }
 
 // Export singleton instance
-export default new ManyllaMinimalSyncService();
+const manyllaMinimalSyncService = new ManyllaMinimalSyncService();
+export default manyllaMinimalSyncService;

@@ -1,4 +1,3 @@
-import { QuickInfoConfig } from "../types/ChildProfile";
 
 export const defaultQuickInfoPanels = [
   {

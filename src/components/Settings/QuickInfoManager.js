@@ -9,11 +9,10 @@ import {
   Alert,
   Switch,
   KeyboardAvoidingView,
-  Platform,
   Modal,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { getNumColumns, getCardWidth } from "../../utils/platformStyles";
+import { getNumColumns } from "../../utils/platformStyles";
 
 import platform from "../../utils/platform";
 

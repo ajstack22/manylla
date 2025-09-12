@@ -6,10 +6,7 @@ import {
   TextInput,
   ScrollView,
   StyleSheet,
-  Platform,
   Dimensions,
-  Image,
-  Alert,
 } from "react-native";
 import { getTextStyle, getScrollViewProps } from "../../utils/platformStyles";
 import { isWeb, isAndroid } from "../../utils/platform";
@@ -19,12 +16,11 @@ const { width } = Dimensions.get("window");
 export const ProgressiveOnboarding = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState("welcome");
   const [mode, setMode] = useState(null);
-  const [childName, setChildName] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState(null);
-  const [photo, setPhoto] = useState("");
+  const [childName] = useState("");
+  const [dateOfBirth] = useState(null);
+  const [photo] = useState("");
   const [accessCode, setAccessCode] = useState("");
   const [showAccessCode, setShowAccessCode] = useState(false);
-  const [nameError, setNameError] = useState(false);
 
   // Always use Manylla theme colors for onboarding
   const manyllaColors = {

@@ -4,13 +4,10 @@ import {
   Text,
   ScrollView,
   StyleSheet,
-  Alert,
   ActivityIndicator,
-  Image,
   Dimensions,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { ChildProfile } from "../../types/ChildProfile";
 import { unifiedCategories } from "../../utils/unifiedCategories";
 import { API_ENDPOINTS } from "../../config/api";
 

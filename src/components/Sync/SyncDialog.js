@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,9 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  Alert,
   ActivityIndicator,
-  Platform,
   Clipboard,
 } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
@@ -18,7 +16,6 @@ import { useSync } from "../../context/SyncContext";
 import {
   generateInviteCode,
   validateInviteCode,
-  normalizeInviteCode,
   generateInviteUrl,
   storeInviteCode,
   getInviteCode,

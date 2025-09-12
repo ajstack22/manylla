@@ -1,13 +1,9 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import platform from "../utils/platform";
 import {
   ErrorHandler,
-  StorageError,
-  SyncError,
-  NetworkError,
 } from "../utils/errors";
-import { getErrorMessage } from "../utils/errorMessages";
 
 // Helper function to clear corrupted storage
 const clearCorruptedStorage = async () => {

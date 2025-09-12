@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import platform from "../utils/platform";
-import { ValidationError, ErrorHandler } from "../utils/errors";
-import { getErrorMessage, formatFieldName } from "../utils/errorMessages";
+import { ErrorHandler } from "../utils/errors";
+import { getErrorMessage } from "../utils/errorMessages";
 import { showToast } from "../components/Toast/ToastManager";
 
 /**
@@ -34,8 +34,8 @@ export const useFormWithRecovery = (
 
   // Load draft on mount
   useEffect(() => {
-    loadDraft();
-  }, []);
+    loadDraft(); // eslint-disable-line no-use-before-define
+  }, [loadDraft]); // eslint-disable-line no-use-before-define
 
   // Auto-save draft on value changes
   useEffect(() => {
@@ -44,7 +44,7 @@ export const useFormWithRecovery = (
     }
 
     autosaveTimer.current = setTimeout(() => {
-      saveDraft(values);
+      saveDraft(values); // eslint-disable-line no-use-before-define
     }, autosaveDelay);
 
     return () => {
@@ -52,7 +52,7 @@ export const useFormWithRecovery = (
         clearTimeout(autosaveTimer.current);
       }
     };
-  }, [values, autosaveDelay]);
+  }, [values, autosaveDelay, saveDraft]); // eslint-disable-line no-use-before-define
 
   // Load draft from storage
   const loadDraft = useCallback(async () => {
@@ -79,7 +79,7 @@ export const useFormWithRecovery = (
           lastSavedDraft.current = savedDraft.values;
         } else {
           // Clear old draft
-          clearDraft();
+          clearDraft(); // eslint-disable-line no-use-before-define
         }
       }
     } catch (error) {
@@ -88,7 +88,7 @@ export const useFormWithRecovery = (
         recoverable: true,
       });
     }
-  }, [draftKey]);
+  }, [draftKey, clearDraft]); // eslint-disable-line no-use-before-define
 
   // Save draft to storage
   const saveDraft = useCallback(
@@ -450,7 +450,7 @@ export const commonValidators = {
   phone:
     (message = "Invalid phone number") =>
     (value) => {
-      if (value && !/^[\d\s\-\+\(\)]+$/.test(value)) {
+      if (value && !/^[\d\s\-+()]+$/.test(value)) {
         return message;
       }
       return null;

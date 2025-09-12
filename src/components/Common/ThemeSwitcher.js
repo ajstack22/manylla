@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
-  Platform,
 } from "react-native";
 import { useTheme } from "../../context";
 import { DarkModeIcon, LightModeIcon, PaletteIcon } from "./IconProvider";

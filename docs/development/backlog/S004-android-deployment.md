@@ -1,5 +1,10 @@
 # Story S004: Android Deployment and Play Store Setup
 
+## Recommended Roles for Adversarial Review
+**Primary:** Android Platform Expert, Developer  
+**Secondary:** Admin (security/signing), PM (store listing)  
+**Optional:** UI/UX Specialist (store assets), Peer Reviewer
+
 ## Overview
 Prepare the Android app for production deployment and Google Play Store submission. This includes app signing, build configuration, Play Store assets, and deployment pipeline setup.
 

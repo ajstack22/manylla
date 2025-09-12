@@ -295,4 +295,5 @@ class ConflictResolver {
 }
 
 // Export singleton instance
-export default new ConflictResolver();
+const conflictResolver = new ConflictResolver();
+export default conflictResolver;

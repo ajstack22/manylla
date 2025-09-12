@@ -3,12 +3,10 @@ import {
   View,
   Text,
   Modal,
-  ScrollView,
   TouchableOpacity,
   Switch,
   StyleSheet,
   SafeAreaView,
-  Platform,
 } from "react-native";
 import DraggableFlatList, {
   ScaleDecorator,

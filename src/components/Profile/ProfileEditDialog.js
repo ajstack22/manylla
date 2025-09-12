@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -18,7 +18,6 @@ import { useTheme } from "../../context/ThemeContext";
 import {
   getTextStyle,
   getScrollViewProps,
-  getShadowStyle,
 } from "../../utils/platformStyles";
 import platform from "../../utils/platform";
 

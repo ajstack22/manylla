@@ -8,8 +8,6 @@ import {
   StyleSheet,
   TextInput,
   Alert,
-  Switch,
-  Platform,
   Clipboard,
   ActivityIndicator,
 } from "react-native";
@@ -166,12 +164,11 @@ export const ShareDialogOptimized = ({ open, onClose, profile }) => {
       });
 
       if (!response.ok) {
-        const error = await response.json();
         Alert.alert("Error", "Failed to create share link. Please try again.");
         return;
       }
 
-      const result = await response.json();
+      await response.json();
 
       // Generate link with key in fragment
       const getShareDomain = () => {

@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
-  Platform,
   View,
   Text,
   TouchableOpacity,
@@ -56,6 +55,18 @@ export const ThemedToast = ({
 
   const toastStyles = getToastStyles();
 
+  const handleClose = useCallback(() => {
+    Animated.spring(slideAnim, {
+      toValue: 100,
+      useNativeDriver: true,
+      tension: 100,
+      friction: 8,
+    }).start(() => {
+      setVisible(false);
+      if (onClose) onClose();
+    });
+  }, [slideAnim, onClose]);
+
   useEffect(() => {
     if (open) {
       setVisible(true);
@@ -72,22 +83,12 @@ export const ThemedToast = ({
         }, duration);
         return () => clearTimeout(timer);
       }
-    } else {
+    } else if (visible) {
+      // Only trigger close animation if currently visible
       handleClose();
     }
-  }, [open, duration]);
-
-  const handleClose = () => {
-    Animated.spring(slideAnim, {
-      toValue: 100,
-      useNativeDriver: true,
-      tension: 100,
-      friction: 8,
-    }).start(() => {
-      setVisible(false);
-      if (onClose) onClose();
-    });
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, duration]); // Intentionally exclude handleClose to prevent infinite loop
 
   if (!visible) return null;
 

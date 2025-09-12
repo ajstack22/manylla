@@ -1,10 +1,5 @@
-import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import {
-  CompositeScreenProps,
-  NavigatorScreenParams,
-} from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Entry, CategoryConfig } from "../types/ChildProfile";
+// Note: TypeScript imports removed since this is a JavaScript file
+// with all TypeScript types commented out
 
 // Root Stack Navigator
 export const RootStackParamList = {

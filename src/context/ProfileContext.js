@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const ProfileContext = createContext(undefined);
 
@@ -6,11 +6,7 @@ export const ProfileProvider = ({ children }) => {
   const [profiles, setProfiles] = useState([]);
   const [currentProfile, setCurrentProfile] = useState(null);
 
-  useEffect(() => {
-    loadProfiles();
-  }, []);
-
-  const loadProfiles = async () => {
+  const loadProfiles = useCallback(async () => {
     try {
       const storedProfiles = await AsyncStorage.getItem("profiles");
       if (storedProfiles) {
@@ -21,7 +17,11 @@ export const ProfileProvider = ({ children }) => {
         }
       }
     } catch (error) {}
-  };
+  }, [currentProfile]);
+
+  useEffect(() => {
+    loadProfiles();
+  }, [loadProfiles]);
 
   const saveProfiles = async (newProfiles) => {
     try {

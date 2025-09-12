@@ -2,10 +2,8 @@ import {
   Platform,
   Dimensions,
   StatusBar,
-  PixelRatio,
   Share as NativeShare,
   Clipboard,
-  Linking,
 } from "react-native";
 
 // ============================================
@@ -475,7 +473,7 @@ export const DEPRECATED = {
 // ============================================
 // DEFAULT EXPORT
 // ============================================
-export default {
+const platform = {
   // Detection
   isWeb,
   isIOS,
@@ -549,6 +547,8 @@ export default {
   // Deprecated
   DEPRECATED,
 };
+
+export default platform;
 
 // Platform.OS references should now use specific detection exports:
 // Instead of Platform.OS === 'web' → use isWeb

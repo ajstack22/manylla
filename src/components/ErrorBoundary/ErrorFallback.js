@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  Platform,
 } from "react-native";
 import { getScrollViewProps } from "../../utils/platformStyles";
 import { useTheme } from "../../context/ThemeContext";

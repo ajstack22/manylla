@@ -121,7 +121,7 @@ export const getKeyboardAvoidingViewProps = () => ({
 });
 
 // Export all for convenience
-export default {
+const platformStyles = {
   getFontFamily,
   getTextStyle,
   isTablet,
@@ -134,3 +134,5 @@ export default {
   getShadowStyle,
   getKeyboardAvoidingViewProps,
 };
+
+export default platformStyles;

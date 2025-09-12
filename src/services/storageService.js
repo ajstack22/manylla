@@ -1,4 +1,3 @@
-import { ChildProfile } from "../types/ChildProfile";
 import { ProfileValidator } from "../utils/validation";
 
 export class StorageService {

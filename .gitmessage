@@ -1,0 +1,25 @@
+# <type>(<scope>): <subject>
+# 
+# [optional body]
+# 
+# [optional footer]
+# 
+# Types: feat, fix, docs, chore, refactor, style, test, perf, build, ci, revert
+# Scopes: platform, android, ios, web, sync, profile, forms, theme, api, deps, security, a11y
+# 
+# Subject rules:
+# - Use imperative mood: "add feature" not "added feature"
+# - Don't capitalize first letter
+# - No period at the end
+# - Maximum 50 characters
+# 
+# Examples:
+# feat(sync): add 60-second pull interval for cloud sync
+# fix(android): resolve gesture handler initialization
+# docs(readme): update deployment instructions
+# 
+# For tracked items: append [S###] or [B###]
+# For breaking changes: add "BREAKING CHANGE:" in footer
+# For WIP: prefix with "WIP: "
+# 
+# See docs/development/GIT_COMMIT_CONVENTIONS.md for full details

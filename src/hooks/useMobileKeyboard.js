@@ -42,9 +42,6 @@ export const useMobileKeyboard = (options = {}) => {
 
     // Fallback for web platform
     if (platform.isWeb) {
-      let lastViewportHeight =
-        window.visualViewport?.height || window.innerHeight;
-
       const handleViewportChange = () => {
         const currentViewportHeight =
           window.visualViewport?.height || window.innerHeight;
@@ -78,8 +75,6 @@ export const useMobileKeyboard = (options = {}) => {
           setIsKeyboardVisible(false);
           setKeyboardHeight(0);
         }
-
-        lastViewportHeight = currentViewportHeight;
       };
 
       // Handle focus events to detect keyboard

@@ -14,7 +14,7 @@ import platform from "../utils/platform";
 const Tab = createBottomTabNavigator();
 
 const MainTabNavigator = () => {
-  const { colors, theme } = useTheme();
+  const { colors } = useTheme();
 
   return (
     <Tab.Navigator

@@ -1,10 +1,7 @@
 import "../../polyfills/crypto"; // Import crypto polyfill
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import nacl from "tweetnacl";
-import util from "tweetnacl-util";
 import manyllaEncryptionService from "./manyllaEncryptionService";
-import conflictResolver from "./conflictResolver";
-import { API_ENDPOINTS } from "../../config/api";
 
 class ManyllaMinimalSyncService {
   constructor() {
@@ -238,4 +235,5 @@ class ManyllaMinimalSyncService {
   }
 }
 
-export default new ManyllaMinimalSyncService();
+const manyllaMinimalSyncService = new ManyllaMinimalSyncService();
+export default manyllaMinimalSyncService;

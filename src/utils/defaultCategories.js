@@ -1,4 +1,3 @@
-import { CategoryConfig } from "../types/ChildProfile";
 
 export const defaultCategories = [
   // Original categories

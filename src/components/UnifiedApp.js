@@ -12,13 +12,10 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Platform,
   Alert,
   StyleSheet,
   KeyboardAvoidingView,
   Switch,
-  FlatList,
-  Dimensions,
 } from "react-native";
 import { getTextStyle } from "../utils/platformStyles";
 import { ThemedModal } from "./Common";
@@ -729,10 +726,12 @@ const createDynamicStyles = (activeColors) =>
 // Create default styles with default colors (for backward compatibility)
 const styles = createDynamicStyles(colors);
 
-export default {
+const UnifiedAppComponents = {
   EntryForm,
   ProfileEditForm,
   CategoryManager,
   colors,
   styles,
 };
+
+export default UnifiedAppComponents;

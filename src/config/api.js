@@ -61,7 +61,9 @@ export const API_ENDPOINTS = {
 if (process.env.NODE_ENV === "development") {
 }
 
-export default {
+const apiConfig = {
   API_BASE_URL,
   API_ENDPOINTS,
 };
+
+export default apiConfig;

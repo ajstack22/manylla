@@ -96,25 +96,7 @@ export const MarkdownRenderer = ({ content, variant = "body2" }) => {
 
   const renderInlineFormatting = (text, key) => {
     const parts = [];
-    let remainingText = text;
     let partKey = 0;
-
-    // Split by markdown patterns
-    const patterns = [
-      { regex: /\*\*(.*?)\*\*/g, style: { fontWeight: "600" } },
-      { regex: /_(.*?)_/g, style: { fontStyle: "italic" } },
-      {
-        regex: /`(.*?)`/g,
-        style: {
-          backgroundColor: colors.action.hover,
-          paddingHorizontal: 4,
-          paddingVertical: 2,
-          borderRadius: 3,
-          fontFamily: "monospace",
-          fontSize: 14,
-        },
-      },
-    ];
 
     // Simple approach: just handle bold for now
     const boldRegex = /\*\*(.*?)\*\*/g;

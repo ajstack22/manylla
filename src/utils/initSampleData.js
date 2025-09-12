@@ -1,5 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ChildProfile } from "../types/ChildProfile";
 
 export const initializeSampleData = async () => {
   try {

@@ -6,8 +6,6 @@ import pako from "pako";
 
 // Base64 encoding from tweetnacl-util (this works fine)
 const util = require("tweetnacl-util");
-const encodeBase64 = (arr) => util.encodeBase64(arr);
-const decodeBase64 = (str) => util.decodeBase64(str);
 
 const ENCRYPTION_VERSION = 2;
 const SALT_LENGTH = 16;
@@ -282,7 +280,6 @@ class ManyllaEncryptionService {
     }
 
     // Extract metadata
-    const version = combined[0];
     const isCompressed = combined[1] === 1;
 
     // Extract nonce and ciphertext
@@ -400,4 +397,5 @@ class ManyllaEncryptionService {
   }
 }
 
-export default new ManyllaEncryptionService();
+const manyllaEncryptionService = new ManyllaEncryptionService();
+export default manyllaEncryptionService;

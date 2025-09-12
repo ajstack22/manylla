@@ -231,7 +231,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
       setSyncId(syncIdValue);
 
       // Pull existing data
-      await pullSync();
+      await pullSync(); // eslint-disable-line no-use-before-define
 
       // Start sync polling
       if (ManyllaMinimalSyncService.startPolling) {
@@ -245,7 +245,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
       setSyncStatus("error");
       throw error;
     }
-  }, []);
+  }, [pullSync]); // eslint-disable-line no-use-before-define
 
   // Push sync / pushProfile (merged)
   const pushSync = useCallback(
@@ -403,7 +403,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
   );
 
   // Disable sync (merged from .tsx version)
-  const disableSync = async () => {
+  const disableSync = useCallback(async () => {
     try {
       if (ManyllaMinimalSyncService.disableSync) {
         await ManyllaMinimalSyncService.disableSync();
@@ -430,7 +430,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
       setSyncError(error.message);
       throw error;
     }
-  };
+  }, []);
 
   // Reset sync (from .js version)
   const resetSync = useCallback(async () => {
@@ -439,7 +439,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
     } catch (error) {
       setSyncError(error.message);
     }
-  }, []);
+  }, [disableSync]);
 
   const value = {
     // State

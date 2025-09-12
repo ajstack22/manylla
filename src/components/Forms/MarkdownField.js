@@ -8,7 +8,6 @@ import {
   StyleSheet,
   Modal,
   Dimensions,
-  Alert,
   Platform,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";

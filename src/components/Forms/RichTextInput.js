@@ -1,12 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
   StyleSheet,
-  Platform,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { getTextStyle } from "../../utils/platformStyles";
@@ -42,22 +40,14 @@ export const RichTextInput = ({
 }) => {
   const textInputRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
-  const [isEmpty, setIsEmpty] = useState(true);
   const [activeFormats, setActiveFormats] = useState({
     bold: false,
     italic: false,
     code: false,
   });
 
-  // Initialize content
-  useEffect(() => {
-    setIsEmpty(!value || value === "");
-  }, [value]);
-
   // Handle input changes
   const handleInput = (text) => {
-    const isEmpty = !text || text === "";
-    setIsEmpty(isEmpty);
     onChange(text);
   };
 
@@ -81,16 +71,7 @@ export const RichTextInput = ({
     }
   };
 
-  // Handle keyboard shortcuts (simplified for React Native)
-  const handleKeyDown = () => {
-    // React Native doesn't have the same keyboard event handling
-    // This would need to be implemented differently
-  };
-
-  // Handle paste (React Native handles this automatically)
-  const handlePaste = () => {
-    // React Native TextInput handles paste automatically
-  };
+  // Note: React Native handles keyboard shortcuts and paste automatically
 
   const minHeight = multiline ? rows * 24 : 40;
 

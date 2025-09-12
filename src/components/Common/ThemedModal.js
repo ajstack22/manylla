@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StyleSheet,
-  Platform,
 } from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import { useTheme } from "../../context/ThemeContext";
 import { getShadowStyle } from "../../utils/platformStyles";
 import platform from "../../utils/platform";
@@ -33,7 +33,15 @@ export const ThemedModal = ({
   headerStyle = "primary",
 }) => {
   const { colors, theme } = useTheme();
-  const styles = getStyles(colors, theme, headerStyle);
+  const isHeaderPrimary = headerStyle === "primary";
+  
+  // Ensure we have valid colors with fallbacks
+  const primaryColor = colors.primary || '#8B6F47'; // Brown fallback
+  const headerBackground = isHeaderPrimary ? primaryColor : colors.background.paper;
+  const headerTextColor = isHeaderPrimary ? '#FFFFFF' : (colors.text?.primary || '#333333');
+  const iconColor = isHeaderPrimary ? '#FFFFFF' : (colors.text?.secondary || '#666666');
+  
+  const styles = getStyles(colors, theme, headerStyle, headerBackground, headerTextColor);
 
   return (
     <Modal
@@ -52,7 +60,11 @@ export const ThemedModal = ({
 
           {showCloseButton ? (
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>✕</Text>
+              <Icon 
+                name="close" 
+                size={24} 
+                color={iconColor}
+              />
             </TouchableOpacity>
           ) : (
             <View style={styles.headerSpacer} />
@@ -66,7 +78,7 @@ export const ThemedModal = ({
   );
 };
 
-const getStyles = (colors, theme, headerStyle) => {
+const getStyles = (colors, theme, headerStyle, headerBackground, headerTextColor) => {
   const isHeaderPrimary = headerStyle === "primary";
 
   return StyleSheet.create({
@@ -78,9 +90,7 @@ const getStyles = (colors, theme, headerStyle) => {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      backgroundColor: isHeaderPrimary
-        ? colors.primary
-        : colors.background.paper,
+      backgroundColor: headerBackground,
       paddingHorizontal: 16,
       paddingVertical: platform.select({
         ios: 16,
@@ -107,7 +117,7 @@ const getStyles = (colors, theme, headerStyle) => {
         web: 17,
       }),
       fontWeight: "600",
-      color: isHeaderPrimary ? colors.background.paper : colors.text.primary,
+      color: headerTextColor,
       flex: 1,
       textAlign: "center",
       letterSpacing: platform.select({
@@ -124,15 +134,6 @@ const getStyles = (colors, theme, headerStyle) => {
       alignItems: "center",
       justifyContent: "center",
       borderRadius: 20,
-    },
-    closeButtonText: {
-      fontSize: 22,
-      color: isHeaderPrimary ? colors.background.paper : colors.text.secondary,
-      fontWeight: platform.select({
-        ios: "400",
-        android: "400",
-        web: "300",
-      }),
     },
     headerSpacer: {
       width: 40,

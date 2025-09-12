@@ -127,7 +127,6 @@ export const SmartTextInput = ({
     } else if (format.markdown.prefix === "- ") {
       // For list, add at start of current line
       const before = value.substring(0, start);
-      const after = value.substring(start);
       const lastNewline = before.lastIndexOf("\n");
       const lineStart = lastNewline === -1 ? 0 : lastNewline + 1;
 

@@ -1,5 +1,5 @@
 import platform from "../platform";
-import { Platform, Dimensions } from "react-native";
+import { Platform } from "react-native";
 
 describe("Platform Abstraction", () => {
   describe("Core Detection", () => {

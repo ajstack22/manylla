@@ -1,5 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ChildProfile } from "../../types/ChildProfile";
 
 const STORAGE_KEYS = {
   PROFILES: "manylla_profiles",
@@ -133,4 +132,5 @@ class ProfileStorageService {
   }
 }
 
-export default new ProfileStorageService();
+const profileStorageService = new ProfileStorageService();
+export default profileStorageService;

@@ -6,14 +6,10 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  Alert,
-  Image,
   Dimensions,
-  Platform,
 } from "react-native";
 import { getTextStyle } from "../../utils/platformStyles";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { ChildProfile, Entry } from "../../types/ChildProfile";
 
 import platform from "../../utils/platform";
 
@@ -118,8 +114,7 @@ export const SharedProfileView = ({ isAuthenticated = false }) => {
                   if (error) setError("");
                 }}
                 placeholder="Enter 6-character code"
-                placeholderTextColor={platform.isAndroid ? "#999" : undefined}
-                placeholderTextColor={colors.textSecondary}
+                placeholderTextColor={platform.isAndroid ? "#999" : colors.textSecondary}
                 autoCapitalize="characters"
                 maxLength={6}
               />
@@ -256,7 +251,7 @@ export const SharedProfileView = ({ isAuthenticated = false }) => {
   );
 };
 
-const { width } = Dimensions.get("window");
+Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {

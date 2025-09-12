@@ -5,19 +5,30 @@
 ```
 docs/development/
 ├── processes/          # Development workflows and methodologies
-├── stories/           # Individual implementation tasks
+├── backlog/           # Active stories and priorities
+├── stories/           # Individual implementation tasks (completed)
+├── bugs/              # Bug reports and resolutions
 ├── epics/            # Collections of related stories
 ├── roles/            # Team role definitions and responsibilities
+├── reviews/          # Adversarial review reports
+├── tech-debt/        # Technical debt tracking
 └── templates/        # Reusable templates for stories/epics
 ```
 
 ## 🚀 Quick Start Guide
 
 ### For a Single Story
-1. Copy `templates/story-template.md`
+1. Create story using `./scripts/create-story.sh "Title" P1`
 2. Fill in requirements and success metrics
 3. Apply `processes/ADVERSARIAL_REVIEW_PROCESS.md`
-4. Iterate until approved
+4. Use assigned roles from [STORY_ROLE_ASSIGNMENTS.md](STORY_ROLE_ASSIGNMENTS.md)
+5. Iterate until approved
+
+### For a Bug
+1. Create bug using `./scripts/create-bug.sh "Title" P0 Critical`
+2. Document reproduction steps
+3. Apply appropriate review process
+4. Archive in `bugs/resolved/` when complete
 
 ### For an Epic (Multiple Stories)
 1. Copy `templates/epic-template.md`
@@ -38,6 +49,11 @@ docs/development/
 **Purpose**: Manage multi-story implementations with integration validation
 **When to use**: Large features requiring multiple coordinated stories
 **Key feature**: Story-level + Epic-level validation
+
+#### 3. [Tech Debt Management](processes/TECH_DEBT_MANAGEMENT.md)
+**Purpose**: Track and prioritize technical debt
+**When to use**: When discovering debt during development
+**Key feature**: Systematic debt tracking and conversion to stories
 
 ## 👥 Role Definitions
 
@@ -158,18 +174,23 @@ Process: EPIC_REVIEW_PROCESS
 
 ## 🛠️ Tools and Automation
 
-### Validation Scripts
+### Management Scripts
 ```bash
-# Story validation
-./scripts/validate-story-[name].sh
+# Story/Bug management
+./scripts/create-story.sh "Title" P1
+./scripts/create-bug.sh "Title" P0 Critical
+./scripts/update-backlog-priority.sh
 
-# Epic validation
-./scripts/validate-epic-[name].sh
+# Tech debt management
+./scripts/tech-debt-to-story.sh drafts/file.md
+
+# Deployment
+./scripts/deploy-qual.sh  # ONLY approved deployment method
 
 # General validation
 npm run lint
 npm run test
-npm run build:all
+npm run build:web
 ```
 
 ### Templates Location
@@ -179,12 +200,22 @@ npm run build:all
 
 ## 📚 Current Active Work
 
-### Stories
-- [Platform Alias Migration](stories/platform-alias-migration.md)
-- [Android Module Resolution Fix](stories/android-module-resolution-fix.md)
+### Active Backlog (Priority Order)
+- **P1 - High Priority**
+  - [S002: Native Sync Implementation](backlog/S002-native-sync-implementation.md) - READY
 
-### Epics
-- (Add active epics here)
+- **P2 - Medium Priority**
+  - [S007: Dead Code Elimination](backlog/S007-dead-code-elimination-and-import-cleanup.md) - IN PROGRESS (27%)
+  - [S003: Test Coverage](backlog/S003-test-coverage.md) - READY
+  - [S004: Android Deployment](backlog/S004-android-deployment.md) - READY
+
+### Recently Completed
+- ✅ [S001: Platform Alias Migration](stories/completed/S001-platform-alias-migration.md) - 2025-09-12
+- ✅ [S006: Technical Debt Cleanup](backlog/S006-technical-debt-cleanup-and-documentation-update.md) - 2025-09-12
+- ✅ [B001: Android Module Resolution](bugs/resolved/B001-android-module-resolution.md) - 2025-09-12
+
+### Story Assignment Guide
+See [STORY_ROLE_ASSIGNMENTS.md](STORY_ROLE_ASSIGNMENTS.md) for role recommendations per story
 
 ## 🔍 Best Practices
 
@@ -236,8 +267,14 @@ This framework evolves based on learnings:
 
 ---
 
-*Framework Version: 1.0*
+*Framework Version: 1.1*
 *Last Updated: 2025-09-12*
-*Maintained by: Development Team*
+*Maintained by: Manylla Development Team*
+
+## 🔗 Quick Links
+- [BACKLOG.md](BACKLOG.md) - Current work priorities
+- [STORY_ROLE_ASSIGNMENTS.md](STORY_ROLE_ASSIGNMENTS.md) - Role assignments per story
+- [RELEASE_NOTES.md](../RELEASE_NOTES.md) - User-facing changes
+- [CLAUDE.md](../../CLAUDE.md) - AI assistant instructions
 
 **Remember**: The goal is quality through rigorous validation, not speed through shortcuts.

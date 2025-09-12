@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  Platform,
   Image,
 } from "react-native";
 
@@ -72,17 +71,6 @@ const OnboardingScreen = ({ onComplete }) => {
     "image/gif",
     "image/webp",
   ];
-
-  // Format date for display (MM/DD/YYYY)
-  const formatDateForDisplay = (dateString) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return dateString;
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    const year = date.getFullYear();
-    return `${month}/${day}/${year}`;
-  };
 
   // Format date input with automatic slashes for mobile
   const formatDateInput = (text) => {

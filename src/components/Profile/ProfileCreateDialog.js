@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import {
   Modal,
   View,
@@ -9,14 +9,12 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
-  Alert,
 } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import { useTheme } from "../../context/ThemeContext";
 import { defaultCategories } from "../../utils/defaultCategories";
 import { defaultQuickInfoPanels } from "../../utils/defaultQuickInfo";
 import { DatePicker } from "../DatePicker/DatePicker";
-import { getTextStyle, getScrollViewProps } from "../../utils/platformStyles";
 import platform from "../../utils/platform";
 
 export const ProfileCreateDialog = ({ open, onClose, onCreate }) => {

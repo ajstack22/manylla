@@ -8,6 +8,7 @@
 *None*
 
 ### Bugs
+- [B003](bugs/B003-modal-headers-have-invisible-white-text-and-close-buttons.md) - Modal headers have invisible white text and close buttons 🔥 **Critical**
 *None*
 
 ## 🟠 P1 - High (Do Next)

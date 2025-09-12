@@ -1,4 +1,3 @@
-import { ChildProfile, Entry, CategoryConfig } from "../types/ChildProfile";
 
 export class ProfileValidator {
   /**

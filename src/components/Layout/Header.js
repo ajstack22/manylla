@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Platform,
   Dimensions,
   Modal,
   SafeAreaView,
@@ -19,8 +18,6 @@ import {
   LabelIcon,
   LogoutIcon,
   CloseIcon,
-  DarkModeIcon,
-  LightModeIcon,
   PaletteIcon,
 } from "../Common";
 import { getStatusBarHeight } from "../../utils/platformStyles";

@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { ChildProfile } from "../../types/ChildProfile";
 import { getShadowStyle } from "../../utils/platformStyles";
 
 const ProfileCard = ({ profile, onPress }) => {

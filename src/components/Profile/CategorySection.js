@@ -4,10 +4,9 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Platform,
 } from "react-native";
 import { getShadowStyle } from "../../utils/platformStyles";
-import Icon, { LabelIcon } from "../Common/IconProvider";
+import Icon from "../Common/IconProvider";
 import { HtmlRenderer } from "../Forms/HtmlRenderer";
 import { useTheme } from "../../context/ThemeContext";
 

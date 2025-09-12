@@ -3,9 +3,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
-  StyleSheet,
-  Platform,
 } from "react-native";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
 import { ErrorFallback } from "./ErrorFallback";
@@ -177,7 +174,7 @@ export const ErrorBoundary = ({
         </View>
       );
     },
-    [FallbackComponent, errorHandler, showRecovery, showRecoveryOptions],
+    [errorHandler, showRecovery, showRecoveryOptions],
   );
 
   return (

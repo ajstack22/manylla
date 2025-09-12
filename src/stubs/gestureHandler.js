@@ -13,4 +13,5 @@ export const Gestures = {};
 export const nativeGesture = {};
 
 // Default export as an empty object
-export default {};
+const gestureHandler = {};
+export default gestureHandler;

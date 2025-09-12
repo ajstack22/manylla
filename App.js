@@ -8,7 +8,7 @@
  * Release notes must be updated before deployment
  */
 
-import React, { useState, useEffect, useRef, lazy, Suspense } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import {
   View,
   ScrollView,
@@ -27,7 +27,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "./src/components/Common/IconProvider";
 
 // Platform utilities
-import { getStatusBarHeight } from "./src/utils/platformStyles";
 import { isWeb, isAndroid, isMobile } from "./src/utils/platform";
 // Shared imports
 import { ThemeProvider, SyncProvider, useSync, useTheme } from "./src/context";
@@ -135,26 +134,7 @@ if (isWeb && typeof window !== "undefined") {
   }
 }
 
-// Default color constants (will be overridden by theme)
-const defaultColors = {
-  primary: "#B8A088", // Softer, lighter manila brown
-  secondary: "#9E8B78", // Lighter complementary brown
-  background: {
-    default: "#FDFBF7",
-    paper: "#FFFFFF",
-    manila: "#F9F2E8", // Much lighter, subtle manila color
-  },
-  text: {
-    primary: "#333333",
-    secondary: "#666666",
-    disabled: "#999999",
-  },
-  border: "#E0E0E0",
-  success: "#4CAF50",
-  error: "#F44336",
-  warning: "#FF9800",
-  info: "#2196F3",
-};
+// Note: Default colors removed - now managed by ThemeContext
 
 // Helper function to get icon for category
 const getCategoryIcon = (categoryTitle) => {
@@ -179,7 +159,6 @@ const ProfileOverview = ({
   const [windowWidth, setWindowWidth] = useState(
     Dimensions.get("window").width,
   );
-  const scrollViewRef = useRef(null);
 
   useEffect(() => {
     const updateWidth = () => {
@@ -1766,7 +1745,7 @@ const createStyles = (colors, theme) => {
 };
 
 // Default styles using default colors (for initial render)
-let styles = createStyles(defaultColors);
+// styles variable removed - was unused
 
 // Main App wrapper
 function App() {

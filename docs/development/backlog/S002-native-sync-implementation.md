@@ -1,5 +1,10 @@
 # Story S002: Native Sync Service Implementation
 
+## Recommended Roles for Adversarial Review
+**Primary:** Developer, iOS Platform Expert, Android Platform Expert  
+**Secondary:** Peer Reviewer, Web Platform Expert (for parity check)  
+**Optional:** Admin (final approval)
+
 ## Overview
 Implement complete cloud sync functionality for React Native mobile apps, achieving feature parity with the web implementation. The native sync service currently has TODO placeholders and needs full implementation to enable multi-device support on mobile platforms.
 

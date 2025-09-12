@@ -1,5 +1,4 @@
 import { useState, useCallback, useEffect } from "react";
-import { Platform } from "react-native";
 import platform from "../utils/platform";
 
 // Helper to show toast messages (simplified version)
@@ -51,20 +50,7 @@ export const useErrorDisplay = (error, errorInfo) => {
 
   const sendReport = useCallback(async () => {
     try {
-      const reportData = {
-        error: error?.toString(),
-        stack: error?.stack,
-        componentStack: errorInfo?.componentStack,
-        userAgent:
-          platform.isWeb && typeof navigator !== "undefined"
-            ? navigator.userAgent
-            : platform.OS,
-        timestamp: new Date().toISOString(),
-        platform: platform.OS,
-        version: Platform.Version,
-      };
-
-      // In a real app, this would send to an error tracking service
+      // In a real app, this would send error data to an error tracking service
       // Error report would be sent here
 
       // Simulate sending report
@@ -76,7 +62,7 @@ export const useErrorDisplay = (error, errorInfo) => {
       console.error("Failed to send report:", err);
       showToast("Failed to send report", "error");
     }
-  }, [error, errorInfo]);
+  }, []);
 
   const toggleDetails = useCallback(() => {
     setShowDetails((prev) => !prev);

@@ -92,6 +92,7 @@ See [/docs/README.md](./docs/README.md) for comprehensive documentation includin
 - Mobile development guides
 - Deployment procedures
 - Security implementation
+- [Git commit conventions](./docs/development/GIT_COMMIT_CONVENTIONS.md)
 
 ## 🔒 Security
 

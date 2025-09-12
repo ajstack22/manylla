@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { RootStackParamList } from "./types";
 import MainTabNavigator from "./MainTabNavigator";
 import ProfileStorageService from "@services/storage/ProfileStorageService";
 import { ActivityIndicator, View, Text } from "react-native";
@@ -13,7 +12,7 @@ const Stack = createNativeStackNavigator();
 const RootNavigator = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasProfile, setHasProfile] = useState(false);
-  const [needsAuth, setNeedsAuth] = useState(false);
+  const [needsAuth] = useState(false);
   const { colors } = useTheme();
 
   useEffect(() => {

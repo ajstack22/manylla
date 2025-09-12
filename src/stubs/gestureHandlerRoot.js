@@ -68,7 +68,7 @@ export const Gestures = {};
 export const GestureDetector = ({ children }) => children;
 
 // Default export
-export default {
+const gestureHandlerRoot = {
   GestureHandlerRootView,
   PanGestureHandler,
   TapGestureHandler,
@@ -76,3 +76,5 @@ export default {
   Directions,
   createNativeWrapper,
 };
+
+export default gestureHandlerRoot;

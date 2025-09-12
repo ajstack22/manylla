@@ -1,4 +1,4 @@
-import { AppRegistry, Platform } from "react-native";
+import { AppRegistry } from "react-native";
 import { isWeb } from "./src/utils/platform";
 import App from "./App";
 
@@ -18,9 +18,6 @@ if (isWeb && window.__earlyShareData) {
 if (isWeb) {
   // Store the original console methods
   const originalWarn = console.warn;
-  const originalLog = console.log;
-  const originalInfo = console.info;
-  const originalDebug = console.debug;
 
   // In production, disable all console outputs except errors
   if (process.env.NODE_ENV === "production") {
