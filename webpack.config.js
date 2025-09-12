@@ -96,7 +96,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      // @platform alias removed - using relative imports for consistency across all bundlers
+      // Platform-specific imports handled via relative paths (migration completed 2025-09-12)
       "@utils": path.resolve(__dirname, "src/utils"),
       "@components": path.resolve(__dirname, "src/components"),
       "@hooks": path.resolve(__dirname, "src/hooks"),

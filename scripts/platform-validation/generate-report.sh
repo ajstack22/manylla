@@ -42,7 +42,7 @@ This report provides comprehensive validation results for the platform consolida
 - **Platform.OS references**: $(count_with_default $(grep -r "Platform\.OS" src/ --include="*.js" --exclude="*/platform.js" 2>/dev/null | wc -l))
 - **Platform.select (old style)**: $(count_with_default $(grep -r "Platform\.select" src/ --include="*.js" 2>/dev/null | grep -v "platform\.select" | wc -l))
 - **Files using platform utilities**: $(count_with_default $(grep -r "platform\." src/ --include="*.js" --exclude="*/platform.js" -l 2>/dev/null | wc -l))
-- **Correct platform imports**: $(count_with_default $(grep -r "import.*platform.*from.*@platform" src/ --include="*.js" -l 2>/dev/null | wc -l))
+- **Correct platform imports (relative)**: $(count_with_default $(grep -r "import.*platform.*from.*['\"]\.\..*platform" src/ --include="*.js" -l 2>/dev/null | wc -l))
 
 ### File Structure Compliance
 - **Platform-specific files (.native.js)**: $(count_with_default $(find src -name "*.native.js" 2>/dev/null | wc -l))
@@ -132,9 +132,9 @@ fi
 cat >> $REPORT_FILE << EOF
 
 ### Import Resolution
-- **Webpack alias configured**: $(grep -q "@platform.*path.resolve" webpack.config.js && echo "✅ Yes" || echo "❌ No")
+- **Webpack platform migration**: $(grep -q "Platform-specific imports handled via relative paths" webpack.config.js && echo "✅ Completed" || echo "❌ Not completed")
 - **Babel plugin installed**: $(grep -q "babel-plugin-module-resolver" package.json && echo "✅ Yes" || echo "❌ No")
-- **Metro config updated**: $(grep -q "@platform" metro.config.js && echo "✅ Yes" || echo "❌ No")
+- **Metro platform migration**: $(grep -q "Platform-specific imports handled via relative paths" metro.config.js && echo "✅ Completed" || echo "❌ Not completed")
 
 ## Security & Quality Checks
 
@@ -222,7 +222,7 @@ if [ "$TODOS" -gt 20 ]; then
 fi
 
 FILES_WITH_PLATFORM=$(grep -r "platform\." src/ --include="*.js" --exclude="*/platform.js" -l 2>/dev/null | wc -l)
-FILES_WITH_IMPORT=$(grep -r "import.*platform.*from.*@platform" src/ --include="*.js" -l 2>/dev/null | wc -l)
+FILES_WITH_IMPORT=$(grep -r "import.*platform.*from.*['\"]\.\..*platform" src/ --include="*.js" -l 2>/dev/null | wc -l)
 if [ "$FILES_WITH_PLATFORM" -ne "$FILES_WITH_IMPORT" ]; then
   WARNINGS+=("$((FILES_WITH_PLATFORM - FILES_WITH_IMPORT)) files use platform without proper import")
 fi

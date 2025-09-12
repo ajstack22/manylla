@@ -7,7 +7,7 @@ module.exports = {
         root: ["./src"],
         extensions: [".ios.js", ".android.js", ".js", ".ts", ".tsx", ".json"],
         alias: {
-          // Remove @platform alias - using relative imports instead
+          // Platform-specific imports handled via relative paths (migration completed 2025-09-12)
           "@": "./src",
           "@components": "./src/components",
           "@screens": "./src/screens",

@@ -12,7 +12,6 @@ module.exports = {
     "import/resolver": {
       "babel-module": {
         alias: {
-          "@platform": "./src/utils/platform",
           "@components": "./src/components",
           "@services": "./src/services",
           "@context": "./src/context",

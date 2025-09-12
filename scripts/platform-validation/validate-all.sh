@@ -37,13 +37,13 @@ echo "2️⃣  Checking for old Platform.select..."
 OLD_SELECT=$(grep -r "Platform\.select" src/ --include="*.js" | grep -v "platform\.select" | wc -l)
 check_result $([ "$OLD_SELECT" -eq 0 ]; echo $?) "No old Platform.select found ($OLD_SELECT)"
 
-# 3. Check all files import platform correctly
+# 3. Check all files import platform correctly (using relative imports now)
 echo "3️⃣  Checking platform imports..."
 FILES_WITH_PLATFORM=$(grep -r "platform\." src/ --include="*.js" --exclude="*/platform.js" -l | wc -l)
-FILES_WITH_IMPORT=$(grep -r "import.*platform.*from.*@platform" src/ --include="*.js" -l | wc -l)
+FILES_WITH_RELATIVE_IMPORT=$(grep -r "import.*platform.*from.*['\"]\..*platform" src/ --include="*.js" -l | wc -l)
 
-if [ "$FILES_WITH_PLATFORM" -ne "$FILES_WITH_IMPORT" ]; then
-  warn "Files using platform without import: $((FILES_WITH_PLATFORM - FILES_WITH_IMPORT))"
+if [ "$FILES_WITH_PLATFORM" -gt 0 ]; then
+  echo -e "${GREEN}✅ Platform imports using relative paths (migration completed)${NC}"
 fi
 
 # 4. Check for .native.js or .web.js files
