@@ -1,4 +1,4 @@
-import platform from "@platform";
+import platform from "../../utils/platform";
 /**
  * Cross-Platform Profile Overview
  * Works on iOS, Android, and Web

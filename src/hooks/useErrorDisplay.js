@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { Platform } from "react-native";
-import platform from "@platform";
+import platform from "../utils/platform";
 
 // Helper to show toast messages (simplified version)
 const showToast = (message, type) => {

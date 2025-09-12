@@ -1,4 +1,4 @@
-import platform from "@platform";
+import platform from "../../utils/platform";
 
 /**
  * ThemeSwitcher - Toggle between light/dark/manylla themes

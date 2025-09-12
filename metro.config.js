@@ -14,7 +14,7 @@ const config = {
   watchFolders: [__dirname],
   resolver: {
     extraNodeModules: {
-      "@platform": path.resolve(__dirname, "src/utils/platform"),
+      // Remove @platform alias - using relative imports instead
       "@utils": path.resolve(__dirname, "src/utils"),
       "@components": path.resolve(__dirname, "src/components"),
       "@hooks": path.resolve(__dirname, "src/hooks"),

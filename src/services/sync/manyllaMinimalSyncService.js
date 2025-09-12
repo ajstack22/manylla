@@ -1,4 +1,4 @@
-import platform from "@platform";
+import platform from "../../utils/platform";
 
 // Create unified sync service based on platform
 let manyllaMinimalSyncService;

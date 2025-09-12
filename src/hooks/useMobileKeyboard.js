@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Dimensions, Keyboard } from "react-native";
-import platform from "@platform";
+import platform from "../utils/platform";
 
 export const useMobileKeyboard = (options = {}) => {
   const { width } = Dimensions.get("window");

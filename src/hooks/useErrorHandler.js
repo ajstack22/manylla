@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import platform from "@platform";
+import platform from "../utils/platform";
 import {
   ErrorHandler,
   StorageError,

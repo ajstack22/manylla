@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useTheme as useAppTheme } from "../../context/ThemeContext";
 
-import platform from "@platform";
+import platform from "../../utils/platform";
 
 const { width } = Dimensions.get("window");
 

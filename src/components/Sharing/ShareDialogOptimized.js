@@ -19,7 +19,7 @@ import util from "tweetnacl-util";
 import { useTheme } from "../../context/ThemeContext";
 import { ThemedModal } from "../Common";
 import { API_ENDPOINTS } from "../../config/api";
-import platform from "@platform";
+import platform from "../../utils/platform";
 
 const sharePresets = [
   {

@@ -16,7 +16,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { useTheme } from "../../context/ThemeContext";
 import { getNumColumns, getCardWidth } from "../../utils/platformStyles";
 
-import platform from "@platform";
+import platform from "../../utils/platform";
 
 export const CategoryManager = ({ visible, onClose, categories, onUpdate }) => {
   const { colors } = useTheme();

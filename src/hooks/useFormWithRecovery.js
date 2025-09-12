@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import platform from "@platform";
+import platform from "../utils/platform";
 import { ValidationError, ErrorHandler } from "../utils/errors";
 import { getErrorMessage, formatFieldName } from "../utils/errorMessages";
 import { showToast } from "../components/Toast/ToastManager";

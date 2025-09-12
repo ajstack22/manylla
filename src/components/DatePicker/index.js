@@ -1,4 +1,4 @@
-import platform from "@platform";
+import platform from "../../utils/platform";
 
 let DatePicker;
 

@@ -14,7 +14,7 @@ import { CategorySection } from "./CategorySection";
 import { getVisibleCategories } from "../../utils/unifiedCategories";
 import { ProfileEditDialog } from "./ProfileEditDialog";
 
-import platform from "@platform";
+import platform from "../../utils/platform";
 
 const { width } = Dimensions.get("window");
 
