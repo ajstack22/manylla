@@ -205,6 +205,20 @@ class ManyllaEncryptionService {
   }
 
   /**
+   * Alias for initialize() to maintain backward compatibility
+   */
+  async init(recoveryPhrase, existingSalt = null) {
+    return this.initialize(recoveryPhrase, existingSalt);
+  }
+
+  /**
+   * Check if encryption is initialized
+   */
+  isInitialized() {
+    return !!this.masterKey;
+  }
+
+  /**
    * Encrypt Manylla profile data
    */
   encryptData(data) {
