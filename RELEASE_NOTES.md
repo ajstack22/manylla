@@ -1,5 +1,23 @@
 # Manylla Release Notes
 
+## Version 2025.09.12.4 - 2025-09-12
+Modal Header Visibility Fix - B003 Complete
+
+### Summary
+Fixed critical modal header visibility issue where headers were invisible due to React Native Web CSS conflicts
+
+### Fixed
+- Modal headers now display properly with visible text and close buttons
+- Replaced broken Material Icons dependency with simple text-based close button (✕)
+- Fixed white-on-white text visibility issue using inline styles to override React Native Web classes
+- Improved theme color contrast for better readability across all themes
+
+### Technical
+- Used inline backgroundColor styles to override React Native Web CSS classes
+- Removed react-native-vector-icons/MaterialIcons dependency from ThemedModal
+- Updated primary colors in theme context for better contrast
+- Cross-platform compatibility ensured with simple text-based close button
+
 ## Version 2025.09.10.6
 Routine Deployment - No Code Changes
 
