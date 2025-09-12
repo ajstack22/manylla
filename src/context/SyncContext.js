@@ -195,7 +195,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
 
       return { recoveryPhrase: phrase, syncId: syncIdValue };
     } catch (error) {
-      if (process.env.NODE_ENV === 'development') {
+      if (process.env.NODE_ENV === "development") {
         console.error("Failed to enable sync:", error);
       }
       setSyncStatus("error");

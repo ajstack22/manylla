@@ -413,7 +413,7 @@ export const readFromClipboard = async () => {
 // ============================================
 export const print = (elementId = null) => {
   if (!isWeb) {
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       console.warn("Print not supported on mobile");
     }
     return;

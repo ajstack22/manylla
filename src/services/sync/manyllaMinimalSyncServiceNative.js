@@ -73,14 +73,14 @@ class ManyllaMinimalSyncService {
         // Simple connectivity test
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 3000);
-        
-        await fetch('https://www.google.com/generate_204', {
+
+        await fetch("https://www.google.com/generate_204", {
           signal: controller.signal,
-          cache: 'no-cache',
+          cache: "no-cache",
         });
-        
+
         clearTimeout(timeoutId);
-        
+
         if (!this.isOnline) {
           this.isOnline = true;
           this.notifyListeners("online", true);
@@ -134,9 +134,9 @@ class ManyllaMinimalSyncService {
     try {
       while (this.offlineQueue.length > 0) {
         const item = this.offlineQueue.shift();
-        
+
         try {
-          if (item.operation === 'push') {
+          if (item.operation === "push") {
             await this.push(item.data);
           }
           // Add other operations as needed
@@ -395,7 +395,11 @@ class ManyllaMinimalSyncService {
    * Push data to sync server
    */
   async push(data) {
-    if (!this.isEnabled || !this.syncId || !manyllaEncryptionService.isInitialized()) {
+    if (
+      !this.isEnabled ||
+      !this.syncId ||
+      !manyllaEncryptionService.isInitialized()
+    ) {
       throw new SyncError(
         "Sync not initialized. Please enable sync first.",
         false,
@@ -404,7 +408,7 @@ class ManyllaMinimalSyncService {
 
     // Check if online, if not queue for later
     if (!this.isOnline) {
-      this.queueForLater('push', data);
+      this.queueForLater("push", data);
       throw new NetworkError("Device offline. Operation queued.");
     }
 
@@ -495,7 +499,11 @@ class ManyllaMinimalSyncService {
    * Pull data from sync server
    */
   async pull() {
-    if (!this.isEnabled || !this.syncId || !manyllaEncryptionService.isInitialized()) {
+    if (
+      !this.isEnabled ||
+      !this.syncId ||
+      !manyllaEncryptionService.isInitialized()
+    ) {
       throw new SyncError(
         "Sync not initialized. Please enable sync first.",
         false,
@@ -597,7 +605,11 @@ class ManyllaMinimalSyncService {
 
     // Set up interval
     this.pullInterval = setInterval(() => {
-      if (this.syncId && manyllaEncryptionService.isInitialized() && this.isOnline) {
+      if (
+        this.syncId &&
+        manyllaEncryptionService.isInitialized() &&
+        this.isOnline
+      ) {
         this.pull().catch((error) => {
           ErrorHandler.log(error, {
             context: "poll",
