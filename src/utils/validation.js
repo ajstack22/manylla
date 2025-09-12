@@ -1,4 +1,3 @@
-
 export class ProfileValidator {
   /**
    * Validates a complete profile object

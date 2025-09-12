@@ -15,10 +15,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "react-native-image-picker";
 import { useTheme } from "../../context/ThemeContext";
-import {
-  getTextStyle,
-  getScrollViewProps,
-} from "../../utils/platformStyles";
+import { getTextStyle, getScrollViewProps } from "../../utils/platformStyles";
 import platform from "../../utils/platform";
 
 export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {

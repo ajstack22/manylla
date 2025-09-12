@@ -203,49 +203,52 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
   };
 
   // Join with existing recovery phrase
-  const joinWithPhrase = useCallback(async (phrase) => {
-    try {
-      // Validate phrase format (32 char hex)
-      if (!/^[a-f0-9]{32}$/i.test(phrase)) {
-        throw new Error("Invalid recovery phrase format");
+  const joinWithPhrase = useCallback(
+    async (phrase) => {
+      try {
+        // Validate phrase format (32 char hex)
+        if (!/^[a-f0-9]{32}$/i.test(phrase)) {
+          throw new Error("Invalid recovery phrase format");
+        }
+
+        await setStorageItem("manylla_recovery_phrase", phrase);
+        await setStorageItem("manylla_sync_enabled", "true");
+
+        setRecoveryPhrase(phrase);
+        setSyncEnabled(true);
+        ManyllaEncryptionService.init(phrase);
+        setEncryptionReady(true);
+
+        // Enable sync with the service (from .tsx version)
+        if (ManyllaMinimalSyncService.enableSync) {
+          await ManyllaMinimalSyncService.enableSync(phrase, false);
+        }
+
+        const syncIdValue = ManyllaMinimalSyncService.getSyncId
+          ? ManyllaMinimalSyncService.getSyncId()
+          : `sync_${Date.now()}`;
+
+        await setStorageItem("manylla_sync_id", syncIdValue);
+        setSyncId(syncIdValue);
+
+        // Pull existing data
+        await pullSync(); // eslint-disable-line no-use-before-define
+
+        // Start sync polling
+        if (ManyllaMinimalSyncService.startPolling) {
+          ManyllaMinimalSyncService.startPolling();
+        }
+
+        setSyncStatus("idle");
+        return true;
+      } catch (error) {
+        setSyncError(error.message);
+        setSyncStatus("error");
+        throw error;
       }
-
-      await setStorageItem("manylla_recovery_phrase", phrase);
-      await setStorageItem("manylla_sync_enabled", "true");
-
-      setRecoveryPhrase(phrase);
-      setSyncEnabled(true);
-      ManyllaEncryptionService.init(phrase);
-      setEncryptionReady(true);
-
-      // Enable sync with the service (from .tsx version)
-      if (ManyllaMinimalSyncService.enableSync) {
-        await ManyllaMinimalSyncService.enableSync(phrase, false);
-      }
-
-      const syncIdValue = ManyllaMinimalSyncService.getSyncId
-        ? ManyllaMinimalSyncService.getSyncId()
-        : `sync_${Date.now()}`;
-
-      await setStorageItem("manylla_sync_id", syncIdValue);
-      setSyncId(syncIdValue);
-
-      // Pull existing data
-      await pullSync(); // eslint-disable-line no-use-before-define
-
-      // Start sync polling
-      if (ManyllaMinimalSyncService.startPolling) {
-        ManyllaMinimalSyncService.startPolling();
-      }
-
-      setSyncStatus("idle");
-      return true;
-    } catch (error) {
-      setSyncError(error.message);
-      setSyncStatus("error");
-      throw error;
-    }
-  }, [pullSync]); // eslint-disable-line no-use-before-define
+    },
+    [pullSync],
+  ); // eslint-disable-line no-use-before-define
 
   // Push sync / pushProfile (merged)
   const pushSync = useCallback(

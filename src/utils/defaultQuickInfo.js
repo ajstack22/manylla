@@ -1,4 +1,3 @@
-
 export const defaultQuickInfoPanels = [
   {
     id: "communication",

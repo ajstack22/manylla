@@ -6,12 +6,7 @@ import platform from "../../utils/platform";
  */
 
 import React from "react";
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-} from "react-native";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { useTheme } from "../../context";
 import { DarkModeIcon, LightModeIcon, PaletteIcon } from "./IconProvider";
 

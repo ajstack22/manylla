@@ -1,9 +1,5 @@
 import React, { Component, useCallback, useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
 import { ErrorFallback } from "./ErrorFallback";
 import { ErrorRecovery } from "./ErrorRecovery";

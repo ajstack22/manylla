@@ -33,13 +33,25 @@ export const ThemedModal = ({
 }) => {
   const { colors, theme } = useTheme();
   const isHeaderPrimary = headerStyle === "primary";
-  
-  const primaryColor = colors.primary || '#8B6F47';
-  const headerBackground = isHeaderPrimary ? primaryColor : colors.background.paper;
-  const headerTextColor = isHeaderPrimary ? '#FFFFFF' : (colors.text?.primary || '#333333');
-  const iconColor = isHeaderPrimary ? '#FFFFFF' : (colors.text?.secondary || '#666666');
-  
-  const styles = getStyles(colors, theme, headerStyle, headerBackground, headerTextColor);
+
+  const primaryColor = colors.primary || "#8B6F47";
+  const headerBackground = isHeaderPrimary
+    ? primaryColor
+    : colors.background.paper;
+  const headerTextColor = isHeaderPrimary
+    ? "#FFFFFF"
+    : colors.text?.primary || "#333333";
+  const iconColor = isHeaderPrimary
+    ? "#FFFFFF"
+    : colors.text?.secondary || "#666666";
+
+  const styles = getStyles(
+    colors,
+    theme,
+    headerStyle,
+    headerBackground,
+    headerTextColor,
+  );
 
   return (
     <Modal
@@ -52,30 +64,41 @@ export const ThemedModal = ({
     >
       <SafeAreaView style={styles.container}>
         {/* Header */}
-        <View 
+        <View
           style={[
             styles.header,
-            { 
+            {
               backgroundColor: headerBackground, // FORCE inline style to override RNW classes
-            }
+            },
           ]}
-          testID="modal-header" 
+          testID="modal-header"
           data-testid="modal-header"
         >
           <View style={styles.headerSpacer} />
 
-          <Text style={styles.headerTitle} testID="modal-title" data-testid="modal-title">
+          <Text
+            style={styles.headerTitle}
+            testID="modal-title"
+            data-testid="modal-title"
+          >
             {title}
           </Text>
 
           {showCloseButton ? (
-            <TouchableOpacity onPress={onClose} style={styles.closeButton} testID="modal-close" data-testid="modal-close">
-              <Text style={{
-                fontSize: 24,
-                color: iconColor,
-                fontWeight: '400',
-                lineHeight: 24,
-              }}>
+            <TouchableOpacity
+              onPress={onClose}
+              style={styles.closeButton}
+              testID="modal-close"
+              data-testid="modal-close"
+            >
+              <Text
+                style={{
+                  fontSize: 24,
+                  color: iconColor,
+                  fontWeight: "400",
+                  lineHeight: 24,
+                }}
+              >
                 ✕
               </Text>
             </TouchableOpacity>
@@ -91,7 +114,13 @@ export const ThemedModal = ({
   );
 };
 
-const getStyles = (colors, theme, headerStyle, headerBackground, headerTextColor) => {
+const getStyles = (
+  colors,
+  theme,
+  headerStyle,
+  headerBackground,
+  headerTextColor,
+) => {
   const isHeaderPrimary = headerStyle === "primary";
 
   return StyleSheet.create({

@@ -30,7 +30,6 @@ export const PrintPreview = ({
     challenges: "Challenges",
   };
 
-
   const handlePrint = async () => {
     try {
       // Generate a text version of the document
@@ -228,7 +227,6 @@ export const PrintPreview = ({
     </Modal>
   );
 };
-
 
 const getStyles = (colors) =>
   StyleSheet.create({
