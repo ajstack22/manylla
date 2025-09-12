@@ -28,6 +28,7 @@ import Icon from "./src/components/Common/IconProvider";
 
 // Platform utilities
 import { getStatusBarHeight } from "./src/utils/platformStyles";
+import { isWeb, isAndroid, isMobile } from "./src/utils/platform";
 // Shared imports
 import { ThemeProvider, SyncProvider, useSync, useTheme } from "./src/context";
 import { StorageService } from "./src/services/storage/storageService";
@@ -45,34 +46,36 @@ import { ThemedToast } from "./src/components/Toast";
 import { LoadingOverlay } from "./src/components/Loading";
 import { Header, HEADER_HEIGHT } from "./src/components/Layout";
 // Lazy load onboarding - only shown to new users
-const OnboardingScreen = lazy(() => import("./src/screens/Onboarding/OnboardingScreen"));
-// Lazy load heavy sharing components
-const PrintPreview = lazy(() => 
-  import("./src/components/Sharing").then(module => ({ 
-    default: module.PrintPreview 
-  }))
+const OnboardingScreen = lazy(
+  () => import("./src/screens/Onboarding/OnboardingScreen"),
 );
-const QRCodeModal = lazy(() => 
-  import("./src/components/Sharing").then(module => ({ 
-    default: module.QRCodeModal 
-  }))
+// Lazy load heavy sharing components
+const PrintPreview = lazy(() =>
+  import("./src/components/Sharing").then((module) => ({
+    default: module.PrintPreview,
+  })),
+);
+const QRCodeModal = lazy(() =>
+  import("./src/components/Sharing").then((module) => ({
+    default: module.QRCodeModal,
+  })),
 );
 
 // Import Share and Sync dialogs - lazy loaded for better performance
-const ShareDialogOptimized = lazy(() => 
-  import("./src/components/Sharing").then(module => ({ 
-    default: module.ShareDialogOptimized 
-  }))
+const ShareDialogOptimized = lazy(() =>
+  import("./src/components/Sharing").then((module) => ({
+    default: module.ShareDialogOptimized,
+  })),
 );
-const SyncDialog = lazy(() => 
-  import("./src/components/Sync").then(module => ({ 
-    default: module.SyncDialog 
-  }))
+const SyncDialog = lazy(() =>
+  import("./src/components/Sync").then((module) => ({
+    default: module.SyncDialog,
+  })),
 );
 
 // Icon imports - must be after other imports due to conditional requires
 let EditIcon, DeleteIcon;
-if (Platform.OS === "web") {
+if (isWeb) {
   // Use Material-UI icons for web
   const MuiIcons = require("@mui/icons-material");
   EditIcon = MuiIcons.Edit;
@@ -92,7 +95,7 @@ if (Platform.OS === "web") {
 let GestureHandlerRootView = View; // Default to View
 let SafeAreaProvider = ({ children }) => children; // Default passthrough
 
-if (Platform.OS !== "web") {
+if (isMobile) {
   // Mobile-only imports
   try {
     const GestureHandler = require("react-native-gesture-handler");
@@ -118,7 +121,7 @@ if (typeof CategoryManager === "undefined")
   console.error("CategoryManager is undefined");
 
 // Web-specific early sync data capture (from StackMap pattern)
-if (Platform.OS === "web" && typeof window !== "undefined") {
+if (isWeb && typeof window !== "undefined") {
   // Check for share URL pattern
   const pathname = window.location.pathname;
   const shareMatch = pathname.match(/\/share\/([a-zA-Z0-9-]+)/);
@@ -189,7 +192,7 @@ const ProfileOverview = ({
 
   // Add scroll listener for web with throttling
   useEffect(() => {
-    if (Platform.OS === "web" && onScrollChange) {
+    if (isWeb && onScrollChange) {
       let ticking = false;
       let lastKnownScrollY = 0;
 
@@ -269,7 +272,7 @@ const ProfileOverview = ({
 
   // Track scroll position for header profile display
   const handleScroll = (event) => {
-    if (Platform.OS === "web" && onScrollChange) {
+    if (isWeb && onScrollChange) {
       // For React Native Web, contentOffset might not work properly
       const scrollY =
         event.nativeEvent.contentOffset?.y ||
@@ -381,7 +384,7 @@ const ProfileOverview = ({
                                   accessibilityLabel={`Edit ${entry.title}`}
                                   accessibilityRole="button"
                                 >
-                                  {Platform.OS === "web" ? (
+                                  {isWeb ? (
                                     <EditIcon
                                       sx={{ fontSize: 20, color: "#666" }}
                                     />
@@ -391,7 +394,7 @@ const ProfileOverview = ({
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                   onPress={() => {
-                                    if (Platform.OS === "web") {
+                                    if (isWeb) {
                                       if (
                                         window.confirm(
                                           "Are you sure you want to delete this entry?",
@@ -419,7 +422,7 @@ const ProfileOverview = ({
                                   accessibilityLabel={`Delete ${entry.title}`}
                                   accessibilityRole="button"
                                 >
-                                  {Platform.OS === "web" ? (
+                                  {isWeb ? (
                                     <DeleteIcon
                                       sx={{
                                         fontSize: 20,
@@ -473,7 +476,7 @@ const ProfileOverview = ({
                   const categoryStyle = [
                     styles.categorySection,
                     windowWidth > 768 &&
-                      Platform.OS === "web" && {
+                      isWeb && {
                         width: "calc(50% - 12px)",
                         marginHorizontal: 6,
                       },
@@ -517,7 +520,7 @@ const ProfileOverview = ({
                                     accessibilityLabel={`Edit ${entry.title}`}
                                     accessibilityRole="button"
                                   >
-                                    {Platform.OS === "web" ? (
+                                    {isWeb ? (
                                       <EditIcon
                                         sx={{ fontSize: 20, color: "#666" }}
                                       />
@@ -527,7 +530,7 @@ const ProfileOverview = ({
                                   </TouchableOpacity>
                                   <TouchableOpacity
                                     onPress={() => {
-                                      if (Platform.OS === "web") {
+                                      if (isWeb) {
                                         if (
                                           window.confirm(
                                             "Are you sure you want to delete this entry?",
@@ -555,7 +558,7 @@ const ProfileOverview = ({
                                     accessibilityLabel={`Delete ${entry.title}`}
                                     accessibilityRole="button"
                                   >
-                                    {Platform.OS === "web" ? (
+                                    {isWeb ? (
                                       <DeleteIcon
                                         sx={{
                                           fontSize: 20,
@@ -642,10 +645,12 @@ function AppContent() {
 
   // Configure StatusBar for Android
   useEffect(() => {
-    if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor('transparent');
+    if (isAndroid) {
+      StatusBar.setBackgroundColor("transparent");
       StatusBar.setTranslucent(true);
-      StatusBar.setBarStyle(theme === 'dark' ? 'light-content' : 'dark-content');
+      StatusBar.setBarStyle(
+        theme === "dark" ? "light-content" : "dark-content",
+      );
     }
   }, [theme]);
 
@@ -684,7 +689,7 @@ function AppContent() {
 
   // Update document title on web
   useEffect(() => {
-    if (Platform.OS === "web" && profile) {
+    if (isWeb && profile) {
       document.title = `manylla - ${profile.preferredName || profile.name}`;
     }
   }, [profile]);
@@ -1361,13 +1366,12 @@ function AppContent() {
 // Create styles function that accepts colors
 const createStyles = (colors, theme) => {
   // Base text style with Atkinson Hyperlegible font
-  const baseTextStyle =
-    Platform.OS === "web"
-      ? {
-          fontFamily:
-            '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
-        }
-      : {};
+  const baseTextStyle = isWeb
+    ? {
+        fontFamily:
+          '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
+      }
+    : {};
 
   return StyleSheet.create({
     container: {
@@ -1449,10 +1453,10 @@ const createStyles = (colors, theme) => {
     },
     profileCardDesktop: {
       margin: 0,
-      marginRight: Platform.OS === "web" ? 6 : "1%",
+      marginRight: isWeb ? 6 : "1%",
       flex: 0,
       // 1/3 width for photo panel, accounting for gap
-      width: Platform.OS === "web" ? "calc(33.333% - 8px)" : "32%",
+      width: isWeb ? "calc(33.333% - 8px)" : "32%",
       minWidth: 280,
       justifyContent: "center",
       alignSelf: "stretch", // Match height of Quick Info
@@ -1536,7 +1540,7 @@ const createStyles = (colors, theme) => {
     quickInfoDesktop: {
       // Standalone styles for desktop Quick Info (not inheriting from categorySection)
       flex: 1,
-      marginLeft: Platform.OS === "web" ? 6 : "1%",
+      marginLeft: isWeb ? 6 : "1%",
       display: "flex",
       flexDirection: "column",
       alignSelf: "stretch", // Match height of profile card
@@ -1563,13 +1567,13 @@ const createStyles = (colors, theme) => {
       paddingVertical: 12,
       backgroundColor: (() => {
         // Create proper shading for each theme
-        if (theme === 'dark') {
-          return '#1F1F1F'; // Slightly darker than dark paper (#2A2A2A)
-        } else if (theme === 'light') {
-          return '#F8F8F8'; // Slightly gray tinted for light mode
+        if (theme === "dark") {
+          return "#1F1F1F"; // Slightly darker than dark paper (#2A2A2A)
+        } else if (theme === "light") {
+          return "#F8F8F8"; // Slightly gray tinted for light mode
         } else {
           // Manylla theme already has good distinction
-          return colors.background.secondary || '#F2E6D5';
+          return colors.background.secondary || "#F2E6D5";
         }
       })(),
       borderBottomWidth: 1,
@@ -1672,7 +1676,7 @@ const createStyles = (colors, theme) => {
       lineHeight: 20,
     },
     fab: {
-      position: Platform.OS === "web" ? "fixed" : "absolute",
+      position: isWeb ? "fixed" : "absolute",
       bottom: 24,
       right: 24,
       width: 56,
@@ -1766,8 +1770,8 @@ let styles = createStyles(defaultColors);
 
 // Main App wrapper
 function App() {
-  const RootView = Platform.OS === "web" ? View : GestureHandlerRootView;
-  const AppWrapper = Platform.OS === "web" ? View : SafeAreaProvider;
+  const RootView = isWeb ? View : GestureHandlerRootView;
+  const AppWrapper = isWeb ? View : SafeAreaProvider;
 
   return (
     <AppWrapper>
