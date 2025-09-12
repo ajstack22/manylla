@@ -92,6 +92,12 @@ module.exports = {
   },
   resolve: {
     alias: {
+      '@platform': path.resolve(__dirname, 'src/utils/platform'),
+      '@utils': path.resolve(__dirname, 'src/utils'),
+      '@components': path.resolve(__dirname, 'src/components'),
+      '@hooks': path.resolve(__dirname, 'src/hooks'),
+      '@services': path.resolve(__dirname, 'src/services'),
+      '@context': path.resolve(__dirname, 'src/context'),
       'react-native$': 'react-native-web',
       '@react-native-async-storage/async-storage': path.resolve(__dirname, 'src/services/webStorage.js'),
       'react-native-vector-icons/MaterialIcons': 'react-native-vector-icons/dist/MaterialIcons',
@@ -102,7 +108,7 @@ module.exports = {
       'react-native-view-shot': false,
       'react-native-html-to-pdf': false,
     },
-    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.js', '.jsx', '.ts', '.tsx'],
+    extensions: ['.web.js', '.js', '.json'],
   },
   plugins: [
     // Ignore .native files when building for web

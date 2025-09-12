@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@platform": ["src/utils/platform"],
+      "@platform/*": ["src/utils/platform/*"],
+      "@utils": ["src/utils"],
+      "@utils/*": ["src/utils/*"],
+      "@components": ["src/components"],
+      "@components/*": ["src/components/*"],
+      "@hooks": ["src/hooks"],
+      "@hooks/*": ["src/hooks/*"],
+      "@services": ["src/services"],
+      "@services/*": ["src/services/*"],
+      "@context": ["src/context"],
+      "@context/*": ["src/context/*"],
+      "@screens": ["src/screens"],
+      "@screens/*": ["src/screens/*"],
+      "@navigation": ["src/navigation"],
+      "@navigation/*": ["src/navigation/*"],
+      "@types": ["src/types"],
+      "@types/*": ["src/types/*"],
+      "@constants": ["src/constants"],
+      "@constants/*": ["src/constants/*"]
+    }
+  },
+  "exclude": ["node_modules", "build", "web/build"]
+}
