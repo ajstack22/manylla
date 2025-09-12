@@ -219,6 +219,20 @@ class ManyllaEncryptionService {
   }
 
   /**
+   * Alias for encryptData() to maintain backward compatibility
+   */
+  encrypt(data) {
+    return this.encryptData(data);
+  }
+
+  /**
+   * Alias for decryptData() to maintain backward compatibility
+   */
+  decrypt(encryptedPayload) {
+    return this.decryptData(encryptedPayload);
+  }
+
+  /**
    * Encrypt Manylla profile data
    */
   encryptData(data) {
