@@ -186,7 +186,7 @@ describe("Platform Integration Tests", () => {
 
         // Test platform-specific shadow implementations
         expect(elevation).toBeGreaterThanOrEqual(0);
-        
+
         // All platforms provide valid style objects
         expect(iosShadow).toBeInstanceOf(Object);
         expect(androidShadow).toBeInstanceOf(Object);
