@@ -288,10 +288,9 @@ class ManyllaEncryptionService {
     }
 
     // Handle both string and object formats for compatibility
-    const encryptedString = typeof encryptedData === 'string' 
-      ? encryptedData 
-      : encryptedData.data;
-    
+    const encryptedString =
+      typeof encryptedData === "string" ? encryptedData : encryptedData.data;
+
     if (!encryptedString) {
       throw new Error("No encrypted data found");
     }
