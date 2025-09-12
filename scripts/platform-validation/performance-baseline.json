@@ -1,0 +1,22 @@
+{
+  "timestamp": "2025-09-12T01:49:07.340Z",
+  "importTime": -1,
+  "functionPerformance": {
+    "select": -1,
+    "shadow": -1,
+    "font": -1
+  },
+  "memoryUsage": {
+    "rss": 41533440,
+    "heapTotal": 5603328,
+    "heapUsed": 4676720,
+    "external": 1691261,
+    "arrayBuffers": 40181
+  },
+  "bundleSize": {
+    "total": 14.458441734313965,
+    "javascript": 0,
+    "css": 0
+  },
+  "rnBundleMetrics": null
+}
