@@ -1,5 +1,27 @@
 # Manylla Release Notes
 
+## Version 2025.09.12.6 - 2025-09-12
+API Integration and Encryption Fixes
+
+### Summary
+Fixed critical encryption issues and simplified API structure for mobile-web compatibility
+
+### Fixed
+- Removed nacl.auth usage that was causing "nacl.auth is not a function" error on web
+- Fixed duplicate variable declaration in decryptData method
+- Simplified encryption to use nacl.secretbox's built-in MAC (no separate HMAC needed)
+
+### Changed  
+- API endpoints moved directly to /api/ folder (not nested in /api/sync/)
+- sync_push.php now accepts 'data' field from mobile app (not 'encrypted_data')
+- sync_pull.php returns simplified {success, data} format for mobile compatibility
+- Made device_id optional with 'mobile_device' default
+
+### Technical
+- Aligned with StackMap's simpler API structure pattern
+- Maintains zero-knowledge encryption while fixing compatibility issues
+- Ready for qual testing with PHP endpoints
+
 ## Version 2025.09.12.5 - 2025-09-12
 Native Sync Implementation - S002 Complete
 
