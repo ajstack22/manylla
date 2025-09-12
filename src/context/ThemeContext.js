@@ -4,7 +4,7 @@
  */
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { Platform } from "react-native";
+import platform from '../utils/platform';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Theme colors (Manila envelope inspired) - EXACT values as required
@@ -102,7 +102,7 @@ const ThemeContext = createContext(undefined);
 
 // Platform-specific storage functions
 const getStorageItem = async (key) => {
-  if (Platform.OS === "web") {
+  if (platform.isWeb) {
     return localStorage.getItem(key);
   } else {
     return await AsyncStorage.getItem(key);
@@ -110,7 +110,7 @@ const getStorageItem = async (key) => {
 };
 
 const setStorageItem = async (key, value) => {
-  if (Platform.OS === "web") {
+  if (platform.isWeb) {
     localStorage.setItem(key, value);
   } else {
     await AsyncStorage.setItem(key, value);

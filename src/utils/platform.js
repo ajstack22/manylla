@@ -372,7 +372,9 @@ export const share = async (data) => {
   }
   
   // Fallback: copy to clipboard
-  const shareText = `${title}\n${message}\n${url}`;
+  const shareText = `${title}
+${message}
+${url}`;
   return copyToClipboard(shareText);
 };
 

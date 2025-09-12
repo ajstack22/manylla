@@ -1,6 +1,6 @@
-import { Platform } from "react-native";
+import platform from '../../utils/platform';
 
 export const UnifiedAddDialog =
-  Platform.OS === "web"
+  platform.isWeb
     ? require("./UnifiedAddDialog").UnifiedAddDialog
     : require("./UnifiedAddDialog.native").UnifiedAddDialog;

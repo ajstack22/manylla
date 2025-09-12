@@ -1,9 +1,10 @@
 import React, { lazy, Suspense } from "react";
-import { Platform, View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator } from 'react-native';
+import platform from './platform';
 
 // Simple lazy loading wrapper for web
 export const lazyLoad = (importFunc) => {
-  if (Platform.OS === "web") {
+  if (platform.isWeb) {
     const LazyComponent = lazy(importFunc);
 
     return (props) => (

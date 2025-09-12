@@ -197,27 +197,42 @@ export const PrintPreview = ({
   };
 
   const generateTextContent = () => {
-    let content = `${childName} - Information Summary\n`;
-    content += `Prepared on ${new Date().toLocaleDateString()}\n`;
+    let content = `${childName} - Information Summary
+`;
+    content += `Prepared on ${new Date().toLocaleDateString()}
+`;
     if (recipientName) {
-      content += `For: ${recipientName}\n`;
+      content += `For: ${recipientName}
+`;
     }
-    content += "\n---\n\n";
+    content += "
+---
+
+";
 
     if (note) {
-      content += `Note: ${note}\n\n`;
+      content += `Note: ${note}
+
+`;
     }
 
     selectedCategories.forEach((category) => {
       const categoryEntries = entries[category] || [];
       if (categoryEntries.length > 0) {
-        content += `${category.toUpperCase()}\n`;
-        content += "=".repeat(category.length) + "\n\n";
+        content += `${category.toUpperCase()}
+`;
+        content += "=".repeat(category.length) + "
+
+";
 
         categoryEntries.forEach((entry, index) => {
-          content += `${index + 1}. ${entry.title}\n`;
-          content += `   ${entry.description}\n`;
-          content += `   Date: ${new Date(entry.date).toLocaleDateString()}\n\n`;
+          content += `${index + 1}. ${entry.title}
+`;
+          content += `   ${entry.description}
+`;
+          content += `   Date: ${new Date(entry.date).toLocaleDateString()}
+
+`;
         });
       }
     });

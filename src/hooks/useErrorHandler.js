@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Platform } from "react-native";
+import platform from '../utils/platform';
 import {
   ErrorHandler,
   StorageError,
@@ -49,7 +49,7 @@ const sendErrorReport = async (errorData) => {
   });
 
   // In the future, this could send to an error tracking service
-  if (Platform.OS === "web" && typeof window !== "undefined") {
+  if (platform.isWeb && typeof window !== "undefined") {
     // Could integrate with Sentry or similar service here
     if (window.Sentry) {
       window.Sentry.captureException(normalizedError, {
@@ -88,7 +88,7 @@ export const useErrorHandler = () => {
 
     // Log to service
     if (
-      Platform.OS === "web" &&
+      platform.isWeb &&
       typeof window !== "undefined" &&
       window.Sentry
     ) {
@@ -121,7 +121,7 @@ export const useErrorHandler = () => {
     } catch (recoveryError) {
       console.error("Recovery failed:", recoveryError);
       // Force reload as last resort
-      if (Platform.OS === "web" && typeof window !== "undefined") {
+      if (platform.isWeb && typeof window !== "undefined") {
         window.location.reload();
       }
     }

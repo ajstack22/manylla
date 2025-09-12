@@ -81,7 +81,7 @@ const getStyles = (colors, theme, headerStyle) => {
         ? colors.primary
         : colors.background.paper,
       paddingHorizontal: 16,
-      paddingVertical: Platform.select({
+      paddingVertical: platform.select({
         ios: 16,
         android: 16,
         web: 14,
@@ -90,7 +90,7 @@ const getStyles = (colors, theme, headerStyle) => {
       borderBottomColor: isHeaderPrimary ? "transparent" : colors.border,
       // Add subtle shadow for depth
       ...getShadowStyle(3),
-      ...Platform.select({
+      ...platform.select({
         web: {
           boxShadow:
             theme === "dark"
@@ -100,7 +100,7 @@ const getStyles = (colors, theme, headerStyle) => {
       }),
     },
     headerTitle: {
-      fontSize: Platform.select({
+      fontSize: platform.select({
         ios: 18,
         android: 18,
         web: 17,
@@ -109,7 +109,7 @@ const getStyles = (colors, theme, headerStyle) => {
       color: isHeaderPrimary ? colors.background.paper : colors.text.primary,
       flex: 1,
       textAlign: "center",
-      letterSpacing: Platform.select({
+      letterSpacing: platform.select({
         ios: 0.35,
         android: 0.25,
         web: 0.15,
@@ -127,7 +127,7 @@ const getStyles = (colors, theme, headerStyle) => {
     closeButtonText: {
       fontSize: 22,
       color: isHeaderPrimary ? colors.background.paper : colors.text.secondary,
-      fontWeight: Platform.select({
+      fontWeight: platform.select({
         ios: "400",
         android: "400",
         web: "300",
@@ -144,3 +144,5 @@ const getStyles = (colors, theme, headerStyle) => {
 };
 
 export default ThemedModal;
+
+import platform from '../../utils/platform';

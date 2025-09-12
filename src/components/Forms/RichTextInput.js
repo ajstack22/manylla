@@ -172,7 +172,7 @@ export const RichTextInput = ({
               textAlignVertical: multiline ? "top" : "center",
             },
             getTextStyle("input"), // Force black text on Android
-            Platform.OS === "android" && { color: "#000000" }, // Extra insurance
+            platform.isAndroid && { color: "#000000" }, // Extra insurance
           ]}
           value={value}
           onChangeText={handleInput}
@@ -183,7 +183,7 @@ export const RichTextInput = ({
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
           placeholderTextColor={
-            Platform.OS === "android" ? "#999" : colors.textSecondary
+            platform.isAndroid ? "#999" : colors.textSecondary
           }
           multiline={multiline}
           numberOfLines={multiline ? rows : 1}
@@ -242,3 +242,5 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 });
+
+import platform from '../../utils/platform';

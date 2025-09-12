@@ -22,7 +22,8 @@ export const MarkdownRenderer = ({ content, variant = "body2" }) => {
     if (!text) return [];
 
     const elements = [];
-    const lines = text.split("\n");
+    const lines = text.split("
+");
     let key = 0;
 
     lines.forEach((line, index) => {

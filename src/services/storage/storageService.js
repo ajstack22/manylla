@@ -3,7 +3,7 @@
  * Works on iOS, Android, and Web
  */
 
-import { Platform } from "react-native";
+import platform from '../../utils/platform';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export class StorageService {
@@ -13,7 +13,7 @@ export class StorageService {
     try {
       let profileData;
 
-      if (Platform.OS === "web") {
+      if (platform.isWeb) {
         // Web uses localStorage
         profileData = localStorage.getItem(this.PROFILE_KEY);
       } else {
@@ -54,7 +54,7 @@ export class StorageService {
     try {
       const profileData = JSON.stringify(profile);
 
-      if (Platform.OS === "web") {
+      if (platform.isWeb) {
         localStorage.setItem(this.PROFILE_KEY, profileData);
       } else {
         await AsyncStorage.setItem(this.PROFILE_KEY, profileData);
@@ -66,7 +66,7 @@ export class StorageService {
 
   static async clearProfile() {
     try {
-      if (Platform.OS === "web") {
+      if (platform.isWeb) {
         localStorage.removeItem(this.PROFILE_KEY);
         localStorage.removeItem("manylla_onboarding_completed");
       } else {

@@ -27,7 +27,7 @@ import { getStatusBarHeight } from "../../utils/platformStyles";
 
 // Define consistent header height
 const statusBarHeight = getStatusBarHeight();
-export const HEADER_HEIGHT = Platform.select({
+export const HEADER_HEIGHT = platform.select({
   web: 64,
   ios: 88, // Account for status bar
   android: 56 + statusBarHeight, // Add status bar height
@@ -66,7 +66,7 @@ const Header = ({
   // Determine if we should show hamburger menu
   // On mobile (native) always show hamburger
   // On web, show hamburger when width < 768px (tablet breakpoint)
-  const showHamburger = Platform.OS !== "web" || windowWidth < 768;
+  const showHamburger = !platform.isWeb || windowWidth < 768;
 
   const menuItems = [
     {
@@ -148,7 +148,7 @@ const Header = ({
   // Debug logging removed for production
 
   // Platform-specific container styles
-  const headerContainerStyle = Platform.select({
+  const headerContainerStyle = platform.select({
     web: {
       ...styles.container,
       position: "fixed",
@@ -172,7 +172,7 @@ const Header = ({
         <View style={styles.content}>
           <View style={styles.left}>
             {/* Transition between logo and profile with fade animation */}
-            {Platform.OS === "web" ? (
+            {platform.isWeb ? (
               <View style={styles.transitionContainer}>
                 {/* Manylla logo - fades out when profile is hidden */}
                 <View
@@ -215,7 +215,7 @@ const Header = ({
                         <Image
                           source={{
                             uri:
-                              Platform.OS === "ios" &&
+                              platform.isIOS &&
                               profile.photo.startsWith("/")
                                 ? `https://manylla.com/qual${profile.photo}` // Convert relative path to absolute URL for iOS
                                 : profile.photo,
@@ -255,7 +255,7 @@ const Header = ({
                         <Image
                           source={{
                             uri:
-                              Platform.OS === "ios" &&
+                              platform.isIOS &&
                               profile.photo.startsWith("/")
                                 ? `https://manylla.com/qual${profile.photo}` // Convert relative path to absolute URL for iOS
                                 : profile.photo,
@@ -395,7 +395,7 @@ const createStyles = (colors) =>
       borderBottomWidth: 1,
       borderBottomColor: colors.divider,
       justifyContent: "center",
-      ...Platform.select({
+      ...platform.select({
         ios: {
           paddingTop: 44, // Status bar height on iOS
         },
@@ -428,7 +428,7 @@ const createStyles = (colors) =>
       fontSize: 24,
       fontWeight: "600",
       color: colors.primary || "#A08670",
-      ...Platform.select({
+      ...platform.select({
         web: {
           fontFamily:
             '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
@@ -445,7 +445,7 @@ const createStyles = (colors) =>
       justifyContent: "center",
       alignItems: "center",
       boxShadow: "0 0 0 3px " + colors.background.paper + ", 0 0 0 5px #CC0000",
-      ...Platform.select({
+      ...platform.select({
         web: {
           position: "relative",
         },
@@ -455,7 +455,7 @@ const createStyles = (colors) =>
       color: colors.background.paper,
       fontSize: 20,
       fontWeight: "600",
-      ...Platform.select({
+      ...platform.select({
         web: {
           fontFamily:
             '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
@@ -479,7 +479,7 @@ const createStyles = (colors) =>
       alignItems: "center",
       padding: 0, // Remove padding for better alignment
       borderRadius: 8,
-      ...Platform.select({
+      ...platform.select({
         web: {
           cursor: "pointer",
           ":hover": {
@@ -503,7 +503,7 @@ const createStyles = (colors) =>
       justifyContent: "center",
       alignItems: "center",
       boxShadow: "0 0 0 3px " + colors.background.paper + ", 0 0 0 5px #CC0000",
-      ...Platform.select({
+      ...platform.select({
         web: {
           position: "relative",
         },
@@ -519,7 +519,7 @@ const createStyles = (colors) =>
       fontWeight: "600",
       color: colors.primary || "#A08670",
       maxWidth: 200,
-      ...Platform.select({
+      ...platform.select({
         web: {
           fontFamily:
             '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
@@ -534,7 +534,7 @@ const createStyles = (colors) =>
     iconButton: {
       padding: 8,
       borderRadius: 8,
-      ...Platform.select({
+      ...platform.select({
         web: {
           cursor: "pointer",
           transition: "background-color 0.2s",
@@ -590,3 +590,5 @@ const createStyles = (colors) =>
   });
 
 export default Header;
+
+import platform from '../../utils/platform';

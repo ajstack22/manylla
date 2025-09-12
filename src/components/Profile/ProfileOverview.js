@@ -69,13 +69,13 @@ export const ProfileOverview = ({
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      padding: Platform.OS === "web" ? 24 : 16,
+      padding: platform.isWeb ? 24 : 16,
     },
     profileCard: {
       backgroundColor: "#FFFFFF",
       borderRadius: 12,
-      padding: Platform.OS === "web" ? 24 : 20,
-      marginBottom: Platform.OS === "web" ? 24 : 16,
+      padding: platform.isWeb ? 24 : 20,
+      marginBottom: platform.isWeb ? 24 : 16,
       shadowColor: "#000",
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
@@ -163,14 +163,14 @@ export const ProfileOverview = ({
       marginBottom: 24,
     },
     categoryWrapper: {
-      width: Platform.OS === "web" && width > 768 ? "48%" : "100%",
-      marginRight: Platform.OS === "web" && width > 768 ? "2%" : 0,
+      width: platform.isWeb && width > 768 ? "48%" : "100%",
+      marginRight: platform.isWeb && width > 768 ? "2%" : 0,
       marginBottom: 16,
     },
     fab: {
       position: "fixed",
-      bottom: Platform.OS === "web" ? 24 : 16,
-      right: Platform.OS === "web" ? 24 : 16,
+      bottom: platform.isWeb ? 24 : 16,
+      right: platform.isWeb ? 24 : 16,
       width: 56,
       height: 56,
       borderRadius: 28,
@@ -202,7 +202,7 @@ export const ProfileOverview = ({
               <Image
                 source={{
                   uri:
-                    Platform.OS === "ios" && profile.photo.startsWith("/")
+                    platform.isIOS && profile.photo.startsWith("/")
                       ? `https://manylla.com/qual${profile.photo}` // Convert relative path to absolute URL for iOS
                       : profile.photo,
                 }}
@@ -292,3 +292,5 @@ export const ProfileOverview = ({
     </ScrollView>
   );
 };
+
+import platform from '../../utils/platform';

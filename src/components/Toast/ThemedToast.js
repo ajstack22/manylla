@@ -92,7 +92,7 @@ export const ThemedToast = ({
   const styles = StyleSheet.create({
     container: {
       position: "absolute",
-      bottom: Platform.OS === "web" ? 24 : 50,
+      bottom: platform.isWeb ? 24 : 50,
       left: 20,
       right: 20,
       alignItems: "center",
@@ -172,3 +172,5 @@ export const ThemedToast = ({
     </View>
   );
 };
+
+import platform from '../../utils/platform';

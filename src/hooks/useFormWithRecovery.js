@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Platform } from "react-native";
+import platform from '../utils/platform';
 import { ValidationError, ErrorHandler } from "../utils/errors";
 import { getErrorMessage, formatFieldName } from "../utils/errorMessages";
 import { showToast } from "../components/Toast/ToastManager";
@@ -59,7 +59,7 @@ export const useFormWithRecovery = (
     try {
       let savedDraft;
 
-      if (Platform.OS === "web") {
+      if (platform.isWeb) {
         const draftString = localStorage.getItem(draftKey);
         savedDraft = draftString ? JSON.parse(draftString) : null;
       } else {
@@ -107,7 +107,7 @@ export const useFormWithRecovery = (
           timestamp: Date.now(),
         };
 
-        if (Platform.OS === "web") {
+        if (platform.isWeb) {
           localStorage.setItem(draftKey, JSON.stringify(draftData));
         } else {
           const AsyncStorage =
@@ -130,7 +130,7 @@ export const useFormWithRecovery = (
   // Clear draft from storage
   const clearDraft = useCallback(async () => {
     try {
-      if (Platform.OS === "web") {
+      if (platform.isWeb) {
         localStorage.removeItem(draftKey);
       } else {
         const AsyncStorage =
@@ -367,11 +367,11 @@ export const useFormWithRecovery = (
       value: values[name] || "",
       error: touched[name] ? errors[name] : null,
       onChangeText:
-        Platform.OS === "web"
+        platform.isWeb
           ? undefined
           : (value) => handleChange(name, value),
       onChange:
-        Platform.OS === "web"
+        platform.isWeb
           ? (e) => handleChange(name, e.target.value)
           : undefined,
       onBlur: () => handleBlur(name),

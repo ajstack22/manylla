@@ -231,7 +231,7 @@ export const QuickInfoManager = ({
     >
       <KeyboardAvoidingView
         style={styles.modalOverlay}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={platform.isIOS ? "padding" : "height"}
       >
         <View style={styles.editDialogContent}>
           <Text style={styles.editDialogTitle}>
@@ -274,7 +274,7 @@ export const QuickInfoManager = ({
   return (
     <KeyboardAvoidingView
       style={styles.overlay}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={platform.isIOS ? "padding" : "height"}
     >
       <View style={styles.container}>
         {/* Header */}
@@ -581,3 +581,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+import platform from '../../utils/platform';

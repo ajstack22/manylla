@@ -1,8 +1,8 @@
-import { Platform } from "react-native";
+import platform from '../../utils/platform';
 
 let DatePicker;
 
-if (Platform.OS === "web") {
+if (platform.isWeb) {
   DatePicker = require("./DatePicker.web").default;
 } else {
   DatePicker = require("./DatePicker.native").default;

@@ -108,7 +108,7 @@ export const SharedProfileView = ({ isAuthenticated = false }) => {
                   styles.accessCodeInput,
                   error ? styles.inputError : null,
                   getTextStyle("input"),
-                  Platform.OS === "android" && { color: "#000000" },
+                  platform.isAndroid && { color: "#000000" },
                 ]}
                 value={accessCode}
                 onChangeText={(text) => {
@@ -117,7 +117,7 @@ export const SharedProfileView = ({ isAuthenticated = false }) => {
                 }}
                 placeholder="Enter 6-character code"
                 placeholderTextColor={
-                  Platform.OS === "android" ? "#999" : undefined
+                  platform.isAndroid ? "#999" : undefined
                 }
                 placeholderTextColor={colors.textSecondary}
                 autoCapitalize="characters"
@@ -547,3 +547,5 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 });
+
+import platform from '../../utils/platform';

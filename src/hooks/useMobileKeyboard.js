@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
-import { Dimensions, Platform, Keyboard } from "react-native";
+import { Dimensions, Keyboard } from 'react-native';
+import platform from '../utils/platform';
 
 export const useMobileKeyboard = (options = {}) => {
   const { width } = Dimensions.get("window");
@@ -16,7 +17,7 @@ export const useMobileKeyboard = (options = {}) => {
     let keyboardDidShowListener;
     let keyboardDidHideListener;
 
-    if (Platform.OS === "ios") {
+    if (platform.isIOS) {
       keyboardDidShowListener = Keyboard.addListener(
         "keyboardWillShow",
         (e) => {
@@ -40,7 +41,7 @@ export const useMobileKeyboard = (options = {}) => {
     }
 
     // Fallback for web platform
-    if (Platform.OS === "web") {
+    if (platform.isWeb) {
       let lastViewportHeight =
         window.visualViewport?.height || window.innerHeight;
 

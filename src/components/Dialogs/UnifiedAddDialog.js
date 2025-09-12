@@ -53,7 +53,7 @@ export const UnifiedAddDialog = ({
   existingItems = [],
 }) => {
   const { theme } = useTheme();
-  const isWeb = Platform.OS === "web";
+  const isWeb = platform.isWeb;
 
   // Quick Info state
   const [selectedOption, setSelectedOption] = useState("");
@@ -484,3 +484,5 @@ export const UnifiedAddDialog = ({
     </Modal>
   );
 };
+
+import platform from '../../utils/platform';

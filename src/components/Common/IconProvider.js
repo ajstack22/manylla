@@ -5,11 +5,12 @@
  */
 
 import React from "react";
-import { Platform, Text } from "react-native";
+import { Text } from 'react-native';
+import platform from '../../utils/platform';
 
 // Native icons from react-native-vector-icons
 let MaterialIcons = null;
-if (Platform.OS !== "web") {
+if (platform.isMobile) {
   try {
     MaterialIcons = require("react-native-vector-icons/MaterialIcons").default;
   } catch (e) {}
@@ -17,7 +18,7 @@ if (Platform.OS !== "web") {
 
 // Web icons from Material-UI
 let MUIIcons = {};
-if (Platform.OS === "web") {
+if (platform.isWeb) {
   MUIIcons = {
     // Navigation & Actions
     Menu: require("@mui/icons-material/Menu").default,
@@ -214,14 +215,14 @@ const iconNameMap = {
 
 // Base Icon Component
 const Icon = ({ name, size = 24, color = "#000000", style, ...props }) => {
-  if (Platform.OS === "web" && MUIIcons[name]) {
+  if (platform.isWeb && MUIIcons[name]) {
     const IconComponent = MUIIcons[name];
     return (
       <IconComponent style={{ fontSize: size, color, ...style }} {...props} />
     );
   }
 
-  if (Platform.OS !== "web" && MaterialIcons && iconNameMap[name]) {
+  if (!platform.isWeb && MaterialIcons && iconNameMap[name]) {
     return (
       <MaterialIcons
         name={iconNameMap[name]}

@@ -1,3 +1,5 @@
+import platform from '../../utils/platform';
+
 // React imports
 import React, { useState } from "react";
 
@@ -36,7 +38,7 @@ import { StorageService } from "../../services/storage/storageService";
 import { unifiedCategories } from "../../utils/unifiedCategories";
 
 // Import Ellie image for React Native
-const EllieImage = Platform.OS !== "web" ? require("../../../ellie.png") : null;
+const EllieImage = !platform.isWeb ? require("../../../ellie.png") : null;
 
 // Helper function to map category IDs to icons
 const getIconForCategory = (categoryId) => {
@@ -102,7 +104,7 @@ const OnboardingScreen = ({ onComplete }) => {
   const handlePhotoPicker = () => {
     setErrorMessage(""); // Clear any previous errors
 
-    if (Platform.OS === "web") {
+    if (platform.isWeb) {
       const input = document.createElement("input");
       input.type = "file";
       input.accept = "image/*";
@@ -154,7 +156,7 @@ const OnboardingScreen = ({ onComplete }) => {
 
   // Handle date change for both web and mobile
   const handleDateChange = (value) => {
-    if (Platform.OS === "web") {
+    if (platform.isWeb) {
       setDateOfBirth(value);
     } else {
       // Mobile text input with formatting
@@ -240,7 +242,7 @@ const OnboardingScreen = ({ onComplete }) => {
       pronouns: "she/her",
       dateOfBirth: new Date("2018-06-15"),
       photo:
-        Platform.OS === "web"
+        platform.isWeb
           ? "/ellie.png"
           : Image.resolveAssetSource(EllieImage).uri,
       // Use unified categories from the shared configuration with icons added
@@ -375,7 +377,7 @@ const OnboardingScreen = ({ onComplete }) => {
     scrollContent: {
       padding: 20,
       alignItems: "center",
-      paddingTop: Platform.OS === "web" ? 60 : 40,
+      paddingTop: platform.isWeb ? 60 : 40,
     },
     logo: {
       width: 80,
@@ -584,13 +586,13 @@ const OnboardingScreen = ({ onComplete }) => {
     },
   });
 
-  const ScrollComponent = Platform.OS === "web" ? View : ScrollView;
+  const ScrollComponent = platform.isWeb ? View : ScrollView;
 
   // Render child info step
   if (step === 1) {
     return (
       <ScrollComponent
-        {...(Platform.OS !== "web" ? getScrollViewProps() : {})}
+        {...(!platform.isWeb ? getScrollViewProps() : {})}
         style={styles.container}
       >
         <View style={styles.scrollContent}>
@@ -622,7 +624,7 @@ const OnboardingScreen = ({ onComplete }) => {
                 <Image
                   source={{
                     uri:
-                      Platform.OS === "ios" && photo.startsWith("/")
+                      platform.isIOS && photo.startsWith("/")
                         ? `https://manylla.com/qual${photo}` // Convert relative path to absolute URL for iOS
                         : photo,
                   }}
@@ -650,7 +652,7 @@ const OnboardingScreen = ({ onComplete }) => {
                 <Text style={styles.clearPhotoText}>Clear photo</Text>
               </TouchableOpacity>
             )}
-            {Platform.OS !== "web" && (
+            {!platform.isWeb && (
               <Text style={styles.dateHint}>
                 Photo selection coming soon for mobile
               </Text>
@@ -663,19 +665,19 @@ const OnboardingScreen = ({ onComplete }) => {
               style={[
                 styles.input,
                 getTextStyle("input"),
-                Platform.OS === "android" && { color: "#000000" },
+                platform.isAndroid && { color: "#000000" },
               ]}
               placeholder="Enter name"
               placeholderTextColor={
-                Platform.OS === "android" ? "#999" : colors.text.disabled
+                platform.isAndroid ? "#999" : colors.text.disabled
               }
               value={childName}
               onChangeText={setChildName}
-              autoFocus={Platform.OS === "web"}
+              autoFocus={platform.isWeb}
             />
 
             <Text style={styles.label}>Date of Birth</Text>
-            {Platform.OS === "web" ? (
+            {platform.isWeb ? (
               <input
                 type="date"
                 className="date-input"
@@ -704,11 +706,11 @@ const OnboardingScreen = ({ onComplete }) => {
                 style={[
                   styles.input,
                   getTextStyle("input"),
-                  Platform.OS === "android" && { color: "#000000" },
+                  platform.isAndroid && { color: "#000000" },
                 ]}
                 placeholder="MM/DD/YYYY"
                 placeholderTextColor={
-                  Platform.OS === "android" ? "#999" : colors.text.disabled
+                  platform.isAndroid ? "#999" : colors.text.disabled
                 }
                 value={dateOfBirth}
                 onChangeText={handleDateChange}
@@ -717,7 +719,7 @@ const OnboardingScreen = ({ onComplete }) => {
                 autoComplete="off"
               />
             )}
-            {Platform.OS !== "web" && dateOfBirth.length === 0 && (
+            {!platform.isWeb && dateOfBirth.length === 0 && (
               <Text style={styles.dateHint}>
                 Type numbers and slashes will be added automatically
               </Text>
@@ -748,7 +750,7 @@ const OnboardingScreen = ({ onComplete }) => {
   // Render welcome step (step 0)
   return (
     <ScrollComponent
-      {...(Platform.OS !== "web" ? getScrollViewProps() : {})}
+      {...(!platform.isWeb ? getScrollViewProps() : {})}
       style={styles.container}
     >
       <View style={styles.scrollContent}>
@@ -764,8 +766,11 @@ const OnboardingScreen = ({ onComplete }) => {
         <View style={styles.infoBox}>
           <Text style={styles.infoTitle}>manylla helps you:</Text>
           <Text style={styles.infoText}>
-            • Track developmental milestones{"\n"}• Organize IEP goals and
-            medical records{"\n"}• Share information securely{"\n"}• Sync across
+            • Track developmental milestones{"
+"}• Organize IEP goals and
+            medical records{"
+"}• Share information securely{"
+"}• Sync across
             all your devices
           </Text>
         </View>
@@ -801,11 +806,11 @@ const OnboardingScreen = ({ onComplete }) => {
             style={[
               styles.input,
               getTextStyle("input"),
-              Platform.OS === "android" && { color: "#000000" },
+              platform.isAndroid && { color: "#000000" },
             ]}
             placeholder="Enter access code"
             placeholderTextColor={
-              Platform.OS === "android" ? "#999" : colors.text.disabled
+              platform.isAndroid ? "#999" : colors.text.disabled
             }
             value={accessCode}
             onChangeText={setAccessCode}

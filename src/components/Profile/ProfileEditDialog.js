@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   ScrollView,
   KeyboardAvoidingView,
-  Platform,
   Alert,
   StyleSheet,
   Modal,
@@ -21,6 +20,7 @@ import {
   getScrollViewProps,
   getShadowStyle,
 } from "../../utils/platformStyles";
+import platform from "../../utils/platform";
 
 export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
   const { colors } = useTheme();
@@ -39,7 +39,7 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
   const [photoPreview, setPhotoPreview] = useState(profile?.photo || "");
 
   const handlePhotoSelect = () => {
-    if (Platform.OS === "web") {
+    if (platform.isWeb) {
       // Web file input
       const input = document.createElement("input");
       input.type = "file";
@@ -164,7 +164,7 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
     >
       <KeyboardAvoidingView
         style={styles.modalBackdrop}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={platform.isIOS ? "padding" : "height"}
       >
         <View style={styles.modalContainer}>
           {/* Header */}
@@ -183,7 +183,7 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
                   <Image
                     source={{
                       uri:
-                        Platform.OS === "ios" && photoPreview.startsWith("/")
+                        platform.isIOS && photoPreview.startsWith("/")
                           ? `https://manylla.com/qual${photoPreview}` // Convert relative path to absolute URL for iOS
                           : photoPreview,
                     }}
@@ -218,7 +218,7 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
                 style={[
                   styles.modalInput,
                   getTextStyle("input"),
-                  Platform.OS === "android" && { color: "#000000" },
+                  platform.isAndroid && { color: "#000000" },
                 ]}
                 value={formData.name}
                 onChangeText={(value) =>
@@ -236,7 +236,7 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
                 style={[
                   styles.modalInput,
                   getTextStyle("input"),
-                  Platform.OS === "android" && { color: "#000000" },
+                  platform.isAndroid && { color: "#000000" },
                 ]}
                 value={formData.preferredName}
                 onChangeText={(value) =>
@@ -267,9 +267,9 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
                 <DateTimePicker
                   value={formData.dateOfBirth}
                   mode="date"
-                  display={Platform.OS === "ios" ? "spinner" : "default"}
+                  display={platform.isIOS ? "spinner" : "default"}
                   onChange={(event, selectedDate) => {
-                    setShowDatePicker(Platform.OS === "ios");
+                    setShowDatePicker(platform.isIOS);
                     if (selectedDate) {
                       setFormData({ ...formData, dateOfBirth: selectedDate });
                     }
@@ -286,7 +286,7 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
                 style={[
                   styles.modalInput,
                   getTextStyle("input"),
-                  Platform.OS === "android" && { color: "#000000" },
+                  platform.isAndroid && { color: "#000000" },
                 ]}
                 value={formData.pronouns}
                 onChangeText={(value) =>
@@ -321,12 +321,12 @@ const getStyles = (colors) =>
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundColor: Platform.select({
+      backgroundColor: platform.select({
         web: "rgba(0, 0, 0, 0.5)",
         ios: "rgba(0, 0, 0, 0.4)",
         android: "rgba(0, 0, 0, 0.5)",
       }),
-      ...Platform.select({
+      ...platform.select({
         web: {
           backdropFilter: "blur(4px)",
           WebkitBackdropFilter: "blur(4px)",
@@ -340,23 +340,23 @@ const getStyles = (colors) =>
     modalContainer: {
       backgroundColor: colors.background.paper,
       borderRadius: 12,
-      maxWidth: Platform.select({
+      maxWidth: platform.select({
         web: 600,
         default: "90%",
       }),
-      width: Platform.select({
+      width: platform.select({
         web: 600,
         default: "90%",
       }),
-      maxHeight: Platform.select({
+      maxHeight: platform.select({
         web: "80vh",
         default: "80%",
       }),
-      marginHorizontal: Platform.select({
+      marginHorizontal: platform.select({
         web: "auto",
         default: 20,
       }),
-      ...Platform.select({
+      ...platform.select({
         web: {
           boxShadow: `0 10px 40px ${colors.primary}26`,
           border: `1px solid ${colors.border}`,
@@ -381,7 +381,7 @@ const getStyles = (colors) =>
       alignItems: "center",
       justifyContent: "space-between",
       borderBottomWidth: 1,
-      borderBottomColor: Platform.select({
+      borderBottomColor: platform.select({
         web: `${colors.primary}CC`,
         default: colors.primary,
       }),
@@ -390,7 +390,7 @@ const getStyles = (colors) =>
       fontSize: 18,
       fontWeight: "600",
       color: colors.text.primary,
-      fontFamily: Platform.select({
+      fontFamily: platform.select({
         web: '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
         default: "System",
       }),
@@ -400,7 +400,7 @@ const getStyles = (colors) =>
       padding: 8,
       marginRight: -8,
       borderRadius: 20,
-      ...Platform.select({
+      ...platform.select({
         web: {
           cursor: "pointer",
           transition: "background-color 0.2s ease",
@@ -411,7 +411,7 @@ const getStyles = (colors) =>
     modalBody: {
       padding: 20,
       backgroundColor: colors.background.paper,
-      maxHeight: Platform.select({
+      maxHeight: platform.select({
         web: "calc(80vh - 140px)",
         default: "70%",
       }),
@@ -434,7 +434,7 @@ const getStyles = (colors) =>
       fontSize: 16,
       color: colors.text.primary,
       backgroundColor: colors.background.paper,
-      ...Platform.select({
+      ...platform.select({
         web: {
           outline: "none",
           transition: "border-color 0.2s ease",
@@ -519,7 +519,7 @@ const getStyles = (colors) =>
       minWidth: 100,
       alignItems: "center",
       justifyContent: "center",
-      ...Platform.select({
+      ...platform.select({
         web: {
           cursor: "pointer",
           transition: "all 0.2s ease",
@@ -543,7 +543,7 @@ const getStyles = (colors) =>
       minWidth: 100,
       alignItems: "center",
       justifyContent: "center",
-      ...Platform.select({
+      ...platform.select({
         web: {
           cursor: "pointer",
           transition: "all 0.2s ease",
@@ -558,3 +558,5 @@ const getStyles = (colors) =>
       letterSpacing: 0.3,
     },
   });
+
+import platform from '../../utils/platform';
