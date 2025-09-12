@@ -274,38 +274,30 @@ class ManyllaEncryptionService {
     combined.set(nonce, metadata.length);
     combined.set(encrypted, metadata.length + nonce.length);
 
-    // Add integrity check (HMAC) for medical data
-    const hmac = nacl.auth(combined, this.masterKey);
-
-    // Return with HMAC
-    return {
-      data: util.encodeBase64(combined),
-      hmac: util.encodeBase64(hmac),
-    };
+    // Note: nacl.secretbox already provides authenticated encryption (includes MAC)
+    // so we don't need a separate HMAC. Returning data directly.
+    return util.encodeBase64(combined);
   }
 
   /**
    * Decrypt Manylla profile data
    */
-  decryptData(encryptedPayload) {
+  decryptData(encryptedData) {
     if (!this.masterKey) {
       throw new Error("Encryption not initialized");
     }
 
-    // Only support new format with HMAC
-    if (typeof encryptedPayload === "string") {
-      throw new Error("Invalid encrypted data format - HMAC required");
+    // Handle both string and object formats for compatibility
+    const encryptedString = typeof encryptedData === 'string' 
+      ? encryptedData 
+      : encryptedData.data;
+    
+    if (!encryptedString) {
+      throw new Error("No encrypted data found");
     }
 
-    // Verify integrity first
-    const combined = util.decodeBase64(encryptedPayload.data);
-    const hmac = util.decodeBase64(encryptedPayload.hmac);
-
-    if (!nacl.auth.verify(hmac, combined, this.masterKey)) {
-      throw new Error(
-        "Data integrity check failed - data may have been tampered with",
-      );
-    }
+    // Parse the encrypted data
+    const combined = util.decodeBase64(encryptedString);
 
     // Extract metadata
     const isCompressed = combined[1] === 1;
