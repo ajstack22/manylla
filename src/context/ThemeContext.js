@@ -9,7 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Theme colors (Manila envelope inspired) - EXACT values as required
 const lightTheme = {
-  primary: "#A08670", // EXACT light primary as required
+  primary: "#8B6F47", // Brown color for primary
   secondary: "#F4E4C1",
   background: {
     primary: "#F5F5F5",
@@ -28,7 +28,7 @@ const lightTheme = {
 };
 
 const darkTheme = {
-  primary: "#A08C74", // EXACT dark primary as required
+  primary: "#8B6F47", // Brown color for primary (same as light for consistency)
   secondary: "#3A3528",
   background: {
     primary: "#1A1A1A",
@@ -47,7 +47,7 @@ const darkTheme = {
 };
 
 const manyllaTheme = {
-  primary: "#9D8B73", // EXACT manylla primary as required
+  primary: "#5D4E37", // Dark brown for better contrast
   secondary: "#8A7862",
   background: {
     primary: "#EBD9C3",

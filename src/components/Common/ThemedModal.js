@@ -7,7 +7,6 @@ import {
   SafeAreaView,
   StyleSheet,
 } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import { useTheme } from "../../context/ThemeContext";
 import { getShadowStyle } from "../../utils/platformStyles";
 import platform from "../../utils/platform";
@@ -35,8 +34,7 @@ export const ThemedModal = ({
   const { colors, theme } = useTheme();
   const isHeaderPrimary = headerStyle === "primary";
   
-  // Ensure we have valid colors with fallbacks
-  const primaryColor = colors.primary || '#8B6F47'; // Brown fallback
+  const primaryColor = colors.primary || '#8B6F47';
   const headerBackground = isHeaderPrimary ? primaryColor : colors.background.paper;
   const headerTextColor = isHeaderPrimary ? '#FFFFFF' : (colors.text?.primary || '#333333');
   const iconColor = isHeaderPrimary ? '#FFFFFF' : (colors.text?.secondary || '#666666');
@@ -50,21 +48,36 @@ export const ThemedModal = ({
       presentationStyle={presentationStyle}
       onRequestClose={onClose}
       transparent={false}
+      testID="themed-modal"
     >
       <SafeAreaView style={styles.container}>
         {/* Header */}
-        <View style={styles.header}>
+        <View 
+          style={[
+            styles.header,
+            { 
+              backgroundColor: headerBackground, // FORCE inline style to override RNW classes
+            }
+          ]}
+          testID="modal-header" 
+          data-testid="modal-header"
+        >
           <View style={styles.headerSpacer} />
 
-          <Text style={styles.headerTitle}>{title}</Text>
+          <Text style={styles.headerTitle} testID="modal-title" data-testid="modal-title">
+            {title}
+          </Text>
 
           {showCloseButton ? (
-            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <Icon 
-                name="close" 
-                size={24} 
-                color={iconColor}
-              />
+            <TouchableOpacity onPress={onClose} style={styles.closeButton} testID="modal-close" data-testid="modal-close">
+              <Text style={{
+                fontSize: 24,
+                color: iconColor,
+                fontWeight: '400',
+                lineHeight: 24,
+              }}>
+                ✕
+              </Text>
             </TouchableOpacity>
           ) : (
             <View style={styles.headerSpacer} />
@@ -90,7 +103,7 @@ const getStyles = (colors, theme, headerStyle, headerBackground, headerTextColor
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      backgroundColor: headerBackground,
+      // backgroundColor removed - now set via inline style to override RNW classes
       paddingHorizontal: 16,
       paddingVertical: platform.select({
         ios: 16,
