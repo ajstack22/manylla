@@ -3,12 +3,24 @@
  * Provides all necessary exports to prevent webpack resolution errors
  */
 
-import React from 'react';
+import React from "react";
 
 // Main components that apps typically import
 export const GestureHandlerRootView = ({ children, ...props }) => {
   // Return a simple View-like div for web
-  return React.createElement('div', { ...props, style: { ...props.style, display: 'flex', flexDirection: 'column', flex: 1 } }, children);
+  return React.createElement(
+    "div",
+    {
+      ...props,
+      style: {
+        ...props.style,
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+      },
+    },
+    children,
+  );
 };
 
 // Other commonly used components and utilities
