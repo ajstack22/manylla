@@ -1050,4 +1050,4 @@ const getStyles = (colors) =>
     },
   });
 
-import platform from '../../utils/platform';
+import platform from "@platform";

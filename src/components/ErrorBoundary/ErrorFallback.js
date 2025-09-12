@@ -302,4 +302,4 @@ const createStyles = (colors, theme) =>
     },
   });
 
-import platform from '../../utils/platform';
+import platform from "@platform";

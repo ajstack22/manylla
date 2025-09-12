@@ -293,4 +293,4 @@ export const ProfileOverview = ({
   );
 };
 
-import platform from '../../utils/platform';
+import platform from "@platform";

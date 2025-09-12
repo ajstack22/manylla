@@ -106,9 +106,7 @@ const markdownCommands = [
     icon: "format-list-bulleted",
     label: "Bullet List",
     action: (text, selection) => {
-      const lines = text.split("
-import platform from '../../utils/platform';
-");
+      const lines = text.split("\n");
       let currentLine = 0;
       let currentPos = 0;
 
@@ -126,8 +124,7 @@ import platform from '../../utils/platform';
         lines[currentLine] = "- " + lines[currentLine];
       }
 
-      const newText = lines.join("
-");
+      const newText = lines.join("\n");
       return {
         text: newText,
         selection: { start: selection.start + 2, end: selection.end + 2 },
@@ -138,8 +135,7 @@ import platform from '../../utils/platform';
     icon: "format-list-numbered",
     label: "Numbered List",
     action: (text, selection) => {
-      const lines = text.split("
-");
+      const lines = text.split("\n");
       let currentLine = 0;
       let currentPos = 0;
 
@@ -157,8 +153,7 @@ import platform from '../../utils/platform';
         lines[currentLine] = "1. " + lines[currentLine];
       }
 
-      const newText = lines.join("
-");
+      const newText = lines.join("\n");
       return {
         text: newText,
         selection: { start: selection.start + 3, end: selection.end + 3 },
@@ -356,19 +351,12 @@ export const MarkdownField = ({
             <Text style={styles.helpTitle}>Markdown Help</Text>
             <ScrollView style={styles.helpContent}>
               <Text style={styles.helpText}>
-                **Bold** or __Bold__{"
-"}
-                *Italic* or _Italic_{"
-"}
-                ~~Strikethrough~~{"
-"}
-                `Code`{"
-"}
-                [Link](url){"
-"}- Bullet list{"
-"}
-                1. Numbered list{"
-"}# Heading
+                **Bold** or __Bold__{"\n"}
+                *Italic* or _Italic_{"\n"}
+                ~~Strikethrough~~{"\n"}
+                `Code`{"\n"}
+                [Link](url){"\n"}- Bullet list{"\n"}
+                1. Numbered list{"\n"}# Heading
               </Text>
             </ScrollView>
           </View>
@@ -448,7 +436,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 2,
     lineHeight: 22,
-    ...platform.select({
+    ...Platform.select({
       ios: {
         paddingTop: 2,
       },

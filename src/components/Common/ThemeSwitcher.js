@@ -1,4 +1,4 @@
-import platform from '../../utils/platform';
+import platform from "@platform";
 
 /**
  * ThemeSwitcher - Toggle between light/dark/manylla themes
@@ -107,10 +107,9 @@ const createStyles = (colors) =>
       fontSize: 14,
       fontWeight: "500",
       color: colors.text.primary || "#000000",
-      fontFamily:
-        platform.isWeb
-          ? '"Atkinson Hyperlegible", -apple-system, sans-serif'
-          : undefined,
+      fontFamily: platform.isWeb
+        ? '"Atkinson Hyperlegible", -apple-system, sans-serif'
+        : undefined,
     },
   });
 

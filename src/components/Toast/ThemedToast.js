@@ -173,4 +173,4 @@ export const ThemedToast = ({
   );
 };
 
-import platform from '../../utils/platform';
+import platform from "@platform";

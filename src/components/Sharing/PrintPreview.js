@@ -221,7 +221,9 @@ export const PrintPreview = ({
       if (categoryEntries.length > 0) {
         content += `${category.toUpperCase()}
 `;
-        content += "=".repeat(category.length) + `
+        content +=
+          "=".repeat(category.length) +
+          `
 
 `;
 

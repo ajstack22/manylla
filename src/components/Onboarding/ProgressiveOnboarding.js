@@ -151,7 +151,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
     },
     scrollContainer: {
       paddingHorizontal: 16,
-      maxWidth: platform.isWeb ? 480 : width,
+      maxWidth: Platform.OS === "web" ? 480 : width,
       alignSelf: "center",
       width: "100%",
     },
@@ -515,13 +515,13 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
                       style={[
                         styles.textInput,
                         getTextStyle("input"),
-                        platform.isAndroid && { color: "#000000" },
+                        Platform.OS === "android" && { color: "#000000" },
                       ]}
                       value={accessCode}
                       onChangeText={(text) => setAccessCode(text.toUpperCase())}
                       placeholder="Enter 6-digit code"
                       placeholderTextColor={
-                        platform.isAndroid ? "#999" : undefined
+                        Platform.OS === "android" ? "#999" : undefined
                       }
                       maxLength={6}
                       autoCapitalize="characters"
@@ -640,11 +640,8 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
                     Quick tips to get started:
                   </Text>
                   <Text style={styles.infoText}>
-                    • Add important information in Quick Info{"
-import platform from '../../utils/platform';
-"}• Track
-                    progress with Goals and Successes{"
-"}• Enable sync to
+                    • Add important information in Quick Info{"\n"}• Track
+                    progress with Goals and Successes{"\n"}• Enable sync to
                     access from other devices
                   </Text>
                 </View>

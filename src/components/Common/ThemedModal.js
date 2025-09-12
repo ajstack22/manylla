@@ -145,4 +145,4 @@ const getStyles = (colors, theme, headerStyle) => {
 
 export default ThemedModal;
 
-import platform from '../../utils/platform';
+import platform from "@platform";

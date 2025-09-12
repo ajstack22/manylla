@@ -108,8 +108,7 @@ export const quickInfoPlaceholders = {
     title: "Medical Information",
     description: "Current medications, allergies, and medical needs",
     examples: [
-      "Allergies: peanuts (EpiPen in backpack)
-Medications: Ritalin 10mg morning",
+      "Allergies: peanuts (EpiPen in backpack)\\nMedications: Ritalin 10mg morning",
       "No allergies. Takes melatonin 3mg at bedtime",
       "Seizure disorder - emergency medication if seizure > 5 min",
     ],
@@ -127,25 +126,18 @@ Medications: Ritalin 10mg morning",
     title: "Emergency Contacts",
     description: "Primary contacts and important phone numbers",
     examples: [
-      "Mom: (555) 555-0123
-Dad: (555) 555-0124
-Dr. Smith: (555) 555-0199",
-      "Parent 1: (555) 123-4567
-School Nurse: (555) 234-5678",
-      "Guardian: (555) 555-1111
-Therapist (crisis): (555) 555-2222",
+      "Mom: (555) 555-0123\nDad: (555) 555-0124\nDr. Smith: (555) 555-0199",
+      "Parent 1: (555) 123-4567\nSchool Nurse: (555) 234-5678",
+      "Guardian: (555) 555-1111\nTherapist (crisis): (555) 555-2222",
     ],
   },
   behaviors: {
     title: "Behavioral Information",
     description: "Common behaviors and effective responses",
     examples: [
-      "Flaps hands when happy - this is okay!
-Bites when frustrated - redirect to chewy",
-      "May elope - always supervise near exits
-Calms with deep pressure hugs",
-      "Rocks when anxious - offer break space
-May hit if overwhelmed - give space",
+      "Flaps hands when happy - this is okay!\nBites when frustrated - redirect to chewy",
+      "May elope - always supervise near exits\nCalms with deep pressure hugs",
+      "Rocks when anxious - offer break space\nMay hit if overwhelmed - give space",
     ],
   },
   calming: {

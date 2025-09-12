@@ -315,4 +315,4 @@ const styles = StyleSheet.create({
 
 export default UnifiedCategoryManager;
 
-import platform from '../../utils/platform';
+import platform from "@platform";

@@ -10,7 +10,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import platform from '../utils/platform';
+import platform from "@platform";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ManyllaMinimalSyncService from "../services/sync/manyllaMinimalSyncService";
 import ManyllaEncryptionService from "../services/sync/manyllaEncryptionService";
@@ -390,10 +390,9 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
         );
 
         // Return the share URL with encryption key in fragment
-        const baseUrl =
-          platform.isWeb
-            ? window.location.origin
-            : "https://manylla.com/qual";
+        const baseUrl = platform.isWeb
+          ? window.location.origin
+          : "https://manylla.com/qual";
 
         return `${baseUrl}/share/${shareId}#${shareData.key}`;
       } catch (error) {

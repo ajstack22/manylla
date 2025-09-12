@@ -116,9 +116,7 @@ export const SharedProfileView = ({ isAuthenticated = false }) => {
                   if (error) setError("");
                 }}
                 placeholder="Enter 6-character code"
-                placeholderTextColor={
-                  platform.isAndroid ? "#999" : undefined
-                }
+                placeholderTextColor={platform.isAndroid ? "#999" : undefined}
                 placeholderTextColor={colors.textSecondary}
                 autoCapitalize="characters"
                 maxLength={6}
@@ -548,4 +546,4 @@ const styles = StyleSheet.create({
   },
 });
 
-import platform from '../../utils/platform';
+import platform from "@platform";

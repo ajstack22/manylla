@@ -1,4 +1,4 @@
-import platform from '../../utils/platform';
+import platform from "@platform";
 /**
  * Cross-Platform Profile Overview
  * Works on iOS, Android, and Web
@@ -87,8 +87,7 @@ export const ProfileOverview = ({ profile, onUpdateProfile }) => {
     },
     header: {
       backgroundColor: colors.primary,
-      paddingTop:
-        platform.isIOS ? 50 : platform.isAndroid ? 20 : 0,
+      paddingTop: platform.isIOS ? 50 : platform.isAndroid ? 20 : 0,
       paddingBottom: 16,
       paddingHorizontal: 16,
     },

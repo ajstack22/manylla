@@ -215,8 +215,7 @@ const Header = ({
                         <Image
                           source={{
                             uri:
-                              platform.isIOS &&
-                              profile.photo.startsWith("/")
+                              platform.isIOS && profile.photo.startsWith("/")
                                 ? `https://manylla.com/qual${profile.photo}` // Convert relative path to absolute URL for iOS
                                 : profile.photo,
                           }}
@@ -255,8 +254,7 @@ const Header = ({
                         <Image
                           source={{
                             uri:
-                              platform.isIOS &&
-                              profile.photo.startsWith("/")
+                              platform.isIOS && profile.photo.startsWith("/")
                                 ? `https://manylla.com/qual${profile.photo}` // Convert relative path to absolute URL for iOS
                                 : profile.photo,
                           }}
@@ -591,4 +589,4 @@ const createStyles = (colors) =>
 
 export default Header;
 
-import platform from '../../utils/platform';
+import platform from "@platform";

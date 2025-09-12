@@ -206,7 +206,6 @@ export const ShareDialogOptimized = ({ open, onClose, profile }) => {
             ? "3 months"
             : "6 months";
       const message = `Here's a secure encrypted link to view ${profile.preferredName || profile.name}'s information:
-import platform from '../../utils/platform';
 
 ${generatedLink}
 

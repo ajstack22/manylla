@@ -1,4 +1,4 @@
-import platform from '../../utils/platform';
+import platform from "@platform";
 
 // React imports
 import React, { useState } from "react";
@@ -241,10 +241,9 @@ const OnboardingScreen = ({ onComplete }) => {
       preferredName: "Ellie",
       pronouns: "she/her",
       dateOfBirth: new Date("2018-06-15"),
-      photo:
-        platform.isWeb
-          ? "/ellie.png"
-          : Image.resolveAssetSource(EllieImage).uri,
+      photo: platform.isWeb
+        ? "/ellie.png"
+        : Image.resolveAssetSource(EllieImage).uri,
       // Use unified categories from the shared configuration with icons added
       categories: unifiedCategories.map((cat) => ({
         ...cat,
@@ -766,10 +765,8 @@ const OnboardingScreen = ({ onComplete }) => {
         <View style={styles.infoBox}>
           <Text style={styles.infoTitle}>manylla helps you:</Text>
           <Text style={styles.infoText}>
-            • Track developmental milestones
-• Organize IEP goals and medical records
-• Share information securely
-• Sync across all your devices
+            • Track developmental milestones • Organize IEP goals and medical
+            records • Share information securely • Sync across all your devices
           </Text>
         </View>
 

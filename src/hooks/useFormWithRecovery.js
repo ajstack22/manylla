@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import platform from '../utils/platform';
+import platform from "@platform";
 import { ValidationError, ErrorHandler } from "../utils/errors";
 import { getErrorMessage, formatFieldName } from "../utils/errorMessages";
 import { showToast } from "../components/Toast/ToastManager";
@@ -366,14 +366,12 @@ export const useFormWithRecovery = (
     (name) => ({
       value: values[name] || "",
       error: touched[name] ? errors[name] : null,
-      onChangeText:
-        platform.isWeb
-          ? undefined
-          : (value) => handleChange(name, value),
-      onChange:
-        platform.isWeb
-          ? (e) => handleChange(name, e.target.value)
-          : undefined,
+      onChangeText: platform.isWeb
+        ? undefined
+        : (value) => handleChange(name, value),
+      onChange: platform.isWeb
+        ? (e) => handleChange(name, e.target.value)
+        : undefined,
       onBlur: () => handleBlur(name),
     }),
     [values, errors, touched, handleChange, handleBlur],

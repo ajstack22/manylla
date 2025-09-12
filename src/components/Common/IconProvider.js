@@ -5,8 +5,8 @@
  */
 
 import React from "react";
-import { Text } from 'react-native';
-import platform from '../../utils/platform';
+import { Text } from "react-native";
+import platform from "@platform";
 
 // Native icons from react-native-vector-icons
 let MaterialIcons = null;

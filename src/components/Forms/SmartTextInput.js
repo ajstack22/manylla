@@ -86,10 +86,7 @@ export const SmartTextInput = ({
     // Check for auto-formatting triggers
     if (newValue.endsWith("  ")) {
       // Double space triggers new paragraph
-      const formattedValue = newValue.trim() + "
-import platform from '../../utils/platform';
-
-";
+      const formattedValue = newValue.trim() + "\n\n";
       onChange(formattedValue);
     } else {
       onChange(newValue);
@@ -130,8 +127,7 @@ import platform from '../../utils/platform';
       // For list, add at start of current line
       const before = value.substring(0, start);
       const after = value.substring(start);
-      const lastNewline = before.lastIndexOf("
-");
+      const lastNewline = before.lastIndexOf("\n");
       const lineStart = lastNewline === -1 ? 0 : lastNewline + 1;
 
       const newValue =
@@ -195,7 +191,7 @@ import platform from '../../utils/platform';
               textAlignVertical: multiline ? "top" : "center",
             },
             getTextStyle("input"), // Force black text on Android
-            platform.isAndroid && { color: "#000000" }, // Extra insurance
+            Platform.OS === "android" && { color: "#000000" }, // Extra insurance
           ]}
           value={value}
           onChangeText={handleChange}
@@ -204,7 +200,7 @@ import platform from '../../utils/platform';
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
           placeholderTextColor={
-            platform.isAndroid ? "#999" : colors.textSecondary
+            Platform.OS === "android" ? "#999" : colors.textSecondary
           }
           multiline={multiline}
           numberOfLines={multiline ? rows : 1}
@@ -318,7 +314,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 2,
     lineHeight: 22,
-    ...platform.select({
+    ...Platform.select({
       ios: {
         paddingTop: 2,
       },

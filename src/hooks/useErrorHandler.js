@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import platform from '../utils/platform';
+import platform from "@platform";
 import {
   ErrorHandler,
   StorageError,
@@ -87,11 +87,7 @@ export const useErrorHandler = () => {
     });
 
     // Log to service
-    if (
-      platform.isWeb &&
-      typeof window !== "undefined" &&
-      window.Sentry
-    ) {
+    if (platform.isWeb && typeof window !== "undefined" && window.Sentry) {
       window.Sentry.captureException(normalizedError, {
         contexts: { react: errorInfo },
       });
