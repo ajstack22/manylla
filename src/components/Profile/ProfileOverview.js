@@ -14,6 +14,8 @@ import { CategorySection } from "./CategorySection";
 import { getVisibleCategories } from "../../utils/unifiedCategories";
 import { ProfileEditDialog } from "./ProfileEditDialog";
 
+import platform from "../../utils/platform";
+
 const { width } = Dimensions.get("window");
 
 export const ProfileOverview = ({
@@ -292,5 +294,3 @@ export const ProfileOverview = ({
     </ScrollView>
   );
 };
-
-import platform from "@platform";

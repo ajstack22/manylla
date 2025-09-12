@@ -13,6 +13,7 @@ import { Picker } from "@react-native-picker/picker";
 import { useTheme } from "../../context/ThemeContext";
 import { MarkdownField } from "../Forms/MarkdownField";
 import { getScrollViewProps, getTextStyle } from "../../utils/platformStyles";
+import platform from "../../utils/platform";
 
 const predefinedQuickInfoOptions = [
   "Communication",
@@ -484,5 +485,3 @@ export const UnifiedAddDialog = ({
     </Modal>
   );
 };
-
-import platform from "@platform";

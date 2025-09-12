@@ -1,7 +1,7 @@
 // Crypto polyfill for web platform
 // Only loads react-native-get-random-values on native platforms
 
-import platform from "@platform";
+import platform from "../../utils/platform";
 
 if (platform.isMobile) {
   // Only import on native platforms

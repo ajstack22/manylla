@@ -6,7 +6,7 @@
 
 import React from "react";
 import { Text } from "react-native";
-import platform from "@platform";
+import platform from "../../utils/platform";
 
 // Native icons from react-native-vector-icons
 let MaterialIcons = null;

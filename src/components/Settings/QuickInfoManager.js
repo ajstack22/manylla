@@ -15,6 +15,8 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { getNumColumns, getCardWidth } from "../../utils/platformStyles";
 
+import platform from "../../utils/platform";
+
 const colors = {
   primary: "#A08670",
   secondary: "#A0937D",
@@ -581,5 +583,3 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-
-import platform from "@platform";

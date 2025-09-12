@@ -1,4 +1,4 @@
-import platform from "@platform";
+import platform from "../../utils/platform";
 
 // Only apply polyfill on web
 if (platform.isWeb && typeof global.crypto === "undefined") {

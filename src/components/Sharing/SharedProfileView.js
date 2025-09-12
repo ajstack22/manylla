@@ -15,6 +15,8 @@ import { getTextStyle } from "../../utils/platformStyles";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { ChildProfile, Entry } from "../../types/ChildProfile";
 
+import platform from "../../utils/platform";
+
 const colors = {
   primary: "#A08670",
   secondary: "#A0937D",
@@ -545,5 +547,3 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 });
-
-import platform from "@platform";

@@ -2,7 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useTheme } from "@context/ThemeContext";
 import { View, Text } from "react-native";
-import platform from "@platform";
+import platform from "../utils/platform";
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Import stack navigators (to be created)

@@ -14,6 +14,8 @@ import DraggableFlatList, {
   ScaleDecorator,
 } from "react-native-draggable-flatlist";
 
+import platform from "../../utils/platform";
+
 export const UnifiedCategoryManager = ({
   open,
   onClose,
@@ -314,5 +316,3 @@ const styles = StyleSheet.create({
 });
 
 export default UnifiedCategoryManager;
-
-import platform from "@platform";

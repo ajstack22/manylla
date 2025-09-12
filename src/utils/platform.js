@@ -465,7 +465,8 @@ export const performance = {
 // ============================================
 export const DEPRECATED = {
   logUsage(feature) {
-    if (__DEV__) {
+    const isDev = process.env.NODE_ENV === 'development';
+    if (isDev) {
       console.warn(`DEPRECATED platform feature used: ${feature}`);
     }
   },

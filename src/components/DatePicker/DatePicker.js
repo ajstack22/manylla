@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import { getTextStyle } from "../../utils/platformStyles";
-import platform from "@platform";
+import platform from "../../utils/platform";
 
 const DatePicker = ({ value, onChange, label, ...props }) => {
   if (platform.isWeb) {

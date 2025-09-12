@@ -11,6 +11,8 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { getTextStyle } from "../../utils/platformStyles";
 
+import platform from "../../utils/platform";
+
 const colors = {
   primary: "#A08670",
   secondary: "#A0937D",
@@ -242,5 +244,3 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 });
-
-import platform from "@platform";

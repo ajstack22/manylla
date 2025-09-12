@@ -1,6 +1,6 @@
 import React from "react";
 import { Dimensions } from "react-native";
-import platform from "@platform";
+import platform from "../utils/platform";
 
 export const useMobileDialog = () => {
   const { width } = Dimensions.get("window");

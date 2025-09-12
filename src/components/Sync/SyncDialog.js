@@ -25,6 +25,8 @@ import {
   formatInviteCodeForDisplay,
 } from "../../utils/inviteCode";
 
+import platform from "../../utils/platform";
+
 export const SyncDialog = ({ open, onClose }) => {
   const { colors } = useTheme();
   const styles = getStyles(colors);
@@ -1049,5 +1051,3 @@ const getStyles = (colors) =>
       marginTop: 8,
     },
   });
-
-import platform from "@platform";

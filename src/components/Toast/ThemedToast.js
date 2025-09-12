@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import { useTheme as useAppTheme } from "../../context/ThemeContext";
 
+import platform from "../../utils/platform";
+
 const { width } = Dimensions.get("window");
 
 export const ThemedToast = ({
@@ -172,5 +174,3 @@ export const ThemedToast = ({
     </View>
   );
 };
-
-import platform from "@platform";

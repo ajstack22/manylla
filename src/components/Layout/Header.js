@@ -25,6 +25,8 @@ import {
 } from "../Common";
 import { getStatusBarHeight } from "../../utils/platformStyles";
 
+import platform from "../../utils/platform";
+
 // Define consistent header height
 const statusBarHeight = getStatusBarHeight();
 export const HEADER_HEIGHT = platform.select({
@@ -588,5 +590,3 @@ const createStyles = (colors) =>
   });
 
 export default Header;
-
-import platform from "@platform";
