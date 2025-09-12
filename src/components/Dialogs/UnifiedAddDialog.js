@@ -13,7 +13,7 @@ import { Picker } from "@react-native-picker/picker";
 import { useTheme } from "../../context/ThemeContext";
 import { MarkdownField } from "../Forms/MarkdownField";
 import { getScrollViewProps, getTextStyle } from "../../utils/platformStyles";
-import platform from "../../utils/platform";
+import platform from "@platform";
 
 const predefinedQuickInfoOptions = [
   "Communication",

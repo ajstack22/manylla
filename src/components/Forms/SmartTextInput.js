@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { getTextStyle } from "../../utils/platformStyles";
-import { isAndroid } from "../../utils/platform";
+import { isAndroid } from "@platform";
 
 // Interface definitions removed - using plain JavaScript
 

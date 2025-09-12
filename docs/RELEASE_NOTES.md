@@ -1,5 +1,39 @@
 # Manylla Release Notes
 
+## Version 2025.09.12.2 - 2025-09-12
+Platform Alias Migration - Production Deployment
+
+### Summary
+Production deployment of @platform alias migration with all tooling properly configured
+
+### Deployment
+- All ESLint validation passing with @platform imports
+- Web build successful with alias resolution
+- 39 files using consistent import pattern
+- Build tools fully aligned
+
+## Version 2025.09.12.1 - 2025-09-12
+Platform Alias Migration Complete
+
+### Summary
+Complete migration to @platform module alias for cleaner, more maintainable imports
+
+### Added
+- ESLint configuration with babel-module resolver for @platform alias
+- Migration script at `scripts/migrate-to-platform-alias.sh`
+- Module alias support across webpack, babel, and metro configs
+
+### Changed
+- Migrated 39 files from relative imports to @platform alias
+- Replaced .eslintrc.json with .eslintrc.js for module resolution
+- All platform imports now use consistent @platform alias
+
+### Technical
+- Zero relative imports to platform utilities
+- ESLint properly resolves @platform imports
+- Build systems (webpack, metro) aligned with alias configuration
+- No TypeScript files or platform-specific files created
+
 ## Version 2025.09.11.19 - 2025-09-11
 Final Android UI/UX Validation Build
 

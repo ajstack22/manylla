@@ -20,7 +20,7 @@ import {
   getScrollViewProps,
   getShadowStyle,
 } from "../../utils/platformStyles";
-import platform from "../../utils/platform";
+import platform from "@platform";
 
 export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
   const { colors } = useTheme();

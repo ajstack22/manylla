@@ -10,7 +10,7 @@ import {
 import { getScrollViewProps } from "../../utils/platformStyles";
 import { useTheme } from "../../context/ThemeContext";
 import { useErrorDisplay } from "../../hooks/useErrorDisplay";
-import platform from "../../utils/platform";
+import platform from "@platform";
 
 export const ErrorFallback = ({
   error,

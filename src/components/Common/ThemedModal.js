@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
 import { getShadowStyle } from "../../utils/platformStyles";
-import platform from "../../utils/platform";
+import platform from "@platform";
 
 /**
  * ThemedModal - A unified modal component with consistent styling

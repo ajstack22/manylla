@@ -10,7 +10,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import platform from "../utils/platform";
+import platform from "@platform";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ManyllaMinimalSyncService from "../services/sync/manyllaMinimalSyncService";
 import ManyllaEncryptionService from "../services/sync/manyllaEncryptionService";

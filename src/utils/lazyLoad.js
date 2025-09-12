@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { View, ActivityIndicator } from "react-native";
-import platform from "./platform";
+import platform from "@platform";
 
 // Simple lazy loading wrapper for web
 export const lazyLoad = (importFunc) => {

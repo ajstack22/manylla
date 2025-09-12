@@ -1,4 +1,4 @@
-import platform from "../../utils/platform";
+import platform from "@platform";
 
 export const UnifiedAddDialog = platform.isWeb
   ? require("./UnifiedAddDialog").UnifiedAddDialog

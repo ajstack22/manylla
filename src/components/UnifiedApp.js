@@ -1,4 +1,4 @@
-import platform from "../utils/platform";
+import platform from "@platform";
 
 /**
  * Unified App Components for Manylla

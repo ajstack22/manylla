@@ -12,7 +12,7 @@ import {
   Alert,
 } from "react-native";
 import { getTextStyle, getScrollViewProps } from "../../utils/platformStyles";
-import { isWeb, isAndroid } from "../../utils/platform";
+import { isWeb, isAndroid } from "@platform";
 
 const { width } = Dimensions.get("window");
 

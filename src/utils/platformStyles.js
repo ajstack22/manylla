@@ -1,5 +1,5 @@
 import { StatusBar, Dimensions } from "react-native";
-import platform from "./platform";
+import platform from "@platform";
 
 // Typography helpers
 export const getFontFamily = (weight) => {

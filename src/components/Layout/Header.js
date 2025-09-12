@@ -25,7 +25,7 @@ import {
 } from "../Common";
 import { getStatusBarHeight } from "../../utils/platformStyles";
 
-import platform from "../../utils/platform";
+import platform from "@platform";
 
 // Define consistent header height
 const statusBarHeight = getStatusBarHeight();

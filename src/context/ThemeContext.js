@@ -4,7 +4,7 @@
  */
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import platform from "../utils/platform";
+import platform from "@platform";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Theme colors (Manila envelope inspired) - EXACT values as required

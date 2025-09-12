@@ -3,7 +3,7 @@
  * Works on iOS, Android, and Web
  */
 
-import platform from "../../utils/platform";
+import platform from "@platform";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export class StorageService {

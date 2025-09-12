@@ -11,7 +11,7 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { getTextStyle } from "../../utils/platformStyles";
 
-import platform from "../../utils/platform";
+import platform from "@platform";
 
 const colors = {
   primary: "#A08670",

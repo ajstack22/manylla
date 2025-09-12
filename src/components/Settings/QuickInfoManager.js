@@ -15,7 +15,7 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { getNumColumns, getCardWidth } from "../../utils/platformStyles";
 
-import platform from "../../utils/platform";
+import platform from "@platform";
 
 const colors = {
   primary: "#A08670",
