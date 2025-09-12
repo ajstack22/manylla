@@ -1,4 +1,5 @@
-const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+const { getDefaultConfig, mergeConfig } = require("@react-native/metro-config");
+const path = require("path");
 
 /**
  * Metro configuration - Following StackMap's simple approach
@@ -11,6 +12,16 @@ const config = {
   resetCache: true,
   // Watch for file changes
   watchFolders: [__dirname],
+  resolver: {
+    extraNodeModules: {
+      // Remove @platform alias - using relative imports instead
+      "@utils": path.resolve(__dirname, "src/utils"),
+      "@components": path.resolve(__dirname, "src/components"),
+      "@hooks": path.resolve(__dirname, "src/hooks"),
+      "@services": path.resolve(__dirname, "src/services"),
+      "@context": path.resolve(__dirname, "src/context"),
+    },
+  },
 };
 
 module.exports = mergeConfig(getDefaultConfig(__dirname), config);

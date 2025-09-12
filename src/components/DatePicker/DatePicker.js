@@ -1,15 +1,10 @@
 import React from "react";
-import {
-  Platform,
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
+import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import { getTextStyle } from "../../utils/platformStyles";
+import platform from "../../utils/platform";
 
 const DatePicker = ({ value, onChange, label, ...props }) => {
-  if (Platform.OS === "web") {
+  if (platform.isWeb) {
     // Web implementation - use HTML5 date input
     return (
       <input
@@ -35,7 +30,7 @@ const DatePicker = ({ value, onChange, label, ...props }) => {
         value={value}
         onChangeText={onChange}
         placeholder="MM/DD/YYYY"
-        placeholderTextColor={Platform.OS === "android" ? "#999" : undefined}
+        placeholderTextColor={platform.isAndroid ? "#999" : undefined}
         style={[
           {
             padding: 12,
@@ -46,7 +41,7 @@ const DatePicker = ({ value, onChange, label, ...props }) => {
             backgroundColor: "#FFFFFF",
           },
           getTextStyle("input"),
-          Platform.OS === "android" && { color: "#000000" },
+          platform.isAndroid && { color: "#000000" },
         ]}
         {...props}
       />

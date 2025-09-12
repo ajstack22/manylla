@@ -1,3 +1,4 @@
+import platform from "../../utils/platform";
 /**
  * Cross-Platform Profile Overview
  * Works on iOS, Android, and Web
@@ -86,8 +87,7 @@ export const ProfileOverview = ({ profile, onUpdateProfile }) => {
     },
     header: {
       backgroundColor: colors.primary,
-      paddingTop:
-        Platform.OS === "ios" ? 50 : Platform.OS === "android" ? 20 : 0,
+      paddingTop: platform.isIOS ? 50 : platform.isAndroid ? 20 : 0,
       paddingBottom: 16,
       paddingHorizontal: 16,
     },
@@ -104,7 +104,7 @@ export const ProfileOverview = ({ profile, onUpdateProfile }) => {
       margin: 16,
       padding: 16,
       borderRadius: 8,
-      ...Platform.select({
+      ...platform.select({
         ios: {
           shadowColor: "#000",
           shadowOffset: { width: 0, height: 1 },
@@ -143,7 +143,7 @@ export const ProfileOverview = ({ profile, onUpdateProfile }) => {
       marginBottom: 16,
       borderRadius: 8,
       overflow: "hidden",
-      ...Platform.select({
+      ...platform.select({
         ios: {
           shadowColor: "#000",
           shadowOffset: { width: 0, height: 1 },

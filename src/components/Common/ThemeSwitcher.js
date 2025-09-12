@@ -1,3 +1,5 @@
+import platform from "../../utils/platform";
+
 /**
  * ThemeSwitcher - Toggle between light/dark/manylla themes
  * Matches the original web implementation
@@ -51,7 +53,7 @@ export const ThemeSwitcher = ({ style }) => {
       activeOpacity={0.7}
     >
       <View style={styles.iconContainer}>{getIcon()}</View>
-      {Platform.OS === "web" && <Text style={styles.label}>{getLabel()}</Text>}
+      {platform.isWeb && <Text style={styles.label}>{getLabel()}</Text>}
     </TouchableOpacity>
   );
 };
@@ -99,16 +101,15 @@ const createStyles = (colors) =>
       borderColor: colors.border || "#E0E0E0",
     },
     iconContainer: {
-      marginRight: Platform.OS === "web" ? 8 : 0,
+      marginRight: platform.isWeb ? 8 : 0,
     },
     label: {
       fontSize: 14,
       fontWeight: "500",
       color: colors.text.primary || "#000000",
-      fontFamily:
-        Platform.OS === "web"
-          ? '"Atkinson Hyperlegible", -apple-system, sans-serif'
-          : undefined,
+      fontFamily: platform.isWeb
+        ? '"Atkinson Hyperlegible", -apple-system, sans-serif'
+        : undefined,
     },
   });
 

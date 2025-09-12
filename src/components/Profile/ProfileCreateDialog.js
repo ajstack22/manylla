@@ -10,7 +10,6 @@ import {
   SafeAreaView,
   Image,
   Alert,
-  Platform,
 } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import { useTheme } from "../../context/ThemeContext";
@@ -18,6 +17,7 @@ import { defaultCategories } from "../../utils/defaultCategories";
 import { defaultQuickInfoPanels } from "../../utils/defaultQuickInfo";
 import { DatePicker } from "../DatePicker/DatePicker";
 import { getTextStyle, getScrollViewProps } from "../../utils/platformStyles";
+import platform from "../../utils/platform";
 
 export const ProfileCreateDialog = ({ open, onClose, onCreate }) => {
   const { colors } = useTheme();
@@ -35,7 +35,7 @@ export const ProfileCreateDialog = ({ open, onClose, onCreate }) => {
   const steps = ["Basic Info", "Photo"];
 
   const handlePhotoChange = () => {
-    if (Platform.OS === "web") {
+    if (platform.isWeb) {
       // Web file input
       const input = document.createElement("input");
       input.type = "file";
@@ -210,7 +210,7 @@ export const ProfileCreateDialog = ({ open, onClose, onCreate }) => {
           <Image
             source={{
               uri:
-                Platform.OS === "ios" && photoPreview.startsWith("/")
+                platform.isIOS && photoPreview.startsWith("/")
                   ? `https://manylla.com/qual${photoPreview}` // Convert relative path to absolute URL for iOS
                   : photoPreview,
             }}

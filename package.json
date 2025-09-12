@@ -1,6 +1,6 @@
 {
   "name": "manylla",
-  "version": "2025.09.11.15",
+  "version": "2025.09.12.2",
   "private": true,
   "homepage": "/qual",
   "scripts": {
@@ -72,6 +72,7 @@
     "css-loader": "^7.1.2",
     "eslint": "^8.57.0",
     "eslint-config-react-app": "^7.0.1",
+    "eslint-import-resolver-babel-module": "^5.3.2",
     "eslint-plugin-react": "^7.37.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "html-webpack-plugin": "^5.6.4",

@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import { useTheme as useAppTheme } from "../../context/ThemeContext";
 
+import platform from "../../utils/platform";
+
 const { width } = Dimensions.get("window");
 
 export const ThemedToast = ({
@@ -92,7 +94,7 @@ export const ThemedToast = ({
   const styles = StyleSheet.create({
     container: {
       position: "absolute",
-      bottom: Platform.OS === "web" ? 24 : 50,
+      bottom: platform.isWeb ? 24 : 50,
       left: 20,
       right: 20,
       alignItems: "center",

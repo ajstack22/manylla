@@ -1,9 +1,9 @@
 // Crypto polyfill for web platform
 // Only loads react-native-get-random-values on native platforms
 
-import { Platform } from "react-native";
+import platform from "../utils/platform";
 
-if (Platform.OS !== "web") {
+if (platform.isMobile) {
   // Only import on native platforms
   try {
     // Use eval to prevent webpack from analyzing this require

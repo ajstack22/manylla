@@ -108,7 +108,7 @@ export const quickInfoPlaceholders = {
     title: "Medical Information",
     description: "Current medications, allergies, and medical needs",
     examples: [
-      "Allergies: peanuts (EpiPen in backpack)\nMedications: Ritalin 10mg morning",
+      "Allergies: peanuts (EpiPen in backpack)\\nMedications: Ritalin 10mg morning",
       "No allergies. Takes melatonin 3mg at bedtime",
       "Seizure disorder - emergency medication if seizure > 5 min",
     ],

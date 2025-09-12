@@ -1,4 +1,3 @@
-import { Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // Import crypto polyfill
 import "../../polyfills/crypto";

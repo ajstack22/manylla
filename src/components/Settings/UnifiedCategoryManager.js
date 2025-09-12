@@ -14,6 +14,8 @@ import DraggableFlatList, {
   ScaleDecorator,
 } from "react-native-draggable-flatlist";
 
+import platform from "../../utils/platform";
+
 export const UnifiedCategoryManager = ({
   open,
   onClose,
@@ -162,7 +164,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: "#E0E0E0",
-    ...Platform.select({
+    ...platform.select({
       ios: {
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
@@ -209,7 +211,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderWidth: 2,
     borderColor: "#E0E0E0",
-    ...Platform.select({
+    ...platform.select({
       ios: {
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },

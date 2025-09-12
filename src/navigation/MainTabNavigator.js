@@ -1,7 +1,8 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useTheme } from "@context/ThemeContext";
-import { Platform, View, Text } from "react-native";
+import { View, Text } from "react-native";
+import platform from "../utils/platform";
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Import stack navigators (to be created)
@@ -25,9 +26,9 @@ const MainTabNavigator = () => {
           backgroundColor: colors.background.paper,
           borderTopColor: colors.border,
           borderTopWidth: 1,
-          paddingBottom: Platform.OS === "ios" ? 20 : 8,
+          paddingBottom: platform.isIOS ? 20 : 8,
           paddingTop: 8,
-          height: Platform.OS === "ios" ? 85 : 60,
+          height: platform.isIOS ? 85 : 60,
         },
         tabBarLabelStyle: {
           fontSize: 12,

@@ -1,8 +1,9 @@
-import { Platform, StatusBar, Dimensions } from "react-native";
+import { StatusBar, Dimensions } from "react-native";
+import platform from "./platform";
 
 // Typography helpers
 export const getFontFamily = (weight) => {
-  if (Platform.OS === "android") {
+  if (platform.isAndroid) {
     // Android can't use fontWeight, needs font variants
     if (weight === "bold" || weight === "700" || weight === "600") {
       return "System"; // Will use system bold variant
@@ -18,12 +19,12 @@ export const getTextStyle = (variant, weight) => {
   };
 
   // Only add fontWeight for non-Android
-  if (Platform.OS !== "android" && weight) {
+  if (!platform.isAndroid && weight) {
     baseStyle.fontWeight = weight;
   }
 
   // Force black text on Android TextInputs
-  if (Platform.OS === "android" && variant === "input") {
+  if (platform.isAndroid && variant === "input") {
     baseStyle.color = "#000000";
   }
 
@@ -36,7 +37,7 @@ export const isTablet = () => {
   const aspectRatio = width / height;
   const minDimension = Math.min(width, height);
 
-  if (Platform.OS === "android") {
+  if (platform.isAndroid) {
     // Android tablet detection
     return minDimension >= 600 && aspectRatio > 1.2;
   }
@@ -54,7 +55,7 @@ export const getNumColumns = () => {
 };
 
 export const getCardWidth = (numColumns = 1) => {
-  if (Platform.OS === "android") {
+  if (platform.isAndroid) {
     // Android FlexWrap needs percentage widths
     return numColumns === 2 ? "48%" : "100%";
   }
@@ -69,26 +70,26 @@ export const getCardWidth = (numColumns = 1) => {
 export const getSwipeThreshold = () => {
   const { width: screenWidth } = Dimensions.get("window");
   // Android needs lower thresholds
-  return Platform.OS === "android"
+  return platform.isAndroid
     ? screenWidth * 0.1 // 10% for Android
     : screenWidth * 0.2; // 20% for iOS
 };
 
 export const getVelocityThreshold = () => {
-  return Platform.OS === "android" ? 0.3 : 0.5;
+  return platform.isAndroid ? 0.3 : 0.5;
 };
 
 // ScrollView helpers
 export const getScrollViewProps = () => ({
-  nestedScrollEnabled: Platform.OS === "android",
-  removeClippedSubviews: Platform.OS === "android",
+  nestedScrollEnabled: platform.isAndroid,
+  removeClippedSubviews: platform.isAndroid,
   keyboardShouldPersistTaps: "handled",
   showsVerticalScrollIndicator: false,
 });
 
 // StatusBar helpers
 export const getStatusBarHeight = () => {
-  if (Platform.OS === "android") {
+  if (platform.isAndroid) {
     return StatusBar.currentHeight || 24;
   }
   // iOS handled by SafeAreaView
@@ -97,7 +98,7 @@ export const getStatusBarHeight = () => {
 
 // Shadow/Elevation helpers
 export const getShadowStyle = (elevation = 4) => {
-  if (Platform.OS === "android") {
+  if (platform.isAndroid) {
     return {
       elevation,
       backgroundColor: "white", // Required for elevation to work
@@ -115,8 +116,8 @@ export const getShadowStyle = (elevation = 4) => {
 
 // Keyboard helpers
 export const getKeyboardAvoidingViewProps = () => ({
-  behavior: Platform.OS === "ios" ? "padding" : "height",
-  keyboardVerticalOffset: Platform.OS === "ios" ? 0 : getStatusBarHeight(),
+  behavior: platform.isIOS ? "padding" : "height",
+  keyboardVerticalOffset: platform.isIOS ? 0 : getStatusBarHeight(),
 });
 
 // Export all for convenience

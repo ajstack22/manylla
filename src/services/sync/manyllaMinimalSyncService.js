@@ -1,9 +1,9 @@
-import { Platform } from "react-native";
+import platform from "../../utils/platform";
 
 // Create unified sync service based on platform
 let manyllaMinimalSyncService;
 
-if (Platform.OS === "web") {
+if (platform.isWeb) {
   // Web-specific implementation with fetch API
   manyllaMinimalSyncService = require("./manyllaMinimalSyncServiceWeb").default;
 } else {

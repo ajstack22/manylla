@@ -16,6 +16,8 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { useTheme } from "../../context/ThemeContext";
 import { getNumColumns, getCardWidth } from "../../utils/platformStyles";
 
+import platform from "../../utils/platform";
+
 export const CategoryManager = ({ visible, onClose, categories, onUpdate }) => {
   const { colors } = useTheme();
   const [categoryList, setCategoryList] = useState(categories);
@@ -222,12 +224,12 @@ const getStyles = (colors) =>
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundColor: Platform.select({
+      backgroundColor: platform.select({
         web: "rgba(0, 0, 0, 0.5)",
         ios: "rgba(0, 0, 0, 0.4)",
         android: "rgba(0, 0, 0, 0.5)",
       }),
-      ...Platform.select({
+      ...platform.select({
         web: {
           backdropFilter: "blur(4px)",
           WebkitBackdropFilter: "blur(4px)",
@@ -241,23 +243,23 @@ const getStyles = (colors) =>
     modalContainer: {
       backgroundColor: colors.background.paper,
       borderRadius: 12,
-      maxWidth: Platform.select({
+      maxWidth: platform.select({
         web: 600,
         default: "90%",
       }),
-      width: Platform.select({
+      width: platform.select({
         web: 600,
         default: "90%",
       }),
-      maxHeight: Platform.select({
+      maxHeight: platform.select({
         web: "80vh",
         default: "80%",
       }),
-      marginHorizontal: Platform.select({
+      marginHorizontal: platform.select({
         web: "auto",
         default: 20,
       }),
-      ...Platform.select({
+      ...platform.select({
         web: {
           boxShadow: `0 10px 40px ${colors.primary}26`,
           border: `1px solid ${colors.border}`,
@@ -282,7 +284,7 @@ const getStyles = (colors) =>
       alignItems: "center",
       justifyContent: "space-between",
       borderBottomWidth: 1,
-      borderBottomColor: Platform.select({
+      borderBottomColor: platform.select({
         web: `${colors.primary}CC`,
         default: colors.primary,
       }),
@@ -291,7 +293,7 @@ const getStyles = (colors) =>
       fontSize: 18,
       fontWeight: "600",
       color: colors.text.primary,
-      fontFamily: Platform.select({
+      fontFamily: platform.select({
         web: '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
         default: "System",
       }),
@@ -301,7 +303,7 @@ const getStyles = (colors) =>
       padding: 8,
       marginRight: -8,
       borderRadius: 20,
-      ...Platform.select({
+      ...platform.select({
         web: {
           cursor: "pointer",
           transition: "background-color 0.2s ease",
@@ -347,7 +349,7 @@ const getStyles = (colors) =>
       fontSize: 16,
       color: colors.text.primary,
       backgroundColor: colors.background.paper,
-      ...Platform.select({
+      ...platform.select({
         web: {
           outline: "none",
           transition: "border-color 0.2s ease",
@@ -367,7 +369,7 @@ const getStyles = (colors) =>
       alignItems: "center",
       padding: 12,
       backgroundColor: colors.background.paper,
-      ...Platform.select({
+      ...platform.select({
         web: {
           transition: "background-color 0.2s ease",
           ":hover": {
@@ -416,7 +418,7 @@ const getStyles = (colors) =>
     deleteButton: {
       padding: 8,
       borderRadius: 6,
-      ...Platform.select({
+      ...platform.select({
         web: {
           cursor: "pointer",
           transition: "background-color 0.2s ease",
@@ -460,7 +462,7 @@ const getStyles = (colors) =>
       minWidth: 100,
       alignItems: "center",
       justifyContent: "center",
-      ...Platform.select({
+      ...platform.select({
         web: {
           cursor: "pointer",
           transition: "all 0.2s ease",
@@ -484,7 +486,7 @@ const getStyles = (colors) =>
       minWidth: 100,
       alignItems: "center",
       justifyContent: "center",
-      ...Platform.select({
+      ...platform.select({
         web: {
           cursor: "pointer",
           transition: "all 0.2s ease",

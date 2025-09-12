@@ -1,5 +1,6 @@
 import React from "react";
-import { Dimensions, Platform } from "react-native";
+import { Dimensions } from "react-native";
+import platform from "../utils/platform";
 
 export const useMobileDialog = () => {
   const { width } = Dimensions.get("window");
@@ -13,7 +14,7 @@ export const useMobileDialog = () => {
         style: {
           margin: 0,
           maxHeight: "100%",
-          borderRadius: Platform.OS === "ios" ? 12 : 8,
+          borderRadius: platform.isIOS ? 12 : 8,
           maxWidth: "100%",
         },
       }
@@ -34,7 +35,7 @@ export const useMobileDialog = () => {
         presentationStyle: "formSheet",
         style: {
           margin: 0,
-          borderRadius: Platform.OS === "ios" ? 12 : 8,
+          borderRadius: platform.isIOS ? 12 : 8,
           width: "100%",
           maxWidth: "100%",
           height: "100%",

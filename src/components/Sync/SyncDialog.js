@@ -25,6 +25,8 @@ import {
   formatInviteCodeForDisplay,
 } from "../../utils/inviteCode";
 
+import platform from "../../utils/platform";
+
 export const SyncDialog = ({ open, onClose }) => {
   const { colors } = useTheme();
   const styles = getStyles(colors);
@@ -357,13 +359,13 @@ export const SyncDialog = ({ open, onClose }) => {
             styles.input,
             styles.codeInput,
             getTextStyle("input"), // Force black text on Android
-            Platform.OS === "android" && { color: "#000000" }, // Extra insurance
+            platform.isAndroid && { color: "#000000" }, // Extra insurance
           ]}
           value={joinPhrase}
           onChangeText={setJoinPhrase}
           placeholder="XXXX-XXXX or 32-character code"
           placeholderTextColor={
-            Platform.OS === "android" ? "#999" : colors.text.secondary
+            platform.isAndroid ? "#999" : colors.text.secondary
           }
           autoCapitalize="characters"
         />
@@ -649,7 +651,7 @@ const getStyles = (colors) =>
       borderRadius: 12,
       padding: 16,
       marginBottom: 16,
-      ...Platform.select({
+      ...platform.select({
         ios: {
           shadowColor: colors.text.primary,
           shadowOffset: { width: 0, height: 2 },
@@ -882,7 +884,7 @@ const getStyles = (colors) =>
       backgroundColor: colors.background.paper,
     },
     codeInput: {
-      fontFamily: Platform.select({
+      fontFamily: platform.select({
         ios: "Menlo",
         android: "monospace",
         default: "monospace",
@@ -902,7 +904,7 @@ const getStyles = (colors) =>
       marginVertical: 16,
     },
     phraseText: {
-      fontFamily: Platform.select({
+      fontFamily: platform.select({
         ios: "Menlo",
         android: "monospace",
         default: "monospace",
@@ -923,7 +925,7 @@ const getStyles = (colors) =>
       alignItems: "center",
     },
     inviteCode: {
-      fontFamily: Platform.select({
+      fontFamily: platform.select({
         ios: "Menlo",
         android: "monospace",
         default: "monospace",
@@ -947,7 +949,7 @@ const getStyles = (colors) =>
       marginBottom: 8,
     },
     linkText: {
-      fontFamily: Platform.select({
+      fontFamily: platform.select({
         ios: "Menlo",
         android: "monospace",
         default: "monospace",
@@ -992,7 +994,7 @@ const getStyles = (colors) =>
       alignItems: "center",
     },
     blurredText: {
-      fontFamily: Platform.select({
+      fontFamily: platform.select({
         ios: "Menlo",
         android: "monospace",
         default: "monospace",

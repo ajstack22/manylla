@@ -10,7 +10,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import { Platform } from "react-native";
+import platform from "../utils/platform";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ManyllaMinimalSyncService from "../services/sync/manyllaMinimalSyncService";
 import ManyllaEncryptionService from "../services/sync/manyllaEncryptionService";
@@ -38,7 +38,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
 
   // Platform-specific storage functions
   const getStorageItem = async (key) => {
-    if (Platform.OS === "web") {
+    if (platform.isWeb) {
       return localStorage.getItem(key);
     } else {
       return await AsyncStorage.getItem(key);
@@ -46,7 +46,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
   };
 
   const setStorageItem = async (key, value) => {
-    if (Platform.OS === "web") {
+    if (platform.isWeb) {
       localStorage.setItem(key, value);
     } else {
       await AsyncStorage.setItem(key, value);
@@ -54,7 +54,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
   };
 
   const removeStorageItem = async (key) => {
-    if (Platform.OS === "web") {
+    if (platform.isWeb) {
       localStorage.removeItem(key);
     } else {
       await AsyncStorage.removeItem(key);
@@ -390,10 +390,9 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
         );
 
         // Return the share URL with encryption key in fragment
-        const baseUrl =
-          Platform.OS === "web"
-            ? window.location.origin
-            : "https://manylla.com/qual";
+        const baseUrl = platform.isWeb
+          ? window.location.origin
+          : "https://manylla.com/qual";
 
         return `${baseUrl}/share/${shareId}#${shareData.key}`;
       } catch (error) {

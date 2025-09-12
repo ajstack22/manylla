@@ -34,7 +34,9 @@ export const QRCodeModal = ({
     try {
       // Without react-native-view-shot, just share the URL directly
       await Share.share({
-        message: `Manylla Share Link: ${url}\n\nScan the QR code or use this link to access shared information.`,
+        message: `Manylla Share Link: ${url}
+
+Scan the QR code or use this link to access shared information.`,
         url: url,
         title: "Manylla Share QR Code",
       });

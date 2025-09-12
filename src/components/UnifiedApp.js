@@ -1,3 +1,5 @@
+import platform from "../utils/platform";
+
 /**
  * Unified App Components for Manylla
  * Cross-platform components following StackMap patterns
@@ -22,7 +24,7 @@ import { getTextStyle } from "../utils/platformStyles";
 import { ThemedModal } from "./Common";
 // DatePicker handled through platform-specific implementations
 let DateTimePicker = null;
-if (Platform.OS !== "web") {
+if (platform.isMobile) {
   try {
     // Use eval to prevent webpack from analyzing this require
     DateTimePicker = eval("require")(
@@ -111,7 +113,7 @@ export const EntryForm = ({
 
   const renderContent = () => (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={platform.isIOS ? "padding" : "height"}
       style={{ flex: 1 }}
     >
       <ScrollView
@@ -163,13 +165,13 @@ export const EntryForm = ({
             style={[
               dynamicStyles.input,
               getTextStyle("input"),
-              Platform.OS === "android" && { color: "#000000" },
+              platform.isAndroid && { color: "#000000" },
             ]}
             value={title}
             onChangeText={setTitle}
             placeholder="Enter a title..."
             placeholderTextColor={
-              Platform.OS === "android" ? "#999" : activeColors.text.disabled
+              platform.isAndroid ? "#999" : activeColors.text.disabled
             }
           />
         </View>
@@ -182,13 +184,13 @@ export const EntryForm = ({
               dynamicStyles.input,
               dynamicStyles.textArea,
               getTextStyle("input"),
-              Platform.OS === "android" && { color: "#000000" },
+              platform.isAndroid && { color: "#000000" },
             ]}
             value={description}
             onChangeText={setDescription}
             placeholder="Add details..."
             placeholderTextColor={
-              Platform.OS === "android" ? "#999" : activeColors.text.disabled
+              platform.isAndroid ? "#999" : activeColors.text.disabled
             }
             multiline
             numberOfLines={5}
@@ -207,7 +209,7 @@ export const EntryForm = ({
               {date.toLocaleDateString()}
             </Text>
           </TouchableOpacity>
-          {showDatePicker && Platform.OS !== "web" && DateTimePicker && (
+          {showDatePicker && !platform.isWeb && DateTimePicker && (
             <DateTimePicker
               value={date}
               mode="date"
@@ -305,13 +307,13 @@ export const ProfileEditForm = ({
           style={[
             dynamicStyles.input,
             getTextStyle("input"),
-            Platform.OS === "android" && { color: "#000000" },
+            platform.isAndroid && { color: "#000000" },
           ]}
           value={name}
           onChangeText={setName}
           placeholder="Full name"
           placeholderTextColor={
-            Platform.OS === "android" ? "#999" : activeColors.text.disabled
+            platform.isAndroid ? "#999" : activeColors.text.disabled
           }
         />
       </View>
@@ -322,13 +324,13 @@ export const ProfileEditForm = ({
           style={[
             dynamicStyles.input,
             getTextStyle("input"),
-            Platform.OS === "android" && { color: "#000000" },
+            platform.isAndroid && { color: "#000000" },
           ]}
           value={preferredName}
           onChangeText={setPreferredName}
           placeholder="What they like to be called"
           placeholderTextColor={
-            Platform.OS === "android" ? "#999" : activeColors.text.disabled
+            platform.isAndroid ? "#999" : activeColors.text.disabled
           }
         />
       </View>
@@ -354,7 +356,7 @@ export const ProfileEditForm = ({
             {dateOfBirth.toLocaleDateString()}
           </Text>
         </TouchableOpacity>
-        {showDatePicker && Platform.OS !== "web" && DateTimePicker && (
+        {showDatePicker && !platform.isWeb && DateTimePicker && (
           <DateTimePicker
             value={dateOfBirth}
             mode="date"
@@ -571,7 +573,7 @@ const createDynamicStyles = (activeColors) =>
       backgroundColor: "rgba(0,0,0,0.5)",
       justifyContent: "center",
       alignItems: "center",
-      paddingHorizontal: Platform.OS === "web" ? 20 : 0,
+      paddingHorizontal: platform.isWeb ? 20 : 0,
     },
     modalCloseText: {
       fontSize: 24,

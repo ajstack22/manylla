@@ -19,6 +19,7 @@ import util from "tweetnacl-util";
 import { useTheme } from "../../context/ThemeContext";
 import { ThemedModal } from "../Common";
 import { API_ENDPOINTS } from "../../config/api";
+import platform from "../../utils/platform";
 
 const sharePresets = [
   {
@@ -205,7 +206,13 @@ export const ShareDialogOptimized = ({ open, onClose, profile }) => {
           : expirationDays === 90
             ? "3 months"
             : "6 months";
-      const message = `Here's a secure encrypted link to view ${profile.preferredName || profile.name}'s information:\n\n${generatedLink}\n\nThis link will expire in ${expiration}.\n\nNotehis link contains encrypted data. Please use the complete link exactly as provided.`;
+      const message = `Here's a secure encrypted link to view ${profile.preferredName || profile.name}'s information:
+
+${generatedLink}
+
+This link will expire in ${expiration}.
+
+Notehis link contains encrypted data. Please use the complete link exactly as provided.`;
 
       await Share.share({
         message,
@@ -421,7 +428,7 @@ export const ShareDialogOptimized = ({ open, onClose, profile }) => {
             style={[
               styles.linkInput,
               getTextStyle("input"),
-              Platform.OS === "android" && { color: "#000000" },
+              platform.isAndroid && { color: "#000000" },
             ]}
             value={generatedLink}
             editable={false}
@@ -732,7 +739,7 @@ const getStyles = (colors) =>
       backgroundColor: colors.background.default,
       borderRadius: 8,
       padding: 12,
-      fontFamily: Platform.OS === "ios" ? "Menlo" : "monospace",
+      fontFamily: platform.isIOS ? "Menlo" : "monospace",
       fontSize: 12,
       color: colors.text.primary,
     },

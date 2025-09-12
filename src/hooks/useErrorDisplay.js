@@ -1,9 +1,10 @@
 import { useState, useCallback, useEffect } from "react";
 import { Platform } from "react-native";
+import platform from "../utils/platform";
 
 // Helper to show toast messages (simplified version)
 const showToast = (message, type) => {
-  if (Platform.OS === "web" && typeof window !== "undefined") {
+  if (platform.isWeb && typeof window !== "undefined") {
     // Could use a toast library in the future
     // Toast message would be shown here
   }
@@ -40,7 +41,7 @@ export const useErrorDisplay = (error, errorInfo) => {
       // Auto-show details in dev
       const isDevelopment =
         (typeof global !== "undefined" && global.__DEV__) ||
-        (Platform.OS === "web" && process?.env?.NODE_ENV === "development");
+        (platform.isWeb && process?.env?.NODE_ENV === "development");
 
       if (isDevelopment) {
         setShowDetails(true);
@@ -55,11 +56,11 @@ export const useErrorDisplay = (error, errorInfo) => {
         stack: error?.stack,
         componentStack: errorInfo?.componentStack,
         userAgent:
-          Platform.OS === "web" && typeof navigator !== "undefined"
+          platform.isWeb && typeof navigator !== "undefined"
             ? navigator.userAgent
-            : Platform.OS,
+            : platform.OS,
         timestamp: new Date().toISOString(),
-        platform: Platform.OS,
+        platform: platform.OS,
         version: Platform.Version,
       };
 

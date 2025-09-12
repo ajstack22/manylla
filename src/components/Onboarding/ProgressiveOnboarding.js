@@ -12,6 +12,7 @@ import {
   Alert,
 } from "react-native";
 import { getTextStyle, getScrollViewProps } from "../../utils/platformStyles";
+import { isWeb, isAndroid } from "../../utils/platform";
 
 const { width } = Dimensions.get("window");
 
@@ -151,7 +152,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
     },
     scrollContainer: {
       paddingHorizontal: 16,
-      maxWidth: Platform.OS === "web" ? 480 : width,
+      maxWidth: isWeb ? 480 : width,
       alignSelf: "center",
       width: "100%",
     },
@@ -515,14 +516,12 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
                       style={[
                         styles.textInput,
                         getTextStyle("input"),
-                        Platform.OS === "android" && { color: "#000000" },
+                        isAndroid && { color: "#000000" },
                       ]}
                       value={accessCode}
                       onChangeText={(text) => setAccessCode(text.toUpperCase())}
                       placeholder="Enter 6-digit code"
-                      placeholderTextColor={
-                        Platform.OS === "android" ? "#999" : undefined
-                      }
+                      placeholderTextColor={isAndroid ? "#999" : undefined}
                       maxLength={6}
                       autoCapitalize="characters"
                     />

@@ -10,6 +10,7 @@ import {
 import { getScrollViewProps } from "../../utils/platformStyles";
 import { useTheme } from "../../context/ThemeContext";
 import { useErrorDisplay } from "../../hooks/useErrorDisplay";
+import platform from "../../utils/platform";
 
 export const ErrorFallback = ({
   error,
@@ -25,7 +26,7 @@ export const ErrorFallback = ({
 
   const isDevelopment =
     (typeof global !== "undefined" && global.__DEV__) ||
-    (Platform.OS === "web" && process?.env?.NODE_ENV === "development");
+    (platform.isWeb && process?.env?.NODE_ENV === "development");
 
   const styles = createStyles(colors, theme);
 
@@ -58,7 +59,7 @@ export const ErrorFallback = ({
             <TouchableOpacity
               style={[styles.button, styles.secondaryButton]}
               onPress={() => {
-                if (Platform.OS === "web" && typeof window !== "undefined") {
+                if (platform.isWeb && typeof window !== "undefined") {
                   window.location.reload();
                 }
               }}
@@ -151,7 +152,7 @@ const createStyles = (colors, theme) =>
       maxWidth: 500,
       width: "100%",
       alignItems: "center",
-      ...Platform.select({
+      ...platform.select({
         web: {
           boxShadow:
             theme === "dark"
@@ -256,12 +257,12 @@ const createStyles = (colors, theme) =>
       marginBottom: 4,
     },
     codeText: {
-      fontFamily: Platform.OS === "ios" ? "Courier" : "monospace",
+      fontFamily: platform.isIOS ? "Courier" : "monospace",
       fontSize: 12,
       color: colors.text.secondary,
     },
     stackTrace: {
-      fontFamily: Platform.OS === "ios" ? "Courier" : "monospace",
+      fontFamily: platform.isIOS ? "Courier" : "monospace",
       fontSize: 11,
       color: colors.text.secondary,
       lineHeight: 16,
