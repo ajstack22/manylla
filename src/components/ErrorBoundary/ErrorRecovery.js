@@ -15,7 +15,9 @@ const clearLocalStorage = async () => {
     await AsyncStorage.clear();
     // Local storage cleared
   } catch (error) {
-    console.error("Failed to clear local storage:", error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error("Failed to clear local storage:", error);
+    }
     throw error;
   }
 };
@@ -25,7 +27,9 @@ const disableSync = async () => {
     await AsyncStorage.setItem("manylla_sync_disabled", "true");
     // Sync disabled
   } catch (error) {
-    console.error("Failed to disable sync:", error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error("Failed to disable sync:", error);
+    }
     throw error;
   }
 };
@@ -40,7 +44,9 @@ const resetApplication = async () => {
 
     // Application reset
   } catch (error) {
-    console.error("Failed to reset application:", error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error("Failed to reset application:", error);
+    }
     throw error;
   }
 };

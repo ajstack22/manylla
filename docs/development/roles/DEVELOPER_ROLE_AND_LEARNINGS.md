@@ -461,3 +461,48 @@ The user's instinct to demand TRUE centralization was correct. The implementatio
 *Last Updated: 2025-09-11*
 *Critical lessons from real deployment failures and successes*
 *This learning applies beyond modals to any centralization effort: authentication, data fetching, styling, routing, etc.*
+## React Native Web Specific Patterns (Added 2025-09-12 from B003)
+
+### 🔴 CRITICAL: React Native Web CSS Override Issue
+**Problem**: RNW generates CSS classes that override StyleSheet properties
+**Solution**: Use inline styles for guaranteed specificity
+
+```javascript
+// ✅ CORRECT - Inline style overrides RNW classes
+<View 
+  style={[
+    styles.header,
+    { backgroundColor: headerBackground } // Forces override
+  ]}
+>
+
+// ❌ WRONG - Can be overridden by RNW classes
+<View style={styles.header}>  // backgroundColor might not apply
+```
+
+### 🔴 Material Icons Web Compatibility
+**Problem**: MaterialIcons font may not load on web
+**Solution**: Use text characters for cross-platform reliability
+
+```javascript
+// ✅ CORRECT - Works everywhere
+<Text style={{ fontSize: 24, color: iconColor }}>✕</Text>
+
+// ❌ WRONG - May show broken glyph on web
+<Icon name="close" size={24} color={iconColor} />
+```
+
+### 🔴 Debugging React Native Web UI Issues
+When styles aren't applying:
+1. Inspect DOM for `r-[property]-[hash]` classes
+2. These RNW classes may override your styles
+3. Use inline styles to force override
+4. Create browser console debug scripts
+
+```javascript
+// Debug script for browser console
+document.querySelectorAll('[class*="r-backgroundColor"]').forEach(el => {
+  console.log('RNW override:', el.className, getComputedStyle(el).backgroundColor);
+});
+```
+

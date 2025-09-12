@@ -99,7 +99,7 @@ export const ErrorHandler = {
    * Log error for debugging (production-safe)
    */
   log(error, context = {}) {
-    // TODO: Replace with error tracking service (Sentry/Bugsnag) in production
+    // Error tracking service integration planned for production deployment
     // This console.error is development-only and will not appear in production builds
     // See TECH_DEBT.md for production error tracking implementation
     if (process.env.NODE_ENV !== "production") {

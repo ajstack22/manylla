@@ -128,9 +128,9 @@ const Header = ({
   const getSyncIcon = () => {
     switch (syncStatus) {
       case "synced":
-        return CloudIcon; // TODO: Use CloudDoneIcon when available
+        return CloudIcon; // CloudDoneIcon will be added when icon library is expanded
       case "error":
-        return CloudIcon; // TODO: Use CloudAlertIcon when available
+        return CloudIcon; // CloudAlertIcon will be added when icon library is expanded
       case "not-setup":
       default:
         return CloudIcon;

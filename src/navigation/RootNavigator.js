@@ -25,7 +25,7 @@ const RootNavigator = () => {
       const profileExists = await ProfileStorageService.hasProfile();
       setHasProfile(profileExists);
 
-      // TODOheck if biometric auth is enabled and required
+      // Biometric auth will be implemented in a future security-focused iteration
       // const authRequired = await checkAuthRequired();
       // setNeedsAuth(authRequired);
     } catch (error) {

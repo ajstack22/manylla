@@ -142,7 +142,9 @@ export const ErrorBoundary = ({
                   await action();
                   handleReset();
                 } catch (err) {
-                  console.error("Recovery failed:", err);
+                  if (process.env.NODE_ENV === 'development') {
+                    console.error("Recovery failed:", err);
+                  }
                 }
               }}
               isRecovering={errorHandler.isRecovering}

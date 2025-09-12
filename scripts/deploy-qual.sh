@@ -666,11 +666,42 @@ if [ -n "$ANDROID_DEVICES" ]; then
     echo "✅ Android devices deployment attempted"
 fi
 echo
+
+# ============================================================================
+# OPTIONAL: Update Role Definitions with Recent Learnings
+# ============================================================================
+
+echo "Role Evolution Check:"
+echo "────────────────────"
+# Check if this was a bug fix or feature implementation
+if echo "$RELEASE_TITLE" | grep -iE "fix|bug|B[0-9]{3}|feature|feat|S[0-9]{3}" > /dev/null; then
+    echo -e "${YELLOW}This deployment appears to include fixes or features.${NC}"
+    echo "Would you like to capture learnings for role evolution?"
+    echo ""
+    read -p "Update role definitions with learnings? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        if [ -f "$SCRIPT_DIR/apply-role-learnings.sh" ]; then
+            echo -e "${BLUE}Applying recent learnings to role definitions...${NC}"
+            "$SCRIPT_DIR/apply-role-learnings.sh"
+            echo "✅ Role definitions updated with recent learnings"
+        else
+            echo -e "${YELLOW}Role learning script not found. Skipping.${NC}"
+        fi
+    else
+        echo "Skipping role definition updates"
+    fi
+else
+    echo "No bug fixes or features detected in this deployment"
+fi
+echo
+
 echo "Next Steps:"
 echo "──────────"
 echo "1. Test the deployment at https://manylla.com/qual"
 echo "2. Check all critical features are working"
 echo "3. Monitor error logs for any issues"
 echo "4. Once verified, consider production deployment"
+echo "5. If bugs were fixed, consider updating role definitions"
 echo
 echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
