@@ -1,4 +1,4 @@
-import platform from "../utils/platform";
+import platform from "../../utils/platform";
 
 // React imports
 import React, { useState } from "react";
