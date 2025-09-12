@@ -96,7 +96,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      "@platform": path.resolve(__dirname, "src/utils/platform"),
+      // @platform alias removed - using relative imports for consistency across all bundlers
       "@utils": path.resolve(__dirname, "src/utils"),
       "@components": path.resolve(__dirname, "src/components"),
       "@hooks": path.resolve(__dirname, "src/hooks"),
