@@ -513,5 +513,7 @@ export default {
   DEPRECATED,
 };
 
-// Backward compatibility - keep OS for existing code
-export const OS = Platform.OS;
+// Platform.OS references should now use specific detection exports:
+// Instead of Platform.OS === 'web' → use isWeb
+// Instead of Platform.OS === 'ios' → use isIOS  
+// Instead of Platform.OS === 'android' → use isAndroid

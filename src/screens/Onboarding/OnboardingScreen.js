@@ -766,12 +766,10 @@ const OnboardingScreen = ({ onComplete }) => {
         <View style={styles.infoBox}>
           <Text style={styles.infoTitle}>manylla helps you:</Text>
           <Text style={styles.infoText}>
-            • Track developmental milestones{"
-"}• Organize IEP goals and
-            medical records{"
-"}• Share information securely{"
-"}• Sync across
-            all your devices
+            • Track developmental milestones
+• Organize IEP goals and medical records
+• Share information securely
+• Sync across all your devices
           </Text>
         </View>
 

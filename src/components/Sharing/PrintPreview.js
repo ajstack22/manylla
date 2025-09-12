@@ -205,10 +205,10 @@ export const PrintPreview = ({
       content += `For: ${recipientName}
 `;
     }
-    content += "
+    content += `
 ---
 
-";
+`;
 
     if (note) {
       content += `Note: ${note}
@@ -221,9 +221,9 @@ export const PrintPreview = ({
       if (categoryEntries.length > 0) {
         content += `${category.toUpperCase()}
 `;
-        content += "=".repeat(category.length) + "
+        content += "=".repeat(category.length) + `
 
-";
+`;
 
         categoryEntries.forEach((entry, index) => {
           content += `${index + 1}. ${entry.title}
