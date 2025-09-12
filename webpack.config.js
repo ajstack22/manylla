@@ -121,6 +121,7 @@ module.exports = {
       "react-native-qrcode-svg": false,
       "react-native-view-shot": false,
       "react-native-html-to-pdf": false,
+      // react-native-gesture-handler is handled by NormalModuleReplacementPlugin above
     },
     extensions: [".web.js", ".js", ".json"],
   },
@@ -129,6 +130,11 @@ module.exports = {
     new webpack.IgnorePlugin({
       resourceRegExp: /\.native\.(js|jsx|ts|tsx)$/,
     }),
+    // Replace react-native-gesture-handler with web-compatible stub
+    new webpack.NormalModuleReplacementPlugin(
+      /react-native-gesture-handler/,
+      path.resolve(__dirname, "src/stubs/gestureHandlerRoot.js")
+    ),
     new HtmlWebpackPlugin({
       template: "./public/index.html",
       filename: "index.html",
