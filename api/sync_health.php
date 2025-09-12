@@ -1,46 +1,31 @@
 <?php
 /**
- * Sync Health Check Endpoint
- * Maps to the actual health.php endpoint
- * This is the endpoint expected by the mobile app
+ * Health Check Endpoint
+ * Returns API status and environment information
  */
 
-// CORS headers for mobile app
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+require_once '../config/config.php';
 
-// Handle preflight
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit(0);
+// Return health status
+$response = [
+    'status' => 'healthy',
+    'timestamp' => time(),
+    'environment' => API_ENV ?? 'unknown',
+    'version' => API_VERSION ?? '1.0.0'
+];
+
+// Test database connection if in debug mode
+if (defined('API_DEBUG') && API_DEBUG) {
+    try {
+        $db = getDbConnection();
+        $response['database'] = 'connected';
+        $response['database_name'] = DB_NAME;
+    } catch (Exception $e) {
+        $response['database'] = 'error';
+        $response['database_error'] = $e->getMessage();
+    }
 }
 
-// Set working directory to sync folder
-$syncDir = __DIR__ . '/sync';
-if (!is_dir($syncDir)) {
-    header('Content-Type: application/json');
-    http_response_code(503);
-    echo json_encode([
-        'success' => false,
-        'error' => 'Sync service not configured'
-    ]);
-    exit;
-}
-
-// Check if health endpoint exists
-$healthFile = $syncDir . '/health.php';
-if (!file_exists($healthFile)) {
-    header('Content-Type: application/json');
-    http_response_code(503);
-    echo json_encode([
-        'success' => false,
-        'error' => 'Health endpoint not available'
-    ]);
-    exit;
-}
-
-// Change to sync directory and include health endpoint
-chdir($syncDir);
-include 'health.php';
+http_response_code(200);
+echo json_encode($response, JSON_PRETTY_PRINT);
 ?>
