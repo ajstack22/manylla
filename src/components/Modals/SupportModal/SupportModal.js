@@ -161,7 +161,7 @@ const SupportModal = ({
                 />
               ) : (
                 <Image
-                  source={{ uri: "/StackMapTeam.jpg" }}
+                  source={require("../../../../public/StackMapTeam.jpg")}
                   style={styles.teamPhoto}
                   resizeMode="cover"
                 />

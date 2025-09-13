@@ -1,7 +1,7 @@
 # Development Backlog
 
 *Last Updated: 2025-09-12*
-*Next ID: S014, B004*
+*Next ID: S017, B004*
 
 ## Quick Start for Claude
 Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything needed to start immediately.
@@ -15,6 +15,7 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟠 P1 - High (Do Next)
 ### Stories
+- [S016](backlog/S016-replace-header-menu-with-bottom-sheet-navigation-system.md) - Replace Header Menu with Bottom Sheet Navigation System ✅ **READY**
 - [S008](backlog/S008-privacy-policy.md) - Implement Privacy Policy Modal and Infrastructure ✅ **READY**
 
 ### Bugs
@@ -23,8 +24,6 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 ## 🟡 P2 - Medium (Plan Soon)
 ### Stories
 - [S015](backlog/S015-implement-support-us-page-with-donation-and-community-features.md) - Implement Support Us Page with Donation and Community Features ✅ **READY**
-- [S015](backlog/S015-reorganize-development-folder-to-root-level-processes.md) - Reorganize Development Folder to Root-Level Processes ✅ **READY**
-- [S015](backlog/S015-test-story-after-reorganization.md) - Test Story After Reorganization ✅ **READY**
 - [S013](backlog/S013-sentry-integration.md) - Integrate Production Error Tracking (Sentry) ✅ **READY**
 - [S010](backlog/S010-react-native-netinfo.md) - Integrate React Native NetInfo ✅ **READY**
 - [S007](backlog/S007-dead-code-elimination.md) - Dead Code Elimination and Import Cleanup ✅ **READY**

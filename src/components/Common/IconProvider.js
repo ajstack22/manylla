@@ -179,6 +179,7 @@ const iconNameMap = {
   Lock: "lock",
   LockOpen: "lock-open",
   Security: "security",
+  PrivacyTip: "privacy-tip",
   DarkMode: "dark-mode",
   LightMode: "light-mode",
   Palette: "palette",
