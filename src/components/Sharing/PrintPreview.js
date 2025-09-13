@@ -97,7 +97,7 @@ export const PrintPreview = ({
 `;
     }
 
-    selectedCategories.forEach((category) => {
+    selectedCategories && selectedCategories.forEach((category) => {
       const categoryEntries = entries[category] || [];
       if (categoryEntries.length > 0) {
         content += `${category.toUpperCase()}
@@ -286,7 +286,7 @@ export const PrintPreview = ({
     </div>`;
     }
 
-    selectedCategories.forEach((category) => {
+    selectedCategories && selectedCategories.forEach((category) => {
         const categoryEntries = entries[category] || [];
         if (categoryEntries.length > 0) {
             html += `
@@ -378,7 +378,7 @@ export const PrintPreview = ({
             )}
 
             {/* Selected Categories */}
-            {selectedCategories.map((category) => {
+            {selectedCategories && selectedCategories.map((category) => {
               const categoryEntries = entries[category];
               if (!categoryEntries || categoryEntries.length === 0) return null;
 
