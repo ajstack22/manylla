@@ -4,7 +4,8 @@ export const createStyles = (colors) => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.background?.primary || colors.background || "#FFFFFF",
+      backgroundColor:
+        colors.background?.primary || colors.background || "#FFFFFF",
     },
     header: {
       flexDirection: "row",
@@ -14,7 +15,11 @@ export const createStyles = (colors) => {
       paddingVertical: 12,
       borderBottomWidth: 1,
       borderBottomColor: colors.border || "#E0E0E0",
-      backgroundColor: colors.background?.secondary || colors.surface || colors.background?.primary || "#FFFFFF",
+      backgroundColor:
+        colors.background?.secondary ||
+        colors.surface ||
+        colors.background?.primary ||
+        "#FFFFFF",
       minHeight: 64,
     },
     logoContainer: {
@@ -29,7 +34,8 @@ export const createStyles = (colors) => {
       letterSpacing: 0.5,
       ...Platform.select({
         web: {
-          fontFamily: '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
+          fontFamily:
+            '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
         },
       }),
     },
@@ -53,7 +59,7 @@ export const createStyles = (colors) => {
           borderColor: "#CC0000",
         },
         android: {
-          // Android: Use a subtle red border  
+          // Android: Use a subtle red border
           borderWidth: 2,
           borderColor: "#CC0000",
         },
@@ -65,7 +71,8 @@ export const createStyles = (colors) => {
       fontWeight: "600",
       ...Platform.select({
         web: {
-          fontFamily: '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
+          fontFamily:
+            '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
         },
       }),
     },
@@ -106,7 +113,8 @@ export const createStyles = (colors) => {
     },
     section: {
       marginBottom: 24,
-      backgroundColor: colors.background?.secondary || colors.surface || "transparent",
+      backgroundColor:
+        colors.background?.secondary || colors.surface || "transparent",
       padding: 16,
       borderRadius: 12,
       borderWidth: 1,
@@ -133,7 +141,8 @@ export const createStyles = (colors) => {
       paddingTop: 24,
       borderTopWidth: 1,
       borderTopColor: colors.border || "#E0E0E0",
-      backgroundColor: colors.background?.secondary || colors.surface || "transparent",
+      backgroundColor:
+        colors.background?.secondary || colors.surface || "transparent",
       padding: 20,
       marginHorizontal: -20,
       borderRadius: 12,

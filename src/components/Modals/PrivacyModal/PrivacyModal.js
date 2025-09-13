@@ -13,12 +13,17 @@ import {
 import { useTheme } from "../../../context/ThemeContext";
 import { createStyles } from "./styles";
 
-const PrivacyModal = ({ visible, onClose, insets, forceManyllaTheme = false }) => {
+const PrivacyModal = ({
+  visible,
+  onClose,
+  insets,
+  forceManyllaTheme = false,
+}) => {
   const { colors: contextColors, theme } = useTheme();
-  
+
   // Use manylla theme during onboarding, current theme after
   const useManyllaTheme = forceManyllaTheme || !theme;
-  
+
   // Define manylla colors for onboarding
   const manyllaColors = {
     background: {
@@ -32,7 +37,7 @@ const PrivacyModal = ({ visible, onClose, insets, forceManyllaTheme = false }) =
     border: "#A68B5B", // Darker manila for borders
     primary: "#5D4E37", // Dark brown for primary elements
   };
-  
+
   // Use manylla theme for onboarding, context theme otherwise
   const colors = useManyllaTheme ? manyllaColors : contextColors;
   const styles = createStyles(colors);
@@ -141,9 +146,13 @@ const PrivacyModal = ({ visible, onClose, insets, forceManyllaTheme = false }) =
       onRequestClose={onClose}
     >
       {Platform.OS === "android" && (
-        <StatusBar 
-          backgroundColor={colors.background.primary} 
-          barStyle={theme === "dark" && !useManyllaTheme ? "light-content" : "dark-content"} 
+        <StatusBar
+          backgroundColor={colors.background.primary}
+          barStyle={
+            theme === "dark" && !useManyllaTheme
+              ? "light-content"
+              : "dark-content"
+          }
         />
       )}
       <SafeAreaView
