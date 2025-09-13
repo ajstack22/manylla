@@ -74,7 +74,7 @@ The enhanced `deploy-qual.sh` script now has 4 distinct phases:
 1. Update version in package.json
 2. Commit changes with release notes title (follows convention: `v<version>: <title>`)
 3. Push to GitHub
-   - See `docs/development/GIT_COMMIT_CONVENTIONS.md` for commit standards
+   - See `processes/GIT_COMMIT_CONVENTIONS.md` for commit standards
 
 ### Phase 3: Web Deployment (FASTEST - happens first)
 1. Build web application

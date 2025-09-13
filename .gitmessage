@@ -22,4 +22,4 @@
 # For breaking changes: add "BREAKING CHANGE:" in footer
 # For WIP: prefix with "WIP: "
 # 
-# See docs/development/GIT_COMMIT_CONVENTIONS.md for full details
+# See processes/GIT_COMMIT_CONVENTIONS.md for full details

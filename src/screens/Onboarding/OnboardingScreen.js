@@ -37,7 +37,7 @@ import { StorageService } from "../../services/storage/storageService";
 import { unifiedCategories } from "../../utils/unifiedCategories";
 
 // Import Ellie image for React Native
-const EllieImage = !platform.isWeb ? require("../../../ellie.png") : null;
+const EllieImage = !platform.isWeb ? require("../../../public/assets/ellie.png") : null;
 
 // Helper function to map category IDs to icons
 const getIconForCategory = (categoryId) => {

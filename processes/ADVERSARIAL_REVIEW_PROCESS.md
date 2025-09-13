@@ -61,7 +61,7 @@ Provide:
    ### Tech Debt Discovered
    - **Item 1**: [Brief description] (Priority: P0-P3, Effort: S/M/L)
    - **Item 2**: [Brief description] (Priority: P0-P3, Effort: S/M/L)
-   [Save as draft in docs/development/tech-debt/drafts/]
+   [Save as draft in processes/tech-debt/drafts/]
    ```
 
 ---

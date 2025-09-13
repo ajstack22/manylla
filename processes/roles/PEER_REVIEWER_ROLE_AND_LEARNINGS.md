@@ -18,13 +18,13 @@ Adversarial reviewer - Find every flaw, expose shortcuts, reject anything imperf
 ### Tech Debt Collection During Review
 ```bash
 # Document any debt discovered during review
-echo "Issue: [Description]" >> docs/development/tech-debt/drafts/review-findings.md
+echo "Issue: [Description]" >> processes/tech-debt/drafts/review-findings.md
 
 # Check story status in backlog
-grep "S###" docs/development/BACKLOG.md
+grep "S###" processes/BACKLOG.md
 
 # Verify story requirements met
-cat docs/development/backlog/S###-*.md  # Check acceptance criteria
+cat processes/backlog/S###-*.md  # Check acceptance criteria
 ```
 
 ## Mandatory Validation Commands

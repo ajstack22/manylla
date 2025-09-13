@@ -390,20 +390,20 @@ git log --oneline -10  # Recent commits
 ### 🔴 New Process: Backlog & Tech Debt Management
 ```bash
 # Check current work priorities
-cat docs/development/BACKLOG.md
+cat processes/BACKLOG.md
 
 # Start a story - update status to ACTIVE
-vim docs/development/BACKLOG.md  # Change status
+vim processes/BACKLOG.md  # Change status
 
 # During implementation, capture tech debt
-echo "Bundle size too large" >> docs/development/tech-debt/drafts/bundle-optimization.md
+echo "Bundle size too large" >> processes/tech-debt/drafts/bundle-optimization.md
 
 # After implementation
 ./scripts/update-backlog-priority.sh  # Update story status to COMPLETED
 ```
 
 ### 🔴 When Receiving a Story from Backlog
-1. **Check Story ID** - Find in docs/development/backlog/S###-*.md
+1. **Check Story ID** - Find in processes/backlog/S###-*.md
 2. **Update Status** - Mark as ACTIVE in BACKLOG.md
 3. **Read Requirements** - Understand all acceptance criteria
 4. **Check existing code** - Search for related patterns/components

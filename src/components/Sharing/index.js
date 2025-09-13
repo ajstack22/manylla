@@ -5,3 +5,4 @@ export { QRCodeModal } from "./QRCodeModal";
 export { SharedProfileView } from "./SharedProfileView";
 export { SharedView } from "./SharedView";
 export { PrintPreview } from "./PrintPreview";
+export { ShareAccessView } from "./ShareAccessView";

@@ -3,8 +3,7 @@
 ## 📁 Structure Overview
 
 ```
-docs/development/
-├── processes/          # Development workflows and methodologies
+processes/
 ├── backlog/           # Active stories and priorities
 ├── stories/           # Individual implementation tasks (completed)
 ├── bugs/              # Bug reports and resolutions
@@ -20,7 +19,7 @@ docs/development/
 ### For a Single Story
 1. Create story using `./scripts/create-story.sh "Title" P1`
 2. Fill in requirements and success metrics
-3. Apply `processes/ADVERSARIAL_REVIEW_PROCESS.md`
+3. Apply `ADVERSARIAL_REVIEW_PROCESS.md`
 4. Use assigned roles from [STORY_ROLE_ASSIGNMENTS.md](STORY_ROLE_ASSIGNMENTS.md)
 5. Iterate until approved
 
@@ -33,19 +32,19 @@ docs/development/
 ### For an Epic (Multiple Stories)
 1. Copy `templates/epic-template.md`
 2. Break down into individual stories
-3. Apply `processes/EPIC_REVIEW_PROCESS.md`
+3. Apply `EPIC_REVIEW_PROCESS.md`
 4. Validate both story-level and epic-level
 
 ## 📋 Process Documentation
 
 ### Core Processes
 
-#### 1. [Adversarial Review Process](processes/ADVERSARIAL_REVIEW_PROCESS.md)
+#### 1. [Adversarial Review Process](ADVERSARIAL_REVIEW_PROCESS.md)
 **Purpose**: Rigorous validation of individual story implementations
 **When to use**: Any non-trivial story requiring quality assurance
 **Key feature**: Developer vs Peer Reviewer adversarial validation
 
-#### 2. [Epic Review Process](processes/EPIC_REVIEW_PROCESS.md)
+#### 2. [Epic Review Process](EPIC_REVIEW_PROCESS.md)
 **Purpose**: Manage multi-story implementations with integration validation
 **When to use**: Large features requiring multiple coordinated stories
 **Key feature**: Story-level + Epic-level validation

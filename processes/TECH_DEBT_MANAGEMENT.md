@@ -39,7 +39,7 @@ When implementing stories, collect tech debt items as they're discovered:
 
 ## 2. Draft Format
 
-Save to `docs/development/tech-debt/drafts/YYYY-MM-DD-[topic].md`:
+Save to `processes/tech-debt/drafts/YYYY-MM-DD-[topic].md`:
 
 ```markdown
 # Tech Debt Draft: [Topic]

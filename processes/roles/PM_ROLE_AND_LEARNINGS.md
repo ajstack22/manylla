@@ -6,7 +6,7 @@ Manage development workflow, prioritize work, ensure quality standards.
 ## New Backlog Management Process
 ```bash
 # Manage work priorities
-cat docs/development/BACKLOG.md                         # Review current priorities
+cat processes/BACKLOG.md                         # Review current priorities
 ./scripts/update-backlog-priority.sh                    # Reorder work items
 
 # Create new work items
@@ -17,7 +17,7 @@ cat docs/development/BACKLOG.md                         # Review current priorit
 ./scripts/tech-debt-to-story.sh drafts/debt.md         # Prioritize tech debt
 
 # Epic management
-cat docs/development/processes/EPIC_REVIEW_PROCESS.md  # Multi-story coordination
+cat processes/EPIC_REVIEW_PROCESS.md  # Multi-story coordination
 ```
 
 ## Critical Commands & Metrics
@@ -56,7 +56,7 @@ npm run build:web                                        # Must pass
 ### 4. Priority Number Conflicts = Workflow Chaos
 **MISTAKE**: Multiple 03-medium packs
 **CORRECT**: Unique numbers ALWAYS (01, 02, 03, never duplicate)
-**PREVENTION**: Check before creating: `ls docs/prompts/active/`
+**PREVENTION**: Check before creating: `ls prompts/active/` (if using prompts)
 
 ### 5. Documentation Debt = 30% Waste
 **PATTERN**: Phase transitions leave obsolete docs

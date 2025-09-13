@@ -44,6 +44,7 @@ import {
 import { ThemedToast } from "./src/components/Toast";
 import { LoadingOverlay } from "./src/components/Loading";
 import { Header, HEADER_HEIGHT } from "./src/components/Layout";
+import { ShareAccessView } from "./src/components/Sharing";
 // Lazy load onboarding - only shown to new users
 const OnboardingScreen = lazy(
   () => import("./src/screens/Onboarding/OnboardingScreen"),
@@ -621,6 +622,11 @@ function AppContent() {
   const [operationLoading, setOperationLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
   const [isProfileHidden, setIsProfileHidden] = useState(false);
+  
+  // Share view state
+  const [isShareView, setIsShareView] = useState(false);
+  const [shareAccessCode, setShareAccessCode] = useState(null);
+  const [shareEncryptionKey, setShareEncryptionKey] = useState(null);
 
   // Configure StatusBar for Android
   useEffect(() => {
@@ -638,7 +644,24 @@ function AppContent() {
     const loadInitialData = async () => {
       setIsLoading(true);
       try {
-        // Check if onboarding completed
+        // Check for share URL first (web only)
+        if (isWeb && typeof window !== "undefined") {
+          const pathname = window.location.pathname;
+          const hash = window.location.hash;
+          const shareMatch = pathname.match(/\/share\/([A-Z0-9]{4}-[A-Z0-9]{4})/i);
+          
+          if (shareMatch && hash && hash.length > 1) {
+            // This is a share URL - show share view instead of normal app
+            setShareAccessCode(shareMatch[1]);
+            setShareEncryptionKey(hash.substring(1));
+            setIsShareView(true);
+            setShowOnboarding(false);
+            setIsLoading(false);
+            return;
+          }
+        }
+        
+        // Normal app flow - check if onboarding completed
         const onboardingCompleted =
           (await AsyncStorage.getItem("manylla_onboarding_completed")) ===
           "true";
@@ -1187,6 +1210,16 @@ function AppContent() {
   // Show loading spinner
   if (isLoading) {
     return <LoadingOverlay visible={true} message="Loading your profile..." />;
+  }
+  
+  // Show share view if accessing a share URL
+  if (isShareView && shareAccessCode && shareEncryptionKey) {
+    return (
+      <ShareAccessView 
+        accessCode={shareAccessCode}
+        encryptionKey={shareEncryptionKey}
+      />
+    );
   }
 
   // Show onboarding if needed
