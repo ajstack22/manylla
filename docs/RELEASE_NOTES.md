@@ -1,5 +1,28 @@
 # Manylla Release Notes
 
+## Version 2025.09.12.2 - 2025-09-13
+Support Us Page Implementation
+
+### Summary
+Added Support Us page to encourage community support through donations, reviews, and engagement
+
+### Added
+- Support modal with manila envelope theme matching Manylla branding
+- Buy Me a Coffee integration for donations (using existing StackMap account)
+- Team photo display showing the development team
+- Impact section highlighting privacy, free sync, and ongoing development
+- Ways to contribute section (Review, Share, Feedback, Ideas)
+- Contact information (support@manylla.com)
+- Heart icon (❤️) for Support menu item in header
+- URL parameter support (?support=true) for direct access
+
+### Technical
+- Platform-specific rendering (FlatList for Android, ScrollView for iOS, HTML img for Web)
+- Reused existing modal infrastructure from PrivacyModal
+- Added Favorite icon to IconProvider for heart display
+- Integrated StackMapTeam.jpg photo asset
+- Story S015 tracked in backlog
+
 ## Version 2025.09.13.1 - 2025-09-13
 Privacy Policy Modal Implementation
 
