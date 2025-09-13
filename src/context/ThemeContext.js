@@ -158,9 +158,14 @@ export const ThemeProvider = ({
     }
   };
 
-  const setThemeModeState = (mode) => {
+  const setThemeModeState = async (mode) => {
     setTheme(mode);
     setThemeMode(mode);
+    
+    try {
+      await setStorageItem("manylla_theme", mode);
+    } catch (error) {}
+    
     if (onThemeChange) {
       onThemeChange(mode);
     }

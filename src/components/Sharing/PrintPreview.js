@@ -10,21 +10,40 @@ import {
   Switch,
 } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
-import { ThemedModal } from "../Common";
+import { ThemedModal, InsertDriveFileIcon, PrintIcon } from "../Common";
 import { isWeb } from "../../utils/platform";
 
 export const PrintPreview = ({
   visible,
   onClose,
+  profile,
+  categories,
+  entries,
+  // Legacy props for backward compatibility
   childName,
   selectedCategories: propSelectedCategories,
-  entries,
   includeQuickInfo: propIncludeQuickInfo,
   recipientName: propRecipientName,
   note: propNote,
 }) => {
   const { colors } = useTheme();
   const styles = getStyles(colors);
+
+  // Use profile data if available, fallback to legacy props
+  const actualChildName = profile?.name || childName || "Child";
+  
+  // Transform entries array into an object organized by category
+  const entriesArray = profile?.entries || entries || [];
+  
+  const actualEntries = Array.isArray(entriesArray) 
+    ? entriesArray.reduce((acc, entry) => {
+        if (!acc[entry.category]) {
+          acc[entry.category] = [];
+        }
+        acc[entry.category].push(entry);
+        return acc;
+      }, {})
+    : entriesArray;
 
   // State for managing selections
   const [localSelectedCategories, setLocalSelectedCategories] = useState(() => {
@@ -51,28 +70,59 @@ export const PrintPreview = ({
     if (propNote) setLocalNote(propNote);
   }, [propSelectedCategories, propIncludeQuickInfo, propRecipientName, propNote]);
 
-  // Available categories - always include quick-info, then add others from entries
-  const availableCategories = ['quick-info'];
-  if (entries) {
-    Object.keys(entries).forEach(cat => {
-      if (entries[cat] && entries[cat].length > 0 && !availableCategories.includes(cat)) {
-        availableCategories.push(cat);
-      }
-    });
-  }
+  // Define all available category groups
+  // These match the actual category IDs from unifiedCategories.js
+  const categoryGroups = {
+    "quick-info": {
+      title: "Quick Info",
+      categories: ["quick-info"]
+    },
+    "daily-support": {
+      title: "Daily Support", 
+      categories: ["daily-support"]
+    },
+    "health-therapy": {
+      title: "Health & Therapy",
+      categories: ["health-therapy"]
+    },
+    "education-goals": {
+      title: "Education & Goals",
+      categories: ["education-goals"]
+    },
+    "behavior-social": {
+      title: "Behavior & Social",
+      categories: ["behavior-social"]
+    },
+    "family-resources": {
+      title: "Family & Resources",
+      categories: ["family-resources"]
+    }
+  };
+
+  // Build flat list of available categories for selection
+  const availableCategories = [];
+  Object.keys(categoryGroups).forEach(groupKey => {
+    availableCategories.push(groupKey);
+  });
 
   const categoryTitles = {
-    goals: "Current Goals",
-    successes: "Recent Successes",
-    strengths: "Strengths",
-    challenges: "Challenges",
-    medical: "Medical Information",
-    education: "Education",
-    behaviors: "Behaviors",
-    "quick-info": "Quick Information",
-    "tips-tricks": "Tips & Tricks",
-    "daily-care": "Daily Care",
+    "quick-info": "Quick Info",
+    "daily-support": "Daily Support",
+    "health-therapy": "Health & Therapy", 
+    "education-goals": "Education & Goals",
+    "behavior-social": "Behavior & Social",
+    "family-resources": "Family & Resources",
     therapies: "Therapies",
+    sensory: "Sensory",
+    medications: "Medications",
+    milestones: "Milestones",
+    communication: "Communication",
+    social: "Social",
+    emotions: "Emotions",
+    family: "Family",
+    resources: "Resources",
+    notes: "Notes",
+    contacts: "Contacts",
   };
 
   // Toggle category selection
@@ -102,22 +152,28 @@ export const PrintPreview = ({
       if (isWeb) {
         // Web: Use actual browser print functionality
         const htmlContent = generateHtmlContent();
-        const printWindow = window.open("", "_blank", "noopener,noreferrer");
+        const printWindow = window.open("", "PRINT", "height=600,width=800");
+        
         if (!printWindow) {
           Alert.alert("Error", "Unable to open print window. Please check your popup blocker settings.");
           return;
         }
+        
         printWindow.document.write(htmlContent);
         printWindow.document.close();
         printWindow.focus();
-        printWindow.print();
-        printWindow.close();
+        
+        // Add a small delay to ensure content is loaded
+        setTimeout(() => {
+          printWindow.print();
+          printWindow.close();
+        }, 250);
       } else {
         // Mobile: Use Share API
         const textContent = generateTextContent();
         await Share.share({
           message: textContent,
-          title: `${childName} - Information Summary`,
+          title: `${actualChildName} - Information Summary`,
         });
       }
     } catch (error) {
@@ -127,13 +183,42 @@ export const PrintPreview = ({
     }
   };
 
+  const handleShareAsText = async () => {
+    try {
+      const textContent = generateTextContent();
+      
+      if (isWeb) {
+        // Web: Download as text file
+        const blob = new Blob([textContent], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${actualChildName.replace(/\s+/g, '_')}_Information_Summary.txt`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      } else {
+        // Mobile: Use Share API
+        await Share.share({
+          message: textContent,
+          title: `${actualChildName} - Information Summary`,
+        });
+      }
+    } catch (error) {
+      if (error.message !== "User did not share") {
+        Alert.alert("Error", "Failed to share document. Please try again.");
+      }
+    }
+  };
+  
   const handleDownloadPDF = async () => {
-    // Same as print for now - shares the text content
-    await handlePrint();
+    // For now, use the text share functionality
+    await handleShareAsText();
   };
 
   const generateTextContent = () => {
-    let content = `${childName} - Information Summary
+    let content = `${actualChildName} - Information Summary
 `;
     content += `Prepared on ${new Date().toLocaleDateString()}
 `;
@@ -152,10 +237,10 @@ export const PrintPreview = ({
 `;
     }
 
-    localSelectedCategories && localSelectedCategories.forEach((category) => {
-      if (category === 'quick-info') {
+    localSelectedCategories && localSelectedCategories.forEach((categoryGroup) => {
+      if (categoryGroup === 'quick-info') {
         // Handle Quick Info as special formatted content
-        content += `QUICK INFORMATION
+        content += `QUICK INFO
 `;
         content += `================
 
@@ -171,26 +256,45 @@ export const PrintPreview = ({
         content += `• Emergency Contact: Mom: 555-0123, Dad: 555-0124
 
 `;
-      } else {
-        const categoryEntries = entries[category] || [];
-        if (categoryEntries.length > 0) {
-          const title = categoryTitles[category] || category;
+      } else if (categoryGroups[categoryGroup]) {
+        // Handle category groups
+        const group = categoryGroups[categoryGroup];
+        let hasContent = false;
+        let groupContent = '';
+        
+        // Check if any categories in this group have entries
+        group.categories.forEach(cat => {
+          const categoryEntries = actualEntries && actualEntries[cat] ? actualEntries[cat] : [];
+          if (categoryEntries.length > 0) {
+            hasContent = true;
+          }
+        });
+        
+        if (hasContent) {
+          const title = categoryTitles[categoryGroup] || categoryGroup;
           content += `${title.toUpperCase()}
 `;
-          content +=
-            "=".repeat(title.length) +
-            `
+          content += `${"=".repeat(title.length)}
 
 `;
+          
+          // Add entries from all categories in this group
+          group.categories.forEach(cat => {
+            const categoryEntries = actualEntries && actualEntries[cat] ? actualEntries[cat] : [];
+            if (categoryEntries.length > 0) {
+              const catTitle = categoryTitles[cat] || cat;
+              content += `${catTitle}:
+`;
+              categoryEntries.forEach((entry, index) => {
+                content += `  ${index + 1}. ${entry.title}
+`;
+                content += `     ${entry.description}
+`;
+                content += `     Date: ${new Date(entry.date).toLocaleDateString()}
 
-          categoryEntries.forEach((entry, index) => {
-            content += `${index + 1}. ${entry.title}
 `;
-            content += `   ${entry.description}
-`;
-            content += `   Date: ${new Date(entry.date).toLocaleDateString()}
-
-`;
+              });
+            }
           });
         }
       }
@@ -208,7 +312,7 @@ export const PrintPreview = ({
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${escapeHtml(childName)} - Information Summary</title>
+    <title>${escapeHtml(actualChildName)} - Information Summary</title>
     <style>
         @page {
             margin: 1in;
@@ -337,7 +441,7 @@ export const PrintPreview = ({
     <button class="print-button no-print" onclick="window.print()">Print Document</button>
 
     <div class="document-header">
-        <h1>${escapeHtml(childName)} - Information Summary</h1>
+        <h1>${escapeHtml(actualChildName)} - Information Summary</h1>
         <div class="document-subtitle">
             Prepared on ${escapeHtml(currentDate)}${localRecipientName ? ` for ${escapeHtml(localRecipientName)}` : ''}
         </div>
@@ -353,7 +457,7 @@ export const PrintPreview = ({
     if (localSelectedCategories.includes('quick-info')) {
         html += `
     <div class="section">
-        <h2>Quick Information</h2>
+        <h2>Quick Info</h2>
         <div class="quick-info-item"><strong>Communication:</strong> ${escapeHtml("Uses 2-3 word phrases. Understands more than can express.")}</div>
         <div class="quick-info-item"><strong>Sensory:</strong> ${escapeHtml("Sensitive to loud noises and bright lights. Loves soft textures.")}</div>
         <div class="quick-info-item"><strong>Medical:</strong> ${escapeHtml("No allergies. Takes melatonin for sleep (prescribed).")}</div>
@@ -366,7 +470,7 @@ export const PrintPreview = ({
         // Skip quick-info since it's handled above
         if (category === 'quick-info') return;
 
-        const categoryEntries = entries[category] || [];
+        const categoryEntries = actualEntries[category] || [];
         if (categoryEntries.length > 0) {
             html += `
     <div class="section">
@@ -400,7 +504,7 @@ export const PrintPreview = ({
     <ThemedModal
       visible={visible}
       onClose={onClose}
-      title="Print Preview"
+      title="Print"
       presentationStyle="fullScreen"
     >
       <View style={styles.container}>
@@ -437,7 +541,7 @@ export const PrintPreview = ({
             {/* Header */}
             <View style={styles.documentHeader}>
               <Text style={styles.documentTitle}>
-                {childName} - Information Summary
+                {actualChildName} - Information Summary
               </Text>
               <Text style={styles.documentSubtitle}>
                 Prepared on {new Date().toLocaleDateString()}
@@ -457,7 +561,7 @@ export const PrintPreview = ({
             {/* Quick Info */}
             {localSelectedCategories.includes('quick-info') && (
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Quick Reference</Text>
+                <Text style={styles.sectionTitle}>Quick Info</Text>
                 <View style={styles.quickInfoItems}>
                   <Text style={styles.quickInfoItem}>
                     <Text style={styles.bold}>Communication:</Text> Uses 2-3
@@ -484,27 +588,51 @@ export const PrintPreview = ({
             )}
 
             {/* Selected Categories */}
-            {localSelectedCategories && localSelectedCategories.map((category) => {
+            {localSelectedCategories && localSelectedCategories.map((categoryGroup) => {
               // Skip quick-info since it's handled separately above
-              if (category === 'quick-info') return null;
+              if (categoryGroup === 'quick-info') return null;
 
-              const categoryEntries = entries[category];
-              if (!categoryEntries || categoryEntries.length === 0) return null;
+              // Handle category groups
+              const group = categoryGroups[categoryGroup];
+              if (!group) return null;
+
+              // Check if any categories in this group have entries
+              let hasContent = false;
+              group.categories.forEach(cat => {
+                const categoryEntries = actualEntries && actualEntries[cat] ? actualEntries[cat] : [];
+                if (categoryEntries.length > 0) {
+                  hasContent = true;
+                }
+              });
+
+              if (!hasContent) return null;
 
               return (
-                <View key={category} style={styles.section}>
+                <View key={categoryGroup} style={styles.section}>
                   <Text style={styles.sectionTitle}>
-                    {categoryTitles[category]}
+                    {categoryTitles[categoryGroup]}
                   </Text>
                   <View style={styles.entriesContainer}>
-                    {categoryEntries.map((entry, index) => (
-                      <View key={index} style={styles.entry}>
-                        <Text style={styles.entryTitle}>• {entry.title}</Text>
-                        <Text style={styles.entryDescription}>
-                          {entry.description}
-                        </Text>
-                      </View>
-                    ))}
+                    {group.categories.map(cat => {
+                      const categoryEntries = actualEntries && actualEntries[cat] ? actualEntries[cat] : [];
+                      if (categoryEntries.length === 0) return null;
+                      
+                      return (
+                        <View key={cat}>
+                          <Text style={styles.categorySubtitle}>
+                            {categoryTitles[cat] || cat}
+                          </Text>
+                          {categoryEntries.map((entry, index) => (
+                            <View key={index} style={styles.entry}>
+                              <Text style={styles.entryTitle}>• {entry.title}</Text>
+                              <Text style={styles.entryDescription}>
+                                {entry.description}
+                              </Text>
+                            </View>
+                          ))}
+                        </View>
+                      );
+                    })}
                   </View>
                 </View>
               );
@@ -533,7 +661,7 @@ export const PrintPreview = ({
             style={[styles.button, styles.downloadButton]}
             onPress={handleDownloadPDF}
           >
-            <Text style={styles.downloadIcon}>📄</Text>
+            <InsertDriveFileIcon size={18} color={colors.primary} style={{ marginRight: 5 }} />
             <Text style={styles.downloadButtonText}>Share as Text</Text>
           </TouchableOpacity>
 
@@ -541,7 +669,7 @@ export const PrintPreview = ({
             style={[styles.button, styles.printButton]}
             onPress={handlePrint}
           >
-            <Text style={styles.printIcon}>🖨️</Text>
+            <PrintIcon size={20} color={colors.background.paper} style={{ marginRight: 5 }} />
             <Text style={styles.printButtonText}>{isWeb ? "Print" : "Share"}</Text>
           </TouchableOpacity>
         </View>
@@ -679,6 +807,14 @@ const getStyles = (colors) =>
       fontWeight: "600",
       color: colors.text.primary,
       marginBottom: 2,
+    },
+    categorySubtitle: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: colors.text.secondary,
+      marginTop: 8,
+      marginBottom: 4,
+      marginLeft: 8,
     },
     quickInfoItems: {
       marginLeft: 6,

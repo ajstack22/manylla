@@ -16,6 +16,12 @@ export const CategorySection = ({
   entries,
   color,
   icon,
+  categoryId,
+  isFirst,
+  isLast,
+  isQuickInfo,
+  onMoveUp,
+  onMoveDown,
   onAddEntry,
   onEditEntry,
   onDeleteEntry,
@@ -48,6 +54,22 @@ export const CategorySection = ({
       fontWeight: "600",
       flex: 1,
       color: "#333",
+    },
+    headerControls: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+    },
+    reorderButton: {
+      padding: 4,
+      opacity: 0.6,
+    },
+    reorderButtonDisabled: {
+      opacity: 0.2,
+    },
+    arrowIcon: {
+      fontSize: 20,
+      color: colors.text?.secondary || "#666",
     },
     entriesContainer: {
       gap: 16,
@@ -128,6 +150,14 @@ export const CategorySection = ({
 
   const iconName = getCategoryIcon(title);
 
+  // Don't render if no entries (auto-hide empty categories)
+  if (!entries || entries.length === 0) {
+    // Exception: Quick Info always shows even if empty
+    if (!isQuickInfo) {
+      return null;
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -138,6 +168,35 @@ export const CategorySection = ({
           style={styles.categoryIcon}
         />
         <Text style={styles.title}>{title}</Text>
+
+        {/* Add reorder controls - exclude for Quick Info */}
+        {!isQuickInfo && (
+          <View style={styles.headerControls}>
+            <TouchableOpacity
+              style={[
+                styles.reorderButton,
+                isFirst && styles.reorderButtonDisabled
+              ]}
+              onPress={onMoveUp}
+              disabled={isFirst}
+              accessibilityLabel={`Move ${title} up`}
+            >
+              <Text style={styles.arrowIcon}>↑</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.reorderButton,
+                isLast && styles.reorderButtonDisabled
+              ]}
+              onPress={onMoveDown}
+              disabled={isLast}
+              accessibilityLabel={`Move ${title} down`}
+            >
+              <Text style={styles.arrowIcon}>↓</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
 
       <View style={styles.entriesContainer}>

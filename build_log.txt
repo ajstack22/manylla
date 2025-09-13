@@ -1,0 +1,149 @@
+
+> manylla@2025.09.13.1 build:web
+> NODE_ENV=production webpack --mode production
+
+Though the "loose" option was set to "false" in your @babel/preset-env config, it will not be used for @babel/plugin-transform-private-methods since the "loose" mode option was set to "true" for @babel/plugin-transform-class-properties.
+The "loose" option must be the same for @babel/plugin-transform-class-properties, @babel/plugin-transform-private-methods and @babel/plugin-transform-private-property-in-object (when they are enabled): you can silence this warning by explicitly adding
+	["@babel/plugin-transform-private-methods", { "loose": true }]
+to the "plugins" section of your Babel config.
+
+If you already set the same 'loose' mode for these plugins in your config, it's possible that they are enabled multiple times with different options.
+You can re-run Babel with the BABEL_SHOW_CONFIG_FOR environment variable to show the loaded configuration:
+	npx cross-env BABEL_SHOW_CONFIG_FOR=/Users/adamstack/manylla/src/components/Common/IconProvider.js <your build command>
+See https://babeljs.io/docs/configuration#print-effective-configs for more info.
+Though the "loose" option was set to "false" in your @babel/preset-env config, it will not be used for @babel/plugin-transform-private-property-in-object since the "loose" mode option was set to "true" for @babel/plugin-transform-class-properties.
+The "loose" option must be the same for @babel/plugin-transform-class-properties, @babel/plugin-transform-private-methods and @babel/plugin-transform-private-property-in-object (when they are enabled): you can silence this warning by explicitly adding
+	["@babel/plugin-transform-private-property-in-object", { "loose": true }]
+to the "plugins" section of your Babel config.
+
+If you already set the same 'loose' mode for these plugins in your config, it's possible that they are enabled multiple times with different options.
+You can re-run Babel with the BABEL_SHOW_CONFIG_FOR environment variable to show the loaded configuration:
+	npx cross-env BABEL_SHOW_CONFIG_FOR=/Users/adamstack/manylla/src/components/Common/IconProvider.js <your build command>
+See https://babeljs.io/docs/configuration#print-effective-configs for more info.
+Though the "loose" option was set to "false" in your @babel/preset-env config, it will not be used for @babel/plugin-transform-private-methods since the "loose" mode option was set to "true" for @babel/plugin-transform-class-properties.
+The "loose" option must be the same for @babel/plugin-transform-class-properties, @babel/plugin-transform-private-methods and @babel/plugin-transform-private-property-in-object (when they are enabled): you can silence this warning by explicitly adding
+	["@babel/plugin-transform-private-methods", { "loose": true }]
+to the "plugins" section of your Babel config.
+
+If you already set the same 'loose' mode for these plugins in your config, it's possible that they are enabled multiple times with different options.
+You can re-run Babel with the BABEL_SHOW_CONFIG_FOR environment variable to show the loaded configuration:
+	npx cross-env BABEL_SHOW_CONFIG_FOR=/Users/adamstack/manylla/src/components/Layout/Header.js <your build command>
+See https://babeljs.io/docs/configuration#print-effective-configs for more info.
+Though the "loose" option was set to "false" in your @babel/preset-env config, it will not be used for @babel/plugin-transform-private-property-in-object since the "loose" mode option was set to "true" for @babel/plugin-transform-class-properties.
+The "loose" option must be the same for @babel/plugin-transform-class-properties, @babel/plugin-transform-private-methods and @babel/plugin-transform-private-property-in-object (when they are enabled): you can silence this warning by explicitly adding
+	["@babel/plugin-transform-private-property-in-object", { "loose": true }]
+to the "plugins" section of your Babel config.
+
+If you already set the same 'loose' mode for these plugins in your config, it's possible that they are enabled multiple times with different options.
+You can re-run Babel with the BABEL_SHOW_CONFIG_FOR environment variable to show the loaded configuration:
+	npx cross-env BABEL_SHOW_CONFIG_FOR=/Users/adamstack/manylla/src/components/Layout/Header.js <your build command>
+See https://babeljs.io/docs/configuration#print-effective-configs for more info.
+Though the "loose" option was set to "false" in your @babel/preset-env config, it will not be used for @babel/plugin-transform-private-methods since the "loose" mode option was set to "true" for @babel/plugin-transform-class-properties.
+The "loose" option must be the same for @babel/plugin-transform-class-properties, @babel/plugin-transform-private-methods and @babel/plugin-transform-private-property-in-object (when they are enabled): you can silence this warning by explicitly adding
+	["@babel/plugin-transform-private-methods", { "loose": true }]
+to the "plugins" section of your Babel config.
+
+If you already set the same 'loose' mode for these plugins in your config, it's possible that they are enabled multiple times with different options.
+You can re-run Babel with the BABEL_SHOW_CONFIG_FOR environment variable to show the loaded configuration:
+	npx cross-env BABEL_SHOW_CONFIG_FOR=/Users/adamstack/manylla/src/components/Common/index.js <your build command>
+See https://babeljs.io/docs/configuration#print-effective-configs for more info.
+Though the "loose" option was set to "false" in your @babel/preset-env config, it will not be used for @babel/plugin-transform-private-property-in-object since the "loose" mode option was set to "true" for @babel/plugin-transform-class-properties.
+The "loose" option must be the same for @babel/plugin-transform-class-properties, @babel/plugin-transform-private-methods and @babel/plugin-transform-private-property-in-object (when they are enabled): you can silence this warning by explicitly adding
+	["@babel/plugin-transform-private-property-in-object", { "loose": true }]
+to the "plugins" section of your Babel config.
+
+If you already set the same 'loose' mode for these plugins in your config, it's possible that they are enabled multiple times with different options.
+You can re-run Babel with the BABEL_SHOW_CONFIG_FOR environment variable to show the loaded configuration:
+	npx cross-env BABEL_SHOW_CONFIG_FOR=/Users/adamstack/manylla/src/components/Common/index.js <your build command>
+See https://babeljs.io/docs/configuration#print-effective-configs for more info.
+Though the "loose" option was set to "false" in your @babel/preset-env config, it will not be used for @babel/plugin-transform-private-methods since the "loose" mode option was set to "true" for @babel/plugin-transform-class-properties.
+The "loose" option must be the same for @babel/plugin-transform-class-properties, @babel/plugin-transform-private-methods and @babel/plugin-transform-private-property-in-object (when they are enabled): you can silence this warning by explicitly adding
+	["@babel/plugin-transform-private-methods", { "loose": true }]
+to the "plugins" section of your Babel config.
+
+If you already set the same 'loose' mode for these plugins in your config, it's possible that they are enabled multiple times with different options.
+You can re-run Babel with the BABEL_SHOW_CONFIG_FOR environment variable to show the loaded configuration:
+	npx cross-env BABEL_SHOW_CONFIG_FOR=/Users/adamstack/manylla/src/components/Modals/SupportModal/SupportModal.js <your build command>
+See https://babeljs.io/docs/configuration#print-effective-configs for more info.
+Though the "loose" option was set to "false" in your @babel/preset-env config, it will not be used for @babel/plugin-transform-private-property-in-object since the "loose" mode option was set to "true" for @babel/plugin-transform-class-properties.
+The "loose" option must be the same for @babel/plugin-transform-class-properties, @babel/plugin-transform-private-methods and @babel/plugin-transform-private-property-in-object (when they are enabled): you can silence this warning by explicitly adding
+	["@babel/plugin-transform-private-property-in-object", { "loose": true }]
+to the "plugins" section of your Babel config.
+
+If you already set the same 'loose' mode for these plugins in your config, it's possible that they are enabled multiple times with different options.
+You can re-run Babel with the BABEL_SHOW_CONFIG_FOR environment variable to show the loaded configuration:
+	npx cross-env BABEL_SHOW_CONFIG_FOR=/Users/adamstack/manylla/src/components/Modals/SupportModal/SupportModal.js <your build command>
+See https://babeljs.io/docs/configuration#print-effective-configs for more info.
+Though the "loose" option was set to "false" in your @babel/preset-env config, it will not be used for @babel/plugin-transform-private-methods since the "loose" mode option was set to "true" for @babel/plugin-transform-class-properties.
+The "loose" option must be the same for @babel/plugin-transform-class-properties, @babel/plugin-transform-private-methods and @babel/plugin-transform-private-property-in-object (when they are enabled): you can silence this warning by explicitly adding
+	["@babel/plugin-transform-private-methods", { "loose": true }]
+to the "plugins" section of your Babel config.
+
+If you already set the same 'loose' mode for these plugins in your config, it's possible that they are enabled multiple times with different options.
+You can re-run Babel with the BABEL_SHOW_CONFIG_FOR environment variable to show the loaded configuration:
+	npx cross-env BABEL_SHOW_CONFIG_FOR=/Users/adamstack/manylla/src/components/Navigation/BottomSheetMenu.js <your build command>
+See https://babeljs.io/docs/configuration#print-effective-configs for more info.
+Though the "loose" option was set to "false" in your @babel/preset-env config, it will not be used for @babel/plugin-transform-private-property-in-object since the "loose" mode option was set to "true" for @babel/plugin-transform-class-properties.
+The "loose" option must be the same for @babel/plugin-transform-class-properties, @babel/plugin-transform-private-methods and @babel/plugin-transform-private-property-in-object (when they are enabled): you can silence this warning by explicitly adding
+	["@babel/plugin-transform-private-property-in-object", { "loose": true }]
+to the "plugins" section of your Babel config.
+
+If you already set the same 'loose' mode for these plugins in your config, it's possible that they are enabled multiple times with different options.
+You can re-run Babel with the BABEL_SHOW_CONFIG_FOR environment variable to show the loaded configuration:
+	npx cross-env BABEL_SHOW_CONFIG_FOR=/Users/adamstack/manylla/src/components/Navigation/BottomSheetMenu.js <your build command>
+See https://babeljs.io/docs/configuration#print-effective-configs for more info.
+assets by status 7.95 MiB [cached] 6 assets
+assets by status 5.21 MiB [compared for emit]
+  assets by path fonts/*.ttf 3.71 MiB 19 assets
+  assets by path *.png 1.47 MiB
+    asset ellie.png 1.46 MiB [compared for emit] [from: public/ellie.png] [copied] [big]
+    + 2 assets
+  assets by path *.css 2.81 KiB
+    asset vector-icons.css 1.59 KiB [compared for emit] [from: public/vector-icons.css] [copied]
+    asset global-styles.css 1.22 KiB [compared for emit] [from: public/global-styles.css] [copied]
+  + 6 assets
+assets by info 1.19 MiB [immutable]
+  asset images/StackMapTeam.901fe405d6eef6ae30cc.jpg 562 KiB [emitted] [immutable] [from: public/StackMapTeam.jpg] [big] (auxiliary name: main)
+  asset vendors.2818b78589829e430c7c.js 430 KiB [emitted] [immutable] [minimized] (name: vendors) (id hint: vendor) 1 related asset
+  asset main.c579eaf65860151f0c73.js 221 KiB [emitted] [immutable] [minimized] (name: main)
+asset service-worker.js 3.87 KiB [emitted] [minimized]
+Entrypoint main [big] 7.09 MiB (562 KiB) = runtime.3eb1b2e1cee62cf01d7d.js 3.17 KiB mui.4f74cb454ac627a31461.js 6.28 MiB react.0c9664ffd4e1fab10c96.js 175 KiB vendors.2818b78589829e430c7c.js 430 KiB main.c579eaf65860151f0c73.js 221 KiB 1 auxiliary asset
+cached modules 13.1 MiB (javascript) 1.46 MiB (asset) [cached] 11294 modules
+runtime modules 8.37 KiB 12 modules
+modules by layer 324 KiB (javascript) 562 KiB (asset)
+  modules by path ./src/ 147 KiB
+    built modules 54.4 KiB [built]
+      modules by path ./src/components/Common/*.js 17 KiB 2 modules
+      + 3 modules
+    + 5 modules
+  modules by path ./node_modules/ 133 KiB
+    modules by path ./node_modules/react-native-web/dist/ 120 KiB 3 modules
+    modules by path ./node_modules/react-native-vector-icons/dist/lib/*.js 13 KiB
+      ./node_modules/react-native-vector-icons/dist/lib/create-icon-set.js 7.64 KiB [code generated]
+      ./node_modules/react-native-vector-icons/dist/lib/icon-button.js 5.37 KiB [code generated]
+  ./App.js 44.8 KiB [code generated]
+  ./public/StackMapTeam.jpg 562 KiB (asset) 42 bytes (javascript) [built] [code generated]
+
+LOG from GenerateSW
+<i> The service worker at service-worker.js will precache
+<i>         41 URLs, totaling 15 MB.
+
+WARNING in asset size limit: The following asset(s) exceed the recommended size limit (500 KiB).
+This can impact web performance.
+Assets: 
+  images/StackMapTeam.901fe405d6eef6ae30cc.jpg (562 KiB)
+  images/ellie.e64f347dda438c6ddd23.png (1.46 MiB)
+  ellie.png (1.46 MiB)
+  fonts/MaterialCommunityIcons.ttf (1.09 MiB)
+  mui.4f74cb454ac627a31461.js (6.28 MiB)
+
+WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (500 KiB). This can impact web performance.
+Entrypoints:
+  main (7.09 MiB)
+      runtime.3eb1b2e1cee62cf01d7d.js
+      mui.4f74cb454ac627a31461.js
+      react.0c9664ffd4e1fab10c96.js
+      vendors.2818b78589829e430c7c.js
+      main.c579eaf65860151f0c73.js
+
+webpack 5.101.3 compiled with 2 warnings in 4323 ms

@@ -35,6 +35,11 @@ export {
   HomeIcon,
   UploadIcon,
   InsertDriveFileIcon,
+  CloudUploadIcon,
+  CloudDownloadIcon,
+  CloudDoneIcon,
+  CloudSyncIcon,
+  PlaylistAddCheckIcon,
 } from "./IconProvider";
 
 // Modal exports - ONLY ONE MODAL SYSTEM

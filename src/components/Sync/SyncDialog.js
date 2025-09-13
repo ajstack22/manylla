@@ -10,7 +10,19 @@ import {
   Clipboard,
 } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
-import { ThemedModal } from "../Common";
+import {
+  ThemedModal,
+  SyncIcon,
+  CloudIcon,
+  ContentCopyIcon,
+  DoneIcon,
+  CheckCircleIcon,
+  CloudUploadIcon,
+  CloudDownloadIcon,
+  CloudDoneIcon,
+  CloudSyncIcon,
+  PlaylistAddCheckIcon
+} from "../Common";
 import { getTextStyle } from "../../utils/platformStyles";
 import { useSync } from "../../context/SyncContext";
 import {
@@ -144,14 +156,14 @@ export const SyncDialog = ({ open, onClose }) => {
         >
           {/* Success Alert */}
           <View style={styles.successAlert}>
-            <Text style={styles.successIcon}>☁️</Text>
+            <CloudIcon size={24} color="#67B26F" />
             <Text style={styles.successText}>Multi-device sync is enabled</Text>
           </View>
 
           {/* Sync Status Card */}
           <View style={styles.card}>
             <View style={styles.cardHeader}>
-              <Text style={styles.syncIcon}>🔄</Text>
+              <SyncIcon size={32} color={colors.primary || "#A08670"} />
               <View style={styles.cardContent}>
                 <Text style={styles.cardTitle}>Sync Status</Text>
                 <Text style={styles.cardDescription}>
@@ -183,7 +195,7 @@ export const SyncDialog = ({ open, onClose }) => {
                       <ActivityIndicator size="small" color={colors.primary} />
                     ) : (
                       <>
-                        <Text style={styles.syncNowIcon}>🔄</Text>
+                        <SyncIcon size={20} color={colors.background?.paper || "#FFFFFF"} />
                         <Text style={styles.syncNowText}>Sync Now</Text>
                       </>
                     )}
@@ -196,7 +208,7 @@ export const SyncDialog = ({ open, onClose }) => {
           {/* Security Card */}
           <View style={styles.card}>
             <View style={styles.cardHeader}>
-              <Text style={styles.securityIcon}>🔒</Text>
+              <CheckCircleIcon size={32} color={colors.primary || "#A08670"} />
               <View style={styles.cardContent}>
                 <Text style={styles.cardTitle}>Security & Sharing</Text>
                 <Text style={styles.cardDescription}>
@@ -246,10 +258,10 @@ export const SyncDialog = ({ open, onClose }) => {
           style={styles.menuOption}
           onPress={() => setMode("enable")}
         >
-          <Text style={styles.menuOptionIcon}>☁️</Text>
+          <CloudUploadIcon size={32} color={colors.primary || "#A08670"} />
           <View style={styles.menuOptionContent}>
             <Text style={styles.menuOptionTitle}>
-              Enable Backup on This Device
+              Enable Cloud Backup
             </Text>
             <Text style={styles.menuOptionDescription}>
               Create a new backup for your devices
@@ -261,9 +273,9 @@ export const SyncDialog = ({ open, onClose }) => {
           style={styles.menuOption}
           onPress={() => setMode("join")}
         >
-          <Text style={styles.menuOptionIcon}>🔄</Text>
+          <CloudDownloadIcon size={32} color={colors.primary || "#A08670"} />
           <View style={styles.menuOptionContent}>
-            <Text style={styles.menuOptionTitle}>Restore from Backup</Text>
+            <Text style={styles.menuOptionTitle}>Restore from Cloud</Text>
             <Text style={styles.menuOptionDescription}>
               Connect to your existing backup with a backup code
             </Text>
@@ -283,7 +295,7 @@ export const SyncDialog = ({ open, onClose }) => {
     <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
       <View style={styles.card}>
         <View style={styles.cardHeader}>
-          <Text style={styles.securityIcon}>🔒</Text>
+          <CheckCircleIcon size={32} color={colors.primary || "#A08670"} />
           <View style={styles.cardContent}>
             <Text style={styles.cardTitle}>Create Secure Sync</Text>
             <Text style={styles.cardDescription}>
@@ -296,7 +308,7 @@ export const SyncDialog = ({ open, onClose }) => {
 
       <View style={[styles.card, styles.infoCard]}>
         <View style={styles.cardHeader}>
-          <Text style={styles.checkIcon}>✓</Text>
+          <PlaylistAddCheckIcon size={32} color={colors.primary || "#A08670"} />
           <View style={styles.cardContent}>
             <Text style={styles.cardTitle}>What happens next</Text>
             <View style={styles.stepsList}>
@@ -328,14 +340,17 @@ export const SyncDialog = ({ open, onClose }) => {
           <Text style={styles.cancelButtonText}>Back</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.button, styles.primaryButton]}
+          style={[styles.button, styles.primaryButton, styles.buttonWithIcon]}
           onPress={handleEnableSync}
           disabled={loading}
         >
           {loading ? (
             <ActivityIndicator color={colors.background.paper} />
           ) : (
-            <Text style={styles.primaryButtonText}>Create Secure Sync</Text>
+            <>
+              <CloudDoneIcon size={20} color={colors.background?.paper || "#FFFFFF"} />
+              <Text style={styles.primaryButtonText}>Create Secure Sync</Text>
+            </>
           )}
         </TouchableOpacity>
       </View>
@@ -408,7 +423,7 @@ export const SyncDialog = ({ open, onClose }) => {
   const renderPhraseStep = () => (
     <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
       <View style={styles.successAlert}>
-        <Text style={styles.successIcon}>✓</Text>
+        <CheckCircleIcon size={24} color="#67B26F" />
         <Text style={styles.successText}>Sync enabled successfully!</Text>
       </View>
 
@@ -420,7 +435,11 @@ export const SyncDialog = ({ open, onClose }) => {
       <View style={styles.phraseContainer}>
         <Text style={styles.phraseText}>{generatedPhrase}</Text>
         <TouchableOpacity style={styles.copyButton} onPress={handleCopyPhrase}>
-          <Text style={styles.copyButtonIcon}>{copied ? "✓" : "📋"}</Text>
+          {copied ? (
+            <DoneIcon size={20} color={colors.background?.paper || "#FFFFFF"} />
+          ) : (
+            <ContentCopyIcon size={20} color={colors.background?.paper || "#FFFFFF"} />
+          )}
           <Text style={styles.copyButtonText}>
             {copied ? "Copied!" : "Copy to Clipboard"}
           </Text>
@@ -428,7 +447,7 @@ export const SyncDialog = ({ open, onClose }) => {
       </View>
 
       <View style={styles.warningAlert}>
-        <Text style={styles.warningAlertTitle}>⚠️ Important</Text>
+        <Text style={styles.warningAlertTitle}>Important</Text>
         <Text style={styles.warningAlertText}>
           This phrase is the only way to access your synced data. Store it
           securely and never share it with anyone.
@@ -447,7 +466,7 @@ export const SyncDialog = ({ open, onClose }) => {
   const renderInviteStep = () => (
     <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
       <View style={styles.successAlert}>
-        <Text style={styles.successIcon}>✓</Text>
+        <CheckCircleIcon size={24} color="#67B26F" />
         <Text style={styles.successText}>
           Invite code created successfully!
         </Text>
@@ -465,7 +484,11 @@ export const SyncDialog = ({ open, onClose }) => {
           style={styles.copyButton}
           onPress={() => handleCopyInvite(currentInviteCode)}
         >
-          <Text style={styles.copyButtonIcon}>{copied ? "✓" : "📋"}</Text>
+          {copied ? (
+            <DoneIcon size={20} color={colors.background?.paper || "#FFFFFF"} />
+          ) : (
+            <ContentCopyIcon size={20} color={colors.background?.paper || "#FFFFFF"} />
+          )}
           <Text style={styles.copyButtonText}>
             {copied ? "Copied!" : "Copy Invite Code"}
           </Text>
@@ -517,7 +540,11 @@ export const SyncDialog = ({ open, onClose }) => {
               style={styles.copyButton}
               onPress={handleCopyPhrase}
             >
-              <Text style={styles.copyButtonIcon}>{copied ? "✓" : "📋"}</Text>
+              {copied ? (
+            <DoneIcon size={20} color={colors.background?.paper || "#FFFFFF"} />
+          ) : (
+            <ContentCopyIcon size={20} color={colors.background?.paper || "#FFFFFF"} />
+          )}
               <Text style={styles.copyButtonText}>
                 {copied ? "Copied!" : "Copy to Clipboard"}
               </Text>
@@ -632,10 +659,7 @@ const getStyles = (colors) =>
       marginBottom: 16,
       flexDirection: "row",
       alignItems: "center",
-    },
-    successIcon: {
-      fontSize: 24,
-      marginRight: 12,
+      gap: 12,
     },
     successText: {
       fontSize: 16,
@@ -684,18 +708,6 @@ const getStyles = (colors) =>
       color: colors.text.secondary,
       lineHeight: 20,
     },
-    syncIcon: {
-      fontSize: 24,
-      color: colors.primary,
-    },
-    securityIcon: {
-      fontSize: 24,
-      color: colors.primary,
-    },
-    checkIcon: {
-      fontSize: 24,
-      color: colors.primary,
-    },
     statusRow: {
       flexDirection: "row",
       alignItems: "center",
@@ -722,19 +734,18 @@ const getStyles = (colors) =>
     syncNowButton: {
       flexDirection: "row",
       alignItems: "center",
-      paddingHorizontal: 12,
-      paddingVertical: 6,
-      borderRadius: 6,
-      borderWidth: 1,
-      borderColor: colors.primary,
-    },
-    syncNowIcon: {
-      fontSize: 14,
-      marginRight: 4,
+      justifyContent: "center",
+      paddingHorizontal: 16,
+      paddingVertical: 10,
+      borderRadius: 12,
+      borderWidth: 2,
+      borderColor: colors.primary || "#A08670",
+      backgroundColor: colors.primary || "#A08670",
+      gap: 6,
     },
     syncNowText: {
       fontSize: 14,
-      color: colors.primary,
+      color: colors.background?.paper || "#FFFFFF",
       fontWeight: "500",
     },
     buttonRow: {
@@ -787,10 +798,7 @@ const getStyles = (colors) =>
       marginBottom: 16,
       borderWidth: 2,
       borderColor: colors.border,
-    },
-    menuOptionIcon: {
-      fontSize: 32,
-      marginRight: 16,
+      gap: 16,
     },
     menuOptionContent: {
       flex: 1,
@@ -839,7 +847,7 @@ const getStyles = (colors) =>
     warningAlertTitle: {
       fontSize: 14,
       fontWeight: "600",
-      color: colors.text.primary,
+      color: colors.primary,
       marginBottom: 4,
     },
     warningAlertText: {
@@ -959,15 +967,14 @@ const getStyles = (colors) =>
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      paddingVertical: 8,
-      paddingHorizontal: 16,
-      borderRadius: 6,
-      backgroundColor: colors.primary,
-    },
-    copyButtonIcon: {
-      fontSize: 16,
-      color: colors.background.paper,
-      marginRight: 8,
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      borderRadius: 12,
+      backgroundColor: colors.primary || "#A08670",
+      borderWidth: 2,
+      borderColor: colors.primary || "#A08670",
+      gap: 8,
+      minHeight: 44,
     },
     copyButtonText: {
       fontSize: 14,
@@ -1019,14 +1026,21 @@ const getStyles = (colors) =>
     },
     button: {
       flex: 1,
-      paddingVertical: 12,
-      borderRadius: 8,
+      paddingVertical: 14,
+      paddingHorizontal: 20,
+      borderRadius: 12,
       alignItems: "center",
+      justifyContent: "center",
+      minHeight: 48,
+    },
+    buttonWithIcon: {
+      flexDirection: "row",
+      gap: 8,
     },
     cancelButton: {
-      backgroundColor: colors.background.paper,
-      borderWidth: 1,
-      borderColor: colors.border,
+      backgroundColor: "transparent",
+      borderWidth: 2,
+      borderColor: colors.border || "#E0E0E0",
     },
     cancelButtonText: {
       fontSize: 16,
@@ -1034,7 +1048,9 @@ const getStyles = (colors) =>
       color: colors.text.primary,
     },
     primaryButton: {
-      backgroundColor: colors.primary,
+      backgroundColor: colors.primary || "#A08670",
+      borderWidth: 2,
+      borderColor: colors.primary || "#A08670",
     },
     primaryButtonText: {
       fontSize: 16,

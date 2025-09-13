@@ -4,15 +4,13 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  Modal,
-  SafeAreaView,
-  StatusBar,
   FlatList,
   Platform,
   Linking,
   Image,
 } from "react-native";
 import { useTheme } from "../../../context/ThemeContext";
+import { ThemedModal } from "../../Common";
 import { createStyles } from "./styles";
 import BuyMeCoffeeButton from "../../BuyMeCoffeeButton/BuyMeCoffeeButton";
 
@@ -267,39 +265,16 @@ const SupportModal = ({
   };
 
   return (
-    <Modal
+    <ThemedModal
       visible={visible}
-      animationType="slide"
-      transparent={false}
-      onRequestClose={onClose}
+      onClose={onClose}
+      title="Support Manylla"
+      presentationStyle="fullScreen"
     >
-      {Platform.OS === "android" && (
-        <StatusBar
-          backgroundColor={colors.background.primary}
-          barStyle={
-            theme === "dark" && !useManyllaTheme
-              ? "light-content"
-              : "dark-content"
-          }
-        />
-      )}
-      <SafeAreaView
-        style={[styles.container, { paddingTop: insets?.top || 0 }]}
-      >
-        <View style={styles.header}>
-          <View style={styles.logoContainer}>
-            <View style={[styles.logoAvatar, styles.logoAvatarPlaceholder]}>
-              <Text style={styles.logoAvatarText}>m</Text>
-            </View>
-            <Text style={styles.logo}>manylla</Text>
-          </View>
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>✕</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.container}>
         {renderContent()}
-      </SafeAreaView>
-    </Modal>
+      </View>
+    </ThemedModal>
   );
 };
 

@@ -37,13 +37,13 @@ import { unifiedCategories } from "./src/utils/unifiedCategories";
 import {
   EntryForm,
   ProfileEditForm,
-  CategoryManager,
 } from "./src/components/UnifiedApp";
 
 // Import additional components
 import { ThemedToast } from "./src/components/Toast";
 import { LoadingOverlay } from "./src/components/Loading";
 import { Header, HEADER_HEIGHT } from "./src/components/Layout";
+import BottomToolbar from "./src/components/Navigation/BottomToolbar";
 import { ShareAccessView } from "./src/components/Sharing";
 import PrivacyModal from "./src/components/Modals/PrivacyModal";
 import SupportModal from "./src/components/Modals/SupportModal";
@@ -119,8 +119,6 @@ if (isMobile) {
 if (typeof EntryForm === "undefined") console.error("EntryForm is undefined");
 if (typeof ProfileEditForm === "undefined")
   console.error("ProfileEditForm is undefined");
-if (typeof CategoryManager === "undefined")
-  console.error("CategoryManager is undefined");
 
 // Web-specific early sync data capture (from StackMap pattern)
 if (isWeb && typeof window !== "undefined") {
@@ -247,16 +245,47 @@ const ProfileOverview = ({
     return profile.entries.filter((entry) => entry.category === categoryName);
   };
 
+  const handleMoveCategory = (categoryId, direction) => {
+    if (!onUpdateProfile) return;
+
+    const categories = [...profile.categories];
+    const index = categories.findIndex(cat => cat.id === categoryId);
+
+    // Skip if Quick Info (always index 0)
+    if (categoryId === 'quick-info') return;
+
+    if (direction === 'up' && index > 1) { // > 1 because Quick Info is 0
+      [categories[index], categories[index - 1]] =
+        [categories[index - 1], categories[index]];
+    } else if (direction === 'down' && index < categories.length - 1) {
+      [categories[index], categories[index + 1]] =
+        [categories[index + 1], categories[index]];
+    }
+
+    // Update order property
+    categories.forEach((cat, idx) => {
+      cat.order = idx;
+    });
+
+    // Save updated profile
+    const updatedProfile = {
+      ...profile,
+      categories,
+      updatedAt: new Date().toISOString(),
+    };
+
+    onUpdateProfile(updatedProfile);
+  };
+
   // Separate QuickInfo panels from regular categories
   const quickInfoCategories = profile.categories
-    .filter((cat) => cat.isQuickInfo && cat.isVisible)
+    .filter((cat) => cat.isQuickInfo)
     .sort((a, b) => a.order - b.order);
 
   const regularCategories = profile.categories
     .filter(
       (cat) =>
         !cat.isQuickInfo &&
-        cat.isVisible &&
         getEntriesByCategory(cat.name).length > 0,
     )
     .sort((a, b) => a.order - b.order);
@@ -464,8 +493,10 @@ const ProfileOverview = ({
             <View style={styles.categoriesGrid}>
               {visibleCategories
                 .filter((cat) => cat.name !== "quick-info")
-                .map((category) => {
+                .map((category, index, filteredCategories) => {
                   const entries = getEntriesByCategory(category.name);
+                  const isFirst = index === 0;
+                  const isLast = index === filteredCategories.length - 1;
 
                   // Dynamic column width based on current window width
                   const categoryStyle = [
@@ -486,9 +517,34 @@ const ProfileOverview = ({
                           color={category.color}
                           style={{ marginRight: 8, opacity: 0.8 }}
                         />
-                        <Text style={styles.categoryTitle}>
+                        <Text style={[styles.categoryTitle, { flex: 1 }]}>
                           {category.displayName}
                         </Text>
+                        {/* Add reorder controls */}
+                        <View style={{ flexDirection: "row", gap: 4 }}>
+                          <TouchableOpacity
+                            style={{
+                              padding: 4,
+                              opacity: isFirst ? 0.2 : 0.6,
+                            }}
+                            onPress={() => handleMoveCategory(category.id, 'up')}
+                            disabled={isFirst}
+                            accessibilityLabel={`Move ${category.displayName} up`}
+                          >
+                            <Text style={{ fontSize: 20, color: colors.text?.secondary || "#666" }}>↑</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={{
+                              padding: 4,
+                              opacity: isLast ? 0.2 : 0.6,
+                            }}
+                            onPress={() => handleMoveCategory(category.id, 'down')}
+                            disabled={isLast}
+                            accessibilityLabel={`Move ${category.displayName} down`}
+                          >
+                            <Text style={{ fontSize: 20, color: colors.text?.secondary || "#666" }}>↓</Text>
+                          </TouchableOpacity>
+                        </View>
                       </View>
                       <View style={styles.categoryContent}>
                         {entries.length === 0 ? (
@@ -611,7 +667,7 @@ const ProfileOverview = ({
 // Main App content
 function AppContent() {
   const { pushSync, syncStatus } = useSync();
-  const { colors, theme, toggleTheme } = useTheme();
+  const { colors, theme, toggleTheme, setThemeMode } = useTheme();
 
   // Create styles based on current theme colors
   const styles = createStyles(colors, theme);
@@ -624,7 +680,6 @@ function AppContent() {
   const [editingEntry, setEditingEntry] = useState(null);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [syncDialogOpen, setSyncDialogOpen] = useState(false);
-  const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [profileEditOpen, setProfileEditOpen] = useState(false);
   const [printPreviewOpen, setPrintPreviewOpen] = useState(false);
   const [qrCodeOpen, setQRCodeOpen] = useState(false);
@@ -1287,21 +1342,9 @@ function AppContent() {
   return (
     <SafeAreaView style={styles.container}>
       <Header
-        onSyncClick={() => setSyncDialogOpen(true)}
-        onCloseProfile={handleLogout}
-        onShare={() => setShareDialogOpen(true)}
-        onCategoriesClick={() => setCategoriesOpen(true)}
-        // onQuickInfoClick={() => setQuickInfoOpen(true)} // TODO: Implement quick info dialog
-        onPrintClick={() => setPrintPreviewOpen(true)}
-        onPrivacyClick={() => setShowPrivacyModal(true)}
-        onSupportClick={() => setShowSupportModal(true)}
-        syncStatus={syncStatus}
-        onThemeToggle={toggleTheme}
-        theme={theme}
         colors={colors}
-        showToast={showToast}
+        theme={theme}
         profile={profile}
-        isProfileHidden={isProfileHidden}
         onEditProfile={() => setProfileEditOpen(true)}
       />
       <ProfileOverview
@@ -1312,7 +1355,6 @@ function AppContent() {
         onUpdateProfile={handleUpdateProfile}
         onShare={() => setShareDialogOpen(true)}
         onEditProfile={() => setProfileEditOpen(true)}
-        onManageCategories={() => setCategoriesOpen(true)}
         styles={styles}
         colors={colors}
         onScrollChange={setIsProfileHidden}
@@ -1340,25 +1382,6 @@ function AppContent() {
         onSave={handleUpdateProfile}
         profile={profile}
         themeColors={colors}
-      />
-
-      {/* Category Manager Modal */}
-      <CategoryManager
-        visible={categoriesOpen}
-        themeColors={colors}
-        onClose={() => setCategoriesOpen(false)}
-        onSave={async (updatedCategories) => {
-          const updatedProfile = {
-            ...profile,
-            categoryConfigs: updatedCategories,
-            updatedAt: new Date(),
-          };
-
-          setProfile(updatedProfile);
-          await StorageService.saveProfile(updatedProfile);
-          setCategoriesOpen(false);
-        }}
-        categories={profile?.categoryConfigs || unifiedCategories}
       />
 
       {/* Share Dialog */}
@@ -1438,6 +1461,22 @@ function AppContent() {
         visible={showSupportModal}
         onClose={() => setShowSupportModal(false)}
         forceManyllaTheme={true}
+      />
+      
+      {/* Permanent Bottom Toolbar */}
+      <BottomToolbar
+        onShare={() => setShareDialogOpen(true)}
+        onPrintClick={() => setPrintPreviewOpen(true)}
+        onSyncClick={() => setSyncDialogOpen(true)}
+        onThemeToggle={toggleTheme}
+        onThemeSelect={setThemeMode}
+        onPrivacyClick={() => setShowPrivacyModal(true)}
+        onSupportClick={() => setShowSupportModal(true)}
+        onCloseProfile={handleLogout}
+        theme={theme}
+        colors={colors}
+        syncStatus={syncStatus}
+        showToast={showToast}
       />
     </SafeAreaView>
   );
@@ -1757,7 +1796,7 @@ const createStyles = (colors, theme) => {
     },
     fab: {
       position: isWeb ? "fixed" : "absolute",
-      bottom: 24,
+      bottom: isWeb ? 80 : 88, // Position above bottom toolbar (56px desktop / 64px mobile + spacing)
       right: 24,
       width: 56,
       height: 56,

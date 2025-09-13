@@ -7,7 +7,6 @@ export const unifiedCategories = [
     displayName: "Quick Info",
     color: "#E74C3C", // Red - urgent/important
     order: 0,
-    isVisible: true,
     isCustom: false,
     isQuickInfo: true, // This flag keeps it pinned to top
   },
@@ -19,7 +18,6 @@ export const unifiedCategories = [
     displayName: "Daily Support",
     color: "#3498DB", // Blue - calm, routine
     order: 1,
-    isVisible: true,
     isCustom: false,
     isQuickInfo: false,
   },
@@ -29,7 +27,6 @@ export const unifiedCategories = [
     displayName: "Health & Therapy",
     color: "#27AE60", // Green - health, growth
     order: 2,
-    isVisible: true,
     isCustom: false,
     isQuickInfo: false,
   },
@@ -39,7 +36,6 @@ export const unifiedCategories = [
     displayName: "Education & Goals",
     color: "#F39C12", // Orange - learning, achievement
     order: 3,
-    isVisible: true,
     isCustom: false,
     isQuickInfo: false,
   },
@@ -49,7 +45,6 @@ export const unifiedCategories = [
     displayName: "Behavior & Social",
     color: "#9B59B6", // Purple - emotional, social
     order: 4,
-    isVisible: true,
     isCustom: false,
     isQuickInfo: false,
   },
@@ -59,7 +54,6 @@ export const unifiedCategories = [
     displayName: "Family & Resources",
     color: "#16A085", // Teal - support, community
     order: 5,
-    isVisible: true,
     isCustom: false,
     isQuickInfo: false,
   },

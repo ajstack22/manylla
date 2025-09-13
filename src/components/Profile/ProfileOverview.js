@@ -38,6 +38,38 @@ export const ProfileOverview = ({
 
   const allCategories = getVisibleCategories(profile.categories);
 
+  const handleMoveCategory = (categoryId, direction) => {
+    if (!onUpdateProfile) return;
+
+    const categories = [...(profile.categories || allCategories)];
+    const index = categories.findIndex(cat => cat.id === categoryId);
+
+    // Skip if Quick Info (always index 0)
+    if (categoryId === 'quick-info') return;
+
+    if (direction === 'up' && index > 1) { // > 1 because Quick Info is 0
+      [categories[index], categories[index - 1]] =
+        [categories[index - 1], categories[index]];
+    } else if (direction === 'down' && index < categories.length - 1) {
+      [categories[index], categories[index + 1]] =
+        [categories[index + 1], categories[index]];
+    }
+
+    // Update order property
+    categories.forEach((cat, idx) => {
+      cat.order = idx;
+    });
+
+    // Save updated profile
+    const updatedProfile = {
+      ...profile,
+      categories,
+      updatedAt: new Date().toISOString(),
+    };
+
+    onUpdateProfile(updatedProfile);
+  };
+
   // Show categories that have entries OR are Quick Info (always show Quick Info)
   const visibleCategories = allCategories
     .filter((category) => {
@@ -249,7 +281,7 @@ export const ProfileOverview = ({
 
       <View style={styles.content}>
         <View style={styles.categoriesContainer}>
-          {visibleCategories.map((category) => {
+          {visibleCategories.map((category, index) => {
             const entries = getEntriesByCategory(category.name);
 
             return (
@@ -259,6 +291,12 @@ export const ProfileOverview = ({
                   entries={entries}
                   color={category.color}
                   icon={null}
+                  categoryId={category.id}
+                  isFirst={index === 0}
+                  isLast={index === visibleCategories.length - 1}
+                  isQuickInfo={category.id === 'quick-info' || category.isQuickInfo}
+                  onMoveUp={() => handleMoveCategory(category.id, 'up')}
+                  onMoveDown={() => handleMoveCategory(category.id, 'down')}
                   onAddEntry={
                     onAddEntry ? () => onAddEntry(category.name) : undefined
                   }

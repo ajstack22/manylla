@@ -1,29 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
-  Modal,
-  SafeAreaView,
-  ScrollView,
   Image,
 } from "react-native";
-import {
-  MenuIcon,
-  ShareIcon,
-  PrintIcon,
-  CloudIcon,
-  LabelIcon,
-  LogoutIcon,
-  CloseIcon,
-  PaletteIcon,
-  PrivacyTipIcon,
-  SupportIcon,
-} from "../Common";
 import { getStatusBarHeight } from "../../utils/platformStyles";
-
 import platform from "../../utils/platform";
 
 // Define consistent header height
@@ -36,139 +19,12 @@ export const HEADER_HEIGHT = platform.select({
 });
 
 const Header = ({
-  onSyncClick,
-  onCloseProfile,
-  onShare,
-  onCategoriesClick,
-  onQuickInfoClick,
-  onPrintClick,
-  onPrivacyClick,
-  onSupportClick,
-  syncStatus,
-  onThemeToggle,
-  theme,
   colors,
-  showToast,
+  theme,
   profile,
-  isProfileHidden,
   onEditProfile,
 }) => {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(
-    Dimensions.get("window").width || 0,
-  );
-
-  useEffect(() => {
-    const subscription = Dimensions.addEventListener("change", ({ window }) => {
-      setWindowWidth(window.width);
-    });
-
-    return () => subscription?.remove();
-  }, []);
-
-  // Determine if we should show hamburger menu
-  // On mobile (native) always show hamburger
-  // On web, show hamburger when width < 768px (tablet breakpoint)
-  const showHamburger = !platform.isWeb || windowWidth < 768;
-
-  const menuItems = [
-    {
-      label: "Share",
-      icon: ShareIcon,
-      onPress: () => {
-        onShare();
-        setMenuOpen(false);
-      },
-    },
-    {
-      label: "Print",
-      icon: PrintIcon,
-      onPress: () => {
-        onPrintClick && onPrintClick();
-        setMenuOpen(false);
-      },
-    },
-    {
-      label: "Sync",
-      icon: CloudIcon,
-      onPress: () => {
-        onSyncClick();
-        setMenuOpen(false);
-      },
-    },
-    {
-      label: "Categories",
-      icon: LabelIcon,
-      onPress: () => {
-        onCategoriesClick();
-        setMenuOpen(false);
-      },
-    },
-    {
-      label: "Theme",
-      icon: PaletteIcon,
-      onPress: () => {
-        onThemeToggle();
-        // Show toast with new theme name
-        const nextTheme =
-          theme === "light" ? "Dark" : theme === "dark" ? "Manylla" : "Light";
-        if (showToast) {
-          showToast(`${nextTheme} mode activated`, "info");
-        }
-        setMenuOpen(false);
-      },
-    },
-    {
-      label: "Privacy Policy",
-      icon: PrivacyTipIcon,
-      onPress: () => {
-        if (onPrivacyClick) {
-          onPrivacyClick();
-        }
-        setMenuOpen(false);
-      },
-    },
-    {
-      label: "Support",
-      icon: SupportIcon,
-      onPress: () => {
-        if (onSupportClick) {
-          onSupportClick();
-        }
-        setMenuOpen(false);
-      },
-    },
-    {
-      label: "Close Profile",
-      icon: LogoutIcon,
-      onPress: () => {
-        onCloseProfile();
-        setMenuOpen(false);
-      },
-    },
-  ];
-
-  // Get sync icon based on status
-  const getSyncIcon = () => {
-    switch (syncStatus) {
-      case "synced":
-        return CloudIcon; // CloudDoneIcon will be added when icon library is expanded
-      case "error":
-        return CloudIcon; // CloudAlertIcon will be added when icon library is expanded
-      case "not-setup":
-      default:
-        return CloudIcon;
-    }
-  };
-
-  const SyncIcon = getSyncIcon();
-
-  // Always use palette icon for theme
-  const ThemeIcon = PaletteIcon;
-
-  const styles = createStyles(colors);
-
-  // Debug logging removed for production
+  const styles = createStyles(colors, theme);
 
   // Platform-specific container styles
   const headerContainerStyle = platform.select({
@@ -190,247 +46,64 @@ const Header = ({
   });
 
   return (
-    <>
-      <View style={headerContainerStyle}>
-        <View style={styles.content}>
-          <View style={styles.left}>
-            {/* Transition between logo and profile with fade animation */}
-            {platform.isWeb ? (
-              <View style={styles.transitionContainer}>
-                {/* Manylla logo - fades out when profile is hidden */}
-                <View
-                  style={[
-                    styles.logoContainer,
-                    styles.fadeContainer,
-                    {
-                      opacity: profile && isProfileHidden ? 0 : 1,
-                      transition: "opacity 0.3s ease-in-out",
-                      pointerEvents:
-                        profile && isProfileHidden ? "none" : "auto",
-                    },
-                  ]}
-                >
-                  <View
-                    style={[styles.logoAvatar, styles.logoAvatarPlaceholder]}
-                    className="logo-avatar-animated"
-                  >
-                    <Text style={styles.logoAvatarText}>m</Text>
-                  </View>
-                  <Text style={styles.logo}>manylla</Text>
-                </View>
-
-                {/* Profile - fades in when profile is hidden */}
-                {profile && (
-                  <TouchableOpacity
-                    onPress={onEditProfile}
-                    style={[
-                      styles.profileButton,
-                      styles.fadeContainer,
-                      {
-                        opacity: isProfileHidden ? 1 : 0,
-                        transition: "opacity 0.3s ease-in-out",
-                        pointerEvents: isProfileHidden ? "auto" : "none",
-                      },
-                    ]}
-                  >
-                    <View style={styles.profileContent}>
-                      {profile.photo && profile.photo !== "default" ? (
-                        <Image
-                          source={{
-                            uri:
-                              platform.isIOS && profile.photo.startsWith("/")
-                                ? `https://manylla.com/qual${profile.photo}` // Convert relative path to absolute URL for iOS
-                                : profile.photo,
-                          }}
-                          style={styles.profileAvatar}
-                        />
-                      ) : (
-                        <View
-                          style={[
-                            styles.profileAvatar,
-                            styles.profileAvatarPlaceholder,
-                          ]}
-                          className="profile-avatar-animated"
-                        >
-                          <Text style={styles.profileAvatarText}>
-                            {profile.name?.charAt(0)?.toUpperCase()}
-                          </Text>
-                        </View>
-                      )}
-                      <Text style={styles.profileName} numberOfLines={1}>
-                        {profile.preferredName || profile.name}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                )}
-              </View>
-            ) : (
-              // Mobile: Show profile when scrolled, otherwise show logo
-              <>
-                {profile && isProfileHidden ? (
-                  <TouchableOpacity
-                    onPress={onEditProfile}
-                    style={styles.profileButton}
-                  >
-                    <View style={styles.profileContent}>
-                      {profile.photo && profile.photo !== "default" ? (
-                        <Image
-                          source={{
-                            uri:
-                              platform.isIOS && profile.photo.startsWith("/")
-                                ? `https://manylla.com/qual${profile.photo}` // Convert relative path to absolute URL for iOS
-                                : profile.photo,
-                          }}
-                          style={styles.profileAvatar}
-                        />
-                      ) : (
-                        <View
-                          style={[
-                            styles.profileAvatar,
-                            styles.profileAvatarPlaceholder,
-                          ]}
-                        >
-                          <Text style={styles.profileAvatarText}>
-                            {profile.name?.charAt(0)?.toUpperCase()}
-                          </Text>
-                        </View>
-                      )}
-                      <Text style={styles.profileName} numberOfLines={1}>
-                        {profile.preferredName || profile.name}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                ) : (
-                  <View style={styles.logoContainer}>
-                    <View
-                      style={[styles.logoAvatar, styles.logoAvatarPlaceholder]}
-                    >
-                      <Text style={styles.logoAvatarText}>m</Text>
-                    </View>
-                    <Text style={styles.logo}>manylla</Text>
-                  </View>
-                )}
-              </>
-            )}
-          </View>
-
-          <View style={styles.right}>
-            {!showHamburger && (
-              <>
-                {/* Desktop buttons */}
-                {onCategoriesClick && (
-                  <TouchableOpacity
-                    onPress={onCategoriesClick}
-                    style={styles.iconButton}
-                  >
-                    <LabelIcon size={24} color={colors.primary || "#A08670"} />
-                  </TouchableOpacity>
-                )}
-                {onShare && (
-                  <TouchableOpacity onPress={onShare} style={styles.iconButton}>
-                    <ShareIcon size={24} color={colors.primary || "#A08670"} />
-                  </TouchableOpacity>
-                )}
-                {onSyncClick && (
-                  <TouchableOpacity
-                    onPress={onSyncClick}
-                    style={styles.iconButton}
-                  >
-                    <SyncIcon size={24} color={colors.primary || "#A08670"} />
-                  </TouchableOpacity>
-                )}
-                {onPrivacyClick && (
-                  <TouchableOpacity
-                    onPress={onPrivacyClick}
-                    style={styles.iconButton}
-                  >
-                    <PrivacyTipIcon
-                      size={24}
-                      color={colors.primary || "#A08670"}
-                    />
-                  </TouchableOpacity>
-                )}
-                {onSupportClick && (
-                  <TouchableOpacity
-                    onPress={onSupportClick}
-                    style={styles.iconButton}
-                  >
-                    <SupportIcon
-                      size={24}
-                      color={colors.primary || "#A08670"}
-                    />
-                  </TouchableOpacity>
-                )}
-                <TouchableOpacity
-                  onPress={onThemeToggle}
-                  style={styles.iconButton}
-                >
-                  <ThemeIcon size={24} color={colors.primary || "#A08670"} />
-                </TouchableOpacity>
-                {onCloseProfile && (
-                  <TouchableOpacity
-                    onPress={onCloseProfile}
-                    style={styles.iconButton}
-                  >
-                    <LogoutIcon size={24} color={colors.primary || "#A08670"} />
-                  </TouchableOpacity>
-                )}
-              </>
-            )}
-
-            {showHamburger && (
-              <TouchableOpacity
-                onPress={() => setMenuOpen(true)}
-                style={styles.iconButton}
-              >
-                <MenuIcon size={24} color={colors.primary || "#A08670"} />
-              </TouchableOpacity>
-            )}
+    <View style={headerContainerStyle}>
+      <View style={styles.content}>
+        {/* Logo on the left */}
+        <View style={styles.left}>
+          <View style={styles.logoContainer}>
+            <View
+              style={[styles.logoAvatar, styles.logoAvatarPlaceholder]}
+              className="logo-avatar-animated"
+            >
+              <Text style={styles.logoAvatarText}>m</Text>
+            </View>
+            <Text style={styles.logo}>manylla</Text>
           </View>
         </View>
-      </View>
 
-      {/* Mobile menu modal */}
-      <Modal
-        visible={menuOpen}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setMenuOpen(false)}
-      >
-        <SafeAreaView style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Menu</Text>
-              <TouchableOpacity
-                onPress={() => setMenuOpen(false)}
-                style={styles.closeButton}
-              >
-                <CloseIcon size={24} color={colors.primary || "#A08670"} />
-              </TouchableOpacity>
-            </View>
-            <ScrollView style={styles.menuList}>
-              {menuItems.map((item, index) => {
-                const Icon = item.icon;
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    style={styles.menuItem}
-                    onPress={item.onPress}
+        {/* Profile on the right */}
+        <View style={styles.right}>
+          {profile && (
+            <TouchableOpacity
+              onPress={onEditProfile}
+              style={styles.profileButton}
+            >
+              <View style={styles.profileContent}>
+                <Text style={styles.profileName} numberOfLines={1}>
+                  {profile.preferredName || profile.name}
+                </Text>
+                {profile.photo && profile.photo !== "default" ? (
+                  <Image
+                    source={{
+                      uri:
+                        platform.isIOS && profile.photo.startsWith("/")
+                          ? `https://manylla.com/qual${profile.photo}`
+                          : profile.photo,
+                    }}
+                    style={styles.profileAvatar}
+                  />
+                ) : (
+                  <View
+                    style={[
+                      styles.profileAvatar,
+                      styles.profileAvatarPlaceholder,
+                    ]}
                   >
-                    <Icon size={24} color={colors.primary || "#A08670"} />
-                    <Text style={styles.menuItemText}>{item.label}</Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
-          </View>
-        </SafeAreaView>
-      </Modal>
-    </>
+                    <Text style={styles.profileAvatarText}>
+                      {profile.name?.charAt(0)?.toUpperCase()}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+    </View>
   );
 };
 
-const createStyles = (colors) =>
+const createStyles = (colors, theme) =>
   StyleSheet.create({
     container: {
       height: HEADER_HEIGHT,
@@ -458,6 +131,10 @@ const createStyles = (colors) =>
       height: "100%",
     },
     left: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    right: {
       flexDirection: "row",
       alignItems: "center",
     },
@@ -495,7 +172,7 @@ const createStyles = (colors) =>
       }),
     },
     logoAvatarText: {
-      color: colors.background.paper,
+      color: theme === "dark" ? "#FFFFFF" : colors.background.paper,
       fontSize: 20,
       fontWeight: "600",
       ...platform.select({
@@ -505,22 +182,10 @@ const createStyles = (colors) =>
         },
       }),
     },
-    transitionContainer: {
-      position: "relative",
-      minHeight: 36, // Match avatar height
-      display: "flex",
-      alignItems: "center",
-    },
-    fadeContainer: {
-      position: "absolute",
-      left: 0,
-      top: "50%",
-      transform: [{ translateY: "-50%" }],
-    },
     profileButton: {
       flexDirection: "row",
       alignItems: "center",
-      padding: 0, // Remove padding for better alignment
+      padding: 4,
       borderRadius: 8,
       ...platform.select({
         web: {
@@ -554,11 +219,11 @@ const createStyles = (colors) =>
     },
     profileAvatarText: {
       color: colors.background.paper,
-      fontSize: 16,
+      fontSize: 20, // Match logo avatar text size
       fontWeight: "600",
     },
     profileName: {
-      fontSize: 24,
+      fontSize: 24, // Match logo font size
       fontWeight: "600",
       color: colors.primary || "#A08670",
       maxWidth: 200,
@@ -568,67 +233,6 @@ const createStyles = (colors) =>
             '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
         },
       }),
-    },
-    right: {
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 8,
-    },
-    iconButton: {
-      padding: 8,
-      borderRadius: 8,
-      ...platform.select({
-        web: {
-          cursor: "pointer",
-          transition: "background-color 0.2s",
-          ":hover": {
-            backgroundColor: colors.action?.hover || "rgba(0,0,0,0.04)",
-          },
-        },
-      }),
-    },
-    modalContainer: {
-      flex: 1,
-      backgroundColor: "rgba(0, 0, 0, 0.5)",
-      justifyContent: "flex-end",
-    },
-    modalContent: {
-      backgroundColor: colors.background.paper,
-      borderTopLeftRadius: 20,
-      borderTopRightRadius: 20,
-      paddingBottom: 20,
-      maxHeight: "70%",
-    },
-    modalHeader: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      padding: 16,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.divider,
-    },
-    modalTitle: {
-      fontSize: 18,
-      fontWeight: "600",
-      color: colors.text.primary,
-    },
-    closeButton: {
-      padding: 8,
-    },
-    menuList: {
-      paddingVertical: 8,
-    },
-    menuItem: {
-      flexDirection: "row",
-      alignItems: "center",
-      paddingVertical: 12,
-      paddingHorizontal: 16,
-      gap: 16,
-    },
-    menuItemText: {
-      fontSize: 16,
-      color: colors.text.primary,
-      flex: 1,
     },
   });
 

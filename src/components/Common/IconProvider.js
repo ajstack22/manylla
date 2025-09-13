@@ -60,6 +60,7 @@ if (platform.isWeb) {
     CloudSync: require("@mui/icons-material/CloudSync").default,
     CloudUpload: require("@mui/icons-material/CloudUpload").default,
     CloudDownload: require("@mui/icons-material/CloudDownload").default,
+    CloudDone: require("@mui/icons-material/CloudDone").default,
 
     // Labels & Tags
     Label: require("@mui/icons-material/Label").default,
@@ -136,6 +137,8 @@ if (platform.isWeb) {
     Save: require("@mui/icons-material/Save").default,
     Cancel: require("@mui/icons-material/Cancel").default,
     Done: require("@mui/icons-material/Done").default,
+    MoreHoriz: require("@mui/icons-material/MoreHoriz").default,
+    PlaylistAddCheck: require("@mui/icons-material/PlaylistAddCheck").default,
   };
 }
 
@@ -145,6 +148,7 @@ const iconNameMap = {
   Close: "close",
   ArrowBack: "arrow-back",
   MoreVert: "more-vert",
+  MoreHoriz: "more-horiz",
   Search: "search",
   Settings: "settings",
   Person: "person",
@@ -172,6 +176,7 @@ const iconNameMap = {
   CloudSync: "cloud-sync",
   CloudUpload: "cloud-upload",
   CloudDownload: "cloud-download",
+  CloudDone: "cloud-done",
   Label: "label",
   LabelOutline: "label-outline",
   Tag: "local-offer",
@@ -215,6 +220,7 @@ const iconNameMap = {
   Save: "save",
   Cancel: "cancel",
   Done: "done",
+  PlaylistAddCheck: "playlist-add-check",
 };
 
 // Base Icon Component
@@ -281,5 +287,24 @@ export const DarkModeIcon = (props) => <Icon name="DarkMode" {...props} />;
 export const LightModeIcon = (props) => <Icon name="LightMode" {...props} />;
 export const PaletteIcon = (props) => <Icon name="Palette" {...props} />;
 export const SupportIcon = (props) => <Icon name="Favorite" {...props} />;
+export const ChevronUpIcon = (props) => <Icon name="ExpandLess" {...props} />;
+export const ChevronDownIcon = (props) => <Icon name="ExpandMore" {...props} />;
+export const MoreHorizIcon = (props) => <Icon name="MoreHoriz" {...props} />;
+export const DescriptionIcon = (props) => <Icon name="Description" {...props} />;
+export const InsertDriveFileIcon = (props) => <Icon name="InsertDriveFile" {...props} />;
+export const DownloadIcon = (props) => <Icon name="Download" {...props} />;
+export const CheckCircleIcon = (props) => <Icon name="CheckCircle" {...props} />;
+export const ContentCopyIcon = (props) => <Icon name="ContentCopy" {...props} />;
+export const DoneIcon = (props) => <Icon name="Done" {...props} />;
+export const LockIcon = (props) => <Icon name="Lock" {...props} />;
+export const SchoolIcon = (props) => <Icon name="School" {...props} />;
+export const LocalHospitalIcon = (props) => <Icon name="LocalHospital" {...props} />;
+export const HomeIcon = (props) => <Icon name="Home" {...props} />;
+export const UploadIcon = (props) => <Icon name="CloudUpload" {...props} />;
+export const CloudUploadIcon = (props) => <Icon name="CloudUpload" {...props} />;
+export const CloudDownloadIcon = (props) => <Icon name="CloudDownload" {...props} />;
+export const CloudDoneIcon = (props) => <Icon name="CloudDone" {...props} />;
+export const CloudSyncIcon = (props) => <Icon name="CloudSync" {...props} />;
+export const PlaylistAddCheckIcon = (props) => <Icon name="PlaylistAddCheck" {...props} />;
 
 export default Icon;

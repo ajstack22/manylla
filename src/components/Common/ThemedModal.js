@@ -8,11 +8,12 @@ import {
   StyleSheet,
 } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
-import { getShadowStyle } from "../../utils/platformStyles";
+import { CloseIcon } from "./index";
 import platform from "../../utils/platform";
 
 /**
  * ThemedModal - A unified modal component with consistent styling
+ * Now always uses theme colors to match the bottom toolbar aesthetic
  *
  * @param {boolean} visible - Whether the modal is visible
  * @param {function} onClose - Function to call when closing the modal
@@ -20,7 +21,7 @@ import platform from "../../utils/platform";
  * @param {ReactNode} children - Content to display in the modal body
  * @param {string} presentationStyle - Modal presentation style (default: "pageSheet")
  * @param {boolean} showCloseButton - Whether to show the close button (default: true)
- * @param {string} headerStyle - Style variant for header: "primary" | "surface" (default: "primary")
+ * @param {string} headerStyle - DEPRECATED - Now always uses theme colors
  */
 export const ThemedModal = ({
   visible,
@@ -29,28 +30,25 @@ export const ThemedModal = ({
   children,
   presentationStyle = "pageSheet",
   showCloseButton = true,
-  headerStyle = "primary",
+  headerStyle, // Kept for backward compatibility but ignored
 }) => {
   const { colors, theme } = useTheme();
-  const isHeaderPrimary = headerStyle === "primary";
-
-  const primaryColor = colors.primary || "#8B6F47";
-  const headerBackground = isHeaderPrimary
-    ? primaryColor
-    : colors.background.paper;
-  const headerTextColor = isHeaderPrimary
-    ? "#FFFFFF"
-    : colors.text?.primary || "#333333";
-  const iconColor = isHeaderPrimary
-    ? "#FFFFFF"
-    : colors.text?.secondary || "#666666";
+  
+  // Match the working area and toolbar styling
+  const headerBackground = colors.background?.paper || colors.surface || "#FFFFFF";
+  const headerTextColor = colors.text?.primary || colors.primary || "#333333";
+  const iconColor = colors.text?.secondary || colors.text?.primary || "#666666";
+  const borderColor = colors.divider || colors.border || "#E0E0E0";
+  const contentBackground = colors.background?.default || colors.background || "#F5F5F5";
 
   const styles = getStyles(
     colors,
     theme,
-    headerStyle,
     headerBackground,
     headerTextColor,
+    iconColor,
+    borderColor,
+    contentBackground,
   );
 
   return (
@@ -63,7 +61,7 @@ export const ThemedModal = ({
       testID="themed-modal"
     >
       <SafeAreaView style={styles.container}>
-        {/* Header */}
+        {/* Header - matching bottom toolbar style */}
         <View
           style={[
             styles.header,
@@ -80,6 +78,7 @@ export const ThemedModal = ({
             style={styles.headerTitle}
             testID="modal-title"
             data-testid="modal-title"
+            numberOfLines={1}
           >
             {title}
           </Text>
@@ -90,17 +89,10 @@ export const ThemedModal = ({
               style={styles.closeButton}
               testID="modal-close"
               data-testid="modal-close"
+              accessibilityLabel="Close modal"
+              accessibilityRole="button"
             >
-              <Text
-                style={{
-                  fontSize: 24,
-                  color: iconColor,
-                  fontWeight: "400",
-                  lineHeight: 24,
-                }}
-              >
-                ✕
-              </Text>
+              <CloseIcon size={24} color={iconColor} />
             </TouchableOpacity>
           ) : (
             <View style={styles.headerSpacer} />
@@ -117,38 +109,39 @@ export const ThemedModal = ({
 const getStyles = (
   colors,
   theme,
-  headerStyle,
   headerBackground,
   headerTextColor,
+  iconColor,
+  borderColor,
+  contentBackground,
 ) => {
-  const isHeaderPrimary = headerStyle === "primary";
-
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.background.default,
+      backgroundColor: contentBackground,
     },
     header: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      // backgroundColor removed - now set via inline style to override RNW classes
+      // backgroundColor set via inline style to override RNW classes
       paddingHorizontal: 16,
-      paddingVertical: platform.select({
-        ios: 16,
-        android: 16,
-        web: 14,
+      height: platform.select({
+        ios: 56,
+        android: 56,
+        web: 56, // Consistent height matching bottom toolbar
       }),
-      borderBottomWidth: isHeaderPrimary ? 0 : 1,
-      borderBottomColor: isHeaderPrimary ? "transparent" : colors.border,
-      // Add subtle shadow for depth
-      ...getShadowStyle(3),
+      borderBottomWidth: 1,
+      borderBottomColor: borderColor,
+      // Subtle shadow to match bottom toolbar
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.05,
+      shadowRadius: 3,
+      elevation: 3,
       ...platform.select({
         web: {
-          boxShadow:
-            theme === "dark"
-              ? `0 2px 4px rgba(255,255,255,0.1)`
-              : `0 2px 4px rgba(0,0,0,0.1)`,
+          boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
         },
       }),
     },
@@ -156,7 +149,7 @@ const getStyles = (
       fontSize: platform.select({
         ios: 18,
         android: 18,
-        web: 17,
+        web: 18,
       }),
       fontWeight: "600",
       color: headerTextColor,
@@ -170,19 +163,27 @@ const getStyles = (
     },
     closeButton: {
       padding: 8,
-      marginRight: -8,
       width: 40,
       height: 40,
       alignItems: "center",
       justifyContent: "center",
       borderRadius: 20,
+      ...platform.select({
+        web: {
+          cursor: "pointer",
+          transition: "background-color 0.2s",
+          ":hover": {
+            backgroundColor: colors.action?.hover || "rgba(0,0,0,0.04)",
+          },
+        },
+      }),
     },
     headerSpacer: {
       width: 40,
     },
     content: {
       flex: 1,
-      backgroundColor: colors.background.default,
+      backgroundColor: contentBackground,
     },
   });
 };

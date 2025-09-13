@@ -15,7 +15,18 @@ import { getTextStyle } from "../../utils/platformStyles";
 import nacl from "tweetnacl";
 import util from "tweetnacl-util";
 import { useTheme } from "../../context/ThemeContext";
-import { ThemedModal } from "../Common";
+import { 
+  ThemedModal,
+  SchoolIcon,
+  HomeIcon,
+  LocalHospitalIcon,
+  SettingsIcon,
+  ContentCopyIcon,
+  DoneIcon,
+  LockIcon,
+  PersonIcon,
+  UploadIcon
+} from "../Common";
 import { API_ENDPOINTS } from "../../config/api";
 import platform from "../../utils/platform";
 
@@ -23,21 +34,21 @@ const sharePresets = [
   {
     id: "education",
     label: "Education",
-    icon: "🎓",
+    IconComponent: SchoolIcon,
     categories: ["goals", "strengths", "challenges", "education", "behaviors"],
     description: "Educational needs  classroom support",
   },
   {
     id: "support",
     label: "Support",
-    icon: "👶",
+    IconComponent: HomeIcon,
     categories: ["quick-info", "behaviors", "tips-tricks", "daily-care"],
     description: "Care instructions  helpful tips",
   },
   {
     id: "medical",
     label: "Medical",
-    icon: "🏥",
+    IconComponent: LocalHospitalIcon,
     categories: [
       "quick-info",
       "medical",
@@ -50,7 +61,7 @@ const sharePresets = [
   {
     id: "custom",
     label: "Custom",
-    icon: "⚙️",
+    IconComponent: SettingsIcon,
     categories: [],
     description: "Choose exactly what to share",
   },
@@ -239,7 +250,11 @@ Notehis link contains encrypted data. Please use the complete link exactly as pr
               ]}
               onPress={() => handlePresetChange(preset.id)}
             >
-              <Text style={styles.presetIcon}>{preset.icon}</Text>
+              {preset.IconComponent ? (
+                <preset.IconComponent size={24} color={colors.text?.primary || "#333"} />
+              ) : (
+                <SettingsIcon size={24} color={colors.text?.primary || "#333"} />
+              )}
               <Text
                 style={[
                   styles.presetLabel,
@@ -285,7 +300,10 @@ Notehis link contains encrypted data. Please use the complete link exactly as pr
                 includePhoto && styles.categoryChipTextSelected,
               ]}
             >
-              👤 Photo
+              <View style={styles.checkboxContent}>
+                <PersonIcon size={16} color={colors.text?.primary || "#333"} />
+                <Text style={styles.checkboxLabel}>Photo</Text>
+              </View>
             </Text>
           </TouchableOpacity>
         </View>
@@ -432,14 +450,21 @@ Notehis link contains encrypted data. Please use the complete link exactly as pr
             multiline
           />
           <TouchableOpacity style={styles.copyButton} onPress={handleCopyLink}>
-            <Text style={styles.copyButtonText}>{copiedLink ? "✓" : "📋"}</Text>
+            {copiedLink ? (
+              <DoneIcon size={20} color={colors.text?.primary || "#333"} />
+            ) : (
+              <ContentCopyIcon size={20} color={colors.text?.primary || "#333"} />
+            )}
           </TouchableOpacity>
         </View>
       </View>
 
       {/* Security Info */}
       <View style={styles.securityCard}>
-        <Text style={styles.securityCardTitle}>🔒 Secure Share</Text>
+        <View style={styles.securityCardHeader}>
+          <LockIcon size={20} color={colors.text?.primary || "#333"} />
+          <Text style={styles.securityCardTitle}>Secure Share</Text>
+        </View>
         <Text style={styles.securityCardText}>
           This link contains an encrypted version of the selected information.
           The encryption key is included in the link and never sent to any
@@ -452,7 +477,10 @@ Notehis link contains encrypted data. Please use the complete link exactly as pr
       <View style={styles.shareOptions}>
         <Text style={styles.shareOptionsTitle}>Share via</Text>
         <TouchableOpacity style={styles.shareButton} onPress={handleShareLink}>
-          <Text style={styles.shareButtonText}>📤 Share Link</Text>
+          <View style={styles.shareButtonContent}>
+            <UploadIcon size={20} color={colors.text?.primary || "#333"} />
+            <Text style={styles.shareButtonText}>Share Link</Text>
+          </View>
         </TouchableOpacity>
       </View>
 
@@ -756,11 +784,16 @@ const getStyles = (colors) =>
       padding: 16,
       marginBottom: 20,
     },
+    securityCardHeader: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      marginBottom: 8,
+    },
     securityCardTitle: {
       fontSize: 14,
       fontWeight: "600",
       color: colors.text.primary,
-      marginBottom: 8,
     },
     securityCardText: {
       fontSize: 13,
@@ -784,9 +817,23 @@ const getStyles = (colors) =>
       paddingVertical: 12,
       alignItems: "center",
     },
+    shareButtonContent: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+    },
     shareButtonText: {
       color: colors.primary,
       fontSize: 14,
       fontWeight: "600",
+    },
+    checkboxContent: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 6,
+    },
+    checkboxLabel: {
+      fontSize: 14,
+      color: colors.text?.primary || "#333",
     },
   });
