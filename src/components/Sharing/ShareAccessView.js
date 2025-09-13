@@ -18,7 +18,7 @@ import { getTextStyle } from "../../utils/platformStyles";
 export const ShareAccessView = ({ accessCode, encryptionKey }) => {
   const { colors } = useTheme();
   const styles = getStyles(colors);
-  
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sharedProfile, setSharedProfile] = useState(null);
@@ -48,7 +48,7 @@ export const ShareAccessView = ({ accessCode, encryptionKey }) => {
       }
 
       const data = await response.json();
-      
+
       // Store share metadata
       setShareInfo({
         recipientType: data.recipient_type,
@@ -63,21 +63,20 @@ export const ShareAccessView = ({ accessCode, encryptionKey }) => {
       // Decrypt the share data
       const encryptedBlob = util.decodeBase64(data.encrypted_data);
       const key = util.decodeBase64(encryptionKey);
-      
+
       // Extract nonce and ciphertext
       const nonce = encryptedBlob.slice(0, 24);
       const ciphertext = encryptedBlob.slice(24);
-      
+
       // Decrypt
       const decryptedBytes = nacl.secretbox.open(ciphertext, nonce, key);
-      
+
       if (!decryptedBytes) {
         throw new Error("Failed to decrypt share data");
       }
-      
+
       const decryptedData = JSON.parse(util.encodeUTF8(decryptedBytes));
       setSharedProfile(decryptedData.profile);
-      
     } catch (err) {
       console.error("Error accessing share:", err);
       setError(err.message);
@@ -88,10 +87,12 @@ export const ShareAccessView = ({ accessCode, encryptionKey }) => {
 
   const renderCategory = (categoryName, entries) => {
     if (!entries || entries.length === 0) return null;
-    
-    const category = sharedProfile.categories?.find(c => c.name === categoryName);
+
+    const category = sharedProfile.categories?.find(
+      (c) => c.name === categoryName,
+    );
     const displayName = category?.displayName || categoryName;
-    
+
     return (
       <View key={categoryName} style={styles.categorySection}>
         <Text style={styles.categoryTitle}>{displayName}</Text>
@@ -167,13 +168,16 @@ export const ShareAccessView = ({ accessCode, encryptionKey }) => {
       )}
 
       {/* View Count Warning */}
-      {shareInfo && shareInfo.viewsRemaining !== null && shareInfo.viewsRemaining <= 2 && (
-        <View style={styles.warningBanner}>
-          <Text style={styles.warningText}>
-            👁️ {shareInfo.viewsRemaining} view{shareInfo.viewsRemaining !== 1 ? 's' : ''} remaining
-          </Text>
-        </View>
-      )}
+      {shareInfo &&
+        shareInfo.viewsRemaining !== null &&
+        shareInfo.viewsRemaining <= 2 && (
+          <View style={styles.warningBanner}>
+            <Text style={styles.warningText}>
+              👁️ {shareInfo.viewsRemaining} view
+              {shareInfo.viewsRemaining !== 1 ? "s" : ""} remaining
+            </Text>
+          </View>
+        )}
 
       {/* Profile Info */}
       <View style={styles.profileSection}>
@@ -196,23 +200,24 @@ export const ShareAccessView = ({ accessCode, encryptionKey }) => {
       </View>
 
       {/* Quick Info */}
-      {sharedProfile.quickInfoPanels && sharedProfile.quickInfoPanels.length > 0 && (
-        <View style={styles.quickInfoSection}>
-          <Text style={styles.sectionTitle}>Quick Info</Text>
-          {sharedProfile.quickInfoPanels.map((panel, index) => (
-            <View key={index} style={styles.quickInfoCard}>
-              <Text style={styles.quickInfoLabel}>{panel.label}</Text>
-              <Text style={styles.quickInfoValue}>{panel.value}</Text>
-            </View>
-          ))}
-        </View>
-      )}
+      {sharedProfile.quickInfoPanels &&
+        sharedProfile.quickInfoPanels.length > 0 && (
+          <View style={styles.quickInfoSection}>
+            <Text style={styles.sectionTitle}>Quick Info</Text>
+            {sharedProfile.quickInfoPanels.map((panel, index) => (
+              <View key={index} style={styles.quickInfoCard}>
+                <Text style={styles.quickInfoLabel}>{panel.label}</Text>
+                <Text style={styles.quickInfoValue}>{panel.value}</Text>
+              </View>
+            ))}
+          </View>
+        )}
 
       {/* Entries by Category */}
       <View style={styles.entriesSection}>
         {sharedProfile.categories?.map((category) => {
           const entries = sharedProfile.entries?.filter(
-            (e) => e.category === category.name
+            (e) => e.category === category.name,
           );
           return renderCategory(category.name, entries);
         })}
@@ -231,7 +236,8 @@ export const ShareAccessView = ({ accessCode, encryptionKey }) => {
           This information was securely shared via Manylla
         </Text>
         <Text style={styles.footerSubtext}>
-          All data is encrypted and will be automatically deleted when the share expires
+          All data is encrypted and will be automatically deleted when the share
+          expires
         </Text>
       </View>
     </ScrollView>
