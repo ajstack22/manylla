@@ -1,5 +1,26 @@
 # Manylla Release Notes
 
+## Version 2025.09.13.1 - 2025-09-13
+Privacy Policy Modal Implementation
+
+### Summary
+Added comprehensive Privacy Policy modal infrastructure to meet App Store requirements for privacy disclosure
+
+### Added
+- Privacy Policy modal component with platform-specific scrolling (FlatList for Android, ScrollView for iOS/Web)
+- URL parameter support (?privacy) to display modal automatically
+- Privacy link in onboarding footer ("By using Manylla, you agree to our Privacy Policy")
+- Privacy Policy icon button in desktop header (using PrivacyTip Material Icon)
+- Privacy Policy menu item in mobile hamburger menu
+- Zero-knowledge privacy policy content explaining data handling
+
+### Technical
+- Modal accessible before any data collection (App Store requirement)
+- URL parameter captured early before React initialization
+- 1-second delay for proper hydration when triggered via URL
+- Integrated with existing modal system without dependencies
+- PrivacyTip icon added to IconProvider for consistent cross-platform display
+
 ## Version 2025.09.12.7 - 2025-09-12
 Share Functionality Implementation
 
