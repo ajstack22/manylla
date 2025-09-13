@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
   Share,
+  Switch,
 } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
 import { ThemedModal } from "../Common";
@@ -16,19 +17,57 @@ export const PrintPreview = ({
   visible,
   onClose,
   childName,
-  selectedCategories,
+  selectedCategories: propSelectedCategories,
   entries,
-  includeQuickInfo,
-  recipientName,
-  note,
+  includeQuickInfo: propIncludeQuickInfo,
+  recipientName: propRecipientName,
+  note: propNote,
 }) => {
   const { colors } = useTheme();
   const styles = getStyles(colors);
+
+  // State for managing selections
+  const [localSelectedCategories, setLocalSelectedCategories] = useState(propSelectedCategories || []);
+  const [localIncludeQuickInfo, setLocalIncludeQuickInfo] = useState(propIncludeQuickInfo || false);
+  const [localRecipientName, setLocalRecipientName] = useState(propRecipientName || "");
+  const [localNote, setLocalNote] = useState(propNote || "");
+
+  // Update state when props change
+  useEffect(() => {
+    if (propSelectedCategories) setLocalSelectedCategories(propSelectedCategories);
+    if (propIncludeQuickInfo !== undefined) setLocalIncludeQuickInfo(propIncludeQuickInfo);
+    if (propRecipientName) setLocalRecipientName(propRecipientName);
+    if (propNote) setLocalNote(propNote);
+  }, [propSelectedCategories, propIncludeQuickInfo, propRecipientName, propNote]);
+
+  // Available categories based on entries
+  const availableCategories = Object.keys(entries || {}).filter(cat =>
+    entries[cat] && entries[cat].length > 0
+  );
+
   const categoryTitles = {
     goals: "Current Goals",
     successes: "Recent Successes",
     strengths: "Strengths",
     challenges: "Challenges",
+    medical: "Medical Information",
+    education: "Education",
+    behaviors: "Behaviors",
+    "quick-info": "Quick Information",
+    "tips-tricks": "Tips & Tricks",
+    "daily-care": "Daily Care",
+    therapies: "Therapies",
+  };
+
+  // Toggle category selection
+  const toggleCategory = (category) => {
+    setLocalSelectedCategories(prev => {
+      if (prev.includes(category)) {
+        return prev.filter(c => c !== category);
+      } else {
+        return [...prev, category];
+      }
+    });
   };
 
   // HTML escaping for security
@@ -82,8 +121,8 @@ export const PrintPreview = ({
 `;
     content += `Prepared on ${new Date().toLocaleDateString()}
 `;
-    if (recipientName) {
-      content += `For: ${recipientName}
+    if (localRecipientName) {
+      content += `For: ${localRecipientName}
 `;
     }
     content += `
@@ -91,13 +130,13 @@ export const PrintPreview = ({
 
 `;
 
-    if (note) {
-      content += `Note: ${note}
+    if (localNote) {
+      content += `Note: ${localNote}
 
 `;
     }
 
-    selectedCategories && selectedCategories.forEach((category) => {
+    localSelectedCategories && localSelectedCategories.forEach((category) => {
       const categoryEntries = entries[category] || [];
       if (categoryEntries.length > 0) {
         content += `${category.toUpperCase()}
@@ -177,7 +216,7 @@ export const PrintPreview = ({
                 margin-top: 4pt;
             }
 
-            .note-section {
+            .localNote-section {
                 background-color: #f9f9f9;
                 padding: 12pt;
                 border-left: 4pt solid #ccc;
@@ -263,18 +302,18 @@ export const PrintPreview = ({
     <div class="document-header">
         <h1>${escapeHtml(childName)} - Information Summary</h1>
         <div class="document-subtitle">
-            Prepared on ${escapeHtml(currentDate)}${recipientName ? ` for ${escapeHtml(recipientName)}` : ''}
+            Prepared on ${escapeHtml(currentDate)}${localRecipientName ? ` for ${escapeHtml(localRecipientName)}` : ''}
         </div>
     </div>`;
 
-    if (note) {
+    if (localNote) {
         html += `
-    <div class="note-section">
-        <strong>Note:</strong> ${escapeHtml(note)}
+    <div class="localNote-section">
+        <strong>Note:</strong> ${escapeHtml(localNote)}
     </div>`;
     }
 
-    if (includeQuickInfo) {
+    if (localIncludeQuickInfo) {
         html += `
     <div class="section">
         <h2>Quick Reference</h2>
@@ -286,7 +325,7 @@ export const PrintPreview = ({
     </div>`;
     }
 
-    selectedCategories && selectedCategories.forEach((category) => {
+    localSelectedCategories && localSelectedCategories.forEach((category) => {
         const categoryEntries = entries[category] || [];
         if (categoryEntries.length > 0) {
             html += `
@@ -325,6 +364,47 @@ export const PrintPreview = ({
       presentationStyle="fullScreen"
     >
       <View style={styles.container}>
+        {/* Configuration Section */}
+        <View style={styles.configSection}>
+          <Text style={styles.configTitle}>Select what to include:</Text>
+
+          {/* Quick Info Toggle */}
+          <View style={styles.toggleRow}>
+            <Text style={styles.toggleLabel}>Quick Reference Information</Text>
+            <Switch
+              value={localIncludeQuickInfo}
+              onValueChange={setLocalIncludeQuickInfo}
+              trackColor={{ false: colors.border, true: colors.primary }}
+              thumbColor={localIncludeQuickInfo ? colors.primaryLight : "#f4f3f4"}
+            />
+          </View>
+
+          {/* Categories Selection */}
+          <Text style={styles.configSubtitle}>Categories:</Text>
+          <View style={styles.categoriesGrid}>
+            {availableCategories.map((category) => (
+              <TouchableOpacity
+                key={category}
+                style={[
+                  styles.categoryCheckbox,
+                  localSelectedCategories.includes(category) && styles.categoryCheckboxSelected
+                ]}
+                onPress={() => toggleCategory(category)}
+              >
+                <Text style={[
+                  styles.categoryCheckboxText,
+                  localSelectedCategories.includes(category) && styles.categoryCheckboxTextSelected
+                ]}>
+                  {localSelectedCategories.includes(category) ? "✓ " : ""}
+                  {categoryTitles[category] || category}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          <View style={styles.divider} />
+        </View>
+
         {/* Preview Content */}
         <ScrollView style={styles.previewContainer}>
           <View style={styles.previewContent}>
@@ -335,21 +415,21 @@ export const PrintPreview = ({
               </Text>
               <Text style={styles.documentSubtitle}>
                 Prepared on {new Date().toLocaleDateString()}
-                {recipientName ? ` for ${recipientName}` : ""}
+                {localRecipientName ? ` for ${localRecipientName}` : ""}
               </Text>
             </View>
 
             <View style={styles.divider} />
 
             {/* Note */}
-            {note && (
-              <View style={styles.noteSection}>
-                <Text style={styles.noteText}>{note}</Text>
+            {localNote && (
+              <View style={styles.localNoteSection}>
+                <Text style={styles.localNoteText}>{localNote}</Text>
               </View>
             )}
 
             {/* Quick Info */}
-            {includeQuickInfo && (
+            {localIncludeQuickInfo && (
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Quick Reference</Text>
                 <View style={styles.quickInfoItems}>
@@ -378,7 +458,7 @@ export const PrintPreview = ({
             )}
 
             {/* Selected Categories */}
-            {selectedCategories && selectedCategories.map((category) => {
+            {localSelectedCategories && localSelectedCategories.map((category) => {
               const categoryEntries = entries[category];
               if (!categoryEntries || categoryEntries.length === 0) return null;
 
@@ -447,6 +527,63 @@ const getStyles = (colors) =>
       flex: 1,
       backgroundColor: colors.background.default,
     },
+    configSection: {
+      backgroundColor: colors.background.paper,
+      padding: 20,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    configTitle: {
+      fontSize: 16,
+      fontWeight: "bold",
+      color: colors.text.primary,
+      marginBottom: 15,
+    },
+    configSubtitle: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: colors.text.secondary,
+      marginTop: 15,
+      marginBottom: 10,
+    },
+    toggleRow: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingVertical: 8,
+    },
+    toggleLabel: {
+      fontSize: 14,
+      color: colors.text.primary,
+      flex: 1,
+    },
+    categoriesGrid: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      gap: 8,
+    },
+    categoryCheckbox: {
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      borderRadius: 6,
+      borderWidth: 1,
+      borderColor: colors.border,
+      backgroundColor: colors.background.default,
+      marginRight: 8,
+      marginBottom: 8,
+    },
+    categoryCheckboxSelected: {
+      backgroundColor: colors.primary,
+      borderColor: colors.primary,
+    },
+    categoryCheckboxText: {
+      fontSize: 13,
+      color: colors.text.primary,
+    },
+    categoryCheckboxTextSelected: {
+      color: colors.background.paper,
+      fontWeight: "600",
+    },
     downloadIcon: {
       fontSize: 16,
       color: colors.primary,
@@ -493,13 +630,13 @@ const getStyles = (colors) =>
       backgroundColor: colors.border,
       marginVertical: 6,
     },
-    noteSection: {
+    localNoteSection: {
       backgroundColor: colors.background.default,
       padding: 60,
       borderRadius: 8,
       marginBottom: 0,
     },
-    noteText: {
+    localNoteText: {
       fontSize: 14,
       color: colors.text.primary,
       fontStyle: "italic",
