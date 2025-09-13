@@ -33,13 +33,15 @@ export const ThemedModal = ({
   headerStyle, // Kept for backward compatibility but ignored
 }) => {
   const { colors, theme } = useTheme();
-  
+
   // Match the working area and toolbar styling
-  const headerBackground = colors.background?.paper || colors.surface || "#FFFFFF";
+  const headerBackground =
+    colors.background?.paper || colors.surface || "#FFFFFF";
   const headerTextColor = colors.text?.primary || colors.primary || "#333333";
   const iconColor = colors.text?.secondary || colors.text?.primary || "#666666";
   const borderColor = colors.divider || colors.border || "#E0E0E0";
-  const contentBackground = colors.background?.default || colors.background || "#F5F5F5";
+  const contentBackground =
+    colors.background?.default || colors.background || "#F5F5F5";
 
   const styles = getStyles(
     colors,

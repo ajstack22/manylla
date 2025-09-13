@@ -31,11 +31,11 @@ export const PrintPreview = ({
 
   // Use profile data if available, fallback to legacy props
   const actualChildName = profile?.name || childName || "Child";
-  
+
   // Transform entries array into an object organized by category
   const entriesArray = profile?.entries || entries || [];
-  
-  const actualEntries = Array.isArray(entriesArray) 
+
+  const actualEntries = Array.isArray(entriesArray)
     ? entriesArray.reduce((acc, entry) => {
         if (!acc[entry.category]) {
           acc[entry.category] = [];
@@ -49,66 +49,73 @@ export const PrintPreview = ({
   const [localSelectedCategories, setLocalSelectedCategories] = useState(() => {
     // Initialize with provided categories or include quick-info if includeQuickInfo was true
     const initial = propSelectedCategories || [];
-    if (propIncludeQuickInfo && !initial.includes('quick-info')) {
-      return [...initial, 'quick-info'];
+    if (propIncludeQuickInfo && !initial.includes("quick-info")) {
+      return [...initial, "quick-info"];
     }
     return initial;
   });
-  const [localRecipientName, setLocalRecipientName] = useState(propRecipientName || "");
+  const [localRecipientName, setLocalRecipientName] = useState(
+    propRecipientName || "",
+  );
   const [localNote, setLocalNote] = useState(propNote || "");
 
   // Update state when props change
   useEffect(() => {
     if (propSelectedCategories) {
       const updated = [...propSelectedCategories];
-      if (propIncludeQuickInfo && !updated.includes('quick-info')) {
-        updated.push('quick-info');
+      if (propIncludeQuickInfo && !updated.includes("quick-info")) {
+        updated.push("quick-info");
       }
       setLocalSelectedCategories(updated);
     }
     if (propRecipientName) setLocalRecipientName(propRecipientName);
     if (propNote) setLocalNote(propNote);
-  }, [propSelectedCategories, propIncludeQuickInfo, propRecipientName, propNote]);
+  }, [
+    propSelectedCategories,
+    propIncludeQuickInfo,
+    propRecipientName,
+    propNote,
+  ]);
 
   // Define all available category groups
   // These match the actual category IDs from unifiedCategories.js
   const categoryGroups = {
     "quick-info": {
       title: "Quick Info",
-      categories: ["quick-info"]
+      categories: ["quick-info"],
     },
     "daily-support": {
-      title: "Daily Support", 
-      categories: ["daily-support"]
+      title: "Daily Support",
+      categories: ["daily-support"],
     },
     "health-therapy": {
       title: "Health & Therapy",
-      categories: ["health-therapy"]
+      categories: ["health-therapy"],
     },
     "education-goals": {
       title: "Education & Goals",
-      categories: ["education-goals"]
+      categories: ["education-goals"],
     },
     "behavior-social": {
       title: "Behavior & Social",
-      categories: ["behavior-social"]
+      categories: ["behavior-social"],
     },
     "family-resources": {
       title: "Family & Resources",
-      categories: ["family-resources"]
-    }
+      categories: ["family-resources"],
+    },
   };
 
   // Build flat list of available categories for selection
   const availableCategories = [];
-  Object.keys(categoryGroups).forEach(groupKey => {
+  Object.keys(categoryGroups).forEach((groupKey) => {
     availableCategories.push(groupKey);
   });
 
   const categoryTitles = {
     "quick-info": "Quick Info",
     "daily-support": "Daily Support",
-    "health-therapy": "Health & Therapy", 
+    "health-therapy": "Health & Therapy",
     "education-goals": "Education & Goals",
     "behavior-social": "Behavior & Social",
     "family-resources": "Family & Resources",
@@ -127,9 +134,9 @@ export const PrintPreview = ({
 
   // Toggle category selection
   const toggleCategory = (category) => {
-    setLocalSelectedCategories(prev => {
+    setLocalSelectedCategories((prev) => {
       if (prev.includes(category)) {
-        return prev.filter(c => c !== category);
+        return prev.filter((c) => c !== category);
       } else {
         return [...prev, category];
       }
@@ -138,7 +145,7 @@ export const PrintPreview = ({
 
   // HTML escaping for security
   const escapeHtml = (unsafe) => {
-    if (!unsafe) return '';
+    if (!unsafe) return "";
     return unsafe
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
@@ -153,16 +160,19 @@ export const PrintPreview = ({
         // Web: Use actual browser print functionality
         const htmlContent = generateHtmlContent();
         const printWindow = window.open("", "PRINT", "height=600,width=800");
-        
+
         if (!printWindow) {
-          Alert.alert("Error", "Unable to open print window. Please check your popup blocker settings.");
+          Alert.alert(
+            "Error",
+            "Unable to open print window. Please check your popup blocker settings.",
+          );
           return;
         }
-        
+
         printWindow.document.write(htmlContent);
         printWindow.document.close();
         printWindow.focus();
-        
+
         // Add a small delay to ensure content is loaded
         setTimeout(() => {
           printWindow.print();
@@ -178,7 +188,10 @@ export const PrintPreview = ({
       }
     } catch (error) {
       if (error.message !== "User did not share") {
-        Alert.alert("Error", "Failed to print/share document. Please try again.");
+        Alert.alert(
+          "Error",
+          "Failed to print/share document. Please try again.",
+        );
       }
     }
   };
@@ -186,14 +199,14 @@ export const PrintPreview = ({
   const handleShareAsText = async () => {
     try {
       const textContent = generateTextContent();
-      
+
       if (isWeb) {
         // Web: Download as text file
-        const blob = new Blob([textContent], { type: 'text/plain' });
+        const blob = new Blob([textContent], { type: "text/plain" });
         const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
+        const link = document.createElement("a");
         link.href = url;
-        link.download = `${actualChildName.replace(/\s+/g, '_')}_Information_Summary.txt`;
+        link.download = `${actualChildName.replace(/\s+/g, "_")}_Information_Summary.txt`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -211,7 +224,7 @@ export const PrintPreview = ({
       }
     }
   };
-  
+
   const handleDownloadPDF = async () => {
     // For now, use the text share functionality
     await handleShareAsText();
@@ -237,68 +250,71 @@ export const PrintPreview = ({
 `;
     }
 
-    localSelectedCategories && localSelectedCategories.forEach((categoryGroup) => {
-      if (categoryGroup === 'quick-info') {
-        // Handle Quick Info as special formatted content
-        content += `QUICK INFO
+    localSelectedCategories &&
+      localSelectedCategories.forEach((categoryGroup) => {
+        if (categoryGroup === "quick-info") {
+          // Handle Quick Info as special formatted content
+          content += `QUICK INFO
 `;
-        content += `================
+          content += `================
 
 `;
-        content += `• Communication: Uses 2-3 word phrases. Understands more than can express.
+          content += `• Communication: Uses 2-3 word phrases. Understands more than can express.
 `;
-        content += `• Sensory: Sensitive to loud noises and bright lights. Loves soft textures.
+          content += `• Sensory: Sensitive to loud noises and bright lights. Loves soft textures.
 `;
-        content += `• Medical: No allergies. Takes melatonin for sleep (prescribed).
+          content += `• Medical: No allergies. Takes melatonin for sleep (prescribed).
 `;
-        content += `• Dietary: Gluten-free diet. Prefers crunchy foods. No nuts.
+          content += `• Dietary: Gluten-free diet. Prefers crunchy foods. No nuts.
 `;
-        content += `• Emergency Contact: Mom: 555-0123, Dad: 555-0124
+          content += `• Emergency Contact: Mom: 555-0123, Dad: 555-0124
 
 `;
-      } else if (categoryGroups[categoryGroup]) {
-        // Handle category groups
-        const group = categoryGroups[categoryGroup];
-        let hasContent = false;
-        let groupContent = '';
-        
-        // Check if any categories in this group have entries
-        group.categories.forEach(cat => {
-          const categoryEntries = actualEntries && actualEntries[cat] ? actualEntries[cat] : [];
-          if (categoryEntries.length > 0) {
-            hasContent = true;
-          }
-        });
-        
-        if (hasContent) {
-          const title = categoryTitles[categoryGroup] || categoryGroup;
-          content += `${title.toUpperCase()}
-`;
-          content += `${"=".repeat(title.length)}
+        } else if (categoryGroups[categoryGroup]) {
+          // Handle category groups
+          const group = categoryGroups[categoryGroup];
+          let hasContent = false;
+          let groupContent = "";
 
-`;
-          
-          // Add entries from all categories in this group
-          group.categories.forEach(cat => {
-            const categoryEntries = actualEntries && actualEntries[cat] ? actualEntries[cat] : [];
+          // Check if any categories in this group have entries
+          group.categories.forEach((cat) => {
+            const categoryEntries =
+              actualEntries && actualEntries[cat] ? actualEntries[cat] : [];
             if (categoryEntries.length > 0) {
-              const catTitle = categoryTitles[cat] || cat;
-              content += `${catTitle}:
-`;
-              categoryEntries.forEach((entry, index) => {
-                content += `  ${index + 1}. ${entry.title}
-`;
-                content += `     ${entry.description}
-`;
-                content += `     Date: ${new Date(entry.date).toLocaleDateString()}
-
-`;
-              });
+              hasContent = true;
             }
           });
+
+          if (hasContent) {
+            const title = categoryTitles[categoryGroup] || categoryGroup;
+            content += `${title.toUpperCase()}
+`;
+            content += `${"=".repeat(title.length)}
+
+`;
+
+            // Add entries from all categories in this group
+            group.categories.forEach((cat) => {
+              const categoryEntries =
+                actualEntries && actualEntries[cat] ? actualEntries[cat] : [];
+              if (categoryEntries.length > 0) {
+                const catTitle = categoryTitles[cat] || cat;
+                content += `${catTitle}:
+`;
+                categoryEntries.forEach((entry, index) => {
+                  content += `  ${index + 1}. ${entry.title}
+`;
+                  content += `     ${entry.description}
+`;
+                  content += `     Date: ${new Date(entry.date).toLocaleDateString()}
+
+`;
+                });
+              }
+            });
+          }
         }
-      }
-    });
+      });
 
     return content;
   };
@@ -443,19 +459,19 @@ export const PrintPreview = ({
     <div class="document-header">
         <h1>${escapeHtml(actualChildName)} - Information Summary</h1>
         <div class="document-subtitle">
-            Prepared on ${escapeHtml(currentDate)}${localRecipientName ? ` for ${escapeHtml(localRecipientName)}` : ''}
+            Prepared on ${escapeHtml(currentDate)}${localRecipientName ? ` for ${escapeHtml(localRecipientName)}` : ""}
         </div>
     </div>`;
 
     if (localNote) {
-        html += `
+      html += `
     <div class="localNote-section">
         <strong>Note:</strong> ${escapeHtml(localNote)}
     </div>`;
     }
 
-    if (localSelectedCategories.includes('quick-info')) {
-        html += `
+    if (localSelectedCategories.includes("quick-info")) {
+      html += `
     <div class="section">
         <h2>Quick Info</h2>
         <div class="quick-info-item"><strong>Communication:</strong> ${escapeHtml("Uses 2-3 word phrases. Understands more than can express.")}</div>
@@ -466,29 +482,30 @@ export const PrintPreview = ({
     </div>`;
     }
 
-    localSelectedCategories && localSelectedCategories.forEach((category) => {
+    localSelectedCategories &&
+      localSelectedCategories.forEach((category) => {
         // Skip quick-info since it's handled above
-        if (category === 'quick-info') return;
+        if (category === "quick-info") return;
 
         const categoryEntries = actualEntries[category] || [];
         if (categoryEntries.length > 0) {
-            html += `
+          html += `
     <div class="section">
         <h2>${escapeHtml(categoryTitles[category])}</h2>`;
 
-            categoryEntries.forEach((entry, index) => {
-                html += `
+          categoryEntries.forEach((entry, index) => {
+            html += `
         <div class="entry">
             <div class="entry-title">• ${escapeHtml(entry.title)}</div>
             <div class="entry-description">${escapeHtml(entry.description)}</div>
             <div class="entry-date">Date: ${escapeHtml(new Date(entry.date).toLocaleDateString())}</div>
         </div>`;
-            });
+          });
 
-            html += `
+          html += `
     </div>`;
         }
-    });
+      });
 
     html += `
     <div class="document-footer">
@@ -517,14 +534,18 @@ export const PrintPreview = ({
                 key={category}
                 style={[
                   styles.categoryCheckbox,
-                  localSelectedCategories.includes(category) && styles.categoryCheckboxSelected
+                  localSelectedCategories.includes(category) &&
+                    styles.categoryCheckboxSelected,
                 ]}
                 onPress={() => toggleCategory(category)}
               >
-                <Text style={[
-                  styles.categoryCheckboxText,
-                  localSelectedCategories.includes(category) && styles.categoryCheckboxTextSelected
-                ]}>
+                <Text
+                  style={[
+                    styles.categoryCheckboxText,
+                    localSelectedCategories.includes(category) &&
+                      styles.categoryCheckboxTextSelected,
+                  ]}
+                >
                   {localSelectedCategories.includes(category) ? "✓ " : ""}
                   {categoryTitles[category] || category}
                 </Text>
@@ -559,7 +580,7 @@ export const PrintPreview = ({
             )}
 
             {/* Quick Info */}
-            {localSelectedCategories.includes('quick-info') && (
+            {localSelectedCategories.includes("quick-info") && (
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Quick Info</Text>
                 <View style={styles.quickInfoItems}>
@@ -588,55 +609,64 @@ export const PrintPreview = ({
             )}
 
             {/* Selected Categories */}
-            {localSelectedCategories && localSelectedCategories.map((categoryGroup) => {
-              // Skip quick-info since it's handled separately above
-              if (categoryGroup === 'quick-info') return null;
+            {localSelectedCategories &&
+              localSelectedCategories.map((categoryGroup) => {
+                // Skip quick-info since it's handled separately above
+                if (categoryGroup === "quick-info") return null;
 
-              // Handle category groups
-              const group = categoryGroups[categoryGroup];
-              if (!group) return null;
+                // Handle category groups
+                const group = categoryGroups[categoryGroup];
+                if (!group) return null;
 
-              // Check if any categories in this group have entries
-              let hasContent = false;
-              group.categories.forEach(cat => {
-                const categoryEntries = actualEntries && actualEntries[cat] ? actualEntries[cat] : [];
-                if (categoryEntries.length > 0) {
-                  hasContent = true;
-                }
-              });
+                // Check if any categories in this group have entries
+                let hasContent = false;
+                group.categories.forEach((cat) => {
+                  const categoryEntries =
+                    actualEntries && actualEntries[cat]
+                      ? actualEntries[cat]
+                      : [];
+                  if (categoryEntries.length > 0) {
+                    hasContent = true;
+                  }
+                });
 
-              if (!hasContent) return null;
+                if (!hasContent) return null;
 
-              return (
-                <View key={categoryGroup} style={styles.section}>
-                  <Text style={styles.sectionTitle}>
-                    {categoryTitles[categoryGroup]}
-                  </Text>
-                  <View style={styles.entriesContainer}>
-                    {group.categories.map(cat => {
-                      const categoryEntries = actualEntries && actualEntries[cat] ? actualEntries[cat] : [];
-                      if (categoryEntries.length === 0) return null;
-                      
-                      return (
-                        <View key={cat}>
-                          <Text style={styles.categorySubtitle}>
-                            {categoryTitles[cat] || cat}
-                          </Text>
-                          {categoryEntries.map((entry, index) => (
-                            <View key={index} style={styles.entry}>
-                              <Text style={styles.entryTitle}>• {entry.title}</Text>
-                              <Text style={styles.entryDescription}>
-                                {entry.description}
-                              </Text>
-                            </View>
-                          ))}
-                        </View>
-                      );
-                    })}
+                return (
+                  <View key={categoryGroup} style={styles.section}>
+                    <Text style={styles.sectionTitle}>
+                      {categoryTitles[categoryGroup]}
+                    </Text>
+                    <View style={styles.entriesContainer}>
+                      {group.categories.map((cat) => {
+                        const categoryEntries =
+                          actualEntries && actualEntries[cat]
+                            ? actualEntries[cat]
+                            : [];
+                        if (categoryEntries.length === 0) return null;
+
+                        return (
+                          <View key={cat}>
+                            <Text style={styles.categorySubtitle}>
+                              {categoryTitles[cat] || cat}
+                            </Text>
+                            {categoryEntries.map((entry, index) => (
+                              <View key={index} style={styles.entry}>
+                                <Text style={styles.entryTitle}>
+                                  • {entry.title}
+                                </Text>
+                                <Text style={styles.entryDescription}>
+                                  {entry.description}
+                                </Text>
+                              </View>
+                            ))}
+                          </View>
+                        );
+                      })}
+                    </View>
                   </View>
-                </View>
-              );
-            })}
+                );
+              })}
 
             {/* Footer */}
             <View style={styles.documentFooter}>
@@ -661,7 +691,11 @@ export const PrintPreview = ({
             style={[styles.button, styles.downloadButton]}
             onPress={handleDownloadPDF}
           >
-            <InsertDriveFileIcon size={18} color={colors.primary} style={{ marginRight: 5 }} />
+            <InsertDriveFileIcon
+              size={18}
+              color={colors.primary}
+              style={{ marginRight: 5 }}
+            />
             <Text style={styles.downloadButtonText}>Share as Text</Text>
           </TouchableOpacity>
 
@@ -669,8 +703,14 @@ export const PrintPreview = ({
             style={[styles.button, styles.printButton]}
             onPress={handlePrint}
           >
-            <PrintIcon size={20} color={colors.background.paper} style={{ marginRight: 5 }} />
-            <Text style={styles.printButtonText}>{isWeb ? "Print" : "Share"}</Text>
+            <PrintIcon
+              size={20}
+              color={colors.background.paper}
+              style={{ marginRight: 5 }}
+            />
+            <Text style={styles.printButtonText}>
+              {isWeb ? "Print" : "Share"}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

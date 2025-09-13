@@ -42,17 +42,22 @@ export const ProfileOverview = ({
     if (!onUpdateProfile) return;
 
     const categories = [...(profile.categories || allCategories)];
-    const index = categories.findIndex(cat => cat.id === categoryId);
+    const index = categories.findIndex((cat) => cat.id === categoryId);
 
     // Skip if Quick Info (always index 0)
-    if (categoryId === 'quick-info') return;
+    if (categoryId === "quick-info") return;
 
-    if (direction === 'up' && index > 1) { // > 1 because Quick Info is 0
-      [categories[index], categories[index - 1]] =
-        [categories[index - 1], categories[index]];
-    } else if (direction === 'down' && index < categories.length - 1) {
-      [categories[index], categories[index + 1]] =
-        [categories[index + 1], categories[index]];
+    if (direction === "up" && index > 1) {
+      // > 1 because Quick Info is 0
+      [categories[index], categories[index - 1]] = [
+        categories[index - 1],
+        categories[index],
+      ];
+    } else if (direction === "down" && index < categories.length - 1) {
+      [categories[index], categories[index + 1]] = [
+        categories[index + 1],
+        categories[index],
+      ];
     }
 
     // Update order property
@@ -294,9 +299,11 @@ export const ProfileOverview = ({
                   categoryId={category.id}
                   isFirst={index === 0}
                   isLast={index === visibleCategories.length - 1}
-                  isQuickInfo={category.id === 'quick-info' || category.isQuickInfo}
-                  onMoveUp={() => handleMoveCategory(category.id, 'up')}
-                  onMoveDown={() => handleMoveCategory(category.id, 'down')}
+                  isQuickInfo={
+                    category.id === "quick-info" || category.isQuickInfo
+                  }
+                  onMoveUp={() => handleMoveCategory(category.id, "up")}
+                  onMoveDown={() => handleMoveCategory(category.id, "down")}
                   onAddEntry={
                     onAddEntry ? () => onAddEntry(category.name) : undefined
                   }

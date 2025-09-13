@@ -290,21 +290,37 @@ export const SupportIcon = (props) => <Icon name="Favorite" {...props} />;
 export const ChevronUpIcon = (props) => <Icon name="ExpandLess" {...props} />;
 export const ChevronDownIcon = (props) => <Icon name="ExpandMore" {...props} />;
 export const MoreHorizIcon = (props) => <Icon name="MoreHoriz" {...props} />;
-export const DescriptionIcon = (props) => <Icon name="Description" {...props} />;
-export const InsertDriveFileIcon = (props) => <Icon name="InsertDriveFile" {...props} />;
+export const DescriptionIcon = (props) => (
+  <Icon name="Description" {...props} />
+);
+export const InsertDriveFileIcon = (props) => (
+  <Icon name="InsertDriveFile" {...props} />
+);
 export const DownloadIcon = (props) => <Icon name="Download" {...props} />;
-export const CheckCircleIcon = (props) => <Icon name="CheckCircle" {...props} />;
-export const ContentCopyIcon = (props) => <Icon name="ContentCopy" {...props} />;
+export const CheckCircleIcon = (props) => (
+  <Icon name="CheckCircle" {...props} />
+);
+export const ContentCopyIcon = (props) => (
+  <Icon name="ContentCopy" {...props} />
+);
 export const DoneIcon = (props) => <Icon name="Done" {...props} />;
 export const LockIcon = (props) => <Icon name="Lock" {...props} />;
 export const SchoolIcon = (props) => <Icon name="School" {...props} />;
-export const LocalHospitalIcon = (props) => <Icon name="LocalHospital" {...props} />;
+export const LocalHospitalIcon = (props) => (
+  <Icon name="LocalHospital" {...props} />
+);
 export const HomeIcon = (props) => <Icon name="Home" {...props} />;
 export const UploadIcon = (props) => <Icon name="CloudUpload" {...props} />;
-export const CloudUploadIcon = (props) => <Icon name="CloudUpload" {...props} />;
-export const CloudDownloadIcon = (props) => <Icon name="CloudDownload" {...props} />;
+export const CloudUploadIcon = (props) => (
+  <Icon name="CloudUpload" {...props} />
+);
+export const CloudDownloadIcon = (props) => (
+  <Icon name="CloudDownload" {...props} />
+);
 export const CloudDoneIcon = (props) => <Icon name="CloudDone" {...props} />;
 export const CloudSyncIcon = (props) => <Icon name="CloudSync" {...props} />;
-export const PlaylistAddCheckIcon = (props) => <Icon name="PlaylistAddCheck" {...props} />;
+export const PlaylistAddCheckIcon = (props) => (
+  <Icon name="PlaylistAddCheck" {...props} />
+);
 
 export default Icon;

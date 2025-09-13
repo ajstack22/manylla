@@ -102,6 +102,5 @@ export function getCategoryByName(categories, name) {
 }
 export function getVisibleCategories(categories) {
   // No longer filter by isVisible - categories auto-show when they have entries
-  return categories
-    .sort((a, b) => a.order - b.order);
+  return categories.sort((a, b) => a.order - b.order);
 }

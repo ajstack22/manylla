@@ -271,9 +271,7 @@ const SupportModal = ({
       title="Support Manylla"
       presentationStyle="fullScreen"
     >
-      <View style={styles.container}>
-        {renderContent()}
-      </View>
+      <View style={styles.container}>{renderContent()}</View>
     </ThemedModal>
   );
 };

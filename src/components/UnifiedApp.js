@@ -398,7 +398,6 @@ export const ProfileEditForm = ({
   );
 };
 
-
 // Function to create dynamic styles based on theme colors
 const createDynamicStyles = (activeColors) =>
   StyleSheet.create({

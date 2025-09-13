@@ -35,8 +35,16 @@ const ChevronUpIcon = ({ size = 24, color = "#666", style }) => {
     const ExpandLess = require("@mui/icons-material/ExpandLess").default;
     return <ExpandLess style={{ fontSize: size, color, ...style }} />;
   } else {
-    const MaterialIcons = require("react-native-vector-icons/MaterialIcons").default;
-    return <MaterialIcons name="expand-less" size={size} color={color} style={style} />;
+    const MaterialIcons =
+      require("react-native-vector-icons/MaterialIcons").default;
+    return (
+      <MaterialIcons
+        name="expand-less"
+        size={size}
+        color={color}
+        style={style}
+      />
+    );
   }
 };
 
@@ -45,8 +53,16 @@ const ChevronDownIcon = ({ size = 24, color = "#666", style }) => {
     const ExpandMore = require("@mui/icons-material/ExpandMore").default;
     return <ExpandMore style={{ fontSize: size, color, ...style }} />;
   } else {
-    const MaterialIcons = require("react-native-vector-icons/MaterialIcons").default;
-    return <MaterialIcons name="expand-more" size={size} color={color} style={style} />;
+    const MaterialIcons =
+      require("react-native-vector-icons/MaterialIcons").default;
+    return (
+      <MaterialIcons
+        name="expand-more"
+        size={size}
+        color={color}
+        style={style}
+      />
+    );
   }
 };
 
@@ -112,7 +128,17 @@ const BottomSheetMenu = ({
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [visible, onShare, onPrint, onSync, onTheme, onPrivacy, onSupport, onCloseProfile, onClose]);
+  }, [
+    visible,
+    onShare,
+    onPrint,
+    onSync,
+    onTheme,
+    onPrivacy,
+    onSupport,
+    onCloseProfile,
+    onClose,
+  ]);
 
   // Handle Android back button
   useEffect(() => {
@@ -123,7 +149,10 @@ const BottomSheetMenu = ({
       return true; // Prevent default back behavior
     };
 
-    const backHandler = BackHandler.addEventListener("hardwareBackPress", handleBackPress);
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      handleBackPress,
+    );
     return () => backHandler.remove();
   }, [visible, onClose]);
 
@@ -171,7 +200,7 @@ const BottomSheetMenu = ({
   const toggleMore = () => {
     const newShowMore = !showMore;
     setShowMore(newShowMore);
-    
+
     // Haptic feedback on mobile
     if (platform.isMobile) {
       Vibration.vibrate(50);
@@ -197,10 +226,11 @@ const BottomSheetMenu = ({
     vibrate();
     action();
     onClose();
-    
+
     // Show next theme name for theme toggle
     if (action === onTheme) {
-      const nextTheme = theme === "light" ? "Dark" : theme === "dark" ? "Manylla" : "Light";
+      const nextTheme =
+        theme === "light" ? "Dark" : theme === "dark" ? "Manylla" : "Light";
       if (showToast) {
         showToast(`${nextTheme} mode activated`, "info");
       }
@@ -208,10 +238,10 @@ const BottomSheetMenu = ({
   };
 
   const styles = createStyles(colors, theme);
-  
+
   const windowHeight = Dimensions.get("window").height;
   const sheetHeight = showMore ? Math.min(480, windowHeight * 0.7) : 280;
-  
+
   // Primary menu items (always visible)
   const primaryItems = [
     {
@@ -325,10 +355,15 @@ const BottomSheetMenu = ({
           accessibilityLabel="Close menu"
           accessibilityRole="button"
         />
-        
+
         <SafeAreaView style={styles.safeArea}>
-          <Animated.View style={[styles.bottomSheet, slideTransform, { height: sheetHeight }]}>
-            
+          <Animated.View
+            style={[
+              styles.bottomSheet,
+              slideTransform,
+              { height: sheetHeight },
+            ]}
+          >
             {/* Header */}
             <View style={styles.header}>
               <Text style={styles.title}>Menu</Text>
@@ -354,18 +389,24 @@ const BottomSheetMenu = ({
                       onPress={() => handleItemPress(item.action)}
                       accessibilityLabel={item.accessibilityLabel}
                       accessibilityRole="button"
-                      accessibilityHint={platform.isWeb ? `Press ${item.keyboardShortcut} for quick access` : undefined}
+                      accessibilityHint={
+                        platform.isWeb
+                          ? `Press ${item.keyboardShortcut} for quick access`
+                          : undefined
+                      }
                     >
                       <View style={styles.iconContainer}>
-                        <IconComponent 
-                          size={28} 
-                          color={colors.primary} 
+                        <IconComponent
+                          size={28}
+                          color={colors.primary}
                           style={styles.icon}
                         />
                       </View>
                       <Text style={styles.menuItemLabel}>{item.label}</Text>
                       {platform.isWeb && (
-                        <Text style={styles.shortcutKey}>{item.keyboardShortcut}</Text>
+                        <Text style={styles.shortcutKey}>
+                          {item.keyboardShortcut}
+                        </Text>
                       )}
                     </TouchableOpacity>
                   );
@@ -377,7 +418,9 @@ const BottomSheetMenu = ({
             <TouchableOpacity
               style={styles.moreButton}
               onPress={toggleMore}
-              accessibilityLabel={showMore ? "Hide more options" : "Show more options"}
+              accessibilityLabel={
+                showMore ? "Hide more options" : "Show more options"
+              }
               accessibilityRole="button"
               accessibilityState={{ expanded: showMore }}
             >
@@ -400,27 +443,42 @@ const BottomSheetMenu = ({
                     return (
                       <TouchableOpacity
                         key={item.id}
-                        style={[styles.menuItem, item.id === "close" && styles.menuItemDanger]}
+                        style={[
+                          styles.menuItem,
+                          item.id === "close" && styles.menuItemDanger,
+                        ]}
                         onPress={() => handleItemPress(item.action)}
                         accessibilityLabel={item.accessibilityLabel}
                         accessibilityRole="button"
-                        accessibilityHint={platform.isWeb ? `Press ${item.keyboardShortcut} for quick access` : undefined}
+                        accessibilityHint={
+                          platform.isWeb
+                            ? `Press ${item.keyboardShortcut} for quick access`
+                            : undefined
+                        }
                       >
                         <View style={styles.iconContainer}>
-                          <IconComponent 
-                            size={28} 
-                            color={item.id === "close" ? colors.error?.main || "#d32f2f" : colors.primary} 
+                          <IconComponent
+                            size={28}
+                            color={
+                              item.id === "close"
+                                ? colors.error?.main || "#d32f2f"
+                                : colors.primary
+                            }
                             style={styles.icon}
                           />
                         </View>
-                        <Text style={[
-                          styles.menuItemLabel,
-                          item.id === "close" && styles.menuItemLabelDanger
-                        ]}>
+                        <Text
+                          style={[
+                            styles.menuItemLabel,
+                            item.id === "close" && styles.menuItemLabelDanger,
+                          ]}
+                        >
                           {item.label}
                         </Text>
                         {platform.isWeb && (
-                          <Text style={styles.shortcutKey}>{item.keyboardShortcut}</Text>
+                          <Text style={styles.shortcutKey}>
+                            {item.keyboardShortcut}
+                          </Text>
                         )}
                       </TouchableOpacity>
                     );
@@ -438,180 +496,187 @@ const BottomSheetMenu = ({
   );
 };
 
-const createStyles = (colors, theme) => StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    justifyContent: "flex-end",
-  },
-  backdropTouchable: {
-    flex: 1,
-  },
-  safeArea: {
-    justifyContent: "flex-end",
-  },
-  bottomSheet: {
-    backgroundColor: colors.background.paper,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: platform.isIOS ? 0 : 16, // Let safe area handle iOS padding
-    ...platform.select({
-      web: {
-        boxShadow: "0 -4px 12px rgba(0,0,0,0.15)",
-      },
-      default: {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: -4 },
-        shadowOpacity: 0.15,
-        shadowRadius: 12,
-        elevation: 8,
-      },
-    }),
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.divider,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: colors.text.primary,
-    ...platform.select({
-      web: {
-        fontFamily: '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
-      },
-    }),
-  },
-  closeButton: {
-    padding: 8,
-    borderRadius: 20,
-    backgroundColor: "transparent",
-    ...platform.select({
-      web: {
-        cursor: "pointer",
-        ":hover": {
-          backgroundColor: colors.action?.hover || "rgba(0,0,0,0.04)",
+const createStyles = (colors, theme) =>
+  StyleSheet.create({
+    backdrop: {
+      flex: 1,
+      justifyContent: "flex-end",
+    },
+    backdropTouchable: {
+      flex: 1,
+    },
+    safeArea: {
+      justifyContent: "flex-end",
+    },
+    bottomSheet: {
+      backgroundColor: colors.background.paper,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+      paddingHorizontal: 16,
+      paddingTop: 16,
+      paddingBottom: platform.isIOS ? 0 : 16, // Let safe area handle iOS padding
+      ...platform.select({
+        web: {
+          boxShadow: "0 -4px 12px rgba(0,0,0,0.15)",
         },
-      },
-    }),
-  },
-  menuSection: {
-    paddingVertical: 16,
-  },
-  menuRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-  },
-  menuItem: {
-    width: "22%", // 4 items per row with some margin
-    alignItems: "center",
-    paddingVertical: 16,
-    paddingHorizontal: 8,
-    borderRadius: 12,
-    backgroundColor: "transparent",
-    position: "relative",
-    ...platform.select({
-      web: {
-        cursor: "pointer",
-        ":hover": {
-          backgroundColor: colors.action?.hover || "rgba(0,0,0,0.04)",
+        default: {
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: 0.15,
+          shadowRadius: 12,
+          elevation: 8,
         },
-        transition: "background-color 0.2s",
-      },
-      default: {
-        // Ensure proper spacing on mobile
-        marginBottom: 8,
-      },
-    }),
-  },
-  menuItemDanger: {
-    ...platform.select({
-      web: {
-        ":hover": {
-          backgroundColor: "rgba(211, 47, 47, 0.08)",
+      }),
+    },
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingBottom: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.divider,
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: "600",
+      color: colors.text.primary,
+      ...platform.select({
+        web: {
+          fontFamily:
+            '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
         },
-      },
-    }),
-  },
-  iconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: colors.background.secondary || colors.action?.selected || "rgba(0,0,0,0.04)",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  icon: {
-    // Icon styling handled by individual icon components
-  },
-  menuItemLabel: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.text.primary,
-    textAlign: "center",
-    ...platform.select({
-      web: {
-        fontFamily: '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
-      },
-    }),
-  },
-  menuItemLabelDanger: {
-    color: colors.error?.main || "#d32f2f",
-  },
-  shortcutKey: {
-    position: "absolute",
-    top: 4,
-    right: 4,
-    fontSize: 12,
-    color: colors.text.disabled,
-    backgroundColor: colors.background.secondary || "rgba(0,0,0,0.04)",
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-    minWidth: 20,
-    textAlign: "center",
-  },
-  moreButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    backgroundColor: "transparent",
-    borderTopWidth: 1,
-    borderTopColor: colors.divider,
-    ...platform.select({
-      web: {
-        cursor: "pointer",
-        ":hover": {
-          backgroundColor: colors.action?.hover || "rgba(0,0,0,0.04)",
+      }),
+    },
+    closeButton: {
+      padding: 8,
+      borderRadius: 20,
+      backgroundColor: "transparent",
+      ...platform.select({
+        web: {
+          cursor: "pointer",
+          ":hover": {
+            backgroundColor: colors.action?.hover || "rgba(0,0,0,0.04)",
+          },
         },
-        transition: "background-color 0.2s",
-      },
-    }),
-  },
-  moreButtonText: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: colors.text.secondary,
-    marginRight: 8,
-    ...platform.select({
-      web: {
-        fontFamily: '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
-      },
-    }),
-  },
-  iosSafeArea: {
-    height: 34, // iOS home indicator safe area
-  },
-});
+      }),
+    },
+    menuSection: {
+      paddingVertical: 16,
+    },
+    menuRow: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "space-between",
+    },
+    menuItem: {
+      width: "22%", // 4 items per row with some margin
+      alignItems: "center",
+      paddingVertical: 16,
+      paddingHorizontal: 8,
+      borderRadius: 12,
+      backgroundColor: "transparent",
+      position: "relative",
+      ...platform.select({
+        web: {
+          cursor: "pointer",
+          ":hover": {
+            backgroundColor: colors.action?.hover || "rgba(0,0,0,0.04)",
+          },
+          transition: "background-color 0.2s",
+        },
+        default: {
+          // Ensure proper spacing on mobile
+          marginBottom: 8,
+        },
+      }),
+    },
+    menuItemDanger: {
+      ...platform.select({
+        web: {
+          ":hover": {
+            backgroundColor: "rgba(211, 47, 47, 0.08)",
+          },
+        },
+      }),
+    },
+    iconContainer: {
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      backgroundColor:
+        colors.background.secondary ||
+        colors.action?.selected ||
+        "rgba(0,0,0,0.04)",
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: 8,
+    },
+    icon: {
+      // Icon styling handled by individual icon components
+    },
+    menuItemLabel: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: colors.text.primary,
+      textAlign: "center",
+      ...platform.select({
+        web: {
+          fontFamily:
+            '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
+        },
+      }),
+    },
+    menuItemLabelDanger: {
+      color: colors.error?.main || "#d32f2f",
+    },
+    shortcutKey: {
+      position: "absolute",
+      top: 4,
+      right: 4,
+      fontSize: 12,
+      color: colors.text.disabled,
+      backgroundColor: colors.background.secondary || "rgba(0,0,0,0.04)",
+      paddingHorizontal: 6,
+      paddingVertical: 2,
+      borderRadius: 4,
+      minWidth: 20,
+      textAlign: "center",
+    },
+    moreButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+      borderRadius: 8,
+      backgroundColor: "transparent",
+      borderTopWidth: 1,
+      borderTopColor: colors.divider,
+      ...platform.select({
+        web: {
+          cursor: "pointer",
+          ":hover": {
+            backgroundColor: colors.action?.hover || "rgba(0,0,0,0.04)",
+          },
+          transition: "background-color 0.2s",
+        },
+      }),
+    },
+    moreButtonText: {
+      fontSize: 16,
+      fontWeight: "500",
+      color: colors.text.secondary,
+      marginRight: 8,
+      ...platform.select({
+        web: {
+          fontFamily:
+            '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
+        },
+      }),
+    },
+    iosSafeArea: {
+      height: 34, // iOS home indicator safe area
+    },
+  });
 
 export default BottomSheetMenu;

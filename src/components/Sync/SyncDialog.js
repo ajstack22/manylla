@@ -21,7 +21,7 @@ import {
   CloudDownloadIcon,
   CloudDoneIcon,
   CloudSyncIcon,
-  PlaylistAddCheckIcon
+  PlaylistAddCheckIcon,
 } from "../Common";
 import { getTextStyle } from "../../utils/platformStyles";
 import { useSync } from "../../context/SyncContext";
@@ -195,7 +195,10 @@ export const SyncDialog = ({ open, onClose }) => {
                       <ActivityIndicator size="small" color={colors.primary} />
                     ) : (
                       <>
-                        <SyncIcon size={20} color={colors.background?.paper || "#FFFFFF"} />
+                        <SyncIcon
+                          size={20}
+                          color={colors.background?.paper || "#FFFFFF"}
+                        />
                         <Text style={styles.syncNowText}>Sync Now</Text>
                       </>
                     )}
@@ -260,9 +263,7 @@ export const SyncDialog = ({ open, onClose }) => {
         >
           <CloudUploadIcon size={32} color={colors.primary || "#A08670"} />
           <View style={styles.menuOptionContent}>
-            <Text style={styles.menuOptionTitle}>
-              Enable Cloud Backup
-            </Text>
+            <Text style={styles.menuOptionTitle}>Enable Cloud Backup</Text>
             <Text style={styles.menuOptionDescription}>
               Create a new backup for your devices
             </Text>
@@ -348,7 +349,10 @@ export const SyncDialog = ({ open, onClose }) => {
             <ActivityIndicator color={colors.background.paper} />
           ) : (
             <>
-              <CloudDoneIcon size={20} color={colors.background?.paper || "#FFFFFF"} />
+              <CloudDoneIcon
+                size={20}
+                color={colors.background?.paper || "#FFFFFF"}
+              />
               <Text style={styles.primaryButtonText}>Create Secure Sync</Text>
             </>
           )}
@@ -438,7 +442,10 @@ export const SyncDialog = ({ open, onClose }) => {
           {copied ? (
             <DoneIcon size={20} color={colors.background?.paper || "#FFFFFF"} />
           ) : (
-            <ContentCopyIcon size={20} color={colors.background?.paper || "#FFFFFF"} />
+            <ContentCopyIcon
+              size={20}
+              color={colors.background?.paper || "#FFFFFF"}
+            />
           )}
           <Text style={styles.copyButtonText}>
             {copied ? "Copied!" : "Copy to Clipboard"}
@@ -487,7 +494,10 @@ export const SyncDialog = ({ open, onClose }) => {
           {copied ? (
             <DoneIcon size={20} color={colors.background?.paper || "#FFFFFF"} />
           ) : (
-            <ContentCopyIcon size={20} color={colors.background?.paper || "#FFFFFF"} />
+            <ContentCopyIcon
+              size={20}
+              color={colors.background?.paper || "#FFFFFF"}
+            />
           )}
           <Text style={styles.copyButtonText}>
             {copied ? "Copied!" : "Copy Invite Code"}
@@ -541,10 +551,16 @@ export const SyncDialog = ({ open, onClose }) => {
               onPress={handleCopyPhrase}
             >
               {copied ? (
-            <DoneIcon size={20} color={colors.background?.paper || "#FFFFFF"} />
-          ) : (
-            <ContentCopyIcon size={20} color={colors.background?.paper || "#FFFFFF"} />
-          )}
+                <DoneIcon
+                  size={20}
+                  color={colors.background?.paper || "#FFFFFF"}
+                />
+              ) : (
+                <ContentCopyIcon
+                  size={20}
+                  color={colors.background?.paper || "#FFFFFF"}
+                />
+              )}
               <Text style={styles.copyButtonText}>
                 {copied ? "Copied!" : "Copy to Clipboard"}
               </Text>

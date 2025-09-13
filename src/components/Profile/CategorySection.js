@@ -175,7 +175,7 @@ export const CategorySection = ({
             <TouchableOpacity
               style={[
                 styles.reorderButton,
-                isFirst && styles.reorderButtonDisabled
+                isFirst && styles.reorderButtonDisabled,
               ]}
               onPress={onMoveUp}
               disabled={isFirst}
@@ -187,7 +187,7 @@ export const CategorySection = ({
             <TouchableOpacity
               style={[
                 styles.reorderButton,
-                isLast && styles.reorderButtonDisabled
+                isLast && styles.reorderButtonDisabled,
               ]}
               onPress={onMoveDown}
               disabled={isLast}

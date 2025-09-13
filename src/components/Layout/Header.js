@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { getStatusBarHeight } from "../../utils/platformStyles";
 import platform from "../../utils/platform";
 
@@ -18,12 +12,7 @@ export const HEADER_HEIGHT = platform.select({
   default: 56,
 });
 
-const Header = ({
-  colors,
-  theme,
-  profile,
-  onEditProfile,
-}) => {
+const Header = ({ colors, theme, profile, onEditProfile }) => {
   const styles = createStyles(colors, theme);
 
   // Platform-specific container styles

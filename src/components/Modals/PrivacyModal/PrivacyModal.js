@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  FlatList,
-  Platform,
-} from "react-native";
+import { View, Text, ScrollView, FlatList, Platform } from "react-native";
 import { useTheme } from "../../../context/ThemeContext";
 import { ThemedModal } from "../../Common";
 import { createStyles } from "./styles";
@@ -142,9 +136,7 @@ const PrivacyModal = ({
       title="Privacy Policy"
       presentationStyle="fullScreen"
     >
-      <View style={styles.container}>
-        {renderContent()}
-      </View>
+      <View style={styles.container}>{renderContent()}</View>
     </ThemedModal>
   );
 };

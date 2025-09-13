@@ -15,7 +15,7 @@ import { getTextStyle } from "../../utils/platformStyles";
 import nacl from "tweetnacl";
 import util from "tweetnacl-util";
 import { useTheme } from "../../context/ThemeContext";
-import { 
+import {
   ThemedModal,
   SchoolIcon,
   HomeIcon,
@@ -25,7 +25,7 @@ import {
   DoneIcon,
   LockIcon,
   PersonIcon,
-  UploadIcon
+  UploadIcon,
 } from "../Common";
 import { API_ENDPOINTS } from "../../config/api";
 import platform from "../../utils/platform";
@@ -251,9 +251,15 @@ Notehis link contains encrypted data. Please use the complete link exactly as pr
               onPress={() => handlePresetChange(preset.id)}
             >
               {preset.IconComponent ? (
-                <preset.IconComponent size={24} color={colors.text?.primary || "#333"} />
+                <preset.IconComponent
+                  size={24}
+                  color={colors.text?.primary || "#333"}
+                />
               ) : (
-                <SettingsIcon size={24} color={colors.text?.primary || "#333"} />
+                <SettingsIcon
+                  size={24}
+                  color={colors.text?.primary || "#333"}
+                />
               )}
               <Text
                 style={[
@@ -453,7 +459,10 @@ Notehis link contains encrypted data. Please use the complete link exactly as pr
             {copiedLink ? (
               <DoneIcon size={20} color={colors.text?.primary || "#333"} />
             ) : (
-              <ContentCopyIcon size={20} color={colors.text?.primary || "#333"} />
+              <ContentCopyIcon
+                size={20}
+                color={colors.text?.primary || "#333"}
+              />
             )}
           </TouchableOpacity>
         </View>
