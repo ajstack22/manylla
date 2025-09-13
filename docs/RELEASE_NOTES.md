@@ -1,5 +1,31 @@
 # Manylla Release Notes
 
+## Version 2025.09.12.7 - 2025-09-12
+Share Functionality Implementation
+
+### Summary
+Implemented complete share functionality allowing parents to create temporary encrypted links to share their child's profile with teachers, doctors, and caregivers
+
+### Added
+- Backend API endpoints for creating and accessing encrypted shares (share_create.php, share_access.php)
+- ShareAccessView component for viewing shared profiles
+- URL routing to detect and handle share links (/share/XXXX-XXXX#key)
+- Zero-knowledge encryption for shared data (server never sees plaintext)
+- Support for expiration times (7 days to 6 months)
+- Optional view limits for shared links
+- Access logging for audit trail
+
+### Changed
+- Updated App.js to detect share URLs and render ShareAccessView
+- Fixed database schema mismatch (uses 'shares' table instead of 'shared_profiles')
+- Reorganized project structure (moved processes to root level, archived old docs)
+
+### Technical
+- Share links include encryption key in URL fragment (never sent to server)
+- Uses 8-character access codes in XXXX-XXXX format
+- Compatible with existing zero-knowledge encryption system
+- Shares automatically expire and are cleaned up by database events
+
 ## Version 2025.09.12.6 - 2025-09-12
 API Integration and Encryption Fixes
 
