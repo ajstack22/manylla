@@ -46,6 +46,7 @@ import { LoadingOverlay } from "./src/components/Loading";
 import { Header, HEADER_HEIGHT } from "./src/components/Layout";
 import { ShareAccessView } from "./src/components/Sharing";
 import PrivacyModal from "./src/components/Modals/PrivacyModal";
+import SupportModal from "./src/components/Modals/SupportModal";
 // Lazy load onboarding - only shown to new users
 const OnboardingScreen = lazy(
   () => import("./src/screens/Onboarding/OnboardingScreen"),
@@ -140,6 +141,12 @@ if (isWeb && typeof window !== "undefined") {
   if (urlParams.has('privacy')) {
     window.urlOpenPrivacy = true;
     console.log("[App] Privacy parameter detected");
+  }
+  
+  // Early URL parameter capture for support modal
+  if (urlParams.has('support')) {
+    window.urlOpenSupport = true;
+    console.log("[App] Support parameter detected");
   }
 }
 
@@ -636,6 +643,8 @@ function AppContent() {
   
   // Privacy modal state
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  // Support modal state
+  const [showSupportModal, setShowSupportModal] = useState(false);
   const [shareAccessCode, setShareAccessCode] = useState(null);
   const [shareEncryptionKey, setShareEncryptionKey] = useState(null);
 
@@ -709,6 +718,11 @@ function AppContent() {
           setShowPrivacyModal(true);
           window.urlOpenPrivacy = false;
           console.log("[App] Opening privacy modal from URL parameter");
+        }
+        if (window.urlOpenSupport) {
+          setShowSupportModal(true);
+          window.urlOpenSupport = false;
+          console.log("[App] Opening support modal from URL parameter");
         }
       }, 1000);
       return () => clearTimeout(timer);
@@ -1259,10 +1273,11 @@ function AppContent() {
           />
         </Suspense>
         
-        {/* Privacy Modal available during onboarding */}
+        {/* Privacy Modal available during onboarding - use manylla theme */}
         <PrivacyModal 
           visible={showPrivacyModal}
           onClose={() => setShowPrivacyModal(false)}
+          forceManyllaTheme={true}
         />
       </>
     );
@@ -1279,6 +1294,7 @@ function AppContent() {
         // onQuickInfoClick={() => setQuickInfoOpen(true)} // TODO: Implement quick info dialog
         onPrintClick={() => setPrintPreviewOpen(true)}
         onPrivacyClick={() => setShowPrivacyModal(true)}
+        onSupportClick={() => setShowSupportModal(true)}
         syncStatus={syncStatus}
         onThemeToggle={toggleTheme}
         theme={theme}
@@ -1410,10 +1426,18 @@ function AppContent() {
         <LoadingOverlay visible={operationLoading} message={loadingMessage} />
       )}
       
-      {/* Privacy Modal */}
+      {/* Privacy Modal - use current theme */}
       <PrivacyModal 
         visible={showPrivacyModal}
         onClose={() => setShowPrivacyModal(false)}
+        forceManyllaTheme={false}
+      />
+
+      {/* Support Modal - use manylla theme for branding */}
+      <SupportModal 
+        visible={showSupportModal}
+        onClose={() => setShowSupportModal(false)}
+        forceManyllaTheme={true}
       />
     </SafeAreaView>
   );

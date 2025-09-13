@@ -22,6 +22,7 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟡 P2 - Medium (Plan Soon)
 ### Stories
+- [S015](backlog/S015-implement-support-us-page-with-donation-and-community-features.md) - Implement Support Us Page with Donation and Community Features ✅ **READY**
 - [S015](backlog/S015-reorganize-development-folder-to-root-level-processes.md) - Reorganize Development Folder to Root-Level Processes ✅ **READY**
 - [S015](backlog/S015-test-story-after-reorganization.md) - Test Story After Reorganization ✅ **READY**
 - [S013](backlog/S013-sentry-integration.md) - Integrate Production Error Tracking (Sentry) ✅ **READY**

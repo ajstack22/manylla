@@ -22,6 +22,7 @@ export {
   DarkModeIcon,
   LightModeIcon,
   PaletteIcon,
+  SupportIcon,
 } from "./IconProvider";
 
 // Modal exports - ONLY ONE MODAL SYSTEM

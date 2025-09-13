@@ -83,6 +83,7 @@ if (platform.isWeb) {
     CheckCircle: require("@mui/icons-material/CheckCircle").default,
     Error: require("@mui/icons-material/Error").default,
     Info: require("@mui/icons-material/Info").default,
+    Favorite: require("@mui/icons-material/Favorite").default,
 
     // Additional icons for categories
     TrendingUp: require("@mui/icons-material/TrendingUp").default,
@@ -206,6 +207,7 @@ const iconNameMap = {
   VisibilityOff: "visibility-off",
   Help: "help",
   HelpOutline: "help-outline",
+  Favorite: "favorite",
   Notifications: "notifications",
   NotificationsOff: "notifications-off",
   Refresh: "refresh",
@@ -277,5 +279,6 @@ export const PrivacyTipIcon = (props) => <Icon name="PrivacyTip" {...props} />;
 export const DarkModeIcon = (props) => <Icon name="DarkMode" {...props} />;
 export const LightModeIcon = (props) => <Icon name="LightMode" {...props} />;
 export const PaletteIcon = (props) => <Icon name="Palette" {...props} />;
+export const SupportIcon = (props) => <Icon name="Favorite" {...props} />;
 
 export default Icon;

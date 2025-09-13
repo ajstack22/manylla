@@ -20,6 +20,7 @@ import {
   CloseIcon,
   PaletteIcon,
   PrivacyTipIcon,
+  SupportIcon,
 } from "../Common";
 import { getStatusBarHeight } from "../../utils/platformStyles";
 
@@ -42,6 +43,7 @@ const Header = ({
   onQuickInfoClick,
   onPrintClick,
   onPrivacyClick,
+  onSupportClick,
   syncStatus,
   onThemeToggle,
   theme,
@@ -122,6 +124,16 @@ const Header = ({
       onPress: () => {
         if (onPrivacyClick) {
           onPrivacyClick();
+        }
+        setMenuOpen(false);
+      },
+    },
+    {
+      label: "Support",
+      icon: SupportIcon,
+      onPress: () => {
+        if (onSupportClick) {
+          onSupportClick();
         }
         setMenuOpen(false);
       },
@@ -333,6 +345,17 @@ const Header = ({
                     style={styles.iconButton}
                   >
                     <PrivacyTipIcon
+                      size={24}
+                      color={colors.primary || "#A08670"}
+                    />
+                  </TouchableOpacity>
+                )}
+                {onSupportClick && (
+                  <TouchableOpacity
+                    onPress={onSupportClick}
+                    style={styles.iconButton}
+                  >
+                    <SupportIcon
                       size={24}
                       color={colors.primary || "#A08670"}
                     />

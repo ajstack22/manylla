@@ -10,9 +10,32 @@ import {
   FlatList,
   Platform,
 } from "react-native";
-import styles from "./styles";
+import { useTheme } from "../../../context/ThemeContext";
+import { createStyles } from "./styles";
 
-const PrivacyModal = ({ visible, onClose, insets }) => {
+const PrivacyModal = ({ visible, onClose, insets, forceManyllaTheme = false }) => {
+  const { colors: contextColors, theme } = useTheme();
+  
+  // Use manylla theme during onboarding, current theme after
+  const useManyllaTheme = forceManyllaTheme || !theme;
+  
+  // Define manylla colors for onboarding
+  const manyllaColors = {
+    background: {
+      primary: "#C4A66B", // Actual manila envelope color
+      secondary: "#D4B896", // Lighter manila for cards
+    },
+    text: {
+      primary: "#3D2F1F", // Dark brown text
+      secondary: "#5D4A37", // Medium brown
+    },
+    border: "#A68B5B", // Darker manila for borders
+    primary: "#5D4E37", // Dark brown for primary elements
+  };
+  
+  // Use manylla theme for onboarding, context theme otherwise
+  const colors = useManyllaTheme ? manyllaColors : contextColors;
+  const styles = createStyles(colors);
   const content = [
     { type: "title", text: "Privacy Policy" },
     { type: "subtitle", text: "Last updated: September 12, 2025" },
@@ -118,12 +141,21 @@ const PrivacyModal = ({ visible, onClose, insets }) => {
       onRequestClose={onClose}
     >
       {Platform.OS === "android" && (
-        <StatusBar backgroundColor="#F4E4C1" barStyle="dark-content" />
+        <StatusBar 
+          backgroundColor={colors.background.primary} 
+          barStyle={theme === "dark" && !useManyllaTheme ? "light-content" : "dark-content"} 
+        />
       )}
       <SafeAreaView
         style={[styles.container, { paddingTop: insets?.top || 0 }]}
       >
         <View style={styles.header}>
+          <View style={styles.logoContainer}>
+            <View style={[styles.logoAvatar, styles.logoAvatarPlaceholder]}>
+              <Text style={styles.logoAvatarText}>m</Text>
+            </View>
+            <Text style={styles.logo}>manylla</Text>
+          </View>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Text style={styles.closeButtonText}>✕</Text>
           </TouchableOpacity>
