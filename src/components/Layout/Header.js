@@ -332,7 +332,10 @@ const Header = ({
                     onPress={onPrivacyClick}
                     style={styles.iconButton}
                   >
-                    <PrivacyTipIcon size={24} color={colors.primary || "#A08670"} />
+                    <PrivacyTipIcon
+                      size={24}
+                      color={colors.primary || "#A08670"}
+                    />
                   </TouchableOpacity>
                 )}
                 <TouchableOpacity

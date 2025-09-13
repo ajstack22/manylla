@@ -1,1 +1,1 @@
-export { default } from './PrivacyModal';
+export { default } from "./PrivacyModal";

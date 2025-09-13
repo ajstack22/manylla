@@ -45,6 +45,7 @@ import { ThemedToast } from "./src/components/Toast";
 import { LoadingOverlay } from "./src/components/Loading";
 import { Header, HEADER_HEIGHT } from "./src/components/Layout";
 import { ShareAccessView } from "./src/components/Sharing";
+import PrivacyModal from "./src/components/Modals/PrivacyModal";
 // Lazy load onboarding - only shown to new users
 const OnboardingScreen = lazy(
   () => import("./src/screens/Onboarding/OnboardingScreen"),
@@ -72,9 +73,6 @@ const SyncDialog = lazy(() =>
     default: module.SyncDialog,
   })),
 );
-
-// Import Privacy Modal
-import PrivacyModal from "./src/components/Modals/PrivacyModal";
 
 // Icon imports - must be after other imports due to conditional requires
 let EditIcon, DeleteIcon;

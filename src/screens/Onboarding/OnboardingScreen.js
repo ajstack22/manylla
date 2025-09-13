@@ -828,16 +828,13 @@ const OnboardingScreen = ({ onComplete, onShowPrivacy }) => {
             <Text style={styles.buttonText}>Join with Access Code</Text>
           </TouchableOpacity>
         </View>
-        
+
         {/* Privacy Policy Footer */}
         {onShowPrivacy && (
           <View style={styles.footer}>
             <Text style={styles.footerText}>
               By using Manylla, you agree to our{" "}
-              <Text 
-                style={styles.footerLink}
-                onPress={onShowPrivacy}
-              >
+              <Text style={styles.footerLink} onPress={onShowPrivacy}>
                 Privacy Policy
               </Text>
             </Text>
