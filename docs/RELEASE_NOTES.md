@@ -1,5 +1,29 @@
 # Manylla Release Notes
 
+## Version 2025.09.13.2 - 2025-09-13
+Category Management Simplification
+
+### Summary
+Removed complex Category Manager modal and replaced with direct up/down arrow controls for simpler, more intuitive category reordering
+
+### Added
+- Up/down arrow buttons directly in category headers for reordering
+- Auto-hide empty categories (except Quick Info which always shows)
+- Categories now display automatically when they have entries
+
+### Removed
+- Category Manager modal (500+ lines of code removed)
+- Category visibility toggles (categories auto-show/hide based on content)
+- "Manage Categories" button from navigation menus
+- Add/delete custom category features (simplified to default categories only)
+
+### Technical
+- Removed CategoryManager.js and UnifiedCategoryManager.js components
+- Updated ProfileOverview and CategorySection components
+- Removed isVisible property from category data model
+- Fixed inline ProfileOverview component in App.js to support reordering
+- Story S016 implementation complete
+
 ## Version 2025.09.12.2 - 2025-09-13
 Support Us Page Implementation
 
