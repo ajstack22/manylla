@@ -27,23 +27,39 @@ export const PrintPreview = ({
   const styles = getStyles(colors);
 
   // State for managing selections
-  const [localSelectedCategories, setLocalSelectedCategories] = useState(propSelectedCategories || []);
-  const [localIncludeQuickInfo, setLocalIncludeQuickInfo] = useState(propIncludeQuickInfo || false);
+  const [localSelectedCategories, setLocalSelectedCategories] = useState(() => {
+    // Initialize with provided categories or include quick-info if includeQuickInfo was true
+    const initial = propSelectedCategories || [];
+    if (propIncludeQuickInfo && !initial.includes('quick-info')) {
+      return [...initial, 'quick-info'];
+    }
+    return initial;
+  });
   const [localRecipientName, setLocalRecipientName] = useState(propRecipientName || "");
   const [localNote, setLocalNote] = useState(propNote || "");
 
   // Update state when props change
   useEffect(() => {
-    if (propSelectedCategories) setLocalSelectedCategories(propSelectedCategories);
-    if (propIncludeQuickInfo !== undefined) setLocalIncludeQuickInfo(propIncludeQuickInfo);
+    if (propSelectedCategories) {
+      const updated = [...propSelectedCategories];
+      if (propIncludeQuickInfo && !updated.includes('quick-info')) {
+        updated.push('quick-info');
+      }
+      setLocalSelectedCategories(updated);
+    }
     if (propRecipientName) setLocalRecipientName(propRecipientName);
     if (propNote) setLocalNote(propNote);
   }, [propSelectedCategories, propIncludeQuickInfo, propRecipientName, propNote]);
 
-  // Available categories based on entries
-  const availableCategories = Object.keys(entries || {}).filter(cat =>
-    entries[cat] && entries[cat].length > 0
-  );
+  // Available categories - always include quick-info, then add others from entries
+  const availableCategories = ['quick-info'];
+  if (entries) {
+    Object.keys(entries).forEach(cat => {
+      if (entries[cat] && entries[cat].length > 0 && !availableCategories.includes(cat)) {
+        availableCategories.push(cat);
+      }
+    });
+  }
 
   const categoryTitles = {
     goals: "Current Goals",
@@ -137,25 +153,46 @@ export const PrintPreview = ({
     }
 
     localSelectedCategories && localSelectedCategories.forEach((category) => {
-      const categoryEntries = entries[category] || [];
-      if (categoryEntries.length > 0) {
-        content += `${category.toUpperCase()}
+      if (category === 'quick-info') {
+        // Handle Quick Info as special formatted content
+        content += `QUICK INFORMATION
 `;
-        content +=
-          "=".repeat(category.length) +
-          `
+        content += `================
+
+`;
+        content += `• Communication: Uses 2-3 word phrases. Understands more than can express.
+`;
+        content += `• Sensory: Sensitive to loud noises and bright lights. Loves soft textures.
+`;
+        content += `• Medical: No allergies. Takes melatonin for sleep (prescribed).
+`;
+        content += `• Dietary: Gluten-free diet. Prefers crunchy foods. No nuts.
+`;
+        content += `• Emergency Contact: Mom: 555-0123, Dad: 555-0124
+
+`;
+      } else {
+        const categoryEntries = entries[category] || [];
+        if (categoryEntries.length > 0) {
+          const title = categoryTitles[category] || category;
+          content += `${title.toUpperCase()}
+`;
+          content +=
+            "=".repeat(title.length) +
+            `
 
 `;
 
-        categoryEntries.forEach((entry, index) => {
-          content += `${index + 1}. ${entry.title}
+          categoryEntries.forEach((entry, index) => {
+            content += `${index + 1}. ${entry.title}
 `;
-          content += `   ${entry.description}
+            content += `   ${entry.description}
 `;
-          content += `   Date: ${new Date(entry.date).toLocaleDateString()}
+            content += `   Date: ${new Date(entry.date).toLocaleDateString()}
 
 `;
-        });
+          });
+        }
       }
     });
 
@@ -313,11 +350,11 @@ export const PrintPreview = ({
     </div>`;
     }
 
-    if (localIncludeQuickInfo) {
+    if (localSelectedCategories.includes('quick-info')) {
         html += `
     <div class="section">
-        <h2>Quick Reference</h2>
-        <div class="quick-info-item"><strong>Communication:</strong> ${escapeHtml("Uses 2-3 word phrases. Understands more than she can express.")}</div>
+        <h2>Quick Information</h2>
+        <div class="quick-info-item"><strong>Communication:</strong> ${escapeHtml("Uses 2-3 word phrases. Understands more than can express.")}</div>
         <div class="quick-info-item"><strong>Sensory:</strong> ${escapeHtml("Sensitive to loud noises and bright lights. Loves soft textures.")}</div>
         <div class="quick-info-item"><strong>Medical:</strong> ${escapeHtml("No allergies. Takes melatonin for sleep (prescribed).")}</div>
         <div class="quick-info-item"><strong>Dietary:</strong> ${escapeHtml("Gluten-free diet. Prefers crunchy foods. No nuts.")}</div>
@@ -326,6 +363,9 @@ export const PrintPreview = ({
     }
 
     localSelectedCategories && localSelectedCategories.forEach((category) => {
+        // Skip quick-info since it's handled above
+        if (category === 'quick-info') return;
+
         const categoryEntries = entries[category] || [];
         if (categoryEntries.length > 0) {
             html += `
@@ -366,21 +406,7 @@ export const PrintPreview = ({
       <View style={styles.container}>
         {/* Configuration Section */}
         <View style={styles.configSection}>
-          <Text style={styles.configTitle}>Select what to include:</Text>
-
-          {/* Quick Info Toggle */}
-          <View style={styles.toggleRow}>
-            <Text style={styles.toggleLabel}>Quick Reference Information</Text>
-            <Switch
-              value={localIncludeQuickInfo}
-              onValueChange={setLocalIncludeQuickInfo}
-              trackColor={{ false: colors.border, true: colors.primary }}
-              thumbColor={localIncludeQuickInfo ? colors.primaryLight : "#f4f3f4"}
-            />
-          </View>
-
-          {/* Categories Selection */}
-          <Text style={styles.configSubtitle}>Categories:</Text>
+          <Text style={styles.configTitle}>Select categories to include:</Text>
           <View style={styles.categoriesGrid}>
             {availableCategories.map((category) => (
               <TouchableOpacity
@@ -429,7 +455,7 @@ export const PrintPreview = ({
             )}
 
             {/* Quick Info */}
-            {localIncludeQuickInfo && (
+            {localSelectedCategories.includes('quick-info') && (
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Quick Reference</Text>
                 <View style={styles.quickInfoItems}>
@@ -459,6 +485,9 @@ export const PrintPreview = ({
 
             {/* Selected Categories */}
             {localSelectedCategories && localSelectedCategories.map((category) => {
+              // Skip quick-info since it's handled separately above
+              if (category === 'quick-info') return null;
+
               const categoryEntries = entries[category];
               if (!categoryEntries || categoryEntries.length === 0) return null;
 
