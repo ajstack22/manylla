@@ -18,6 +18,7 @@ export {
   CloudIcon,
   LabelIcon,
   LogoutIcon,
+  PrivacyTipIcon,
   DarkModeIcon,
   LightModeIcon,
   PaletteIcon,

@@ -73,6 +73,9 @@ const SyncDialog = lazy(() =>
   })),
 );
 
+// Import Privacy Modal
+import PrivacyModal from "./src/components/Modals/PrivacyModal";
+
 // Icon imports - must be after other imports due to conditional requires
 let EditIcon, DeleteIcon;
 if (isWeb) {
@@ -132,6 +135,13 @@ if (isWeb && typeof window !== "undefined") {
       encryptionKey: window.__initialHash.substring(1),
     };
     console.log("[App] Captured share data:", { shareId: shareMatch[1] });
+  }
+
+  // Early URL parameter capture for privacy modal
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has('privacy')) {
+    window.urlOpenPrivacy = true;
+    console.log("[App] Privacy parameter detected");
   }
 }
 
@@ -625,6 +635,9 @@ function AppContent() {
   
   // Share view state
   const [isShareView, setIsShareView] = useState(false);
+  
+  // Privacy modal state
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [shareAccessCode, setShareAccessCode] = useState(null);
   const [shareEncryptionKey, setShareEncryptionKey] = useState(null);
 
@@ -688,6 +701,21 @@ function AppContent() {
 
     loadInitialData();
   }, []);
+
+  // Delayed execution for privacy modal URL parameter (after hydration)
+  useEffect(() => {
+    if (!isLoading && isWeb && typeof window !== "undefined") {
+      // Wait 1 second for full hydration
+      const timer = setTimeout(() => {
+        if (window.urlOpenPrivacy) {
+          setShowPrivacyModal(true);
+          window.urlOpenPrivacy = false;
+          console.log("[App] Opening privacy modal from URL parameter");
+        }
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
 
   // Update document title on web
   useEffect(() => {
@@ -1225,9 +1253,20 @@ function AppContent() {
   // Show onboarding if needed
   if (showOnboarding) {
     return (
-      <Suspense fallback={<LoadingOverlay message="Loading..." />}>
-        <OnboardingScreen onComplete={handleOnboardingComplete} />
-      </Suspense>
+      <>
+        <Suspense fallback={<LoadingOverlay message="Loading..." />}>
+          <OnboardingScreen 
+            onComplete={handleOnboardingComplete}
+            onShowPrivacy={() => setShowPrivacyModal(true)}
+          />
+        </Suspense>
+        
+        {/* Privacy Modal available during onboarding */}
+        <PrivacyModal 
+          visible={showPrivacyModal}
+          onClose={() => setShowPrivacyModal(false)}
+        />
+      </>
     );
   }
 
@@ -1241,6 +1280,7 @@ function AppContent() {
         onCategoriesClick={() => setCategoriesOpen(true)}
         // onQuickInfoClick={() => setQuickInfoOpen(true)} // TODO: Implement quick info dialog
         onPrintClick={() => setPrintPreviewOpen(true)}
+        onPrivacyClick={() => setShowPrivacyModal(true)}
         syncStatus={syncStatus}
         onThemeToggle={toggleTheme}
         theme={theme}
@@ -1371,6 +1411,12 @@ function AppContent() {
       {operationLoading && (
         <LoadingOverlay visible={operationLoading} message={loadingMessage} />
       )}
+      
+      {/* Privacy Modal */}
+      <PrivacyModal 
+        visible={showPrivacyModal}
+        onClose={() => setShowPrivacyModal(false)}
+      />
     </SafeAreaView>
   );
 }

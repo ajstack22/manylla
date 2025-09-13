@@ -71,6 +71,7 @@ if (platform.isWeb) {
     Lock: require("@mui/icons-material/Lock").default,
     LockOpen: require("@mui/icons-material/LockOpen").default,
     Security: require("@mui/icons-material/Security").default,
+    PrivacyTip: require("@mui/icons-material/PrivacyTip").default,
 
     // Theme & Display
     DarkMode: require("@mui/icons-material/DarkMode").default,
@@ -272,6 +273,7 @@ export const SettingsIcon = (props) => <Icon name="Settings" {...props} />;
 export const CloudIcon = (props) => <Icon name="Cloud" {...props} />;
 export const LabelIcon = (props) => <Icon name="Label" {...props} />;
 export const LogoutIcon = (props) => <Icon name="Logout" {...props} />;
+export const PrivacyTipIcon = (props) => <Icon name="PrivacyTip" {...props} />;
 export const DarkModeIcon = (props) => <Icon name="DarkMode" {...props} />;
 export const LightModeIcon = (props) => <Icon name="LightMode" {...props} />;
 export const PaletteIcon = (props) => <Icon name="Palette" {...props} />;

@@ -19,6 +19,7 @@ import {
   LogoutIcon,
   CloseIcon,
   PaletteIcon,
+  PrivacyTipIcon,
 } from "../Common";
 import { getStatusBarHeight } from "../../utils/platformStyles";
 
@@ -40,6 +41,7 @@ const Header = ({
   onCategoriesClick,
   onQuickInfoClick,
   onPrintClick,
+  onPrivacyClick,
   syncStatus,
   onThemeToggle,
   theme,
@@ -110,6 +112,16 @@ const Header = ({
           theme === "light" ? "Dark" : theme === "dark" ? "Manylla" : "Light";
         if (showToast) {
           showToast(`${nextTheme} mode activated`, "info");
+        }
+        setMenuOpen(false);
+      },
+    },
+    {
+      label: "Privacy Policy",
+      icon: PrivacyTipIcon,
+      onPress: () => {
+        if (onPrivacyClick) {
+          onPrivacyClick();
         }
         setMenuOpen(false);
       },
@@ -313,6 +325,14 @@ const Header = ({
                     style={styles.iconButton}
                   >
                     <SyncIcon size={24} color={colors.primary || "#A08670"} />
+                  </TouchableOpacity>
+                )}
+                {onPrivacyClick && (
+                  <TouchableOpacity
+                    onPress={onPrivacyClick}
+                    style={styles.iconButton}
+                  >
+                    <PrivacyTipIcon size={24} color={colors.primary || "#A08670"} />
                   </TouchableOpacity>
                 )}
                 <TouchableOpacity

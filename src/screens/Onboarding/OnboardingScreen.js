@@ -54,7 +54,7 @@ const getIconForCategory = (categoryId) => {
   return iconMap[categoryId] || "folder";
 };
 
-const OnboardingScreen = ({ onComplete }) => {
+const OnboardingScreen = ({ onComplete, onShowPrivacy }) => {
   const { colors } = useTheme();
   const [step, setStep] = useState(0);
   const [accessCode, setAccessCode] = useState("");
@@ -568,6 +568,22 @@ const OnboardingScreen = ({ onComplete }) => {
       marginBottom: 10,
       textAlign: "center",
     },
+    footer: {
+      marginTop: 30,
+      paddingTop: 20,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+      alignItems: "center",
+    },
+    footerText: {
+      fontSize: 12,
+      color: colors.text.secondary,
+      textAlign: "center",
+    },
+    footerLink: {
+      color: colors.primary,
+      textDecorationLine: "underline",
+    },
     loadingText: {
       color: colors.text.secondary,
       fontSize: 14,
@@ -812,6 +828,21 @@ const OnboardingScreen = ({ onComplete }) => {
             <Text style={styles.buttonText}>Join with Access Code</Text>
           </TouchableOpacity>
         </View>
+        
+        {/* Privacy Policy Footer */}
+        {onShowPrivacy && (
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>
+              By using Manylla, you agree to our{" "}
+              <Text 
+                style={styles.footerLink}
+                onPress={onShowPrivacy}
+              >
+                Privacy Policy
+              </Text>
+            </Text>
+          </View>
+        )}
       </View>
     </ScrollComponent>
   );
