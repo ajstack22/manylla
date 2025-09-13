@@ -23,6 +23,18 @@ export {
   LightModeIcon,
   PaletteIcon,
   SupportIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+  MoreHorizIcon,
+  CheckCircleIcon,
+  ContentCopyIcon,
+  DoneIcon,
+  LockIcon,
+  SchoolIcon,
+  LocalHospitalIcon,
+  HomeIcon,
+  UploadIcon,
+  InsertDriveFileIcon,
 } from "./IconProvider";
 
 // Modal exports - ONLY ONE MODAL SYSTEM
