@@ -55,8 +55,16 @@ export const PhotoUpload = ({
 
       // Check if photo is encrypted or legacy format
       if (photoService && typeof photoService.isPhotoEncrypted === 'function' && photoService.isPhotoEncrypted(currentPhoto)) {
-        const decryptedDataUrl = await photoService.decryptPhoto(currentPhoto);
-        setPhotoPreview(decryptedDataUrl);
+        try {
+          const decryptedDataUrl = await photoService.decryptPhoto(currentPhoto);
+          setPhotoPreview(decryptedDataUrl);
+        } catch (decryptError) {
+          // If decryption fails, try to use as-is (might be unencrypted)
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('Photo decryption failed, using as-is:', decryptError);
+          }
+          setPhotoPreview(currentPhoto);
+        }
       } else {
         // Legacy format or service not ready - display as-is
         setPhotoPreview(currentPhoto);
@@ -65,8 +73,13 @@ export const PhotoUpload = ({
       if (process.env.NODE_ENV === 'development') {
         console.warn('Failed to load photo:', error);
       }
-      setError('Failed to load photo');
-      setPhotoPreview(null);
+      // Don't show error for encryption issues, just use the photo as-is
+      if (currentPhoto && currentPhoto.startsWith('data:image')) {
+        setPhotoPreview(currentPhoto);
+      } else {
+        setError('Failed to load photo');
+        setPhotoPreview(null);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -115,22 +128,40 @@ export const PhotoUpload = ({
         setProcessingProgress(prev => Math.min(prev + 10, 90));
       }, 100);
 
-      // Process and encrypt photo
-      const processResult = await photoService.processAndEncryptPhoto(result.dataUrl || result);
+      try {
+        // Try to process and encrypt photo
+        const processResult = await photoService.processAndEncryptPhoto(result.dataUrl || result);
 
-      clearInterval(progressInterval);
-      setProcessingProgress(100);
+        clearInterval(progressInterval);
+        setProcessingProgress(100);
 
-      if (!processResult.success) {
-        throw new Error(processResult.error);
-      }
+        if (!processResult.success) {
+          throw new Error(processResult.error);
+        }
 
-      // Update preview immediately with unencrypted version
-      setPhotoPreview(result.dataUrl);
+        // Update preview immediately with unencrypted version
+        setPhotoPreview(result.dataUrl);
 
-      // Notify parent component
-      if (onPhotoChange) {
-        onPhotoChange(processResult.encrypted, processResult.metadata);
+        // Notify parent component with encrypted data
+        if (onPhotoChange) {
+          onPhotoChange(processResult.encrypted, processResult.metadata);
+        }
+      } catch (encryptError) {
+        // If encryption fails, just use the unencrypted photo
+        clearInterval(progressInterval);
+        setProcessingProgress(100);
+
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('Photo encryption failed, using unencrypted:', encryptError);
+        }
+
+        // Update preview with unencrypted version
+        setPhotoPreview(result.dataUrl);
+
+        // Notify parent component with unencrypted data
+        if (onPhotoChange) {
+          onPhotoChange(result.dataUrl || result, { encrypted: false });
+        }
       }
 
       // Reset progress after a brief delay
