@@ -1,12 +1,17 @@
-# Story S016: Replace Header Menu with Bottom Sheet Navigation System
+# Story S016: Replace Header Menu with Bottom Navigation Toolbar
+
+## COMPLETED - IMPLEMENTATION REVISED
+**Completion Date**: 2025-01-14
+**Final Implementation**: Permanent bottom toolbar (not slide-up sheet)
 
 ## EPIC OVERVIEW
-Complete redesign of Manylla's navigation system, replacing the cramped header menu with a scalable bottom sheet navigation pattern that supports future growth, improves mobile usability, and provides clear labeling for all actions.
+Redesigned Manylla's navigation system, replacing the cramped header menu with a permanent bottom toolbar that provides better mobile usability and clear labeling for all actions.
 
 ## STATUS
 - **Priority**: P1 - High Priority
-- **Status**: READY
+- **Status**: COMPLETED (with revised approach)
 - **Created**: 2025-09-13
+- **Completed**: 2025-01-14
 - **Type**: UI/UX Major Feature
 - **Effort**: L (Large - 20-30 hours)
 - **Risk**: Medium (Core navigation change affects all users)
@@ -14,28 +19,54 @@ Complete redesign of Manylla's navigation system, replacing the cramped header m
 
 ## BACKGROUND & PROBLEM STATEMENT
 
-### Current State Problems
-1. **Space Constraints**: Header menu has 8 items crammed into limited horizontal space
-2. **No Labels**: Icons only - users must guess functionality
-3. **Mobile Unfriendly**: Small tap targets in header are hard to hit
-4. **No Growth Path**: Adding new features means smaller buttons or hidden features
+### Original Problems (SOLVED)
+1. **Space Constraints**: Header menu had 8 items crammed into limited horizontal space
+2. **No Labels**: Icons only - users had to guess functionality
+3. **Mobile Unfriendly**: Small tap targets in header were hard to hit
+4. **No Growth Path**: Adding new features meant smaller buttons or hidden features
 5. **Inconsistent Access**: Some features buried in hamburger menu, others visible
 
-### Why Now?
-- Planning to add more features (activities, templates, etc.)
-- User feedback indicates confusion with icon-only navigation
-- Mobile usage increasing - need thumb-friendly navigation
-- StackMap successfully uses this pattern - proven approach
-
-### Proposed Solution
-Bottom sheet navigation with:
-- Single menu trigger in header
-- Primary row of 4 main actions + "More" button
-- Secondary overflow row that expands
+### Implemented Solution
+Permanent bottom toolbar with:
+- Always-visible navigation at bottom of screen
+- Primary actions readily accessible
+- Overflow menu for secondary actions
 - Icons WITH labels for clarity
-- Platform-optimized sizing and animations
+- Platform-optimized sizing
+- Clean header with just logo and profile
+- Profile always visible in top-right (no scroll animation needed)
 
-## DETAILED REQUIREMENTS
+## IMPLEMENTATION SUMMARY
+
+### What Was Built
+1. **BottomToolbar Component** (`src/components/Navigation/BottomToolbar.js`)
+   - Permanent bottom navigation bar
+   - Always visible, no slide-up animation needed
+   - Contains all primary navigation actions
+   - Overflow menu for additional options
+   - Theme selector with light/dark/auto options
+
+2. **Simplified Header** (`src/components/Layout/Header.js`)
+   - Logo on left
+   - Profile on right (always visible)
+   - No menu items cluttering the header
+   - Clean, minimal design
+
+3. **Navigation Strategy**
+   - Header: Branding and user identity
+   - Footer: All navigation and actions
+   - No hidden menus or drawers
+   - Everything accessible with one tap
+
+### Benefits Achieved
+- ✅ Better mobile ergonomics (thumb-friendly bottom navigation)
+- ✅ All actions visible and labeled
+- ✅ Scalable for future features
+- ✅ Consistent across all platforms
+- ✅ Profile always visible for context
+- ✅ Clean, uncluttered header
+
+## ORIGINAL DETAILED REQUIREMENTS (ARCHIVED)
 
 ### 1. Header Modifications
 

@@ -234,7 +234,8 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
         setSyncId(syncIdValue);
 
         // Pull existing data
-        await pullSync(); // eslint-disable-line no-use-before-define
+        // eslint-disable-next-line no-use-before-define
+        await pullSync();
 
         // Start sync polling
         if (ManyllaMinimalSyncService.startPolling) {
@@ -249,8 +250,9 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
         throw error;
       }
     },
+    // eslint-disable-next-line no-use-before-define
     [pullSync],
-  ); // eslint-disable-line no-use-before-define
+  );
 
   // Push sync / pushProfile (merged)
   const pushSync = useCallback(

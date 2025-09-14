@@ -16,7 +16,6 @@ const clearLocalStorage = async () => {
     // Local storage cleared
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
-      console.error("Failed to clear local storage:", error);
     }
     throw error;
   }
@@ -28,7 +27,6 @@ const disableSync = async () => {
     // Sync disabled
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
-      console.error("Failed to disable sync:", error);
     }
     throw error;
   }
@@ -45,7 +43,6 @@ const resetApplication = async () => {
     // Application reset
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
-      console.error("Failed to reset application:", error);
     }
     throw error;
   }

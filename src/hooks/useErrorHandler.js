@@ -14,7 +14,6 @@ const clearCorruptedStorage = async () => {
     await AsyncStorage.multiRemove(profileKeys);
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
-      console.error("Failed to clear storage:", error);
     }
   }
 };
@@ -25,7 +24,6 @@ const resetAppState = async () => {
     await AsyncStorage.clear();
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
-      console.error("Failed to reset app state:", error);
     }
   }
 };
@@ -114,7 +112,6 @@ export const useErrorHandler = () => {
       resetError();
     } catch (recoveryError) {
       if (process.env.NODE_ENV === "development") {
-        console.error("Recovery failed:", recoveryError);
       }
       // Force reload as last resort
       if (platform.isWeb && typeof window !== "undefined") {

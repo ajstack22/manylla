@@ -23,7 +23,6 @@ const getMobileImagePicker = () => {
         mobileImagePicker = picker;
       }
     } catch (error) {
-      console.warn("react-native-image-picker not available:", error);
       mobileImagePicker = false; // Mark as unavailable
     }
   }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -40,12 +40,7 @@ export const ProfileOverview = ({
   const [photoLoading, setPhotoLoading] = useState(false);
   const [photoError, setPhotoError] = useState(false);
 
-  // Load and decrypt photo when profile changes
-  useEffect(() => {
-    loadProfilePhoto();
-  }, [profile.photo]);
-
-  const loadProfilePhoto = async () => {
+  const loadProfilePhoto = useCallback(async () => {
     if (!profile.photo) {
       setPhotoDataUrl(null);
       setPhotoLoading(false);
@@ -66,13 +61,17 @@ export const ProfileOverview = ({
         setPhotoDataUrl(profile.photo);
       }
     } catch (error) {
-      console.warn("Failed to load profile photo:", error);
       setPhotoError(true);
       setPhotoDataUrl(null);
     } finally {
       setPhotoLoading(false);
     }
-  };
+  }, [profile.photo]);
+
+  // Load and decrypt photo when profile changes
+  useEffect(() => {
+    loadProfilePhoto();
+  }, [loadProfilePhoto]);
 
   const getEntriesByCategory = (category) =>
     profile.entries.filter((entry) => entry.category === category);

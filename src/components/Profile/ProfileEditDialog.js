@@ -9,7 +9,6 @@ import {
   Alert,
   StyleSheet,
   Modal,
-  Image,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import DateTimePicker from "@react-native-community/datetimepicker";

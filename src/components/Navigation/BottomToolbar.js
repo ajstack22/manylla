@@ -56,12 +56,6 @@ const BottomToolbar = ({
     return () => subscription?.remove();
   }, []);
 
-  // Get next theme name for toast
-  const getNextThemeName = () => {
-    if (theme === "light") return "Dark";
-    if (theme === "dark") return "Manylla";
-    return "Light";
-  };
 
   // Handle item press
   const handleItemPress = (action, message) => {

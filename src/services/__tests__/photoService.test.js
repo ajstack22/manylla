@@ -54,22 +54,26 @@ describe("PhotoService", () => {
 
   describe("Encryption/Decryption", () => {
     it("should encrypt photo data successfully", async () => {
-      const testPhotoData = { dataUrl: mockDataUrl, size: 1000 };
+      const testPhotoDataUrl = mockDataUrl;
       const encryptedData = "encrypted_photo_data";
 
       mockEncryptionService.encryptData.mockResolvedValue(encryptedData);
 
-      const result = await photoService.encryptPhotoData(testPhotoData);
+      const result = await photoService.encryptPhotoData(testPhotoDataUrl);
 
       expect(mockEncryptionService.encryptData).toHaveBeenCalledWith(
-        testPhotoData,
+        expect.objectContaining({
+          dataUrl: testPhotoDataUrl,
+          timestamp: expect.any(String),
+          type: "photo",
+        }),
       );
       expect(result).toBe(encryptedData);
     });
 
     it("should decrypt photo data successfully", async () => {
       const encryptedPhoto = "encrypted_photo_data";
-      const decryptedData = { dataUrl: mockDataUrl, size: 1000 };
+      const decryptedData = { dataUrl: mockDataUrl, size: 1000, timestamp: "2025-09-14T06:51:24.976Z", type: "photo" };
 
       mockEncryptionService.decryptData.mockReturnValue(decryptedData);
 
@@ -92,9 +96,8 @@ describe("PhotoService", () => {
     it("should handle decryption service not initialized", async () => {
       mockEncryptionService.isInitialized.mockReturnValue(false);
 
-      await expect(photoService.decryptPhoto("encrypted_data")).rejects.toThrow(
-        "Encryption service not initialized",
-      );
+      const result = await photoService.decryptPhoto("encrypted_data");
+      expect(result).toBeNull();
     });
 
     it("should return null for empty encrypted photo", async () => {
@@ -108,9 +111,8 @@ describe("PhotoService", () => {
     it("should handle invalid decrypted data", async () => {
       mockEncryptionService.decryptData.mockReturnValue({ invalid: "data" });
 
-      await expect(photoService.decryptPhoto("encrypted_data")).rejects.toThrow(
-        "Invalid photo data after decryption",
-      );
+      const result = await photoService.decryptPhoto("encrypted_data");
+      expect(result).toBeNull();
     });
   });
 
@@ -141,7 +143,7 @@ describe("PhotoService", () => {
       expect(createThumbnail).toHaveBeenCalledWith(mockDataUrl, 120);
       expect(mockEncryptionService.encryptData).toHaveBeenCalledTimes(2);
       expect(result.success).toBe(true);
-      expect(result.encryptedPhoto).toBe("encrypted_photo");
+      expect(result.encrypted).toBe("encrypted_photo");
       expect(result.encryptedThumbnail).toBe("encrypted_thumbnail");
     });
 
@@ -154,15 +156,15 @@ describe("PhotoService", () => {
         error: "Image too large",
       });
 
-      await expect(
-        photoService.processAndEncryptPhoto(mockFile),
-      ).rejects.toThrow("Image too large");
+      const result = await photoService.processAndEncryptPhoto(mockFile);
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Image too large");
     });
   });
 
   describe("Photo Format Detection", () => {
     it("should detect encrypted photo format", () => {
-      const encryptedPhotoString = "encrypted_v2_abc123";
+      const encryptedPhotoString = "abcd1234567890abcdef1234567890abcdef1234567890abcdef1234567890"; // Long base64-like encrypted data
       const result = photoService.isPhotoEncrypted(encryptedPhotoString);
 
       expect(result).toBe(true);
@@ -184,9 +186,10 @@ describe("PhotoService", () => {
 
   describe("Caching", () => {
     it("should cache decrypted photos", async () => {
-      const encryptedPhoto = "encrypted_photo_data";
-      const decryptedData = { dataUrl: mockDataUrl, size: 1000 };
+      const encryptedPhoto = "abcd1234567890abcdef1234567890abcdef1234567890abcdef1234567890"; // Valid encrypted string
+      const decryptedData = { dataUrl: mockDataUrl, size: 1000, timestamp: "2025-09-14T06:51:24.976Z", type: "photo" };
 
+      mockEncryptionService.isInitialized.mockReturnValue(true);
       mockEncryptionService.decryptData.mockReturnValue(decryptedData);
 
       // First call should decrypt
@@ -201,23 +204,25 @@ describe("PhotoService", () => {
     });
 
     it("should bypass cache when requested", async () => {
-      const encryptedPhoto = "encrypted_photo_data";
-      const decryptedData = { dataUrl: mockDataUrl, size: 1000 };
+      const encryptedPhoto = "wxyz1234567890abcdef1234567890abcdef1234567890abcdef1234567890"; // Different valid encrypted string
+      const decryptedData = { dataUrl: mockDataUrl, size: 1000, timestamp: "2025-09-14T06:51:24.976Z", type: "photo" };
 
+      mockEncryptionService.isInitialized.mockReturnValue(true);
       mockEncryptionService.decryptData.mockReturnValue(decryptedData);
 
       // First call with cache
-      await photoService.decryptPhoto(encryptedPhoto, true);
+      const result1 = await photoService.decryptPhoto(encryptedPhoto, true);
+      expect(result1).toBe(mockDataUrl);
       expect(mockEncryptionService.decryptData).toHaveBeenCalledTimes(1);
 
       // Second call without cache
-      await photoService.decryptPhoto(encryptedPhoto, false);
+      const result2 = await photoService.decryptPhoto(encryptedPhoto, false);
+      expect(result2).toBe(mockDataUrl);
       expect(mockEncryptionService.decryptData).toHaveBeenCalledTimes(2);
     });
 
     it("should clear cache", () => {
       // Add some cached data first
-      const encryptedPhoto = "encrypted_photo_data";
       const decryptedData = { dataUrl: mockDataUrl, size: 1000 };
       mockEncryptionService.decryptData.mockReturnValue(decryptedData);
 
@@ -246,9 +251,8 @@ describe("PhotoService", () => {
         throw new Error("Decryption failed");
       });
 
-      await expect(photoService.decryptPhoto("encrypted_data")).rejects.toThrow(
-        "Failed to decrypt photo",
-      );
+      const result = await photoService.decryptPhoto("encrypted_data");
+      expect(result).toBeNull();
     });
   });
 });

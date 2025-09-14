@@ -7,7 +7,6 @@ import {
   StyleSheet,
   Alert,
   Share,
-  Switch,
 } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
 import { ThemedModal, InsertDriveFileIcon, PrintIcon } from "../Common";
@@ -274,7 +273,6 @@ export const PrintPreview = ({
           // Handle category groups
           const group = categoryGroups[categoryGroup];
           let hasContent = false;
-          let groupContent = "";
 
           // Check if any categories in this group have entries
           group.categories.forEach((cat) => {

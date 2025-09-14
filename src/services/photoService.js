@@ -7,7 +7,6 @@ import {
   processImage,
   validateImage,
   createThumbnail,
-  IMAGE_CONFIG,
 } from "../utils/imageUtils";
 
 // Photo-specific configuration
@@ -150,7 +149,6 @@ class PhotoService {
 
       return photoData.dataUrl;
     } catch (error) {
-      console.warn("Photo decryption failed:", error.message);
       return null;
     }
   }
@@ -251,7 +249,7 @@ class PhotoService {
     let validEntries = 0;
     let expiredEntries = 0;
 
-    for (const [key, cached] of this.decryptionCache.entries()) {
+    for (const [, cached] of this.decryptionCache.entries()) {
       if (Date.now() - cached.timestamp < PHOTO_CONFIG.CACHE_DURATION) {
         validEntries++;
       } else {

@@ -15,7 +15,6 @@ import {
   Alert,
   StyleSheet,
   KeyboardAvoidingView,
-  Switch,
 } from "react-native";
 import { getTextStyle } from "../utils/platformStyles";
 import { ThemedModal } from "./Common";
@@ -25,6 +24,7 @@ let DateTimePicker = null;
 if (platform.isMobile) {
   try {
     // Use eval to prevent webpack from analyzing this require
+    // eslint-disable-next-line no-eval
     DateTimePicker = eval("require")(
       "@react-native-community/datetimepicker",
     ).default;

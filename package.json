@@ -95,6 +95,16 @@
   "engines": {
     "node": ">=18"
   },
+  "jest": {
+    "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"],
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^react-native$": "react-native-web"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(react-native|@react-native|react-native-vector-icons)/)"
+    ]
+  },
   "browserslist": {
     "production": [
       ">0.2%",

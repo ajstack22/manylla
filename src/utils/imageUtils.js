@@ -358,7 +358,7 @@ export const createThumbnail = async (dataUrl, size = 120) => {
   });
 };
 
-export default {
+const imageUtils = {
   validateImage,
   calculateDimensions,
   resizeImage,
@@ -370,3 +370,5 @@ export default {
   createThumbnail,
   IMAGE_CONFIG,
 };
+
+export default imageUtils;

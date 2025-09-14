@@ -20,7 +20,6 @@ import {
   CloudUploadIcon,
   CloudDownloadIcon,
   CloudDoneIcon,
-  CloudSyncIcon,
   PlaylistAddCheckIcon,
 } from "../Common";
 import { getTextStyle } from "../../utils/platformStyles";

@@ -14,8 +14,5 @@ if (platform.isMobile) {
 if (typeof global !== "undefined" && !global.crypto) {
   // Fallback for environments missing crypto
   if (platform.isMobile) {
-    console.warn(
-      "Crypto polyfill may not be loaded correctly. Make sure react-native-get-random-values is imported in index.js",
-    );
   }
 }

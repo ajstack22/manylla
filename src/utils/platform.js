@@ -414,7 +414,6 @@ export const readFromClipboard = async () => {
 export const print = (elementId = null) => {
   if (!isWeb) {
     if (process.env.NODE_ENV === "development") {
-      console.warn("Print not supported on mobile");
     }
     return;
   }
@@ -467,7 +466,6 @@ export const DEPRECATED = {
   logUsage(feature) {
     const isDev = process.env.NODE_ENV === "development";
     if (isDev) {
-      console.warn(`DEPRECATED platform feature used: ${feature}`);
     }
   },
 };

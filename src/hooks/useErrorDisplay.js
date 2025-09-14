@@ -60,7 +60,6 @@ export const useErrorDisplay = (error, errorInfo) => {
       showToast("Error report sent. Thank you!", "success");
     } catch (err) {
       if (process.env.NODE_ENV === "development") {
-        console.error("Failed to send report:", err);
       }
       showToast("Failed to send report", "error");
     }

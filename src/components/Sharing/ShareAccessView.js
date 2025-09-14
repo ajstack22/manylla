@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -13,7 +13,6 @@ import util from "tweetnacl-util";
 import { useTheme } from "../../context/ThemeContext";
 import { API_ENDPOINTS } from "../../config/api";
 import platform from "../../utils/platform";
-import { getTextStyle } from "../../utils/platformStyles";
 
 export const ShareAccessView = ({ accessCode, encryptionKey }) => {
   const { colors } = useTheme();
@@ -24,13 +23,7 @@ export const ShareAccessView = ({ accessCode, encryptionKey }) => {
   const [sharedProfile, setSharedProfile] = useState(null);
   const [shareInfo, setShareInfo] = useState(null);
 
-  useEffect(() => {
-    if (accessCode && encryptionKey) {
-      fetchAndDecryptShare();
-    }
-  }, [accessCode, encryptionKey]);
-
-  const fetchAndDecryptShare = async () => {
+  const fetchAndDecryptShare = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -78,12 +71,17 @@ export const ShareAccessView = ({ accessCode, encryptionKey }) => {
       const decryptedData = JSON.parse(util.encodeUTF8(decryptedBytes));
       setSharedProfile(decryptedData.profile);
     } catch (err) {
-      console.error("Error accessing share:", err);
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  };
+  }, [accessCode, encryptionKey]);
+
+  useEffect(() => {
+    if (accessCode && encryptionKey) {
+      fetchAndDecryptShare();
+    }
+  }, [accessCode, encryptionKey, fetchAndDecryptShare]);
 
   const renderCategory = (categoryName, entries) => {
     if (!entries || entries.length === 0) return null;
