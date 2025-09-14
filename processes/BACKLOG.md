@@ -15,6 +15,7 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟠 P1 - High (Do Next)
 ### Stories
+- [S029](backlog/S029-increase-test-coverage-from-7-to-60-minimum.md) - Increase Test Coverage from 7% to 60% Minimum ✅ **READY**
 - [S026](backlog/S026-comprehensive-code-quality-cleanup.md) - Comprehensive Code Quality Cleanup ✅ **READY**
 - [S027](backlog/S027-implement-jest-and-react-testing-library-infrastructure.md) - Implement Jest and React Testing Library Infrastructure ✅ **READY**
 

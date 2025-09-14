@@ -45,10 +45,10 @@ export function normalizeInviteCode(code) {
 /**
  * Generate a shareable invite URL
  */
-export function generateInviteUrl(inviteCode, recoveryPhrase) {
-  const baseUrl = window.location.origin;
+export function generateInviteUrl(inviteCode, recoveryPhrase, baseUrl) {
+  const origin = baseUrl || window.location.origin;
   // URL format: /sync/ABCD-1234#recoveryPhrase
-  return `${baseUrl}/sync/${inviteCode}#${recoveryPhrase}`;
+  return `${origin}/sync/${inviteCode}#${recoveryPhrase}`;
 }
 
 /**
@@ -69,53 +69,73 @@ export function parseInviteUrl(pathname, hash) {
  * Store invite code data in local storage
  */
 export function storeInviteCode(inviteCode, syncId, recoveryPhrase) {
-  const invites = JSON.parse(localStorage.getItem("manylla_invites") || "{}");
-  invites[inviteCode] = {
-    syncId,
-    recoveryPhrase,
-    createdAt: Date.now(),
-    expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
-  };
-  localStorage.setItem("manylla_invites", JSON.stringify(invites));
+  try {
+    const invites = JSON.parse(localStorage.getItem("manylla_invites") || "{}");
+    invites[inviteCode] = {
+      syncId,
+      recoveryPhrase,
+      createdAt: Date.now(),
+      expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
+    };
+    localStorage.setItem("manylla_invites", JSON.stringify(invites));
+  } catch (error) {
+    console.warn('Failed to store invite code:', error);
+  }
 }
 
 /**
  * Retrieve invite code data from local storage
  */
 export function getInviteCode(inviteCode) {
-  const invites = JSON.parse(localStorage.getItem("manylla_invites") || "{}");
-  const invite = invites[normalizeInviteCode(inviteCode)];
+  try {
+    const invites = JSON.parse(localStorage.getItem("manylla_invites") || "{}");
+    const normalizedCode = normalizeInviteCode(inviteCode);
+    const invite = invites[normalizedCode];
 
-  if (!invite) {
+    if (!invite) {
+      return null;
+    }
+
+    // Check if expired
+    if (invite.expiresAt < Date.now()) {
+      // Clean up expired invite - use normalized code
+      delete invites[normalizedCode];
+      localStorage.setItem("manylla_invites", JSON.stringify(invites));
+      return null;
+    }
+
+    return {
+      syncId: invite.syncId,
+      recoveryPhrase: invite.recoveryPhrase,
+    };
+  } catch (error) {
+    console.warn('Failed to retrieve invite code:', error);
     return null;
   }
-
-  // Check if expired
-  if (invite.expiresAt < Date.now()) {
-    // Clean up expired invite
-    delete invites[inviteCode];
-    localStorage.setItem("manylla_invites", JSON.stringify(invites));
-    return null;
-  }
-
-  return {
-    syncId: invite.syncId,
-    recoveryPhrase: invite.recoveryPhrase,
-  };
 }
 
 /**
  * Clean up expired invite codes
  */
 export function cleanupExpiredInvites() {
-  const invites = JSON.parse(localStorage.getItem("manylla_invites") || "{}");
-  const now = Date.now();
+  try {
+    const invites = JSON.parse(localStorage.getItem("manylla_invites") || "{}");
+    const now = Date.now();
 
-  Object.keys(invites).forEach((code) => {
-    if (invites[code].expiresAt < now) {
-      delete invites[code];
+    Object.keys(invites).forEach((code) => {
+      if (invites[code].expiresAt < now) {
+        delete invites[code];
+      }
+    });
+
+    localStorage.setItem("manylla_invites", JSON.stringify(invites));
+  } catch (error) {
+    console.warn('Failed to cleanup expired invites:', error);
+    // Fallback: store empty object
+    try {
+      localStorage.setItem("manylla_invites", '{}');
+    } catch (storageError) {
+      // Ignore if storage is completely unavailable
     }
-  });
-
-  localStorage.setItem("manylla_invites", JSON.stringify(invites));
+  }
 }

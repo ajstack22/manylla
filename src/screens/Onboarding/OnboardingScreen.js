@@ -1,4 +1,5 @@
 import platform from "../../utils/platform";
+import { version } from "../../../package.json";
 
 // React imports
 import React, { useState } from "react";
@@ -766,6 +767,14 @@ const OnboardingScreen = ({ onComplete, onShowPrivacy }) => {
         <Text style={styles.title}>Welcome to manylla</Text>
         <Text style={styles.subtitle}>
           Your secure companion for managing your child's special needs journey
+        </Text>
+        <Text style={{
+          fontSize: 12,
+          color: colors.text.disabled,
+          marginTop: -5,
+          marginBottom: 15,
+        }}>
+          v{version}
         </Text>
 
         <View style={styles.infoBox}>
