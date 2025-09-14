@@ -23,11 +23,12 @@ The Developer Task tool receives:
 ### Phase 2: Peer Review (Task Tool Instance)
 The Peer Reviewer Task tool:
 1. **TRACES IMPORT CHAINS** - Verifies the modified component is actually used
-2. Validates EVERY requirement independently
-3. Tests all edge cases
-4. Verifies no regressions
-5. REJECTS if ANY requirement fails
-6. Provides detailed feedback report
+2. **VALIDATES TEST COVERAGE** - Ensures tests exist and coverage increased by ≥10%
+3. Validates EVERY requirement independently
+4. Tests all edge cases
+5. Verifies no regressions
+6. REJECTS if ANY requirement fails OR test coverage doesn't improve
+7. Provides detailed feedback report with coverage metrics
 
 ### Phase 3: Iteration (Coordinated by Project Manager)
 Project Manager coordinates iterations:
@@ -90,10 +91,18 @@ You are an autonomous Developer agent. Implement the following story completely 
 Provide a comprehensive report including:
 1. Implementation approach taken
 2. All files created/modified with full paths
-3. Verification commands executed with results
-4. Any edge cases handled
-5. Tech debt discovered (if any)
-6. Statement of completion confidence (0-100%)
+3. **TEST COVERAGE METRICS** - Before/after percentages
+4. **NEW TESTS CREATED** - List all test files added/modified
+5. Verification commands executed with results
+6. Any edge cases handled
+7. Tech debt discovered (if any)
+8. Statement of completion confidence (0-100%)
+
+## TESTING REQUIREMENTS
+- **MANDATORY**: Add tests for ALL new code
+- **COVERAGE INCREASE**: Minimum +10% coverage per story
+- **UPDATE EXISTING**: Fix/update any broken tests
+- **RUN TEST SUITE**: Include `npm test` and `npm run test:coverage` results
 
 ## IMPORTANT
 - Work autonomously to completion
@@ -120,7 +129,14 @@ You are an adversarial Peer Reviewer. Rigorously validate this implementation an
 [INSERT PEER REVIEWER ROLE DEFINITION HERE]
 
 ## VALIDATION PROCESS
-1. **TRACE COMPONENT USAGE FIRST**
+1. **VERIFY TEST COVERAGE FIRST**
+   ```bash
+   # Check current coverage
+   npm run test:coverage
+   # Compare with previous coverage
+   # MUST show ≥10% improvement OR maintain 100%
+   ```
+2. **TRACE COMPONENT USAGE**
    ```bash
    # Find where component is imported
    grep -r "ComponentName" src/ --include="*.js" | grep import
@@ -129,11 +145,19 @@ You are an adversarial Peer Reviewer. Rigorously validate this implementation an
    # Check App.js imports specifically
    grep "import.*ComponentName" App.js
    ```
-2. Run ALL verification commands independently
-3. Check EVERY requirement from the story
-4. Test edge cases the developer might have missed
-5. Look for any regressions introduced
-6. Verify no shortcuts were taken
+3. **VALIDATE TEST QUALITY**
+   ```bash
+   # Check for new test files
+   git status | grep test
+   # Run specific test suites
+   npm test -- ComponentName.test.js
+   # Verify tests are meaningful (not just coverage padding)
+   ```
+4. Run ALL verification commands independently
+5. Check EVERY requirement from the story
+6. Test edge cases the developer might have missed
+7. Look for any regressions introduced
+8. Verify no shortcuts were taken
 
 ## OUTPUT FORMAT
 ```
@@ -146,6 +170,9 @@ Evidence:
 - [Command]: [Result]
 
 Requirements Checklist:
+□ Test Coverage: [PASS/FAIL - Current: X%, Required: Previous+10% or 100%]
+□ Test Quality: [PASS/FAIL - Meaningful tests, not padding]
+□ Test Suite Passes: [PASS/FAIL - npm test result]
 □ Requirement 1: [PASS/FAIL - Evidence]
 □ Requirement 2: [PASS/FAIL - Evidence]
 □ Requirement 3: [PASS/FAIL - Evidence]
@@ -194,7 +221,39 @@ Address EACH required fix:
 
 ## SUCCESS CRITERIA
 Story is ONLY complete when Peer Reviewer outputs:
-✅ APPROVED with ALL requirements checked
+✅ APPROVED with:
+- ALL requirements checked
+- Test coverage increased by ≥10% (or maintained at 100%)
+- All tests passing
+- No test quality issues
+```
+
+## TEST COVERAGE ENFORCEMENT
+
+### Coverage Requirements by Story Type
+1. **New Features**: Must include comprehensive tests (+10% minimum)
+2. **Bug Fixes**: Must include regression tests (+5% minimum)
+3. **Refactoring**: Must maintain or improve existing coverage
+4. **Legacy Code Updates**: Must add tests for modified code (+10% minimum)
+5. **Critical Systems**: Target 80%+ coverage for security/data handling
+
+### Test Quality Standards
+- **Meaningful Assertions**: Tests must validate behavior, not just execute code
+- **Edge Cases**: Include boundary conditions and error paths
+- **Integration Tests**: Test component interactions, not just units
+- **Mocking Strategy**: Proper mocks for external dependencies
+- **Performance**: Tests complete in reasonable time (<10s per file)
+
+### Coverage Tracking
+```bash
+# Track coverage over time
+echo "$(date): $(npm run test:coverage | grep 'All files')" >> coverage-history.log
+
+# Ensure continuous improvement
+if [ $(current_coverage) -lt $(previous_coverage) ]; then
+  echo "❌ Coverage decreased - REJECTION"
+  exit 1
+fi
 ```
 
 ## EXAMPLE USAGE
@@ -345,11 +404,32 @@ Evidence: Test suite failing - 3 tests
 Required Fix: Restore compatibility while maintaining new changes
 ```
 
-### 🔴 Insufficient Testing
+### 🔴 Insufficient Test Coverage
 ```
-REJECTED: No evidence of Android testing
-Evidence: No adb logcat output provided
-Required Fix: Test on Android and provide logs
+REJECTED: Test coverage only increased by 3% (required: 10%)
+Evidence: Previous: 45%, Current: 48%
+Required Fix: Add tests for uncovered functions in ComponentX
+```
+
+### 🔴 No Tests for New Code
+```
+REJECTED: New feature added without any tests
+Evidence: git diff shows new functions, no test files created
+Required Fix: Create ComponentX.test.js with full coverage
+```
+
+### 🔴 Test Quality Issues
+```
+REJECTED: Tests are padding, not validating behavior
+Evidence: Test only checks if component renders, no interaction tests
+Required Fix: Add meaningful assertions and user interaction tests
+```
+
+### 🔴 Broken Test Suite
+```
+REJECTED: Existing tests now failing
+Evidence: npm test - 5 failures in unrelated components
+Required Fix: Fix regression in test environment or mocks
 ```
 
 ## CUSTOMIZATION POINTS
@@ -367,10 +447,14 @@ Add metrics:
 - Runtime performance unchanged
 
 ### 3. Code Quality Gates
+- **TEST COVERAGE: Must increase by ≥10% OR maintain 100%**
+- **TEST SUITE: All tests must pass (npm test)**
+- **NEW CODE: Must have corresponding tests**
+- **LEGACY CODE: Update tests when modifying**
 - ESLint: 0 errors
 - Prettier: All files formatted
 - TypeScript: No type errors
-- Tests: All passing
+- Tests: All passing with improved coverage
 
 ## AUTOMATION POSSIBILITIES
 
@@ -425,6 +509,15 @@ When using this framework, replace:
 - Performance optimizations
 - Security implementations
 - Architecture changes
+- **ANY story that modifies production code**
+- **Legacy code updates (perfect opportunity to add tests)**
+
+### Test Coverage Expectations:
+- **New Features**: Start with 60%+ coverage target
+- **Core Services**: Target 80%+ coverage
+- **Utilities**: Target 90%+ coverage
+- **UI Components**: Target 50%+ coverage
+- **Security/Encryption**: Target 95%+ coverage
 
 ### Not Necessary For:
 - Simple bug fixes
