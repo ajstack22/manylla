@@ -13,6 +13,7 @@ import {
   Alert
 } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
+import Icon from '../Common/IconProvider';
 import ImagePicker from '../Common/ImagePicker';
 import photoService from '../../services/photoService';
 import platform from '../../utils/platform';
@@ -221,10 +222,11 @@ export const PhotoUpload = ({
             onPress={!disabled ? handlePhotoSelect : undefined}
             disabled={disabled}
           >
-            <Text style={[
-              styles.placeholderIcon,
-              { color: disabled ? colors.text.disabled : colors.text.secondary }
-            ]}>📷</Text>
+            <Icon
+              name="CameraAlt"
+              size={size / 3}
+              color={disabled ? colors.text.disabled : colors.text.secondary}
+            />
             <Text style={[
               styles.placeholderText,
               disabled && styles.placeholderTextDisabled
@@ -240,7 +242,7 @@ export const PhotoUpload = ({
             style={styles.editButton}
             onPress={handlePhotoSelect}
           >
-            <Text style={styles.editIcon}>✏️</Text>
+            <Icon name="Edit" size={18} color={colors.text.secondary} />
           </TouchableOpacity>
         )}
 
@@ -250,7 +252,7 @@ export const PhotoUpload = ({
             style={styles.deleteButton}
             onPress={handlePhotoRemove}
           >
-            <Text style={styles.deleteIcon}>🗑️</Text>
+            <Icon name="Delete" size={18} color={colors.error || '#F44336'} />
           </TouchableOpacity>
         )}
       </View>
@@ -258,7 +260,7 @@ export const PhotoUpload = ({
       {/* Error message */}
       {error && (
         <View style={styles.errorContainer}>
-          <Text style={{ fontSize: 16, color: colors.error }}>⚠️</Text>
+          <Icon name="Warning" size={16} color={colors.error} />
           <Text style={styles.errorText}>{error}</Text>
         </View>
       )}
@@ -386,15 +388,6 @@ const getStyles = (colors, size) =>
       shadowOpacity: 0.2,
       shadowRadius: 2,
       elevation: 2
-    },
-    placeholderIcon: {
-      fontSize: size / 3
-    },
-    editIcon: {
-      fontSize: 16
-    },
-    deleteIcon: {
-      fontSize: 16
     },
     errorContainer: {
       flexDirection: 'row',

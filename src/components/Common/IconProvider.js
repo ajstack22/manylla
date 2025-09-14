@@ -34,6 +34,7 @@ if (platform.isWeb) {
     Edit: require("@mui/icons-material/Edit").default,
     Delete: require("@mui/icons-material/Delete").default,
     AccountCircle: require("@mui/icons-material/AccountCircle").default,
+    CameraAlt: require("@mui/icons-material/CameraAlt").default,
 
     // Content & Categories
     Add: require("@mui/icons-material/Add").default,
@@ -156,6 +157,7 @@ const iconNameMap = {
   Edit: "edit",
   Delete: "delete",
   AccountCircle: "account-circle",
+  CameraAlt: "camera-alt",
   Add: "add",
   AddCircle: "add-circle",
   Category: "category",
