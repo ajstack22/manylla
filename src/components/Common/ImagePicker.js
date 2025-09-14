@@ -18,7 +18,11 @@ const getMobileImagePicker = () => {
   if (mobileImagePicker === null && !platform.isWeb) {
     try {
       // Safe conditional import for mobile only
-      mobileImagePicker = require('react-native-image-picker');
+      // Webpack will replace this with false for web builds
+      const picker = require('react-native-image-picker');
+      if (picker) {
+        mobileImagePicker = picker;
+      }
     } catch (error) {
       console.warn('react-native-image-picker not available:', error);
       mobileImagePicker = false; // Mark as unavailable

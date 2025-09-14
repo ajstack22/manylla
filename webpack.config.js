@@ -121,6 +121,7 @@ module.exports = {
       "react-native-qrcode-svg": false,
       "react-native-view-shot": false,
       "react-native-html-to-pdf": false,
+      "react-native-image-picker": false,
       // react-native-gesture-handler is handled by NormalModuleReplacementPlugin above
     },
     extensions: [".web.js", ".js", ".json"],

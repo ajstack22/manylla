@@ -1,5 +1,36 @@
 # Manylla Release Notes
 
+## Version 2025.09.14.1 - 2025-09-14
+Encrypted Photo Upload for User Profiles
+
+### Summary
+Implemented zero-knowledge encrypted photo upload and storage system for user profile photos with cross-platform support
+
+### Added
+- Profile photo upload with drag-and-drop (web) and camera/gallery (mobile) support
+- Client-side image processing and optimization (800x800px max, ~500KB target)
+- Zero-knowledge encryption for all photos using XSalsa20-Poly1305
+- Automatic photo sync across devices through encrypted sync system
+- Photo caching with 5-minute expiration for performance
+- Comprehensive error handling and validation
+- Support for JPG and PNG formats with 2MB upload limit
+
+### Technical
+- Created PhotoUpload component with loading states and progress indicators
+- Added photoService for encryption/decryption with caching
+- Implemented imageUtils for cross-platform image processing
+- Created ImagePicker for unified web/mobile photo selection
+- Integrated with existing ManyllaEncryptionService
+- Photos stored as encrypted Base64 strings in sync_data
+- Added test coverage for photo encryption service
+- Story S018 implementation complete with peer review
+
+### Security
+- All photos encrypted client-side before storage or transmission
+- No plaintext photos ever reach the server
+- Secure memory management with sensitive data cleanup
+- File validation prevents malicious uploads
+
 ## Version 2025.09.13.2 - 2025-09-13
 Category Management Simplification
 
