@@ -5,6 +5,9 @@
 
 const { getTestConfig } = require('../../../config/test-env');
 
+// Use node-fetch for API calls in tests
+const fetch = require('node-fetch');
+
 // Only mock AsyncStorage, not the encryption libraries
 jest.mock('@react-native-async-storage/async-storage', () => ({
   getItem: jest.fn(() => Promise.resolve(null)),
