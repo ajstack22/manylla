@@ -12,6 +12,7 @@ import {
   StyleSheet,
   Alert
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useTheme } from '../../context/ThemeContext';
 import ImagePicker from '../Common/ImagePicker';
 import photoService from '../../services/photoService';
@@ -221,10 +222,11 @@ export const PhotoUpload = ({
             onPress={!disabled ? handlePhotoSelect : undefined}
             disabled={disabled}
           >
-            <Text style={[
-              styles.placeholderIcon,
-              { color: disabled ? colors.text.disabled : colors.text.secondary }
-            ]}>📷</Text>
+            <Icon
+              name="camera-alt"
+              size={size / 3}
+              color={disabled ? colors.text.disabled : colors.text.secondary}
+            />
             <Text style={[
               styles.placeholderText,
               disabled && styles.placeholderTextDisabled
@@ -234,23 +236,23 @@ export const PhotoUpload = ({
           </TouchableOpacity>
         )}
 
-        {/* Edit button - top left */}
-        {!disabled && (
+        {/* Edit button - top right */}
+        {photoPreview && !disabled && (
           <TouchableOpacity
             style={styles.editButton}
             onPress={handlePhotoSelect}
           >
-            <Text style={styles.editIcon}>✏️</Text>
+            <Icon name="edit" size={18} color={colors.text.secondary} />
           </TouchableOpacity>
         )}
 
-        {/* Delete button - left side, only when photo exists */}
+        {/* Delete button - top left, only when photo exists */}
         {photoPreview && !disabled && (
           <TouchableOpacity
             style={styles.deleteButton}
             onPress={handlePhotoRemove}
           >
-            <Text style={styles.deleteIcon}>🗑️</Text>
+            <Icon name="delete" size={18} color={colors.error || '#F44336'} />
           </TouchableOpacity>
         )}
       </View>
@@ -258,7 +260,7 @@ export const PhotoUpload = ({
       {/* Error message */}
       {error && (
         <View style={styles.errorContainer}>
-          <Text style={{ fontSize: 16, color: colors.error }}>⚠️</Text>
+          <Icon name="warning" size={16} color={colors.error} />
           <Text style={styles.errorText}>{error}</Text>
         </View>
       )}
@@ -346,9 +348,6 @@ const getStyles = (colors, size) =>
       backgroundColor: '#F0F0F0',
       borderColor: colors.text.disabled
     },
-    placeholderIcon: {
-      fontSize: size / 3
-    },
     placeholderText: {
       fontSize: 11,
       color: colors.text.secondary,
@@ -361,7 +360,7 @@ const getStyles = (colors, size) =>
     editButton: {
       position: 'absolute',
       top: -5,
-      left: -5,
+      right: -5,
       width: 28,
       height: 28,
       borderRadius: 14,
@@ -376,7 +375,7 @@ const getStyles = (colors, size) =>
     },
     deleteButton: {
       position: 'absolute',
-      bottom: -5,
+      top: -5,
       left: -5,
       width: 28,
       height: 28,
@@ -389,12 +388,6 @@ const getStyles = (colors, size) =>
       shadowOpacity: 0.2,
       shadowRadius: 2,
       elevation: 2
-    },
-    editIcon: {
-      fontSize: 16
-    },
-    deleteIcon: {
-      fontSize: 16
     },
     errorContainer: {
       flexDirection: 'row',
