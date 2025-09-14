@@ -2,30 +2,53 @@
 import '@testing-library/jest-dom';
 
 // Mock React Native modules
-jest.mock('react-native', () => ({
-  Platform: {
+jest.mock('react-native', () => {
+  const platform = {
     OS: 'web',
     select: (obj) => obj.web || obj.default,
-  },
-  Dimensions: {
-    get: () => ({ width: 375, height: 667 }),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-  },
-  StatusBar: {
-    setBarStyle: jest.fn(),
-    setHidden: jest.fn(),
-    setBackgroundColor: jest.fn(),
-    setTranslucent: jest.fn(),
-  },
-  PixelRatio: {
-    get: () => 2,
-  },
-  Alert: {
-    alert: jest.fn(),
-  },
-  // Add other commonly used React Native modules as needed
-}));
+  };
+
+  return {
+    Platform: platform,
+    Dimensions: {
+      get: () => ({ width: 375, height: 667 }),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    },
+    StatusBar: {
+      setBarStyle: jest.fn(),
+      setHidden: jest.fn(),
+      setBackgroundColor: jest.fn(),
+      setTranslucent: jest.fn(),
+      currentHeight: 24,
+    },
+    PixelRatio: {
+      get: () => 2,
+    },
+    Alert: {
+      alert: jest.fn(),
+    },
+    View: 'View',
+    Text: 'Text',
+    Modal: 'Modal',
+    ScrollView: 'ScrollView',
+    TouchableHighlight: 'TouchableHighlight',
+    TouchableOpacity: 'TouchableOpacity',
+    Image: 'Image',
+    Share: {
+      share: jest.fn(() => Promise.resolve()),
+    },
+    Clipboard: {
+      setString: jest.fn(() => Promise.resolve()),
+      getString: jest.fn(() => Promise.resolve('')),
+    },
+    StyleSheet: {
+      create: (styles) => styles,
+      flatten: (styles) => styles,
+    },
+    // Add other commonly used React Native modules as needed
+  };
+});
 
 // Mock AsyncStorage
 jest.mock('@react-native-async-storage/async-storage', () => ({

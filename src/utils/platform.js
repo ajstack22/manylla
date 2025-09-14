@@ -9,11 +9,11 @@ import {
 // ============================================
 // CORE PLATFORM DETECTION
 // ============================================
-export const isWeb = Platform.OS === "web";
-export const isIOS = Platform.OS === "ios";
-export const isAndroid = Platform.OS === "android";
-export const isMobile = !isWeb;
-export const isNative = isMobile; // Alias for clarity
+export const isWeb = () => Platform.OS === "web";
+export const isIOS = () => Platform.OS === "ios";
+export const isAndroid = () => Platform.OS === "android";
+export const isMobile = () => !isWeb();
+export const isNative = () => isMobile(); // Alias for clarity
 
 // ============================================
 // DEVICE DETECTION
@@ -24,8 +24,8 @@ export const isTablet = () => {
   const maxDim = Math.max(width, height);
   const aspectRatio = maxDim / minDim;
 
-  if (isAndroid) return minDim >= 600 && aspectRatio < 1.6;
-  if (isIOS) return minDim >= 768;
+  if (isAndroid()) return minDim >= 600 && aspectRatio < 1.6;
+  if (isIOS()) return minDim >= 768;
   return width >= 768; // web
 };
 
@@ -47,25 +47,25 @@ export const getDeviceType = () => {
 // ============================================
 // FEATURE DETECTION
 // ============================================
-export const supportsHaptics = isIOS; // Android haptics unreliable
-export const supportsFileInput = true; // All platforms now support
-export const supportsTouch = isMobile;
-export const supportsHover = isWeb;
-export const supportsKeyboard = true;
-export const supportsCamera = isMobile;
-export const supportsStatusBar = isMobile;
-export const supportsSafeArea = isIOS;
-export const supportsBackHandler = isAndroid;
-export const supportsElevation = isAndroid;
-export const supportsShadow = !isAndroid;
-export const supportsShare = isMobile || (isWeb && navigator.share);
-export const supportsPrint = isWeb;
-export const supportsClipboard = true; // All platforms
-export const supportsDeepLinks = isMobile;
-export const supportsLocalStorage = isWeb;
-export const supportsAsyncStorage = true; // Polyfilled on web
-export const supportsImagePicker = isMobile;
-export const supportsNotifications = isMobile; // Web needs permission
+export const supportsHaptics = () => isIOS(); // Android haptics unreliable
+export const supportsFileInput = () => true; // All platforms now support
+export const supportsTouch = () => isMobile();
+export const supportsHover = () => isWeb();
+export const supportsKeyboard = () => true;
+export const supportsCamera = () => isMobile();
+export const supportsStatusBar = () => isMobile();
+export const supportsSafeArea = () => isIOS();
+export const supportsBackHandler = () => isAndroid();
+export const supportsElevation = () => isAndroid();
+export const supportsShadow = () => !isAndroid();
+export const supportsShare = () => isMobile() || (isWeb() && typeof navigator !== 'undefined' && !!navigator.share);
+export const supportsPrint = () => isWeb();
+export const supportsClipboard = () => true; // All platforms
+export const supportsDeepLinks = () => isMobile();
+export const supportsLocalStorage = () => isWeb();
+export const supportsAsyncStorage = () => true; // Polyfilled on web
+export const supportsImagePicker = () => isMobile();
+export const supportsNotifications = () => isMobile(); // Web needs permission
 
 // ============================================
 // PLATFORM CAPABILITIES
@@ -81,15 +81,18 @@ export const capabilities = {
 // UNIFIED STYLE HELPERS
 // ============================================
 export const select = (options) => {
-  if (isWeb && options.web !== undefined) return options.web;
-  if (isIOS && options.ios !== undefined) return options.ios;
-  if (isAndroid && options.android !== undefined) return options.android;
-  if (isMobile && options.mobile !== undefined) return options.mobile;
-  return options.default !== undefined ? options.default : null;
+  // Handle null/undefined options
+  if (!options || typeof options !== 'object') return null;
+
+  if (isWeb() && options.web !== undefined) return options.web;
+  if (isIOS() && options.ios !== undefined) return options.ios;
+  if (isAndroid() && options.android !== undefined) return options.android;
+  if (isMobile() && options.mobile !== undefined) return options.mobile;
+  return options.default !== undefined ? options.default : undefined;
 };
 
 export const shadow = (elevation = 4, color = "#000") => {
-  if (isAndroid) {
+  if (isAndroid()) {
     return {
       elevation,
       backgroundColor: "white", // Required for Android shadows
@@ -117,7 +120,7 @@ export const font = (weight = "400", size = 14) => {
     fontSize: size,
   };
 
-  if (isAndroid) {
+  if (isAndroid()) {
     // Android font weight mapping
     const androidFonts = {
       100: "sans-serif-thin",
@@ -133,8 +136,11 @@ export const font = (weight = "400", size = 14) => {
       bold: "sans-serif",
     };
     style.fontFamily = androidFonts[weight] || "sans-serif";
+    // Always set fontWeight for consistency
     if (weight === "700" || weight === "800" || weight === "bold") {
       style.fontWeight = "bold";
+    } else {
+      style.fontWeight = "normal";
     }
   } else {
     // iOS and Web
@@ -176,14 +182,14 @@ export const textInputProps = () => ({
 // SCROLLVIEW CONFIGURATION
 // ============================================
 export const scrollView = () => ({
-  nestedScrollEnabled: isAndroid,
-  removeClippedSubviews: isAndroid,
+  nestedScrollEnabled: isAndroid(),
+  removeClippedSubviews: isAndroid(),
   keyboardShouldPersistTaps: "handled",
   showsVerticalScrollIndicator: false,
   showsHorizontalScrollIndicator: false,
-  contentInsetAdjustmentBehavior: isIOS ? "automatic" : undefined,
-  bounces: isIOS,
-  overScrollMode: isAndroid ? "never" : undefined,
+  contentInsetAdjustmentBehavior: isIOS() ? "automatic" : undefined,
+  bounces: isIOS(),
+  overScrollMode: isAndroid() ? "never" : undefined,
   scrollEventThrottle: 16,
 });
 
@@ -273,11 +279,11 @@ export const responsiveSize = (base, scale = 1) => {
 // COMPONENT CONFIGURATIONS
 // ============================================
 export const modalConfig = () => ({
-  animationType: isWeb ? "none" : "fade",
+  animationType: isWeb() ? "none" : "fade",
   transparent: true,
-  statusBarTranslucent: isAndroid,
-  hardwareAccelerated: isAndroid,
-  presentationStyle: isIOS ? "overFullScreen" : undefined,
+  statusBarTranslucent: isAndroid(),
+  hardwareAccelerated: isAndroid(),
+  presentationStyle: isIOS() ? "overFullScreen" : undefined,
 });
 
 export const touchableConfig = () => ({
@@ -286,6 +292,23 @@ export const touchableConfig = () => ({
     ios: 0.2,
     android: 0.2,
     default: 0.2,
+  }),
+  delayPressIn: 0,
+  delayPressOut: 100,
+});
+
+export const touchableHighlightConfig = () => ({
+  activeOpacity: select({
+    web: 0.7,
+    ios: 0.2,
+    android: 0.2,
+    default: 0.2,
+  }),
+  underlayColor: select({
+    ios: "#DDDDDD",
+    android: "#E0E0E0",
+    web: "#F5F5F5",
+    default: "#DDDDDD",
   }),
   delayPressIn: 0,
   delayPressOut: 100,
@@ -305,7 +328,7 @@ export const rippleConfig = (color = "#A08670") => {
 // API & NETWORK
 // ============================================
 export const apiBaseUrl = () => {
-  if (isWeb) {
+  if (isWeb()) {
     // Use relative path for web to avoid CORS
     return "/manylla/qual/api";
   }
@@ -318,6 +341,7 @@ export const fetchConfig = () => ({
     "Content-Type": "application/json",
     Accept: "application/json",
   },
+  timeout: 10000, // 10 second timeout
   ...(isWeb && { credentials: "same-origin" }),
 });
 
@@ -474,37 +498,37 @@ export const DEPRECATED = {
 // DEFAULT EXPORT
 // ============================================
 const platform = {
-  // Detection
-  isWeb,
-  isIOS,
-  isAndroid,
-  isMobile,
-  isNative,
+  // Detection (as functions)
+  get isWeb() { return isWeb(); },
+  get isIOS() { return isIOS(); },
+  get isAndroid() { return isAndroid(); },
+  get isMobile() { return isMobile(); },
+  get isNative() { return isNative(); },
   isTablet,
   isPhone,
   isLandscape,
   isPortrait,
   getDeviceType,
 
-  // Features
-  supportsHaptics,
-  supportsFileInput,
-  supportsTouch,
-  supportsHover,
-  supportsCamera,
-  supportsStatusBar,
-  supportsSafeArea,
-  supportsBackHandler,
-  supportsElevation,
-  supportsShadow,
-  supportsShare,
-  supportsPrint,
-  supportsClipboard,
-  supportsDeepLinks,
-  supportsLocalStorage,
-  supportsAsyncStorage,
-  supportsImagePicker,
-  supportsNotifications,
+  // Features (as functions)
+  get supportsHaptics() { return supportsHaptics(); },
+  get supportsFileInput() { return supportsFileInput(); },
+  get supportsTouch() { return supportsTouch(); },
+  get supportsHover() { return supportsHover(); },
+  get supportsCamera() { return supportsCamera(); },
+  get supportsStatusBar() { return supportsStatusBar(); },
+  get supportsSafeArea() { return supportsSafeArea(); },
+  get supportsBackHandler() { return supportsBackHandler(); },
+  get supportsElevation() { return supportsElevation(); },
+  get supportsShadow() { return supportsShadow(); },
+  get supportsShare() { return supportsShare(); },
+  get supportsPrint() { return supportsPrint(); },
+  get supportsClipboard() { return supportsClipboard(); },
+  get supportsDeepLinks() { return supportsDeepLinks(); },
+  get supportsLocalStorage() { return supportsLocalStorage(); },
+  get supportsAsyncStorage() { return supportsAsyncStorage(); },
+  get supportsImagePicker() { return supportsImagePicker(); },
+  get supportsNotifications() { return supportsNotifications(); },
 
   // Capabilities
   capabilities,
@@ -528,6 +552,7 @@ const platform = {
   // Components
   modalConfig,
   touchableConfig,
+  touchableHighlightConfig,
   rippleConfig,
 
   // API & Storage

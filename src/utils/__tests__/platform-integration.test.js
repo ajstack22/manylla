@@ -1,10 +1,15 @@
-import platform from "../platform";
-import { render, screen } from "@testing-library/react-native";
-import React from "react";
-import { View, Text, Modal, ScrollView, Platform } from "react-native";
+import { Platform } from "react-native";
 
 // Mock Platform.OS for testing
 const originalOS = Platform.OS;
+
+// Import platform after setting up mocks
+let platform;
+
+beforeAll(() => {
+  // Dynamically import platform after Platform mock is set up
+  platform = require("../platform").default;
+});
 
 describe("Platform Integration Tests", () => {
   afterEach(() => {
@@ -12,59 +17,45 @@ describe("Platform Integration Tests", () => {
   });
 
   describe("Component Integration", () => {
-    it("should render with platform-specific styles", () => {
+    it("should generate platform-specific styles", () => {
       Platform.OS = "ios";
+      const shadowStyle = platform.shadow(4);
+      const fontStyle = platform.font("bold", 16);
 
-      const TestComponent = () => (
-        <View style={platform.shadow(4)}>
-          <Text style={platform.font("bold", 16)}>Test</Text>
-        </View>
-      );
-
-      render(<TestComponent />);
-      expect(screen.getByText("Test")).toBeTruthy();
+      expect(shadowStyle).toBeDefined();
+      expect(typeof shadowStyle).toBe("object");
+      expect(fontStyle).toBeDefined();
+      expect(typeof fontStyle).toBe("object");
+      expect(fontStyle.fontSize).toBe(16);
     });
 
     it("should configure modal correctly for iOS", () => {
       Platform.OS = "ios";
+      const modalConfig = platform.modalConfig();
 
-      const TestModal = () => (
-        <Modal {...platform.modalConfig()} visible={true} testID="test-modal">
-          <Text>Modal Content</Text>
-        </Modal>
-      );
-
-      render(<TestModal />);
-      expect(screen.getByText("Modal Content")).toBeTruthy();
-      expect(screen.getByTestId("test-modal")).toBeTruthy();
+      expect(modalConfig).toBeDefined();
+      expect(typeof modalConfig).toBe("object");
+      expect(modalConfig.presentationStyle).toBe("overFullScreen");
     });
 
     it("should configure modal correctly for Android", () => {
       Platform.OS = "android";
+      const modalConfig = platform.modalConfig();
 
-      const TestModal = () => (
-        <Modal {...platform.modalConfig()} visible={true} testID="test-modal">
-          <Text>Modal Content</Text>
-        </Modal>
-      );
-
-      render(<TestModal />);
-      expect(screen.getByText("Modal Content")).toBeTruthy();
-      expect(screen.getByTestId("test-modal")).toBeTruthy();
+      expect(modalConfig).toBeDefined();
+      expect(typeof modalConfig).toBe("object");
+      expect(modalConfig.hardwareAccelerated).toBe(true);
+      expect(modalConfig.statusBarTranslucent).toBe(true);
     });
 
     it("should configure ScrollView correctly", () => {
       Platform.OS = "ios";
+      const scrollConfig = platform.scrollView();
 
-      const TestScrollView = () => (
-        <ScrollView {...platform.scrollView()} testID="test-scroll">
-          <Text>Scrollable Content</Text>
-        </ScrollView>
-      );
-
-      render(<TestScrollView />);
-      expect(screen.getByText("Scrollable Content")).toBeTruthy();
-      expect(screen.getByTestId("test-scroll")).toBeTruthy();
+      expect(scrollConfig).toBeDefined();
+      expect(typeof scrollConfig).toBe("object");
+      expect(scrollConfig.bounces).toBe(true);
+      expect(scrollConfig.contentInsetAdjustmentBehavior).toBe("automatic");
     });
 
     it("should handle platform-specific TouchableHighlight config", () => {

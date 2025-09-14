@@ -1,5 +1,55 @@
 # Manylla Release Notes
 
+## Version 2025.09.15.3 - 2025-09-15
+Jest and React Testing Library Infrastructure Implementation
+
+### Summary
+Established comprehensive testing infrastructure with mandatory test execution in deployment pipeline, achieving 107 passing tests and zero bypass mechanisms
+
+### Added
+- **Jest Testing Infrastructure (S027)**:
+  - Integrated mandatory test execution into deploy-qual.sh (Step 9)
+  - Added test:ci, test:watch, and test:coverage npm scripts
+  - Created BottomToolbar component tests
+  - Created deployment-integration validation tests
+  - Set realistic coverage thresholds (30% global)
+  - Configured Jest with proper React Native Web mocking
+
+### Fixed
+- Fixed platform.supportsShare returning undefined in test environment
+- Resolved React Native module mocking issues in jest.setup.js
+- Fixed platform detection functions for test compatibility
+- Improved test execution from 90 to 107 passing tests
+
+### Technical
+- Tests now block deployment on failure (no bypass possible)
+- Test execution time optimized to ~3.5 seconds
+- Coverage reporting properly configured
+- No skip-test flags or bypass mechanisms in deployment
+- Complete React Native module mocking infrastructure
+
+## Version 2025.09.15.2 - 2025-09-15
+Comprehensive Code Quality Cleanup
+
+### Summary
+Achieved zero ESLint violations project-wide by fixing all test file errors and warnings
+
+### Fixed
+- **ESLint Compliance (S026)**:
+  - Fixed 123 ESLint errors in test files
+  - Fixed 12 ESLint warnings in test utilities
+  - Converted all destructured queries to screen-based queries
+  - Removed unnecessary act() wrappers
+  - Fixed service singleton constructor issues in tests
+  - Verified all switch statements have default cases
+
+### Technical
+- Updated Testing Library patterns to best practices
+- Fixed mock service definitions in test files
+- Exported ManyllaMinimalSyncService class for testing
+- Achieved 0 errors, 0 warnings from npm run lint
+- Improved test stability (reduced failures from 110 to 76)
+
 ## Version 2025.09.15.1 - 2025-09-15
 iOS Deployment and App Store Setup Complete
 

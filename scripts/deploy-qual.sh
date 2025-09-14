@@ -280,8 +280,27 @@ if [ "$SECRET_COUNT" -gt "0" ]; then
 fi
 echo
 
-# Step 9: Dependency Analysis
-echo -e "${BLUE}Step 9: Dependency Analysis${NC}"
+# Step 9: Test Suite Execution (MANDATORY)
+echo -e "${BLUE}Step 9: Test Suite Execution${NC}"
+echo "──────────────────────────────"
+echo "Running comprehensive test suite..."
+
+npm run test:ci > /tmp/test-output.txt 2>&1
+TEST_EXIT_CODE=$?
+cat /tmp/test-output.txt
+
+if [ $TEST_EXIT_CODE -ne 0 ]; then
+    FAILED_COUNT=$(grep -c "● " /tmp/test-output.txt 2>/dev/null || echo "unknown")
+    handle_error "Test suite failed with $FAILED_COUNT failing tests" \
+        "Fix all failing tests. Run: npm test"
+fi
+
+PASSED_COUNT=$(grep -oE "[0-9]+ passed" /tmp/test-output.txt | grep -oE "[0-9]+" || echo "0")
+echo -e "${GREEN}✅ All tests passed ($PASSED_COUNT tests)${NC}"
+echo
+
+# Step 10: Dependency Analysis
+echo -e "${BLUE}Step 10: Dependency Analysis${NC}"
 echo "─────────────────────────────"
 
 # Check for unused dependencies
@@ -324,8 +343,8 @@ else
 fi
 echo
 
-# Step 10: Bundle Size Analysis
-echo -e "${BLUE}Step 10: Bundle Size Pre-Check${NC}"
+# Step 11: Bundle Size Analysis
+echo -e "${BLUE}Step 11: Bundle Size Pre-Check${NC}"
 echo "────────────────────────────────"
 # This is just a warning for now, actual build happens later
 if [ -d "build" ]; then
