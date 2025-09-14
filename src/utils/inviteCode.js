@@ -79,7 +79,7 @@ export function storeInviteCode(inviteCode, syncId, recoveryPhrase) {
     };
     localStorage.setItem("manylla_invites", JSON.stringify(invites));
   } catch (error) {
-    console.warn('Failed to store invite code:', error);
+    console.warn("Failed to store invite code:", error);
   }
 }
 
@@ -109,7 +109,7 @@ export function getInviteCode(inviteCode) {
       recoveryPhrase: invite.recoveryPhrase,
     };
   } catch (error) {
-    console.warn('Failed to retrieve invite code:', error);
+    console.warn("Failed to retrieve invite code:", error);
     return null;
   }
 }
@@ -130,10 +130,10 @@ export function cleanupExpiredInvites() {
 
     localStorage.setItem("manylla_invites", JSON.stringify(invites));
   } catch (error) {
-    console.warn('Failed to cleanup expired invites:', error);
+    console.warn("Failed to cleanup expired invites:", error);
     // Fallback: store empty object
     try {
-      localStorage.setItem("manylla_invites", '{}');
+      localStorage.setItem("manylla_invites", "{}");
     } catch (storageError) {
       // Ignore if storage is completely unavailable
     }

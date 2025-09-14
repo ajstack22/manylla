@@ -1,211 +1,225 @@
-import { ProfileValidator } from '../validation';
+import { ProfileValidator } from "../validation";
 
-describe('ProfileValidator', () => {
-  describe('validateProfile', () => {
+describe("ProfileValidator", () => {
+  describe("validateProfile", () => {
     const validProfile = {
-      id: 'test-profile-1',
-      name: 'Test Child',
-      dateOfBirth: '2010-01-01',
+      id: "test-profile-1",
+      name: "Test Child",
+      dateOfBirth: "2010-01-01",
       entries: [
         {
-          id: 'entry-1',
-          category: 'medical',
-          title: 'Test Entry',
-          description: 'Test description',
-          date: '2024-01-01',
-          visibility: ['private']
-        }
+          id: "entry-1",
+          category: "medical",
+          title: "Test Entry",
+          description: "Test description",
+          date: "2024-01-01",
+          visibility: ["private"],
+        },
       ],
       categories: [
         {
-          id: 'cat-1',
-          name: 'medical',
-          displayName: 'Medical',
-          color: '#E76F51',
+          id: "cat-1",
+          name: "medical",
+          displayName: "Medical",
+          color: "#E76F51",
           order: 0,
-          isVisible: true
-        }
-      ]
+          isVisible: true,
+        },
+      ],
     };
 
-    it('should validate a valid profile', () => {
+    it("should validate a valid profile", () => {
       const result = ProfileValidator.validateProfile(validProfile);
 
       expect(result.valid).toBe(true);
       expect(result.errors).toHaveLength(0);
     });
 
-    it('should reject null or undefined profile', () => {
+    it("should reject null or undefined profile", () => {
       expect(ProfileValidator.validateProfile(null).valid).toBe(false);
       expect(ProfileValidator.validateProfile(undefined).valid).toBe(false);
-      expect(ProfileValidator.validateProfile("not an object").valid).toBe(false);
+      expect(ProfileValidator.validateProfile("not an object").valid).toBe(
+        false,
+      );
     });
 
-    it('should require profile ID', () => {
+    it("should require profile ID", () => {
       const profile = { ...validProfile };
       delete profile.id;
 
       const result = ProfileValidator.validateProfile(profile);
 
       expect(result.valid).toBe(false);
-      expect(result.errors).toContain('Profile ID is required');
+      expect(result.errors).toContain("Profile ID is required");
     });
 
-    it('should require child name', () => {
-      const profile = { ...validProfile, name: '' };
+    it("should require child name", () => {
+      const profile = { ...validProfile, name: "" };
 
       const result = ProfileValidator.validateProfile(profile);
 
       expect(result.valid).toBe(false);
-      expect(result.errors).toContain('Child name is required');
+      expect(result.errors).toContain("Child name is required");
     });
 
-    it('should require valid date of birth', () => {
+    it("should require valid date of birth", () => {
       let profile = { ...validProfile };
       delete profile.dateOfBirth;
 
       let result = ProfileValidator.validateProfile(profile);
       expect(result.valid).toBe(false);
-      expect(result.errors).toContain('Date of birth is required');
+      expect(result.errors).toContain("Date of birth is required");
 
-      profile = { ...validProfile, dateOfBirth: 'invalid-date' };
+      profile = { ...validProfile, dateOfBirth: "invalid-date" };
       result = ProfileValidator.validateProfile(profile);
       expect(result.valid).toBe(false);
-      expect(result.errors).toContain('Invalid date of birth');
+      expect(result.errors).toContain("Invalid date of birth");
     });
 
-    it('should reject future date of birth', () => {
+    it("should reject future date of birth", () => {
       const futureDate = new Date();
       futureDate.setFullYear(futureDate.getFullYear() + 1);
 
-      const profile = { ...validProfile, dateOfBirth: futureDate.toISOString() };
+      const profile = {
+        ...validProfile,
+        dateOfBirth: futureDate.toISOString(),
+      };
 
       const result = ProfileValidator.validateProfile(profile);
 
       expect(result.valid).toBe(false);
-      expect(result.errors).toContain('Date of birth cannot be in the future');
+      expect(result.errors).toContain("Date of birth cannot be in the future");
     });
 
-    it('should require entries to be an array', () => {
-      const profile = { ...validProfile, entries: 'not an array' };
+    it("should require entries to be an array", () => {
+      const profile = { ...validProfile, entries: "not an array" };
 
       const result = ProfileValidator.validateProfile(profile);
 
       expect(result.valid).toBe(false);
-      expect(result.errors).toContain('Entries must be an array');
+      expect(result.errors).toContain("Entries must be an array");
     });
 
-    it('should require categories to be an array', () => {
-      const profile = { ...validProfile, categories: 'not an array' };
+    it("should require categories to be an array", () => {
+      const profile = { ...validProfile, categories: "not an array" };
 
       const result = ProfileValidator.validateProfile(profile);
 
       expect(result.valid).toBe(false);
-      expect(result.errors).toContain('Categories must be an array');
+      expect(result.errors).toContain("Categories must be an array");
     });
 
-    it('should validate individual entries', () => {
+    it("should validate individual entries", () => {
       const profile = {
         ...validProfile,
         entries: [
           {
             // Missing required fields
-            id: '',
-            title: '',
-            date: 'invalid-date'
-          }
-        ]
+            id: "",
+            title: "",
+            date: "invalid-date",
+          },
+        ],
       };
 
       const result = ProfileValidator.validateProfile(profile);
 
       expect(result.valid).toBe(false);
-      expect(result.errors.some(error => error.includes('Entry 1:'))).toBe(true);
+      expect(result.errors.some((error) => error.includes("Entry 1:"))).toBe(
+        true,
+      );
     });
 
-    it('should validate individual categories', () => {
+    it("should validate individual categories", () => {
       const profile = {
         ...validProfile,
         categories: [
           {
             // Missing required fields
-            id: '',
-            name: '',
-            color: 'invalid-color'
-          }
-        ]
+            id: "",
+            name: "",
+            color: "invalid-color",
+          },
+        ],
       };
 
       const result = ProfileValidator.validateProfile(profile);
 
       expect(result.valid).toBe(false);
-      expect(result.errors.some(error => error.includes('Category 1:'))).toBe(true);
+      expect(result.errors.some((error) => error.includes("Category 1:"))).toBe(
+        true,
+      );
     });
   });
 
-  describe('validateEntry', () => {
+  describe("validateEntry", () => {
     const validEntry = {
-      id: 'entry-1',
-      category: 'medical',
-      title: 'Test Entry',
-      description: 'Test description',
-      date: '2024-01-01',
-      visibility: ['private']
+      id: "entry-1",
+      category: "medical",
+      title: "Test Entry",
+      description: "Test description",
+      date: "2024-01-01",
+      visibility: ["private"],
     };
 
-    it('should validate a valid entry', () => {
+    it("should validate a valid entry", () => {
       const errors = ProfileValidator.validateEntry(validEntry);
 
       expect(errors).toHaveLength(0);
     });
 
-    it('should require ID', () => {
+    it("should require ID", () => {
       const entry = { ...validEntry };
       delete entry.id;
 
       const errors = ProfileValidator.validateEntry(entry);
 
-      expect(errors).toContain('ID required');
+      expect(errors).toContain("ID required");
     });
 
-    it('should require category', () => {
+    it("should require category", () => {
       const entry = { ...validEntry, category: null };
 
       const errors = ProfileValidator.validateEntry(entry);
 
-      expect(errors).toContain('Category required');
+      expect(errors).toContain("Category required");
     });
 
-    it('should require title', () => {
-      const entry = { ...validEntry, title: '   ' };
+    it("should require title", () => {
+      const entry = { ...validEntry, title: "   " };
 
       const errors = ProfileValidator.validateEntry(entry);
 
-      expect(errors).toContain('Title required');
+      expect(errors).toContain("Title required");
     });
 
-    it('should require description', () => {
+    it("should require description", () => {
       const entry = { ...validEntry, description: null };
 
       const errors = ProfileValidator.validateEntry(entry);
 
-      expect(errors).toContain('Description required');
+      expect(errors).toContain("Description required");
     });
 
-    it('should validate visibility array', () => {
-      let entry = { ...validEntry, visibility: 'not-array' };
+    it("should validate visibility array", () => {
+      let entry = { ...validEntry, visibility: "not-array" };
       let errors = ProfileValidator.validateEntry(entry);
-      expect(errors).toContain('Visibility must be an array');
+      expect(errors).toContain("Visibility must be an array");
 
-      entry = { ...validEntry, visibility: ['invalid-visibility'] };
+      entry = { ...validEntry, visibility: ["invalid-visibility"] };
       errors = ProfileValidator.validateEntry(entry);
-      expect(errors).toContain('Invalid visibility: invalid-visibility');
+      expect(errors).toContain("Invalid visibility: invalid-visibility");
     });
 
-    it('should accept valid visibility values', () => {
-      const validVisibilityValues = ['private', 'family', 'medical', 'education'];
+    it("should accept valid visibility values", () => {
+      const validVisibilityValues = [
+        "private",
+        "family",
+        "medical",
+        "education",
+      ];
 
-      validVisibilityValues.forEach(visibility => {
+      validVisibilityValues.forEach((visibility) => {
         const entry = { ...validEntry, visibility: [visibility] };
         const errors = ProfileValidator.validateEntry(entry);
 
@@ -213,176 +227,176 @@ describe('ProfileValidator', () => {
       });
     });
 
-    it('should validate date format', () => {
-      const entry = { ...validEntry, date: 'invalid-date' };
+    it("should validate date format", () => {
+      const entry = { ...validEntry, date: "invalid-date" };
 
       const errors = ProfileValidator.validateEntry(entry);
 
-      expect(errors).toContain('Invalid date');
+      expect(errors).toContain("Invalid date");
     });
 
-    it('should handle undefined visibility (optional field)', () => {
+    it("should handle undefined visibility (optional field)", () => {
       const entry = { ...validEntry };
       delete entry.visibility;
 
       const errors = ProfileValidator.validateEntry(entry);
 
-      expect(errors).not.toContain('Visibility must be an array');
+      expect(errors).not.toContain("Visibility must be an array");
     });
   });
 
-  describe('validateCategory', () => {
+  describe("validateCategory", () => {
     const validCategory = {
-      id: 'cat-1',
-      name: 'medical',
-      displayName: 'Medical',
-      color: '#E76F51',
+      id: "cat-1",
+      name: "medical",
+      displayName: "Medical",
+      color: "#E76F51",
       order: 0,
-      isVisible: true
+      isVisible: true,
     };
 
-    it('should validate a valid category', () => {
+    it("should validate a valid category", () => {
       const errors = ProfileValidator.validateCategory(validCategory);
 
       expect(errors).toHaveLength(0);
     });
 
-    it('should require ID', () => {
+    it("should require ID", () => {
       const category = { ...validCategory, id: null };
 
       const errors = ProfileValidator.validateCategory(category);
 
-      expect(errors).toContain('ID required');
+      expect(errors).toContain("ID required");
     });
 
-    it('should require name', () => {
+    it("should require name", () => {
       const category = { ...validCategory, name: null };
 
       const errors = ProfileValidator.validateCategory(category);
 
-      expect(errors).toContain('Name required');
+      expect(errors).toContain("Name required");
     });
 
-    it('should require display name', () => {
+    it("should require display name", () => {
       const category = { ...validCategory, displayName: null };
 
       const errors = ProfileValidator.validateCategory(category);
 
-      expect(errors).toContain('Display name required');
+      expect(errors).toContain("Display name required");
     });
 
-    it('should validate hex color format', () => {
-      let category = { ...validCategory, color: 'invalid-color' };
+    it("should validate hex color format", () => {
+      let category = { ...validCategory, color: "invalid-color" };
       let errors = ProfileValidator.validateCategory(category);
-      expect(errors).toContain('Valid hex color required');
+      expect(errors).toContain("Valid hex color required");
 
-      category = { ...validCategory, color: '#ZZZ' };
+      category = { ...validCategory, color: "#ZZZ" };
       errors = ProfileValidator.validateCategory(category);
-      expect(errors).toContain('Valid hex color required');
+      expect(errors).toContain("Valid hex color required");
 
-      category = { ...validCategory, color: 'red' };
+      category = { ...validCategory, color: "red" };
       errors = ProfileValidator.validateCategory(category);
-      expect(errors).toContain('Valid hex color required');
+      expect(errors).toContain("Valid hex color required");
     });
 
-    it('should accept valid hex colors', () => {
-      const validColors = ['#000000', '#FFFFFF', '#e76f51', '#2A9D8F'];
+    it("should accept valid hex colors", () => {
+      const validColors = ["#000000", "#FFFFFF", "#e76f51", "#2A9D8F"];
 
-      validColors.forEach(color => {
+      validColors.forEach((color) => {
         const category = { ...validCategory, color };
         const errors = ProfileValidator.validateCategory(category);
 
-        expect(errors).not.toContain('Valid hex color required');
+        expect(errors).not.toContain("Valid hex color required");
       });
     });
 
-    it('should require order to be a number', () => {
-      const category = { ...validCategory, order: 'not-a-number' };
+    it("should require order to be a number", () => {
+      const category = { ...validCategory, order: "not-a-number" };
 
       const errors = ProfileValidator.validateCategory(category);
 
-      expect(errors).toContain('Order must be a number');
+      expect(errors).toContain("Order must be a number");
     });
 
-    it('should require isVisible to be boolean', () => {
-      const category = { ...validCategory, isVisible: 'not-boolean' };
+    it("should require isVisible to be boolean", () => {
+      const category = { ...validCategory, isVisible: "not-boolean" };
 
       const errors = ProfileValidator.validateCategory(category);
 
-      expect(errors).toContain('isVisible must be boolean');
+      expect(errors).toContain("isVisible must be boolean");
     });
   });
 
-  describe('sanitizeProfile', () => {
-    it('should trim whitespace from names', () => {
+  describe("sanitizeProfile", () => {
+    it("should trim whitespace from names", () => {
       const profile = {
-        name: '  Test Child  ',
-        preferredName: '  Nickname  ',
-        entries: []
+        name: "  Test Child  ",
+        preferredName: "  Nickname  ",
+        entries: [],
       };
 
       const sanitized = ProfileValidator.sanitizeProfile(profile);
 
-      expect(sanitized.name).toBe('Test Child');
-      expect(sanitized.preferredName).toBe('Nickname');
+      expect(sanitized.name).toBe("Test Child");
+      expect(sanitized.preferredName).toBe("Nickname");
     });
 
-    it('should sanitize entry titles and descriptions', () => {
+    it("should sanitize entry titles and descriptions", () => {
       const profile = {
-        name: 'Test Child',
+        name: "Test Child",
         entries: [
           {
-            title: '  Test Title  ',
-            description: '  Test Description  ',
-            visibility: ['private']
-          }
-        ]
+            title: "  Test Title  ",
+            description: "  Test Description  ",
+            visibility: ["private"],
+          },
+        ],
       };
 
       const sanitized = ProfileValidator.sanitizeProfile(profile);
 
-      expect(sanitized.entries[0].title).toBe('Test Title');
-      expect(sanitized.entries[0].description).toBe('Test Description');
+      expect(sanitized.entries[0].title).toBe("Test Title");
+      expect(sanitized.entries[0].description).toBe("Test Description");
     });
 
-    it('should set default visibility for entries without visibility', () => {
+    it("should set default visibility for entries without visibility", () => {
       const profile = {
-        name: 'Test Child',
+        name: "Test Child",
         entries: [
           {
-            title: 'Test Title',
-            description: 'Test Description'
+            title: "Test Title",
+            description: "Test Description",
             // No visibility field
-          }
-        ]
+          },
+        ],
       };
 
       const sanitized = ProfileValidator.sanitizeProfile(profile);
 
-      expect(sanitized.entries[0].visibility).toEqual(['private']);
+      expect(sanitized.entries[0].visibility).toEqual(["private"]);
     });
 
-    it('should preserve valid visibility arrays', () => {
+    it("should preserve valid visibility arrays", () => {
       const profile = {
-        name: 'Test Child',
+        name: "Test Child",
         entries: [
           {
-            title: 'Test Title',
-            description: 'Test Description',
-            visibility: ['family', 'medical']
-          }
-        ]
+            title: "Test Title",
+            description: "Test Description",
+            visibility: ["family", "medical"],
+          },
+        ],
       };
 
       const sanitized = ProfileValidator.sanitizeProfile(profile);
 
-      expect(sanitized.entries[0].visibility).toEqual(['family', 'medical']);
+      expect(sanitized.entries[0].visibility).toEqual(["family", "medical"]);
     });
 
-    it('should add updatedAt timestamp', () => {
+    it("should add updatedAt timestamp", () => {
       const profile = {
-        name: 'Test Child',
-        entries: []
+        name: "Test Child",
+        entries: [],
       };
 
       const sanitized = ProfileValidator.sanitizeProfile(profile);
@@ -392,71 +406,74 @@ describe('ProfileValidator', () => {
     });
   });
 
-  describe('sanitizeHtml', () => {
-    it('should remove script tags', () => {
-      const html = 'Safe content <script>alert("dangerous")</script> more content';
+  describe("sanitizeHtml", () => {
+    it("should remove script tags", () => {
+      const html =
+        'Safe content <script>alert("dangerous")</script> more content';
 
       const sanitized = ProfileValidator.sanitizeHtml(html);
 
-      expect(sanitized).toBe('Safe content  more content');
-      expect(sanitized).not.toContain('<script>');
+      expect(sanitized).toBe("Safe content  more content");
+      expect(sanitized).not.toContain("<script>");
     });
 
-    it('should remove event handlers', () => {
-      const html = '<div onclick="alert(\'click\')" onmouseover="dangerous()">Content</div>';
+    it("should remove event handlers", () => {
+      const html =
+        '<div onclick="alert(\'click\')" onmouseover="dangerous()">Content</div>';
 
       const sanitized = ProfileValidator.sanitizeHtml(html);
 
-      expect(sanitized).not.toContain('onclick');
-      expect(sanitized).not.toContain('onmouseover');
-      expect(sanitized).toContain('Content');
+      expect(sanitized).not.toContain("onclick");
+      expect(sanitized).not.toContain("onmouseover");
+      expect(sanitized).toContain("Content");
       expect(sanitized).toMatch(/<div[^>]*>Content<\/div>/);
     });
 
-    it('should remove javascript: protocols', () => {
-      const html = '<a href="javascript:alert(\'bad\')">Link</a>';
+    it("should remove javascript: protocols", () => {
+      const html = "<a href=\"javascript:alert('bad')\">Link</a>";
 
       const sanitized = ProfileValidator.sanitizeHtml(html);
 
-      expect(sanitized).not.toContain('javascript:');
+      expect(sanitized).not.toContain("javascript:");
     });
 
-    it('should preserve safe HTML content', () => {
-      const html = '<p>This is <strong>safe</strong> <em>content</em></p>';
+    it("should preserve safe HTML content", () => {
+      const html = "<p>This is <strong>safe</strong> <em>content</em></p>";
 
       const sanitized = ProfileValidator.sanitizeHtml(html);
 
       expect(sanitized).toBe(html);
     });
 
-    it('should handle complex script variations', () => {
-      const html = 'Content <SCRIPT type="text/javascript">bad code</SCRIPT> more';
+    it("should handle complex script variations", () => {
+      const html =
+        'Content <SCRIPT type="text/javascript">bad code</SCRIPT> more';
 
       const sanitized = ProfileValidator.sanitizeHtml(html);
 
-      expect(sanitized).toBe('Content  more');
+      expect(sanitized).toBe("Content  more");
     });
   });
 
-  describe('repairProfile', () => {
-    it('should generate ID if missing', () => {
+  describe("repairProfile", () => {
+    it("should generate ID if missing", () => {
       const profile = {
-        name: 'Test Child',
+        name: "Test Child",
         entries: [],
-        categories: []
+        categories: [],
       };
 
       const repaired = ProfileValidator.repairProfile(profile);
 
       expect(repaired.id).toBeDefined();
-      expect(typeof repaired.id).toBe('string');
+      expect(typeof repaired.id).toBe("string");
     });
 
-    it('should return null for profiles without name', () => {
+    it("should return null for profiles without name", () => {
       const profile = {
-        id: 'test-id',
+        id: "test-id",
         entries: [],
-        categories: []
+        categories: [],
       };
 
       const repaired = ProfileValidator.repairProfile(profile);
@@ -464,12 +481,12 @@ describe('ProfileValidator', () => {
       expect(repaired).toBe(null);
     });
 
-    it('should ensure entries and categories are arrays', () => {
+    it("should ensure entries and categories are arrays", () => {
       const profile = {
-        id: 'test-id',
-        name: 'Test Child',
-        entries: 'not-array',
-        categories: null
+        id: "test-id",
+        name: "Test Child",
+        entries: "not-array",
+        categories: null,
       };
 
       const repaired = ProfileValidator.repairProfile(profile);
@@ -478,12 +495,12 @@ describe('ProfileValidator', () => {
       expect(Array.isArray(repaired.categories)).toBe(true);
     });
 
-    it('should fix date fields', () => {
+    it("should fix date fields", () => {
       const profile = {
-        id: 'test-id',
-        name: 'Test Child',
+        id: "test-id",
+        name: "Test Child",
         entries: [],
-        categories: []
+        categories: [],
       };
 
       const repaired = ProfileValidator.repairProfile(profile);
@@ -493,56 +510,58 @@ describe('ProfileValidator', () => {
       expect(repaired.updatedAt).toBeInstanceOf(Date);
     });
 
-    it('should fix entry fields', () => {
+    it("should fix entry fields", () => {
       const profile = {
-        id: 'test-id',
-        name: 'Test Child',
+        id: "test-id",
+        name: "Test Child",
         entries: [
           {
-            title: 'Test Entry',
-            description: 'Description'
+            title: "Test Entry",
+            description: "Description",
             // Missing id, date, visibility
-          }
+          },
         ],
-        categories: []
+        categories: [],
       };
 
       const repaired = ProfileValidator.repairProfile(profile);
 
       expect(repaired.entries[0].id).toBeDefined();
       expect(repaired.entries[0].date).toBeInstanceOf(Date);
-      expect(repaired.entries[0].visibility).toEqual(['private']);
+      expect(repaired.entries[0].visibility).toEqual(["private"]);
     });
 
-    it('should preserve existing valid visibility arrays', () => {
+    it("should preserve existing valid visibility arrays", () => {
       const profile = {
-        id: 'test-id',
-        name: 'Test Child',
+        id: "test-id",
+        name: "Test Child",
         entries: [
           {
-            title: 'Test Entry',
-            description: 'Description',
-            visibility: ['family', 'medical']
-          }
+            title: "Test Entry",
+            description: "Description",
+            visibility: ["family", "medical"],
+          },
         ],
-        categories: []
+        categories: [],
       };
 
       const repaired = ProfileValidator.repairProfile(profile);
 
-      expect(repaired.entries[0].visibility).toEqual(['family', 'medical']);
+      expect(repaired.entries[0].visibility).toEqual(["family", "medical"]);
     });
 
-    it('should handle errors gracefully', () => {
+    it("should handle errors gracefully", () => {
       // Test with data that would cause errors during processing
       const profile = {
-        name: 'Test',
-        dateOfBirth: 'invalid-date-that-throws'
+        name: "Test",
+        dateOfBirth: "invalid-date-that-throws",
       };
 
       // Mock Date constructor to throw
       const originalDate = global.Date;
-      global.Date = jest.fn(() => { throw new Error('Date error'); });
+      global.Date = jest.fn(() => {
+        throw new Error("Date error");
+      });
 
       const repaired = ProfileValidator.repairProfile(profile);
 
@@ -552,14 +571,14 @@ describe('ProfileValidator', () => {
       global.Date = originalDate;
     });
 
-    it('should preserve valid date objects', () => {
-      const validDate = new Date('2010-01-01');
+    it("should preserve valid date objects", () => {
+      const validDate = new Date("2010-01-01");
       const profile = {
-        id: 'test-id',
-        name: 'Test Child',
+        id: "test-id",
+        name: "Test Child",
         dateOfBirth: validDate,
         entries: [],
-        categories: []
+        categories: [],
       };
 
       const repaired = ProfileValidator.repairProfile(profile);
@@ -568,60 +587,62 @@ describe('ProfileValidator', () => {
     });
   });
 
-  describe('edge cases and error handling', () => {
-    it('should handle empty objects gracefully', () => {
+  describe("edge cases and error handling", () => {
+    it("should handle empty objects gracefully", () => {
       const result = ProfileValidator.validateProfile({});
 
       expect(result.valid).toBe(false);
       expect(result.errors.length).toBeGreaterThan(0);
     });
 
-    it('should handle entries with mixed valid/invalid data', () => {
+    it("should handle entries with mixed valid/invalid data", () => {
       const profile = {
-        id: 'test-profile',
-        name: 'Test Child',
-        dateOfBirth: '2010-01-01',
+        id: "test-profile",
+        name: "Test Child",
+        dateOfBirth: "2010-01-01",
         entries: [
           {
-            id: 'valid-entry',
-            category: 'medical',
-            title: 'Valid Entry',
-            description: 'Valid description',
-            date: '2024-01-01'
+            id: "valid-entry",
+            category: "medical",
+            title: "Valid Entry",
+            description: "Valid description",
+            date: "2024-01-01",
           },
           {
             // Invalid entry
-            id: '',
-            title: '',
-            date: 'invalid'
-          }
+            id: "",
+            title: "",
+            date: "invalid",
+          },
         ],
-        categories: []
+        categories: [],
       };
 
       const result = ProfileValidator.validateProfile(profile);
 
       expect(result.valid).toBe(false);
-      expect(result.errors.some(error => error.includes('Entry 2:'))).toBe(true);
+      expect(result.errors.some((error) => error.includes("Entry 2:"))).toBe(
+        true,
+      );
     });
 
-    it('should handle null and undefined values in nested objects', () => {
+    it("should handle null and undefined values in nested objects", () => {
       const profile = {
         id: null,
         name: undefined,
         dateOfBirth: null,
         entries: null,
-        categories: undefined
+        categories: undefined,
       };
 
       const result = ProfileValidator.validateProfile(profile);
 
       expect(result.valid).toBe(false);
-      expect(result.errors).toContain('Profile ID is required');
-      expect(result.errors).toContain('Child name is required');
-      expect(result.errors).toContain('Date of birth is required');
-      expect(result.errors).toContain('Entries must be an array');
-      expect(result.errors).toContain('Categories must be an array');
+      expect(result.errors).toContain("Profile ID is required");
+      expect(result.errors).toContain("Child name is required");
+      expect(result.errors).toContain("Date of birth is required");
+      expect(result.errors).toContain("Entries must be an array");
+      expect(result.errors).toContain("Categories must be an array");
     });
   });
 });

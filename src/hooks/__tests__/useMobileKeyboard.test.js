@@ -2,32 +2,32 @@
  * Tests for useMobileKeyboard hook
  */
 
-import { renderHook, act } from '@testing-library/react';
-import { Dimensions, Keyboard } from 'react-native';
-import { useMobileKeyboard } from '../useMobileKeyboard';
+import { renderHook, act } from "@testing-library/react";
+import { Dimensions, Keyboard } from "react-native";
+import { useMobileKeyboard } from "../useMobileKeyboard";
 
 // Mock React Native
-jest.mock('react-native', () => ({
+jest.mock("react-native", () => ({
   Dimensions: {
-    get: jest.fn()
+    get: jest.fn(),
   },
   Keyboard: {
-    addListener: jest.fn(() => ({ remove: jest.fn() }))
-  }
+    addListener: jest.fn(() => ({ remove: jest.fn() })),
+  },
 }));
 
 // Mock platform
-jest.mock('../../utils/platform', () => ({
+jest.mock("../../utils/platform", () => ({
   isIOS: false,
-  isWeb: false
+  isWeb: false,
 }));
 
-describe('useMobileKeyboard', () => {
+describe("useMobileKeyboard", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should initialize with default values', () => {
+  it("should initialize with default values", () => {
     Dimensions.get.mockReturnValue({ width: 400 });
 
     const { result } = renderHook(() => useMobileKeyboard());
@@ -39,7 +39,7 @@ describe('useMobileKeyboard', () => {
     expect(result.current.stickyStyles).toEqual({});
   });
 
-  it('should detect desktop vs mobile based on screen width', () => {
+  it("should detect desktop vs mobile based on screen width", () => {
     // Test mobile
     Dimensions.get.mockReturnValue({ width: 400 });
     const { result: mobileResult } = renderHook(() => useMobileKeyboard());
@@ -51,7 +51,7 @@ describe('useMobileKeyboard', () => {
     expect(desktopResult.current.isMobile).toBe(false);
   });
 
-  it('should accept options for scroll behavior', () => {
+  it("should accept options for scroll behavior", () => {
     Dimensions.get.mockReturnValue({ width: 400 });
 
     const options = { scrollIntoView: false, scrollOffset: 200 };
@@ -61,22 +61,22 @@ describe('useMobileKeyboard', () => {
     expect(result.current.isKeyboardVisible).toBe(false);
   });
 
-  it('should register keyboard listeners on mobile', () => {
+  it("should register keyboard listeners on mobile", () => {
     Dimensions.get.mockReturnValue({ width: 400 });
 
     renderHook(() => useMobileKeyboard());
 
     expect(Keyboard.addListener).toHaveBeenCalledWith(
-      'keyboardDidShow',
-      expect.any(Function)
+      "keyboardDidShow",
+      expect.any(Function),
     );
     expect(Keyboard.addListener).toHaveBeenCalledWith(
-      'keyboardDidHide',
-      expect.any(Function)
+      "keyboardDidHide",
+      expect.any(Function),
     );
   });
 
-  it('should not register keyboard listeners on desktop', () => {
+  it("should not register keyboard listeners on desktop", () => {
     Dimensions.get.mockReturnValue({ width: 800 });
 
     renderHook(() => useMobileKeyboard());
@@ -84,16 +84,16 @@ describe('useMobileKeyboard', () => {
     expect(Keyboard.addListener).not.toHaveBeenCalled();
   });
 
-  it('should simulate keyboard show/hide on mobile', () => {
+  it("should simulate keyboard show/hide on mobile", () => {
     Dimensions.get.mockReturnValue({ width: 400 });
 
     let showCallback;
     let hideCallback;
 
     Keyboard.addListener.mockImplementation((event, callback) => {
-      if (event === 'keyboardDidShow') {
+      if (event === "keyboardDidShow") {
         showCallback = callback;
-      } else if (event === 'keyboardDidHide') {
+      } else if (event === "keyboardDidHide") {
         hideCallback = callback;
       }
       return { remove: jest.fn() };
@@ -114,11 +114,11 @@ describe('useMobileKeyboard', () => {
     expect(result.current.keyboardHeight).toBe(300);
     expect(result.current.keyboardPadding).toBe(300);
     expect(result.current.stickyStyles).toEqual({
-      position: 'absolute',
+      position: "absolute",
       bottom: 300,
       left: 0,
       right: 0,
-      zIndex: 1000
+      zIndex: 1000,
     });
 
     // Simulate keyboard hide
@@ -132,7 +132,7 @@ describe('useMobileKeyboard', () => {
     expect(result.current.stickyStyles).toEqual({});
   });
 
-  it('should cleanup listeners on unmount', () => {
+  it("should cleanup listeners on unmount", () => {
     Dimensions.get.mockReturnValue({ width: 400 });
 
     const mockRemove = jest.fn();
