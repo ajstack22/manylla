@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,11 +7,13 @@ import {
   StyleSheet,
   Image,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { manyllaColors } from "../../theme/theme";
 import { CategorySection } from "./CategorySection";
 import { getVisibleCategories } from "../../utils/unifiedCategories";
 import { ProfileEditDialog } from "./ProfileEditDialog";
+import photoService from "../../services/photoService";
 
 import platform from "../../utils/platform";
 
@@ -32,6 +34,45 @@ export const ProfileOverview = ({
   const [profileEditOpenLocal, setProfileEditOpenLocal] = useState(false);
   const profileEditOpen = profileEditOpenProp ?? profileEditOpenLocal;
   const setProfileEditOpen = setProfileEditOpenProp ?? setProfileEditOpenLocal;
+
+  // Photo state
+  const [photoDataUrl, setPhotoDataUrl] = useState(null);
+  const [photoLoading, setPhotoLoading] = useState(false);
+  const [photoError, setPhotoError] = useState(false);
+
+  // Load and decrypt photo when profile changes
+  useEffect(() => {
+    loadProfilePhoto();
+  }, [profile.photo]);
+
+  const loadProfilePhoto = async () => {
+    if (!profile.photo) {
+      setPhotoDataUrl(null);
+      setPhotoLoading(false);
+      setPhotoError(false);
+      return;
+    }
+
+    try {
+      setPhotoLoading(true);
+      setPhotoError(false);
+
+      // Check if photo is encrypted
+      if (photoService.isPhotoEncrypted(profile.photo)) {
+        const decryptedDataUrl = await photoService.decryptPhoto(profile.photo);
+        setPhotoDataUrl(decryptedDataUrl);
+      } else {
+        // Legacy format - display as-is
+        setPhotoDataUrl(profile.photo);
+      }
+    } catch (error) {
+      console.warn('Failed to load profile photo:', error);
+      setPhotoError(true);
+      setPhotoDataUrl(null);
+    } finally {
+      setPhotoLoading(false);
+    }
+  };
 
   const getEntriesByCategory = (category) =>
     profile.entries.filter((entry) => entry.category === category);
@@ -129,9 +170,7 @@ export const ProfileOverview = ({
       height: 120,
       borderRadius: 60,
       marginBottom: 16,
-      backgroundColor: profile.photo
-        ? "transparent"
-        : manyllaColors.avatarDefaultBg,
+      backgroundColor: "transparent",
     },
     avatarPlaceholder: {
       width: 120,
@@ -233,19 +272,19 @@ export const ProfileOverview = ({
     <ScrollView style={styles.container}>
       <View style={styles.profileCard}>
         <View style={styles.profileHeader}>
-          {profile.photo && profile.photo !== "default" ? (
+          {photoLoading ? (
+            <View style={styles.avatarPlaceholder}>
+              <ActivityIndicator size="large" color={manyllaColors.brown} />
+            </View>
+          ) : photoDataUrl && !photoError ? (
             <TouchableOpacity
               onPress={() => onUpdateProfile && setProfileEditOpen(true)}
             >
               <Image
-                source={{
-                  uri:
-                    platform.isIOS && profile.photo.startsWith("/")
-                      ? `https://manylla.com/qual${profile.photo}` // Convert relative path to absolute URL for iOS
-                      : profile.photo,
-                }}
+                source={{ uri: photoDataUrl }}
                 style={styles.avatar}
                 resizeMode="cover"
+                onError={() => setPhotoError(true)}
               />
             </TouchableOpacity>
           ) : (

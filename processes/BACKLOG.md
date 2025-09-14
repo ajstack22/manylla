@@ -15,6 +15,7 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟠 P1 - High (Do Next)
 ### Stories
+- [S018](backlog/S018-profile-photo-upload-and-encrypted-storage.md) - Profile Photo Upload and Encrypted Storage ✅ **READY**
 - [S016](backlog/S016-replace-header-menu-with-bottom-sheet-navigation-system.md) - Replace Header Menu with Bottom Sheet Navigation System ✅ **READY**
 - [S008](backlog/S008-privacy-policy.md) - Implement Privacy Policy Modal and Infrastructure ✅ **READY**
 

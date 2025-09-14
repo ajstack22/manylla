@@ -13,9 +13,9 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import * as ImagePicker from "react-native-image-picker";
 import { useTheme } from "../../context/ThemeContext";
 import { getTextStyle, getScrollViewProps } from "../../utils/platformStyles";
+import PhotoUpload from "./PhotoUpload";
 import platform from "../../utils/platform";
 
 export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
@@ -32,85 +32,12 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
     photo: profile?.photo || "",
   });
 
-  const [photoPreview, setPhotoPreview] = useState(profile?.photo || "");
-
-  const handlePhotoSelect = () => {
-    if (platform.isWeb) {
-      // Web file input
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "image/*";
-      input.onchange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            const result = reader.result;
-            setPhotoPreview(result);
-            setFormData({ ...formData, photo: result });
-          };
-          reader.readAsDataURL(file);
-        }
-      };
-      input.click();
-    } else {
-      // Mobile image picker
-      Alert.alert(
-        "Select Photo",
-        "Choose from where you want to select an image",
-        [
-          { text: "Cancel", style: "cancel" },
-          {
-            text: "Take Photo",
-            onPress: () => launchCamera(),
-          },
-          {
-            text: "Choose from Gallery",
-            onPress: () => launchImageLibrary(),
-          },
-        ],
-      );
-    }
+  const handlePhotoChange = (encryptedPhoto, metadata) => {
+    setFormData({ ...formData, photo: encryptedPhoto });
   };
 
-  const launchCamera = () => {
-    const options = {
-      mediaType: "photo",
-      includeBase64: true,
-      maxHeight: 2000,
-      maxWidth: 2000,
-    };
-
-    ImagePicker.launchCamera(options, (response) => {
-      if (response.didCancel) {
-        // User cancelled camera - no logging needed
-      } else if (response.error) {
-      } else {
-        const imageUri = `data:${response.type};base64,${response.base64}`;
-        setPhotoPreview(imageUri);
-        setFormData({ ...formData, photo: imageUri });
-      }
-    });
-  };
-
-  const launchImageLibrary = () => {
-    const options = {
-      mediaType: "photo",
-      includeBase64: true,
-      maxHeight: 2000,
-      maxWidth: 2000,
-    };
-
-    ImagePicker.launchImageLibrary(options, (response) => {
-      if (response.didCancel) {
-        // User cancelled image picker - no logging needed
-      } else if (response.error) {
-      } else {
-        const imageUri = `data:${response.type};base64,${response.base64}`;
-        setPhotoPreview(imageUri);
-        setFormData({ ...formData, photo: imageUri });
-      }
-    });
+  const handlePhotoRemove = () => {
+    setFormData({ ...formData, photo: "" });
   };
 
   const handleSave = () => {
@@ -173,39 +100,12 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
 
           <ScrollView style={styles.modalBody} {...getScrollViewProps()}>
             {/* Profile Photo */}
-            <View style={styles.photoSection}>
-              <View style={styles.avatarContainer}>
-                {photoPreview ? (
-                  <Image
-                    source={{
-                      uri:
-                        platform.isIOS && photoPreview.startsWith("/")
-                          ? `https://manylla.com/qual${photoPreview}` // Convert relative path to absolute URL for iOS
-                          : photoPreview,
-                    }}
-                    style={styles.avatar}
-                  />
-                ) : (
-                  <View style={styles.avatarPlaceholder}>
-                    <Icon
-                      name="person"
-                      size={50}
-                      color={colors.text.secondary}
-                    />
-                  </View>
-                )}
-              </View>
-
-              <TouchableOpacity
-                style={styles.photoButton}
-                onPress={handlePhotoSelect}
-              >
-                <Icon name="photo-camera" size={20} color={colors.primary} />
-                <Text style={styles.photoButtonText}>
-                  {photoPreview ? "Change Photo" : "Add Photo"}
-                </Text>
-              </TouchableOpacity>
-            </View>
+            <PhotoUpload
+              currentPhoto={formData.photo}
+              onPhotoChange={handlePhotoChange}
+              onPhotoRemove={handlePhotoRemove}
+              size={100}
+            />
 
             {/* Name */}
             <View style={styles.formField}>
@@ -437,46 +337,6 @@ const getStyles = (colors) =>
         },
         default: {},
       }),
-    },
-    photoSection: {
-      alignItems: "center",
-      marginBottom: 20,
-    },
-    avatarContainer: {
-      marginBottom: 12,
-    },
-    avatar: {
-      width: 100,
-      height: 100,
-      borderRadius: 50,
-      borderWidth: 2,
-      borderColor: colors.border,
-    },
-    avatarPlaceholder: {
-      width: 100,
-      height: 100,
-      borderRadius: 50,
-      backgroundColor: colors.background.manila,
-      alignItems: "center",
-      justifyContent: "center",
-      borderWidth: 2,
-      borderColor: colors.border,
-    },
-    photoButton: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: 12,
-      borderRadius: 6,
-      borderWidth: 1,
-      borderColor: colors.primary,
-      backgroundColor: `${colors.primary}10`,
-      gap: 8,
-    },
-    photoButtonText: {
-      color: colors.primary,
-      fontSize: 15,
-      fontWeight: "500",
     },
     datePickerButton: {
       flexDirection: "row",

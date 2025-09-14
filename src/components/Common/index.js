@@ -55,6 +55,9 @@ export { default as LoadingOverlay } from "../Loading/LoadingOverlay";
 // Toast component - unified export
 export { default as ThemedToast } from "../Toast/ThemedToast";
 
+// Image picker - unified cross-platform component
+export { ImagePicker } from "./ImagePicker";
+
 // These components should be in Common directory or have unified versions
 // For now, export placeholders that can be implemented
 export const ErrorBoundary = ({ children }) => children;
