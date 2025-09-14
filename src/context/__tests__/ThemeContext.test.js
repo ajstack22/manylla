@@ -33,7 +33,7 @@ const TestConsumer = ({ onThemeChange }) => {
     if (onThemeChange) {
       onThemeChange(theme);
     }
-  }, [theme, onThemeChange]);
+  }, [theme.isDark, theme.colors, onThemeChange]); // Watch for actual theme changes
 
   return (
     <div>
@@ -98,9 +98,9 @@ describe('ThemeContext', () => {
         </ThemeProvider>
       );
 
-      // Allow effect to run
+      // Wait for async storage load and theme update
       await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 0));
+        await new Promise(resolve => setTimeout(resolve, 50));
       });
 
       expect(mockLocalStorage.getItem).toHaveBeenCalledWith('theme_preference');
@@ -119,9 +119,9 @@ describe('ThemeContext', () => {
         </ThemeProvider>
       );
 
-      // Allow effect to run
+      // Wait for async storage load and theme update
       await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 0));
+        await new Promise(resolve => setTimeout(resolve, 50));
       });
 
       expect(mockLocalStorage.getItem).toHaveBeenCalledWith('theme_preference');
@@ -166,17 +166,20 @@ describe('ThemeContext', () => {
 
   describe('Theme Toggle', () => {
     test('should toggle from light to dark', async () => {
-      render(
-        <ThemeProvider>
-          <TestConsumer />
-        </ThemeProvider>
-      );
+      await act(async () => {
+        render(
+          <ThemeProvider>
+            <TestConsumer />
+          </ThemeProvider>
+        );
+      });
 
       expect(screen.getByTestId('theme-mode')).toHaveTextContent('light');
       expect(screen.getByTestId('primary-color')).toHaveTextContent('#8B6F47');
 
       await act(async () => {
         screen.getByTestId('toggle-button').click();
+        await new Promise(resolve => setTimeout(resolve, 0));
       });
 
       expect(screen.getByTestId('theme-mode')).toHaveTextContent('dark');
@@ -185,34 +188,42 @@ describe('ThemeContext', () => {
     });
 
     test('should toggle from dark to light', async () => {
-      render(
-        <ThemeProvider initialThemeMode="dark">
-          <TestConsumer />
-        </ThemeProvider>
-      );
+      await act(async () => {
+        render(
+          <ThemeProvider initialThemeMode="dark">
+            <TestConsumer />
+          </ThemeProvider>
+        );
+      });
 
       expect(screen.getByTestId('theme-mode')).toHaveTextContent('dark');
 
       await act(async () => {
         screen.getByTestId('toggle-button').click();
+        await new Promise(resolve => setTimeout(resolve, 0));
       });
 
       expect(screen.getByTestId('theme-mode')).toHaveTextContent('light');
-      expect(mockAsyncStorage.setItem).toHaveBeenCalledWith('theme_preference', 'light');
+      expect(mockLocalStorage.setItem).toHaveBeenCalledWith('theme_preference', 'light');
     });
 
     test('should handle storage save error gracefully', async () => {
-      mockAsyncStorage.setItem.mockRejectedValueOnce(new Error('Storage error'));
+      mockLocalStorage.setItem.mockImplementationOnce(() => {
+        throw new Error('Storage error');
+      });
 
-      render(
-        <ThemeProvider>
-          <TestConsumer />
-        </ThemeProvider>
-      );
+      await act(async () => {
+        render(
+          <ThemeProvider>
+            <TestConsumer />
+          </ThemeProvider>
+        );
+      });
 
       // Should still toggle theme despite storage error
       await act(async () => {
         screen.getByTestId('toggle-button').click();
+        await new Promise(resolve => setTimeout(resolve, 0));
       });
 
       expect(screen.getByTestId('theme-mode')).toHaveTextContent('dark');
@@ -413,14 +424,17 @@ describe('ThemeContext', () => {
       platform.isWeb = true;
       platform.isNative = false;
 
-      render(
-        <ThemeProvider>
-          <TestConsumer />
-        </ThemeProvider>
-      );
+      await act(async () => {
+        render(
+          <ThemeProvider>
+            <TestConsumer />
+          </ThemeProvider>
+        );
+      });
 
       await act(async () => {
         screen.getByTestId('toggle-button').click();
+        await new Promise(resolve => setTimeout(resolve, 0));
       });
 
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith('theme_preference', 'dark');
@@ -430,14 +444,17 @@ describe('ThemeContext', () => {
       platform.isWeb = false;
       platform.isNative = true;
 
-      render(
-        <ThemeProvider>
-          <TestConsumer />
-        </ThemeProvider>
-      );
+      await act(async () => {
+        render(
+          <ThemeProvider>
+            <TestConsumer />
+          </ThemeProvider>
+        );
+      });
 
       await act(async () => {
         screen.getByTestId('toggle-button').click();
+        await new Promise(resolve => setTimeout(resolve, 0));
       });
 
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith('theme_preference', 'dark');
@@ -514,7 +531,7 @@ describe('ThemeContext', () => {
     });
 
     test('should load persisted theme on initialization', async () => {
-      mockAsyncStorage.getItem.mockResolvedValueOnce('dark');
+      mockLocalStorage.getItem.mockReturnValueOnce('dark');
 
       let capturedTheme;
 
@@ -530,7 +547,7 @@ describe('ThemeContext', () => {
       });
 
       expect(capturedTheme.isDark).toBe(true);
-      expect(mockAsyncStorage.getItem).toHaveBeenCalledWith('theme_preference');
+      expect(mockLocalStorage.getItem).toHaveBeenCalledWith('theme_preference');
     });
   });
 });

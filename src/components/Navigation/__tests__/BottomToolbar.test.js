@@ -1,4 +1,3 @@
-import React from 'react';
 import BottomToolbar from '../BottomToolbar';
 
 // Mock all the dependencies for BottomToolbar
