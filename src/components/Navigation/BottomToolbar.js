@@ -56,7 +56,6 @@ const BottomToolbar = ({
     return () => subscription?.remove();
   }, []);
 
-
   // Handle item press
   const handleItemPress = (action, message) => {
     setShowOverflowMenu(false); // Close overflow if open

@@ -73,7 +73,12 @@ describe("PhotoService", () => {
 
     it("should decrypt photo data successfully", async () => {
       const encryptedPhoto = "encrypted_photo_data";
-      const decryptedData = { dataUrl: mockDataUrl, size: 1000, timestamp: "2025-09-14T06:51:24.976Z", type: "photo" };
+      const decryptedData = {
+        dataUrl: mockDataUrl,
+        size: 1000,
+        timestamp: "2025-09-14T06:51:24.976Z",
+        type: "photo",
+      };
 
       mockEncryptionService.decryptData.mockReturnValue(decryptedData);
 
@@ -164,7 +169,8 @@ describe("PhotoService", () => {
 
   describe("Photo Format Detection", () => {
     it("should detect encrypted photo format", () => {
-      const encryptedPhotoString = "abcd1234567890abcdef1234567890abcdef1234567890abcdef1234567890"; // Long base64-like encrypted data
+      const encryptedPhotoString =
+        "abcd1234567890abcdef1234567890abcdef1234567890abcdef1234567890"; // Long base64-like encrypted data
       const result = photoService.isPhotoEncrypted(encryptedPhotoString);
 
       expect(result).toBe(true);
@@ -186,8 +192,14 @@ describe("PhotoService", () => {
 
   describe("Caching", () => {
     it("should cache decrypted photos", async () => {
-      const encryptedPhoto = "abcd1234567890abcdef1234567890abcdef1234567890abcdef1234567890"; // Valid encrypted string
-      const decryptedData = { dataUrl: mockDataUrl, size: 1000, timestamp: "2025-09-14T06:51:24.976Z", type: "photo" };
+      const encryptedPhoto =
+        "abcd1234567890abcdef1234567890abcdef1234567890abcdef1234567890"; // Valid encrypted string
+      const decryptedData = {
+        dataUrl: mockDataUrl,
+        size: 1000,
+        timestamp: "2025-09-14T06:51:24.976Z",
+        type: "photo",
+      };
 
       mockEncryptionService.isInitialized.mockReturnValue(true);
       mockEncryptionService.decryptData.mockReturnValue(decryptedData);
@@ -204,8 +216,14 @@ describe("PhotoService", () => {
     });
 
     it("should bypass cache when requested", async () => {
-      const encryptedPhoto = "wxyz1234567890abcdef1234567890abcdef1234567890abcdef1234567890"; // Different valid encrypted string
-      const decryptedData = { dataUrl: mockDataUrl, size: 1000, timestamp: "2025-09-14T06:51:24.976Z", type: "photo" };
+      const encryptedPhoto =
+        "wxyz1234567890abcdef1234567890abcdef1234567890abcdef1234567890"; // Different valid encrypted string
+      const decryptedData = {
+        dataUrl: mockDataUrl,
+        size: 1000,
+        timestamp: "2025-09-14T06:51:24.976Z",
+        type: "photo",
+      };
 
       mockEncryptionService.isInitialized.mockReturnValue(true);
       mockEncryptionService.decryptData.mockReturnValue(decryptedData);
