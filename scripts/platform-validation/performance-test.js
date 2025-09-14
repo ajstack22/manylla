@@ -177,6 +177,7 @@ const testRNBundleMetrics = async () => {
     
     // Try to generate bundle stats (this is approximate)
     try {
+      // eslint-disable-next-line no-unused-vars
       const { stdout } = await execAsync('npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output temp-bundle.js --sourcemap-output temp-bundle.map --reset-cache');
       
       // Check generated bundle size

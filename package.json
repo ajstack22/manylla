@@ -16,6 +16,9 @@
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\"",
     "typecheck": "tsc --noEmit",
     "check:type": "node scripts/check-project-type.js",
+    "license:check": "npx license-checker --summary --failOn 'GPL;AGPL;LGPL'",
+    "license:report": "npx license-checker --out LICENSES-REPORT.txt",
+    "license:report:json": "npx license-checker --json --out licenses-report.json",
     "clean": "cd android && ./gradlew clean && cd ../ios && rm -rf build && cd ..",
     "pod-install": "cd ios && pod install && cd ..",
     "_DEPRECATED_deploy:qual": "echo '❌ DO NOT USE - Run ./scripts/deploy-qual.sh instead'"
@@ -78,6 +81,7 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "html-webpack-plugin": "^5.6.4",
     "jest": "^29.7.0",
+    "license-checker": "^25.0.1",
     "prettier": "^3.4.1",
     "style-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.3.14",

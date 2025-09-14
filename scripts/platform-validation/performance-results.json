@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-09-12T01:49:07.340Z",
+  "timestamp": "2025-09-14T03:28:18.349Z",
   "importTime": -1,
   "functionPerformance": {
     "select": -1,
@@ -7,16 +7,18 @@
     "font": -1
   },
   "memoryUsage": {
-    "rss": 41533440,
+    "rss": 40976384,
     "heapTotal": 5603328,
-    "heapUsed": 4676720,
+    "heapUsed": 4711792,
     "external": 1691261,
     "arrayBuffers": 40181
   },
   "bundleSize": {
-    "total": 14.458441734313965,
+    "total": 14.376812934875488,
     "javascript": 0,
     "css": 0
   },
-  "rnBundleMetrics": null
+  "rnBundleMetrics": {
+    "bundleSize": 9.669827461242676
+  }
 }

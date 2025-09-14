@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 const { GenerateSW } = require("workbox-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-// TerserPlugin is included in webpack 5 by default
+const TerserPlugin = require("terser-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -226,6 +226,28 @@ module.exports = {
   ],
   optimization: {
     minimize: isProduction,
+    minimizer: isProduction ? [
+      new TerserPlugin({
+        extractComments: {
+          condition: /^\**!|@preserve|@license|@cc_on/i,
+          filename: (fileData) => {
+            // Extract licenses to LICENSE.txt files for each chunk
+            return `${fileData.filename}.LICENSE.txt`.replace(/\.js\.LICENSE\.txt$/, '.LICENSE.txt');
+          },
+          banner: (licenseTxt) => {
+            return `For license information please see ${licenseTxt}`;
+          },
+        },
+        terserOptions: {
+          format: {
+            comments: false,
+          },
+          compress: {
+            drop_console: false, // Keep console logs for now (deployment script validates this)
+          },
+        },
+      }),
+    ] : [],
     splitChunks: {
       chunks: "all",
       maxInitialRequests: 6,

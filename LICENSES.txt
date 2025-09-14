@@ -5,118 +5,45 @@ THIRD-PARTY SOFTWARE LICENSES AND ATTRIBUTIONS
 This application uses open source software components. The following is a list
 of these components and their respective licenses and attributions.
 
-================================================================================
-SOFTWARE LICENSED UNDER CC-BY-4.0 (Creative Commons Attribution 4.0)
-================================================================================
-
-caniuse-lite
-Copyright (c) Alexis Deveria and Can I Use contributors
-Repository: https://github.com/browserslist/caniuse-lite
-License: CC-BY-4.0
-
-This package contains browser compatibility data from Can I Use 
-(https://caniuse.com/), which is licensed under CC-BY-4.0. 
-We use this data to ensure cross-browser compatibility of our application.
-
-Full CC-BY-4.0 License: https://creativecommons.org/licenses/by/4.0/
+Last Updated: 2025-09-13
+Total Production Dependencies: 631 packages
+License Analysis Generated via: npx license-checker --production --summary
 
 ================================================================================
-SOFTWARE LICENSED UNDER APACHE LICENSE 2.0
+LICENSE DISTRIBUTION SUMMARY
 ================================================================================
 
-The following packages are licensed under the Apache License, Version 2.0:
-
-@humanwhocodes/config-array
-Copyright (c) Human Who Codes LLC
-Repository: https://github.com/humanwhocodes/config-array
-
-@humanwhocodes/module-importer
-Copyright (c) Human Who Codes LLC
-Repository: https://github.com/humanwhocodes/module-importer
-
-@jsonjoy.com/base64
-@jsonjoy.com/buffers
-@jsonjoy.com/codegen
-@jsonjoy.com/json-pack
-@jsonjoy.com/json-pointer
-@jsonjoy.com/util
-Copyright (c) jsonjoy.com contributors
-Repository: https://github.com/jsonjoy-com/
-
-@surma/rollup-plugin-off-main-thread
-Copyright (c) Surma
-Repository: https://github.com/surma/rollup-plugin-off-main-thread
-
-@webassemblyjs/leb128
-Copyright (c) Sven Sauleau
-Repository: https://github.com/xtuc/webassemblyjs
-
-@xtuc/long
-Copyright (c) Daniel Wirtz / dcodeIO
-Repository: https://github.com/dcodeIO/long.js
-
-ansi-html-community
-Copyright (c) Mahdyar Hasanpour
-Repository: https://github.com/mahdyar/ansi-html-community
-
-ansi-html
-Copyright (c) Tjatse
-Repository: https://github.com/Tjatse/ansi-html
-
-aria-query
-Copyright (c) A11yance contributors
-Repository: https://github.com/A11yance/aria-query
-
-axobject-query
-Copyright (c) A11yance contributors
-Repository: https://github.com/A11yance/axobject-query
-
-bser
-Copyright (c) Meta Platforms, Inc. and affiliates
-Repository: https://github.com/facebook/watchman
-
-chrome-launcher
-Copyright (c) Google Inc.
-Repository: https://github.com/GoogleChrome/chrome-launcher
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+MIT License:                     537 packages (85.1%)
+ISC License:                      41 packages (6.5%)
+BSD-3-Clause License:             21 packages (3.3%)
+Apache-2.0 License:               11 packages (1.7%)
+BSD-2-Clause License:             11 packages (1.7%)
+Unlicense:                         2 packages (0.3%)
+Python-2.0:                       1 package  (0.2%)
+CC-BY-4.0:                         1 package  (0.2%)
+0BSD:                              1 package  (0.2%)
+CC0-1.0:                           1 package  (0.2%)
+(MIT AND Zlib):                    1 package  (0.2%)
+(Unlicense OR Apache-2.0):         1 package  (0.2%)
+(MIT OR CC0-1.0):                  1 package  (0.2%)
 
 ================================================================================
-SOFTWARE LICENSED UNDER MPL-2.0 (Mozilla Public License 2.0)
-================================================================================
-
-axe-core
-Copyright (c) Deque Systems, Inc.
-Repository: https://github.com/dequelabs/axe-core
-License: MPL-2.0
-
-This Source Code Form is subject to the terms of the Mozilla Public
-License, v. 2.0. If a copy of the MPL was not distributed with this
-file, You can obtain one at https://mozilla.org/MPL/2.0/.
-
-================================================================================
-SOFTWARE LICENSED UNDER MIT LICENSE
+SOFTWARE LICENSED UNDER MIT LICENSE (537 packages - 85.1%)
 ================================================================================
 
 The majority of dependencies in this project are licensed under the MIT License.
-These include but are not limited to:
+Major components include:
 
 - React (Copyright (c) Meta Platforms, Inc. and affiliates)
 - React Native (Copyright (c) Meta Platforms, Inc. and affiliates)
-- Material-UI (Copyright (c) MUI)
-- TypeScript (Copyright (c) Microsoft Corporation)
+- Material-UI/MUI (Copyright (c) MUI)
 - Webpack (Copyright (c) JS Foundation and other contributors)
-- Babel (Copyright (c) Sebastian McKenzie)
+- Babel (Copyright (c) Sebastian McKenzie and Babel Team)
+- TypeScript (Copyright (c) Microsoft Corporation)
+- Lodash (Copyright (c) JS Foundation)
+- ESLint (Copyright (c) OpenJS Foundation)
+- React Router (Copyright (c) Remix Software Inc.)
+- Emotion (Copyright (c) Emotion team)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -137,16 +64,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ================================================================================
-SOFTWARE LICENSED UNDER BSD LICENSES
+SOFTWARE LICENSED UNDER ISC LICENSE (41 packages - 6.5%)
 ================================================================================
 
-Various packages use BSD 2-Clause or BSD 3-Clause licenses, including:
+The ISC License is functionally equivalent to the MIT License.
+Notable packages include npm, glob, semver, and various utility packages.
 
-BSD-2-Clause packages:
-- Various utility libraries
+Copyright (c) [Year] [Copyright Holder]
 
-BSD-3-Clause packages:
-- Various development tools and libraries
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+================================================================================
+SOFTWARE LICENSED UNDER BSD LICENSES (32 packages total)
+================================================================================
+
+BSD-3-Clause License (21 packages):
+Various development tools and libraries including source-map utilities,
+AST parsers, and development dependencies.
+
+BSD-2-Clause License (11 packages):
+Various utility libraries and development tools.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -160,7 +107,7 @@ modification, are permitted provided that the following conditions are met:
 
 3. Neither the name of the copyright holder nor the names of its contributors
    may be used to endorse or promote products derived from this software
-   without specific prior written permission.
+   without specific prior written permission. (BSD-3-Clause only)
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -174,8 +121,79 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ================================================================================
+SOFTWARE LICENSED UNDER APACHE LICENSE 2.0 (11 packages - 1.7%)
+================================================================================
+
+The following packages are licensed under the Apache License, Version 2.0:
+Various utilities and development tools including Google-maintained packages
+and Facebook/Meta open source projects.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+================================================================================
+SOFTWARE LICENSED UNDER CC-BY-4.0 (Creative Commons Attribution 4.0) - 1 package
+================================================================================
+
+caniuse-lite
+Copyright (c) Alexis Deveria and Can I Use contributors
+Repository: https://github.com/browserslist/caniuse-lite
+License: CC-BY-4.0
+
+This package contains browser compatibility data from Can I Use
+(https://caniuse.com/), which is licensed under CC-BY-4.0.
+We use this data to ensure cross-browser compatibility of our application.
+
+Full CC-BY-4.0 License: https://creativecommons.org/licenses/by/4.0/
+
+================================================================================
+OTHER LICENSES
+================================================================================
+
+Unlicense (2 packages):
+Public domain equivalent license for packages that place no restrictions on use.
+
+Python-2.0 (1 package):
+Compatible open source license for Python-related tooling.
+
+0BSD (1 package):
+"Zero-Clause BSD" - Public domain equivalent.
+
+CC0-1.0 (1 package):
+Creative Commons Zero - Public domain dedication.
+
+Dual Licensed Packages:
+- (MIT AND Zlib): 1 package - Combines MIT and Zlib licenses
+- (Unlicense OR Apache-2.0): 1 package - Choice between Unlicense or Apache-2.0
+- (MIT OR CC0-1.0): 1 package - Choice between MIT or CC0-1.0
+
+================================================================================
+LICENSE COMPLIANCE VERIFICATION
+================================================================================
+
+✅ All production dependencies use permissive open source licenses
+✅ No copyleft (GPL) licenses found
+✅ No proprietary or restrictive licenses found
+✅ All licenses are compatible with commercial use
+✅ All licenses allow modification and redistribution
+
+The main application (Manylla) is proprietary software and is not covered
+by these open source licenses.
+
+================================================================================
 END OF THIRD-PARTY SOFTWARE LICENSES AND ATTRIBUTIONS
 ================================================================================
 
-For a complete list of all dependencies and their licenses, please refer to
-the license-report.csv file in the project root directory.
+For a complete detailed list of all dependencies and their individual licenses,
+run: npx license-checker --production
+
+Generated on: 2025-09-13 using license-checker v25.0.1

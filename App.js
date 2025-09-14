@@ -691,7 +691,6 @@ function AppContent() {
   });
   const [operationLoading, setOperationLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
-  const [isProfileHidden, setIsProfileHidden] = useState(false);
   
   // Share view state
   const [isShareView, setIsShareView] = useState(false);
@@ -1357,7 +1356,6 @@ function AppContent() {
         onEditProfile={() => setProfileEditOpen(true)}
         styles={styles}
         colors={colors}
-        onScrollChange={setIsProfileHidden}
       />
 
       {/* Entry Form Modal */}

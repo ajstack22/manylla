@@ -123,6 +123,9 @@ const BottomSheetMenu = ({
           onCloseProfile();
           onClose();
           break;
+        default:
+          // Ignore unhandled keyboard events
+          break;
       }
     };
 

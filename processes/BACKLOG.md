@@ -36,6 +36,9 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟢 P3 - Low (Nice to Have)
 ### Stories
+- [S018](backlog/S018-add-default-case-to-switch-statements.md) - Add default case to switch statements ✅ **READY**
+- [S018](backlog/S018-fix-unreachable-code-warnings-in-imagepicker.md) - Fix unreachable code warnings in ImagePicker ✅ **READY**
+- [S018](backlog/S018-fix-unused-variable-warnings-in-codebase.md) - Fix unused variable warnings in codebase ✅ **READY**
 - [S011](backlog/S011-background-tasks.md) - Platform-Specific Background Task APIs ✅ **READY**
 
 ### Bugs

@@ -2,7 +2,6 @@
  * ImagePicker - Cross-platform image selection component
  * Supports web file picker, mobile camera, and gallery access
  */
-import React from "react";
 import { Alert, Platform } from "react-native";
 import { validateImage, IMAGE_CONFIG } from "../../utils/imageUtils";
 import platform from "../../utils/platform";
@@ -297,13 +296,8 @@ export class ImagePicker {
       return false;
     }
 
-    try {
-      // react-native-image-picker handles permissions automatically
-      return true;
-    } catch (error) {
-      console.warn("Camera permission request failed:", error);
-      return false;
-    }
+    // react-native-image-picker handles permissions automatically
+    return true;
   }
 
   /**
@@ -315,13 +309,8 @@ export class ImagePicker {
       return true; // Web doesn't need explicit permissions
     }
 
-    try {
-      // react-native-image-picker handles permissions automatically
-      return true;
-    } catch (error) {
-      console.warn("Gallery permission request failed:", error);
-      return false;
-    }
+    // react-native-image-picker handles permissions automatically
+    return true;
   }
 
   /**
