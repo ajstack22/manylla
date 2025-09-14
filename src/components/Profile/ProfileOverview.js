@@ -219,18 +219,6 @@ export const ProfileOverview = ({
       textAlign: "center",
       marginBottom: 8,
     },
-    pronounsChip: {
-      backgroundColor: "#f0f0f0",
-      paddingHorizontal: 12,
-      paddingVertical: 6,
-      borderRadius: 16,
-      marginTop: 8,
-    },
-    pronounsText: {
-      fontSize: 12,
-      color: "#666",
-      fontWeight: "500",
-    },
     content: {
       position: "relative",
     },
@@ -314,12 +302,6 @@ export const ProfileOverview = ({
           <Text style={styles.ageText}>
             Age: {calculateAge(profile.dateOfBirth)} years
           </Text>
-
-          {profile.pronouns && (
-            <View style={styles.pronounsChip}>
-              <Text style={styles.pronounsText}>{profile.pronouns}</Text>
-            </View>
-          )}
         </View>
       </View>
 

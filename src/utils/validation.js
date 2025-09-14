@@ -164,7 +164,6 @@ export class ProfileValidator {
       ...profile,
       name: profile.name.trim(),
       preferredName: profile.preferredName?.trim(),
-      pronouns: profile.pronouns?.trim(),
       entries: profile.entries.map((entry) => ({
         ...entry,
         title: this.sanitizeHtml(entry.title).trim(),

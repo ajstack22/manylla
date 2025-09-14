@@ -269,7 +269,6 @@ export const ProfileEditForm = ({
   const [preferredName, setPreferredName] = useState(
     profile?.preferredName || "",
   );
-  const [pronouns, setPronouns] = useState(profile?.pronouns || "");
   const [dateOfBirth, setDateOfBirth] = useState(
     profile?.dateOfBirth ? new Date(profile.dateOfBirth) : new Date(),
   );
@@ -287,7 +286,6 @@ export const ProfileEditForm = ({
     onSave({
       name: name.trim(),
       preferredName: preferredName.trim() || name.trim(),
-      pronouns: pronouns.trim(),
       dateOfBirth,
     });
     onClose();
@@ -329,17 +327,6 @@ export const ProfileEditForm = ({
           placeholderTextColor={
             platform.isAndroid ? "#999" : activeColors.text.disabled
           }
-        />
-      </View>
-
-      <View style={dynamicStyles.inputGroup}>
-        <Text style={dynamicStyles.label}>Pronouns</Text>
-        <TextInput
-          style={dynamicStyles.input}
-          value={pronouns}
-          onChangeText={setPronouns}
-          placeholder="e.g., she/her, he/him, they/them"
-          placeholderTextColor={activeColors.text.disabled}
         />
       </View>
 

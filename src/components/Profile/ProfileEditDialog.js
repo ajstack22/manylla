@@ -28,7 +28,6 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
     dateOfBirth: profile?.dateOfBirth
       ? new Date(profile.dateOfBirth)
       : new Date(),
-    pronouns: profile?.pronouns || "",
     photo: profile?.photo || "",
   });
 
@@ -173,24 +172,6 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
                   maximumDate={new Date()}
                 />
               )}
-            </View>
-
-            {/* Pronouns */}
-            <View style={styles.formField}>
-              <Text style={styles.modalLabel}>Pronouns</Text>
-              <TextInput
-                style={[
-                  styles.modalInput,
-                  getTextStyle("input"),
-                  platform.isAndroid && { color: "#000000" },
-                ]}
-                value={formData.pronouns}
-                onChangeText={(value) =>
-                  setFormData({ ...formData, pronouns: value })
-                }
-                placeholder="e.g., she/her, he/him, they/them"
-                placeholderTextColor={colors.text.disabled}
-              />
             </View>
           </ScrollView>
 

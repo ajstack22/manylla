@@ -25,7 +25,6 @@ export const ProfileCreateDialog = ({ open, onClose, onCreate }) => {
     name: "",
     preferredName: "",
     dateOfBirth: new Date(),
-    pronouns: "",
     photo: "",
   });
   const [photoPreview, setPhotoPreview] = useState("");
@@ -182,17 +181,6 @@ export const ProfileCreateDialog = ({ open, onClose, onCreate }) => {
         <Text style={styles.helperText}>
           Age: {calculateAge(formData.dateOfBirth)} years
         </Text>
-      </View>
-
-      <View style={styles.inputGroup}>
-        <Text style={styles.inputLabel}>Pronouns (Optional)</Text>
-        <TextInput
-          style={styles.input}
-          value={formData.pronouns}
-          onChangeText={(text) => setFormData({ ...formData, pronouns: text })}
-          placeholder="e.g., she/her, he/him, they/them"
-          placeholderTextColor={colors.text.secondary}
-        />
       </View>
     </View>
   );
