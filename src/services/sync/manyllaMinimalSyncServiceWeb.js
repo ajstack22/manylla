@@ -29,7 +29,13 @@ class ManyllaMinimalSyncService {
 
   // Initialize with recovery phrase
   async init(recoveryPhrase) {
-    if (!recoveryPhrase || recoveryPhrase.length !== 32) {
+    if (!recoveryPhrase || typeof recoveryPhrase !== "string") {
+      throw new AuthError("Invalid recovery phrase format", "INVALID_CODE");
+    }
+
+    // Validate recovery phrase format (32 hex characters, case-insensitive)
+    const hexRegex = /^[A-Fa-f0-9]{32}$/;
+    if (!hexRegex.test(recoveryPhrase)) {
       throw new AuthError("Invalid recovery phrase format", "INVALID_CODE");
     }
 
@@ -62,7 +68,7 @@ class ManyllaMinimalSyncService {
   // Check if sync endpoint is available
   async checkHealth() {
     try {
-      const response = await fetch(API_ENDPOINTS.SYNC_HEALTH, {
+      const response = await fetch(API_ENDPOINTS.sync.health, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -113,7 +119,7 @@ class ManyllaMinimalSyncService {
           let lastError;
           for (let i = 0; i < this.MAX_RETRIES; i++) {
             try {
-              const response = await fetch(API_ENDPOINTS.SYNC_PUSH, {
+              const response = await fetch(API_ENDPOINTS.sync.push, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -179,7 +185,7 @@ class ManyllaMinimalSyncService {
 
     try {
       const response = await fetch(
-        `${API_ENDPOINTS.SYNC_PULL}?sync_id=${encodeURIComponent(this.syncId)}`,
+        `${API_ENDPOINTS.sync.pull}?sync_id=${encodeURIComponent(this.syncId)}`,
         {
           method: "GET",
           headers: {
@@ -322,9 +328,14 @@ class ManyllaMinimalSyncService {
 
   // Join sync from invite code
   async joinFromInvite(inviteCode) {
-    // Validate invite code format (32 hex characters)
+    if (!inviteCode || typeof inviteCode !== "string") {
+      throw new Error("Invalid invite code");
+    }
+
+    // Clean and validate invite code format (32 hex characters)
     const cleaned = inviteCode.replace(/[^A-F0-9]/gi, "").toUpperCase();
-    if (cleaned.length !== 32) {
+    const hexRegex = /^[A-F0-9]{32}$/;
+    if (!hexRegex.test(cleaned)) {
       throw new Error("Invalid invite code");
     }
 

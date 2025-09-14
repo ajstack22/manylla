@@ -1,3 +1,4 @@
+// Mock the polyfill import
 import manyllaEncryptionService from "../manyllaEncryptionService";
 import nacl from "tweetnacl";
 import util from "tweetnacl-util";
@@ -6,17 +7,10 @@ import {
   createTestProfileData,
 } from "../../../test/utils/encryption-helpers";
 
-// Mock the polyfill import
+// Import the mocked AsyncStorage
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 jest.mock("../../../polyfills/crypto", () => ({}));
-
-// Mock AsyncStorage for testing
-const mockAsyncStorage = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-};
-
-jest.mock("@react-native-async-storage/async-storage", () => mockAsyncStorage);
 
 describe("ManyllaEncryptionService", () => {
   beforeEach(() => {
@@ -26,9 +20,9 @@ describe("ManyllaEncryptionService", () => {
 
     // Reset all mocks
     jest.clearAllMocks();
-    mockAsyncStorage.getItem.mockResolvedValue(null);
-    mockAsyncStorage.setItem.mockResolvedValue(true);
-    mockAsyncStorage.removeItem.mockResolvedValue(true);
+    AsyncStorage.getItem.mockResolvedValue(null);
+    AsyncStorage.setItem.mockResolvedValue();
+    AsyncStorage.removeItem.mockResolvedValue();
   });
 
   describe("Recovery Phrase Generation", () => {
@@ -117,7 +111,7 @@ describe("ManyllaEncryptionService", () => {
   describe("Initialization", () => {
     test("should initialize with recovery phrase", async () => {
       const phrase = TEST_RECOVERY_PHRASE;
-      mockAsyncStorage.getItem.mockResolvedValue(null);
+      AsyncStorage.getItem.mockResolvedValue(null);
 
       const result = await manyllaEncryptionService.initialize(phrase);
 
@@ -142,19 +136,22 @@ describe("ManyllaEncryptionService", () => {
 
     test("should store encrypted recovery phrase and salt", async () => {
       const phrase = TEST_RECOVERY_PHRASE;
-      mockAsyncStorage.getItem.mockResolvedValue(null);
+
+      // Set up the mocks properly
+      AsyncStorage.getItem.mockResolvedValue(null);
+      AsyncStorage.setItem.mockResolvedValue();
 
       await manyllaEncryptionService.initialize(phrase);
 
-      expect(mockAsyncStorage.setItem).toHaveBeenCalledWith(
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
         "secure_manylla_salt",
         expect.any(String),
       );
-      expect(mockAsyncStorage.setItem).toHaveBeenCalledWith(
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
         "secure_manylla_sync_id",
         expect.any(String),
       );
-      expect(mockAsyncStorage.setItem).toHaveBeenCalledWith(
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
         "secure_manylla_recovery",
         expect.any(String),
       );
@@ -317,13 +314,13 @@ describe("ManyllaEncryptionService", () => {
 
   describe("Device Key Management", () => {
     test("should generate device key when none exists", async () => {
-      mockAsyncStorage.getItem.mockResolvedValue(null);
+      AsyncStorage.getItem.mockResolvedValue(null);
 
       const deviceKey = await manyllaEncryptionService.getDeviceKey();
 
       expect(deviceKey).toBeInstanceOf(Uint8Array);
       expect(deviceKey.length).toBe(32);
-      expect(mockAsyncStorage.setItem).toHaveBeenCalledWith(
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
         "secure_manylla_device_key",
         expect.any(String),
       );
@@ -331,12 +328,12 @@ describe("ManyllaEncryptionService", () => {
 
     test("should reuse existing device key", async () => {
       const existingKey = util.encodeBase64(nacl.randomBytes(32));
-      mockAsyncStorage.getItem.mockResolvedValue(existingKey);
+      AsyncStorage.getItem.mockResolvedValue(existingKey);
 
       const deviceKey = await manyllaEncryptionService.getDeviceKey();
 
       expect(deviceKey).toEqual(util.decodeBase64(existingKey));
-      expect(mockAsyncStorage.setItem).not.toHaveBeenCalled();
+      expect(AsyncStorage.setItem).not.toHaveBeenCalled();
     });
   });
 
@@ -365,21 +362,21 @@ describe("ManyllaEncryptionService", () => {
 
   describe("Service State Management", () => {
     test("should check if enabled", async () => {
-      mockAsyncStorage.getItem.mockResolvedValue(null);
+      AsyncStorage.getItem.mockResolvedValue(null);
       expect(await manyllaEncryptionService.isEnabled()).toBe(false);
 
-      mockAsyncStorage.getItem.mockResolvedValue("test_sync_id");
+      AsyncStorage.getItem.mockResolvedValue("test_sync_id");
       expect(await manyllaEncryptionService.isEnabled()).toBe(true);
     });
 
     test("should get sync ID", async () => {
       const testSyncId = "test_sync_id_123";
-      mockAsyncStorage.getItem.mockResolvedValue(testSyncId);
+      AsyncStorage.getItem.mockResolvedValue(testSyncId);
 
       const syncId = await manyllaEncryptionService.getSyncId();
 
       expect(syncId).toBe(testSyncId);
-      expect(mockAsyncStorage.getItem).toHaveBeenCalledWith(
+      expect(AsyncStorage.getItem).toHaveBeenCalledWith(
         "secure_manylla_sync_id",
       );
     });
@@ -391,13 +388,13 @@ describe("ManyllaEncryptionService", () => {
 
       expect(manyllaEncryptionService.masterKey).toBe(null);
       expect(manyllaEncryptionService.syncId).toBe(null);
-      expect(mockAsyncStorage.removeItem).toHaveBeenCalledWith(
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
         "secure_manylla_salt",
       );
-      expect(mockAsyncStorage.removeItem).toHaveBeenCalledWith(
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
         "secure_manylla_sync_id",
       );
-      expect(mockAsyncStorage.removeItem).toHaveBeenCalledWith(
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
         "secure_manylla_recovery",
       );
     });
@@ -405,23 +402,32 @@ describe("ManyllaEncryptionService", () => {
 
   describe("Service Restoration", () => {
     test("should restore from stored recovery phrase", async () => {
-      const encryptedPhrase = "encrypted_recovery_phrase";
+      const deviceKeyBytes = nacl.randomBytes(32);
+      // Create a valid base64 encrypted phrase (nonce + ciphertext)
+      const nonce = nacl.randomBytes(24);
+      const ciphertext = nacl.randomBytes(48); // Some fake ciphertext
+      const combined = new Uint8Array(nonce.length + ciphertext.length);
+      combined.set(nonce);
+      combined.set(ciphertext, nonce.length);
+      const encryptedPhrase = util.encodeBase64(combined);
       const salt = util.encodeBase64(nacl.randomBytes(16));
 
-      mockAsyncStorage.getItem.mockImplementation((key) => {
+      AsyncStorage.getItem.mockImplementation((key) => {
         if (key === "secure_manylla_recovery")
           return Promise.resolve(encryptedPhrase);
         if (key === "secure_manylla_salt") return Promise.resolve(salt);
         if (key === "secure_manylla_device_key")
-          return Promise.resolve(util.encodeBase64(nacl.randomBytes(32)));
+          return Promise.resolve(util.encodeBase64(deviceKeyBytes));
         return Promise.resolve(null);
       });
 
-      // Mock successful decryption
+      // Mock successful decryption - return UTF-8 encoded bytes
       const originalDecrypt = nacl.secretbox.open;
-      nacl.secretbox.open = jest.fn(() =>
-        util.decodeUTF8(TEST_RECOVERY_PHRASE),
+      // Since TEST_RECOVERY_PHRASE is ASCII hex, we can encode it simply
+      const phraseBytes = new Uint8Array(
+        [...TEST_RECOVERY_PHRASE].map((c) => c.charCodeAt(0)),
       );
+      nacl.secretbox.open = jest.fn(() => phraseBytes);
 
       const result = await manyllaEncryptionService.restore();
 
@@ -433,7 +439,7 @@ describe("ManyllaEncryptionService", () => {
     });
 
     test("should fail restoration with missing data", async () => {
-      mockAsyncStorage.getItem.mockResolvedValue(null);
+      AsyncStorage.getItem.mockResolvedValue(null);
 
       const result = await manyllaEncryptionService.restore();
 
@@ -442,7 +448,7 @@ describe("ManyllaEncryptionService", () => {
     });
 
     test("should fail restoration with invalid encrypted phrase", async () => {
-      mockAsyncStorage.getItem.mockImplementation((key) => {
+      AsyncStorage.getItem.mockImplementation((key) => {
         if (key === "secure_manylla_recovery")
           return Promise.resolve("invalid_encrypted");
         if (key === "secure_manylla_salt")
@@ -467,8 +473,8 @@ describe("ManyllaEncryptionService", () => {
 
   describe("Error Handling", () => {
     test("should handle storage errors gracefully", async () => {
-      mockAsyncStorage.getItem.mockRejectedValue(new Error("Storage error"));
-      mockAsyncStorage.setItem.mockRejectedValue(new Error("Storage error"));
+      AsyncStorage.getItem.mockRejectedValue(new Error("Storage error"));
+      AsyncStorage.setItem.mockRejectedValue(new Error("Storage error"));
 
       // Should not throw, but return null/false for failures
       expect(await manyllaEncryptionService.isEnabled()).toBe(false);
@@ -504,11 +510,15 @@ describe("ManyllaEncryptionService", () => {
 
       expect(() => {
         manyllaEncryptionService.decryptData(encrypted);
-      }).toThrow("Decryption failed");
+      }).toThrow("Decryption failed - invalid key or corrupted data");
     });
   });
 
   describe("UTF-8 Encoding/Decoding", () => {
+    beforeEach(async () => {
+      await manyllaEncryptionService.initialize(TEST_RECOVERY_PHRASE);
+    });
+
     test("should handle various UTF-8 characters correctly", () => {
       const testStrings = [
         "Hello, World!",

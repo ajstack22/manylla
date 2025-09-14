@@ -44,8 +44,8 @@ export const createMockRecoveryPhrase = () => {
     .join("");
 };
 
-// Create predictable recovery phrase for consistent tests
-export const TEST_RECOVERY_PHRASE = "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6";
+// Create predictable recovery phrase for consistent tests (32 valid hex characters)
+export const TEST_RECOVERY_PHRASE = "a1b2c3d4e5f6789012345678abcdef01";
 
 // Create predictable sync ID
 export const TEST_SYNC_ID = "test_sync_id_12345678";

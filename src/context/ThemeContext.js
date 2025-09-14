@@ -133,14 +133,20 @@ export const ThemeProvider = ({
     const loadTheme = async () => {
       try {
         const savedTheme = await getStorageItem("theme_preference");
-        if (savedTheme) {
+        if (savedTheme && (savedTheme === "light" || savedTheme === "dark")) {
           setTheme(savedTheme);
           setThemeMode(savedTheme);
         } else if (initialThemeMode) {
           setTheme(initialThemeMode);
           setThemeMode(initialThemeMode);
         }
-      } catch (error) {}
+        // If no saved theme and no initial theme, use default (light)
+      } catch (error) {
+        // On error, fall back to initial theme or light
+        const fallbackTheme = initialThemeMode || "light";
+        setTheme(fallbackTheme);
+        setThemeMode(fallbackTheme);
+      }
     };
     loadTheme();
   }, [initialThemeMode]);
