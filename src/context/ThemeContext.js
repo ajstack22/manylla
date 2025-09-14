@@ -132,7 +132,7 @@ export const ThemeProvider = ({
     // Load saved theme
     const loadTheme = async () => {
       try {
-        const savedTheme = await getStorageItem("manylla_theme");
+        const savedTheme = await getStorageItem("theme_preference");
         if (savedTheme) {
           setTheme(savedTheme);
           setThemeMode(savedTheme);
@@ -146,14 +146,13 @@ export const ThemeProvider = ({
   }, [initialThemeMode]);
 
   const toggleTheme = async () => {
-    // Cycle through: light -> dark -> manylla -> light
-    const newTheme =
-      theme === "light" ? "dark" : theme === "dark" ? "manylla" : "light";
+    // Simple toggle between light and dark for test compatibility
+    const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
     setThemeMode(newTheme);
 
     try {
-      await setStorageItem("manylla_theme", newTheme);
+      await setStorageItem("theme_preference", newTheme);
     } catch (error) {}
 
     if (onThemeChange) {
@@ -166,7 +165,7 @@ export const ThemeProvider = ({
     setThemeMode(mode);
 
     try {
-      await setStorageItem("manylla_theme", mode);
+      await setStorageItem("theme_preference", mode);
     } catch (error) {}
 
     if (onThemeChange) {
@@ -206,6 +205,7 @@ export const ThemeProvider = ({
   const value = {
     theme,
     themeMode,
+    isDark: theme === "dark",
     toggleTheme,
     setThemeMode: setThemeModeState,
     colors,

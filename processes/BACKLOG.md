@@ -22,7 +22,6 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟡 P2 - Medium (Plan Soon)
 ### Stories
-- [S007](backlog/S007-dead-code-elimination-and-import-cleanup.md) - Dead Code Elimination and Import Cleanup ✅ **READY**
 - [S003](backlog/S003-test-coverage.md) - Comprehensive Test Coverage Implementation ✅ **READY**
 - [S004](backlog/S004-android-deployment.md) - Android Deployment Setup ✅ **READY**
 
@@ -42,16 +41,17 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 ---
 
 ## 📊 Metrics
-- **Total Stories**: 7 active (all ready)
+- **Total Stories**: 6 active (all ready)
 - **Total Bugs**: 0 active
-- **Completed Stories**: 7 (in completed-stories folder)
+- **Completed Stories**: 8 (in completed-stories folder)
 - **Resolved Bugs**: 2 (in bugs/resolved)
 - **P0 Items**: 0
 - **P1 Items**: 0
-- **P2 Items**: 3
+- **P2 Items**: 2
 - **P3 Items**: 4
 
 ## ✅ Recently Completed
+- [S007](completed-stories/S007-dead-code-elimination-COMPLETED.md) - Dead Code Elimination ✨ **COMPLETED** (2025-09-14)
 - [S015](completed-stories/S015-support-us-page-COMPLETED.md) - Support Us Page ✨ **COMPLETED** (2025-01-14)
 - [S016](completed-stories/S016-bottom-navigation-toolbar-COMPLETED.md) - Bottom Navigation Toolbar ✨ **COMPLETED** (2025-01-14)
 - [S018](completed-stories/S018-profile-photo-upload-COMPLETED.md) - Profile Photo Upload ✨ **COMPLETED** (2025-01-14)
