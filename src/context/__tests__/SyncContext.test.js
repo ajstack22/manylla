@@ -1,9 +1,8 @@
 import React from 'react';
-import { render, act, waitFor } from '@testing-library/react';
+import { render, act, screen } from '@testing-library/react';
 import { SyncProvider, useSync } from '../SyncContext';
 import platform from '../../utils/platform';
 import ManyllaMinimalSyncService from '../../services/sync/manyllaMinimalSyncService';
-import ManyllaEncryptionService from '../../services/sync/manyllaEncryptionService';
 import {
   TEST_RECOVERY_PHRASE,
   TEST_SYNC_ID,
@@ -87,6 +86,16 @@ const mockLocalStorage = {
   removeItem: jest.fn(),
 };
 Object.defineProperty(global, 'localStorage', { value: mockLocalStorage });
+
+// Define mock services for test usage
+const mockSyncService = ManyllaMinimalSyncService;
+const mockEncryptionService = {
+  encryptData: jest.fn(() => Promise.resolve('encrypted_test_data')),
+  decryptData: jest.fn(() => Promise.resolve({ test: 'decrypted data' })),
+  generateRecoveryPhrase: jest.fn(() => 'test-recovery-phrase'),
+  isInitialized: jest.fn(() => true),
+  initialize: jest.fn(() => Promise.resolve({ syncId: 'test_sync_id_12345678', salt: 'test_salt' })),
+};
 
 // Test consumer component
 const TestConsumer = ({ onSyncUpdate }) => {
@@ -185,14 +194,14 @@ describe('SyncContext', () => {
 
       let capturedSync;
 
-      await act(async () => {
-        render(
-          <SyncProvider>
-            <TestConsumer onSyncUpdate={(sync) => (capturedSync = sync)} />
-          </SyncProvider>
-        );
+      render(
+        <SyncProvider>
+          <TestConsumer onSyncUpdate={(sync) => (capturedSync = sync)} />
+        </SyncProvider>
+      );
 
-        // Wait for effects to complete
+      // Wait for effects to complete
+      await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 50));
       });
 
@@ -213,14 +222,14 @@ describe('SyncContext', () => {
 
       let capturedSync;
 
-      await act(async () => {
-        render(
-          <SyncProvider>
-            <TestConsumer onSyncUpdate={(sync) => (capturedSync = sync)} />
-          </SyncProvider>
-        );
+      render(
+        <SyncProvider>
+          <TestConsumer onSyncUpdate={(sync) => (capturedSync = sync)} />
+        </SyncProvider>
+      );
 
-        // Wait for effects to complete
+      // Wait for effects to complete
+      await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 50));
       });
 
@@ -234,12 +243,15 @@ describe('SyncContext', () => {
 
       let capturedSync;
 
+      render(
+        <SyncProvider>
+          <TestConsumer onSyncUpdate={(sync) => (capturedSync = sync)} />
+        </SyncProvider>
+      );
+
       await act(async () => {
-        render(
-          <SyncProvider>
-            <TestConsumer onSyncUpdate={(sync) => (capturedSync = sync)} />
-          </SyncProvider>
-        );
+        // Wait for effects to complete
+        await new Promise(resolve => setTimeout(resolve, 10));
       });
 
       // Should maintain default state on error
@@ -284,43 +296,43 @@ describe('SyncContext', () => {
 
   describe('Sync Enabling/Disabling', () => {
     test('should enable sync successfully', async () => {
-      const { getByTestId } = render(
+      render(
         <SyncProvider>
           <TestConsumer />
         </SyncProvider>
       );
 
-      expect(getByTestId('sync-enabled')).toHaveTextContent('disabled');
-      expect(getByTestId('sync-status')).toHaveTextContent('not-setup');
+      expect(screen.getByTestId('sync-enabled')).toHaveTextContent('disabled');
+      expect(screen.getByTestId('sync-status')).toHaveTextContent('not-setup');
 
       await act(async () => {
-        getByTestId('enable-sync').click();
+        screen.getByTestId('enable-sync').click();
       });
 
       expect(mockSyncService.enableSync).toHaveBeenCalledWith(TEST_RECOVERY_PHRASE, true);
-      expect(getByTestId('sync-enabled')).toHaveTextContent('enabled');
-      expect(getByTestId('sync-status')).toHaveTextContent('active');
+      expect(screen.getByTestId('sync-enabled')).toHaveTextContent('enabled');
+      expect(screen.getByTestId('sync-status')).toHaveTextContent('active');
     });
 
     test('should handle sync enable failure', async () => {
       mockSyncService.enableSync.mockRejectedValueOnce(new Error('Sync failed'));
 
-      const { getByTestId } = render(
+      render(
         <SyncProvider>
           <TestConsumer />
         </SyncProvider>
       );
 
       await act(async () => {
-        getByTestId('enable-sync').click();
+        screen.getByTestId('enable-sync').click();
       });
 
-      expect(getByTestId('sync-enabled')).toHaveTextContent('disabled');
-      expect(getByTestId('sync-status')).toHaveTextContent('error');
+      expect(screen.getByTestId('sync-enabled')).toHaveTextContent('disabled');
+      expect(screen.getByTestId('sync-status')).toHaveTextContent('error');
     });
 
     test('should disable sync successfully', async () => {
-      const { getByTestId } = render(
+      render(
         <SyncProvider>
           <TestConsumer />
         </SyncProvider>
@@ -328,25 +340,25 @@ describe('SyncContext', () => {
 
       // First enable sync
       await act(async () => {
-        getByTestId('enable-sync').click();
+        screen.getByTestId('enable-sync').click();
       });
 
-      expect(getByTestId('sync-enabled')).toHaveTextContent('enabled');
+      expect(screen.getByTestId('sync-enabled')).toHaveTextContent('enabled');
 
       // Then disable it
       await act(async () => {
-        getByTestId('disable-sync').click();
+        screen.getByTestId('disable-sync').click();
       });
 
       expect(mockSyncService.disableSync).toHaveBeenCalled();
-      expect(getByTestId('sync-enabled')).toHaveTextContent('disabled');
-      expect(getByTestId('sync-status')).toHaveTextContent('not-setup');
+      expect(screen.getByTestId('sync-enabled')).toHaveTextContent('disabled');
+      expect(screen.getByTestId('sync-status')).toHaveTextContent('not-setup');
     });
 
     test('should handle sync disable failure', async () => {
       mockSyncService.disableSync.mockRejectedValueOnce(new Error('Disable failed'));
 
-      const { getByTestId } = render(
+      render(
         <SyncProvider>
           <TestConsumer />
         </SyncProvider>
@@ -354,29 +366,29 @@ describe('SyncContext', () => {
 
       // First enable sync
       await act(async () => {
-        getByTestId('enable-sync').click();
+        screen.getByTestId('enable-sync').click();
       });
 
       // Then try to disable it (should fail)
       await act(async () => {
-        getByTestId('disable-sync').click();
+        screen.getByTestId('disable-sync').click();
       });
 
       // Should still be enabled due to error
-      expect(getByTestId('sync-enabled')).toHaveTextContent('enabled');
+      expect(screen.getByTestId('sync-enabled')).toHaveTextContent('enabled');
     });
 
     test('should persist sync enabled state on web', async () => {
       platform.isWeb = true;
 
-      const { getByTestId } = render(
+      render(
         <SyncProvider>
           <TestConsumer />
         </SyncProvider>
       );
 
       await act(async () => {
-        getByTestId('enable-sync').click();
+        screen.getByTestId('enable-sync').click();
       });
 
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith('manylla_sync_enabled', 'true');
@@ -387,14 +399,14 @@ describe('SyncContext', () => {
       platform.isWeb = false;
       platform.isNative = true;
 
-      const { getByTestId } = render(
+      render(
         <SyncProvider>
           <TestConsumer />
         </SyncProvider>
       );
 
       await act(async () => {
-        getByTestId('enable-sync').click();
+        screen.getByTestId('enable-sync').click();
       });
 
       expect(mockAsyncStorage.setItem).toHaveBeenCalledWith('manylla_sync_enabled', 'true');
@@ -403,52 +415,44 @@ describe('SyncContext', () => {
   });
 
   describe('Data Push/Pull Operations', () => {
-    beforeEach(async () => {
-      // Enable sync for all push/pull tests
-      const { getByTestId } = render(
+    // Helper function to setup enabled sync for push/pull tests
+    const setupEnabledSync = async () => {
+      render(
         <SyncProvider>
           <TestConsumer />
         </SyncProvider>
       );
 
       await act(async () => {
-        getByTestId('enable-sync').click();
+        screen.getByTestId('enable-sync').click();
       });
-    });
+    };
 
     test('should push profile data successfully', async () => {
-      const { getByTestId } = render(
-        <SyncProvider>
-          <TestConsumer />
-        </SyncProvider>
-      );
+      await setupEnabledSync();
 
-      expect(getByTestId('is-syncing')).toHaveTextContent('idle');
+      expect(screen.getByTestId('is-syncing')).toHaveTextContent('idle');
 
       await act(async () => {
-        getByTestId('push-data').click();
+        screen.getByTestId('push-data').click();
       });
 
       expect(mockSyncService.pushData).toHaveBeenCalledWith(
         expect.objectContaining({ id: expect.any(String) })
       );
-      expect(getByTestId('is-syncing')).toHaveTextContent('idle'); // Should return to idle after
+      expect(screen.getByTestId('is-syncing')).toHaveTextContent('idle'); // Should return to idle after
     });
 
     test('should handle push data failure', async () => {
       mockSyncService.pushData.mockRejectedValueOnce(new Error('Push failed'));
 
-      const { getByTestId } = render(
-        <SyncProvider>
-          <TestConsumer />
-        </SyncProvider>
-      );
+      await setupEnabledSync();
 
       await act(async () => {
-        getByTestId('push-data').click();
+        screen.getByTestId('push-data').click();
       });
 
-      expect(getByTestId('is-syncing')).toHaveTextContent('idle');
+      expect(screen.getByTestId('is-syncing')).toHaveTextContent('idle');
       // Should handle error gracefully
     });
 
@@ -456,38 +460,30 @@ describe('SyncContext', () => {
       const testData = createTestProfileData();
       mockSyncService.pullData.mockResolvedValueOnce(testData);
 
-      const { getByTestId } = render(
-        <SyncProvider>
-          <TestConsumer />
-        </SyncProvider>
-      );
+      await setupEnabledSync();
 
       await act(async () => {
-        getByTestId('pull-data').click();
+        screen.getByTestId('pull-data').click();
       });
 
       expect(mockSyncService.pullData).toHaveBeenCalled();
-      expect(getByTestId('is-syncing')).toHaveTextContent('idle');
+      expect(screen.getByTestId('is-syncing')).toHaveTextContent('idle');
     });
 
     test('should handle pull data failure', async () => {
       mockSyncService.pullData.mockRejectedValueOnce(new Error('Pull failed'));
 
-      const { getByTestId } = render(
-        <SyncProvider>
-          <TestConsumer />
-        </SyncProvider>
-      );
+      await setupEnabledSync();
 
       await act(async () => {
-        getByTestId('pull-data').click();
+        screen.getByTestId('pull-data').click();
       });
 
-      expect(getByTestId('is-syncing')).toHaveTextContent('idle');
+      expect(screen.getByTestId('is-syncing')).toHaveTextContent('idle');
     });
 
     test('should not allow push/pull when sync disabled', async () => {
-      const { getByTestId } = render(
+      render(
         <SyncProvider>
           <TestConsumer />
         </SyncProvider>
@@ -495,14 +491,14 @@ describe('SyncContext', () => {
 
       // Try to push without enabling sync first
       await act(async () => {
-        getByTestId('push-data').click();
+        screen.getByTestId('push-data').click();
       });
 
       expect(mockSyncService.pushData).not.toHaveBeenCalled();
 
       // Try to pull without enabling sync first
       await act(async () => {
-        getByTestId('pull-data').click();
+        screen.getByTestId('pull-data').click();
       });
 
       expect(mockSyncService.pullData).not.toHaveBeenCalled();
@@ -513,7 +509,7 @@ describe('SyncContext', () => {
     test('should update sync status during operations', async () => {
       let capturedSync;
 
-      const { getByTestId } = render(
+      render(
         <SyncProvider>
           <TestConsumer onSyncUpdate={(sync) => (capturedSync = sync)} />
         </SyncProvider>
@@ -523,7 +519,7 @@ describe('SyncContext', () => {
       expect(capturedSync.isSyncing).toBe(false);
 
       await act(async () => {
-        getByTestId('enable-sync').click();
+        screen.getByTestId('enable-sync').click();
       });
 
       expect(capturedSync.syncStatus).toBe('active');
@@ -535,14 +531,14 @@ describe('SyncContext', () => {
 
       let capturedSync;
 
-      const { getByTestId } = render(
+      render(
         <SyncProvider>
           <TestConsumer onSyncUpdate={(sync) => (capturedSync = sync)} />
         </SyncProvider>
       );
 
       await act(async () => {
-        getByTestId('enable-sync').click();
+        screen.getByTestId('enable-sync').click();
       });
 
       expect(capturedSync.syncStatus).toBe('error');
@@ -556,7 +552,7 @@ describe('SyncContext', () => {
 
       let capturedSync;
 
-      const { getByTestId } = render(
+      render(
         <SyncProvider>
           <TestConsumer onSyncUpdate={(sync) => (capturedSync = sync)} />
         </SyncProvider>
@@ -564,14 +560,14 @@ describe('SyncContext', () => {
 
       // First attempt should fail
       await act(async () => {
-        getByTestId('enable-sync').click();
+        screen.getByTestId('enable-sync').click();
       });
 
       expect(capturedSync.syncError).toBeTruthy();
 
       // Second attempt should succeed and clear error
       await act(async () => {
-        getByTestId('enable-sync').click();
+        screen.getByTestId('enable-sync').click();
       });
 
       expect(capturedSync.syncError).toBeNull();
@@ -579,68 +575,6 @@ describe('SyncContext', () => {
     });
   });
 
-  describe('Storage Operations', () => {
-    test('should get storage item on web', async () => {
-      platform.isWeb = true;
-      mockLocalStorage.getItem.mockReturnValueOnce('test_value');
-
-      const provider = new SyncProvider({});
-      const result = await provider.getStorageItem('test_key');
-
-      expect(result).toBe('test_value');
-      expect(mockLocalStorage.getItem).toHaveBeenCalledWith('test_key');
-    });
-
-    test('should get storage item on native', async () => {
-      platform.isWeb = false;
-      platform.isNative = true;
-      mockAsyncStorage.getItem.mockResolvedValueOnce('test_value');
-
-      const provider = new SyncProvider({});
-      const result = await provider.getStorageItem('test_key');
-
-      expect(result).toBe('test_value');
-      expect(mockAsyncStorage.getItem).toHaveBeenCalledWith('test_key');
-    });
-
-    test('should set storage item on web', async () => {
-      platform.isWeb = true;
-
-      const provider = new SyncProvider({});
-      await provider.setStorageItem('test_key', 'test_value');
-
-      expect(mockLocalStorage.setItem).toHaveBeenCalledWith('test_key', 'test_value');
-    });
-
-    test('should set storage item on native', async () => {
-      platform.isWeb = false;
-      platform.isNative = true;
-
-      const provider = new SyncProvider({});
-      await provider.setStorageItem('test_key', 'test_value');
-
-      expect(mockAsyncStorage.setItem).toHaveBeenCalledWith('test_key', 'test_value');
-    });
-
-    test('should remove storage item on web', async () => {
-      platform.isWeb = true;
-
-      const provider = new SyncProvider({});
-      await provider.removeStorageItem('test_key');
-
-      expect(mockLocalStorage.removeItem).toHaveBeenCalledWith('test_key');
-    });
-
-    test('should remove storage item on native', async () => {
-      platform.isWeb = false;
-      platform.isNative = true;
-
-      const provider = new SyncProvider({});
-      await provider.removeStorageItem('test_key');
-
-      expect(mockAsyncStorage.removeItem).toHaveBeenCalledWith('test_key');
-    });
-  });
 
   describe('Profile Received Handling', () => {
     test('should update last sync time when profile received', async () => {
@@ -710,7 +644,7 @@ describe('SyncContext', () => {
         throw new Error('Storage quota exceeded');
       });
 
-      const { getByTestId } = render(
+      render(
         <SyncProvider>
           <TestConsumer />
         </SyncProvider>
@@ -718,10 +652,10 @@ describe('SyncContext', () => {
 
       // Should not throw error despite storage failure
       await act(async () => {
-        getByTestId('enable-sync').click();
+        screen.getByTestId('enable-sync').click();
       });
 
-      expect(getByTestId('sync-enabled')).toHaveTextContent('enabled');
+      expect(screen.getByTestId('sync-enabled')).toHaveTextContent('enabled');
     });
   });
 

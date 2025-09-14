@@ -1,5 +1,4 @@
 import ManyllaMinimalSyncServiceWeb from '../manyllaMinimalSyncServiceWeb';
-import manyllaEncryptionService from '../manyllaEncryptionService';
 import {
   TEST_RECOVERY_PHRASE,
   createTestProfileData,

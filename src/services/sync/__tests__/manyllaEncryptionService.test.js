@@ -3,9 +3,7 @@ import nacl from 'tweetnacl';
 import util from 'tweetnacl-util';
 import {
   TEST_RECOVERY_PHRASE,
-  TEST_VECTORS,
   createTestProfileData,
-  waitForAsync,
 } from '../../../test/utils/encryption-helpers';
 
 // Mock the polyfill import

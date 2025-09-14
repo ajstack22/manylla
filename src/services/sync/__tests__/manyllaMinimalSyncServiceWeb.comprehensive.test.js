@@ -2,7 +2,6 @@ import manyllaMinimalSyncService from '../manyllaMinimalSyncServiceWeb';
 import manyllaEncryptionService from '../manyllaEncryptionService';
 import {
   TEST_RECOVERY_PHRASE,
-  TEST_SYNC_ID,
   createTestProfileData,
   waitForAsync,
 } from '../../../test/utils/encryption-helpers';
@@ -645,7 +644,6 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
 
     test('should clean invite code with spaces and dashes', async () => {
       const messyCode = 'A1B2-C3D4 E5F6-G7H8 I9J0-K1L2 M3N4-O5P6';
-      const expectedClean = 'A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6';
 
       fetch.mockResolvedValueOnce({
         ok: true,

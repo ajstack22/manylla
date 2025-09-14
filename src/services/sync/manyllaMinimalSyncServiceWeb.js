@@ -421,3 +421,6 @@ class ManyllaMinimalSyncService {
 // Export singleton instance
 const manyllaMinimalSyncService = new ManyllaMinimalSyncService();
 export default manyllaMinimalSyncService;
+
+// Also export the class for testing
+export { ManyllaMinimalSyncService };

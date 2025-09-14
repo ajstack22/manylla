@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, act } from '@testing-library/react';
+import { render, act, screen } from '@testing-library/react';
 import { ThemeProvider, useTheme } from '../ThemeContext';
 import platform from '../../utils/platform';
 
@@ -92,13 +92,11 @@ describe('ThemeContext', () => {
 
       let capturedTheme;
 
-      await act(async () => {
-        render(
-          <ThemeProvider>
-            <TestConsumer onThemeChange={(theme) => (capturedTheme = theme)} />
-          </ThemeProvider>
-        );
-      });
+      render(
+        <ThemeProvider>
+          <TestConsumer onThemeChange={(theme) => (capturedTheme = theme)} />
+        </ThemeProvider>
+      );
 
       // Allow effect to run
       await act(async () => {
@@ -115,13 +113,11 @@ describe('ThemeContext', () => {
 
       let capturedTheme;
 
-      await act(async () => {
-        render(
-          <ThemeProvider>
-            <TestConsumer onThemeChange={(theme) => (capturedTheme = theme)} />
-          </ThemeProvider>
-        );
-      });
+      render(
+        <ThemeProvider>
+          <TestConsumer onThemeChange={(theme) => (capturedTheme = theme)} />
+        </ThemeProvider>
+      );
 
       // Allow effect to run
       await act(async () => {
@@ -137,13 +133,11 @@ describe('ThemeContext', () => {
 
       let capturedTheme;
 
-      await act(async () => {
-        render(
-          <ThemeProvider>
-            <TestConsumer onThemeChange={(theme) => (capturedTheme = theme)} />
-          </ThemeProvider>
-        );
-      });
+      render(
+        <ThemeProvider>
+          <TestConsumer onThemeChange={(theme) => (capturedTheme = theme)} />
+        </ThemeProvider>
+      );
 
       // Should default to light theme on error
       expect(capturedTheme.isDark).toBe(false);
@@ -154,13 +148,11 @@ describe('ThemeContext', () => {
 
       let capturedTheme;
 
-      await act(async () => {
-        render(
-          <ThemeProvider>
-            <TestConsumer onThemeChange={(theme) => (capturedTheme = theme)} />
-          </ThemeProvider>
-        );
-      });
+      render(
+        <ThemeProvider>
+          <TestConsumer onThemeChange={(theme) => (capturedTheme = theme)} />
+        </ThemeProvider>
+      );
 
       // Allow effect to run
       await act(async () => {
@@ -174,45 +166,45 @@ describe('ThemeContext', () => {
 
   describe('Theme Toggle', () => {
     test('should toggle from light to dark', async () => {
-      const { getByTestId } = render(
+      render(
         <ThemeProvider>
           <TestConsumer />
         </ThemeProvider>
       );
 
-      expect(getByTestId('theme-mode')).toHaveTextContent('light');
-      expect(getByTestId('primary-color')).toHaveTextContent('#8B6F47');
+      expect(screen.getByTestId('theme-mode')).toHaveTextContent('light');
+      expect(screen.getByTestId('primary-color')).toHaveTextContent('#8B6F47');
 
       await act(async () => {
-        getByTestId('toggle-button').click();
+        screen.getByTestId('toggle-button').click();
       });
 
-      expect(getByTestId('theme-mode')).toHaveTextContent('dark');
-      expect(getByTestId('primary-color')).toHaveTextContent('#8B6F47'); // Primary should stay same
+      expect(screen.getByTestId('theme-mode')).toHaveTextContent('dark');
+      expect(screen.getByTestId('primary-color')).toHaveTextContent('#8B6F47'); // Primary should stay same
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith('theme_preference', 'dark');
     });
 
     test('should toggle from dark to light', async () => {
-      const { getByTestId } = render(
+      render(
         <ThemeProvider initialThemeMode="dark">
           <TestConsumer />
         </ThemeProvider>
       );
 
-      expect(getByTestId('theme-mode')).toHaveTextContent('dark');
+      expect(screen.getByTestId('theme-mode')).toHaveTextContent('dark');
 
       await act(async () => {
-        getByTestId('toggle-button').click();
+        screen.getByTestId('toggle-button').click();
       });
 
-      expect(getByTestId('theme-mode')).toHaveTextContent('light');
+      expect(screen.getByTestId('theme-mode')).toHaveTextContent('light');
       expect(mockAsyncStorage.setItem).toHaveBeenCalledWith('theme_preference', 'light');
     });
 
     test('should handle storage save error gracefully', async () => {
       mockAsyncStorage.setItem.mockRejectedValueOnce(new Error('Storage error'));
 
-      const { getByTestId } = render(
+      render(
         <ThemeProvider>
           <TestConsumer />
         </ThemeProvider>
@@ -220,10 +212,10 @@ describe('ThemeContext', () => {
 
       // Should still toggle theme despite storage error
       await act(async () => {
-        getByTestId('toggle-button').click();
+        screen.getByTestId('toggle-button').click();
       });
 
-      expect(getByTestId('theme-mode')).toHaveTextContent('dark');
+      expect(screen.getByTestId('theme-mode')).toHaveTextContent('dark');
     });
   });
 
@@ -302,7 +294,7 @@ describe('ThemeContext', () => {
         );
       };
 
-      const { getByRole } = render(
+      render(
         <ThemeProvider>
           <TestComponent />
         </ThemeProvider>
@@ -310,12 +302,12 @@ describe('ThemeContext', () => {
 
       // Capture light theme and switch to dark
       act(() => {
-        getByRole('button').click();
+        screen.getByRole('button').click();
       });
 
       // Capture dark theme
       act(() => {
-        getByRole('button').click();
+        screen.getByRole('button').click();
       });
 
       expect(lightTheme.colors.primary).toBe(darkTheme.colors.primary);
@@ -421,14 +413,14 @@ describe('ThemeContext', () => {
       platform.isWeb = true;
       platform.isNative = false;
 
-      const { getByTestId } = render(
+      render(
         <ThemeProvider>
           <TestConsumer />
         </ThemeProvider>
       );
 
       await act(async () => {
-        getByTestId('toggle-button').click();
+        screen.getByTestId('toggle-button').click();
       });
 
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith('theme_preference', 'dark');
@@ -438,14 +430,14 @@ describe('ThemeContext', () => {
       platform.isWeb = false;
       platform.isNative = true;
 
-      const { getByTestId } = render(
+      render(
         <ThemeProvider>
           <TestConsumer />
         </ThemeProvider>
       );
 
       await act(async () => {
-        getByTestId('toggle-button').click();
+        screen.getByTestId('toggle-button').click();
       });
 
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith('theme_preference', 'dark');
@@ -473,24 +465,24 @@ describe('ThemeContext', () => {
         );
       };
 
-      const { getByTestId } = render(
+      render(
         <ThemeProvider>
           <Consumer1 />
           <Consumer2 />
         </ThemeProvider>
       );
 
-      expect(getByTestId('consumer1')).toHaveTextContent('light');
-      expect(getByTestId('consumer2')).toHaveTextContent('light');
+      expect(screen.getByTestId('consumer1')).toHaveTextContent('light');
+      expect(screen.getByTestId('consumer2')).toHaveTextContent('light');
       expect(theme1.isDark).toBe(false);
       expect(theme2.isDark).toBe(false);
 
       await act(async () => {
-        getByTestId('toggle').click();
+        screen.getByTestId('toggle').click();
       });
 
-      expect(getByTestId('consumer1')).toHaveTextContent('dark');
-      expect(getByTestId('consumer2')).toHaveTextContent('dark');
+      expect(screen.getByTestId('consumer1')).toHaveTextContent('dark');
+      expect(screen.getByTestId('consumer2')).toHaveTextContent('dark');
       expect(theme1.isDark).toBe(true);
       expect(theme2.isDark).toBe(true);
     });
@@ -498,19 +490,19 @@ describe('ThemeContext', () => {
 
   describe('Theme Persistence', () => {
     test('should persist theme changes across re-renders', async () => {
-      const { getByTestId, rerender } = render(
+      const { rerender } = render(
         <ThemeProvider>
           <TestConsumer />
         </ThemeProvider>
       );
 
-      expect(getByTestId('theme-mode')).toHaveTextContent('light');
+      expect(screen.getByTestId('theme-mode')).toHaveTextContent('light');
 
       await act(async () => {
-        getByTestId('toggle-button').click();
+        screen.getByTestId('toggle-button').click();
       });
 
-      expect(getByTestId('theme-mode')).toHaveTextContent('dark');
+      expect(screen.getByTestId('theme-mode')).toHaveTextContent('dark');
 
       rerender(
         <ThemeProvider>
@@ -518,7 +510,7 @@ describe('ThemeContext', () => {
         </ThemeProvider>
       );
 
-      expect(getByTestId('theme-mode')).toHaveTextContent('dark');
+      expect(screen.getByTestId('theme-mode')).toHaveTextContent('dark');
     });
 
     test('should load persisted theme on initialization', async () => {
@@ -526,14 +518,14 @@ describe('ThemeContext', () => {
 
       let capturedTheme;
 
-      await act(async () => {
-        render(
-          <ThemeProvider>
-            <TestConsumer onThemeChange={(theme) => (capturedTheme = theme)} />
-          </ThemeProvider>
-        );
+      render(
+        <ThemeProvider>
+          <TestConsumer onThemeChange={(theme) => (capturedTheme = theme)} />
+        </ThemeProvider>
+      );
 
-        // Wait for effect to complete
+      // Wait for effect to complete
+      await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 50));
       });
 

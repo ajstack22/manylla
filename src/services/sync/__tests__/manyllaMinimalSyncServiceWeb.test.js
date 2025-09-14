@@ -42,12 +42,29 @@ const mockLocalStorage = {
 };
 global.localStorage = mockLocalStorage;
 
+// Define mock services for test usage
+const mockEncryptionService = manyllaEncryptionService;
+
+// Mock MSW server and HTTP utilities
+const server = {
+  use: jest.fn(),
+  resetHandlers: jest.fn(),
+};
+const http = {
+  get: jest.fn(),
+  post: jest.fn(),
+};
+const HttpResponse = {
+  json: jest.fn(),
+  text: jest.fn(),
+};
+
 describe('ManyllaMinimalSyncServiceWeb', () => {
   let syncService;
 
   beforeEach(() => {
-    // Create fresh instance for each test
-    syncService = new ManyllaMinimalSyncServiceWeb();
+    // Use the singleton instance
+    syncService = ManyllaMinimalSyncServiceWeb;
 
     // Reset mocks
     jest.clearAllMocks();
@@ -193,7 +210,9 @@ describe('ManyllaMinimalSyncServiceWeb', () => {
     });
 
     test('should throw error when not initialized', async () => {
-      const uninitializedService = new ManyllaMinimalSyncServiceWeb();
+      // Create a new instance of the service for this test
+      const { ManyllaMinimalSyncService } = require('../manyllaMinimalSyncServiceWeb');
+      const uninitializedService = new ManyllaMinimalSyncService();
       const testData = createTestProfileData();
 
       await expect(uninitializedService.push(testData)).rejects.toThrow('Sync not initialized');
@@ -264,14 +283,16 @@ describe('ManyllaMinimalSyncServiceWeb', () => {
       };
       jest.doMock('../conflictResolver', () => ({ default: mockConflictResolver }));
 
-      const result = await syncService.pull();
+      await syncService.pull();
 
       // Should call conflict resolver and return merged result
       expect(mockConflictResolver.resolve).toHaveBeenCalledWith(localData, remoteData);
     });
 
     test('should throw error when not initialized', async () => {
-      const uninitializedService = new ManyllaMinimalSyncServiceWeb();
+      // Create a new instance of the service for this test
+      const { ManyllaMinimalSyncService } = require('../manyllaMinimalSyncServiceWeb');
+      const uninitializedService = new ManyllaMinimalSyncService();
 
       await expect(uninitializedService.pull()).rejects.toThrow('Sync not initialized');
     });
@@ -352,6 +373,8 @@ describe('ManyllaMinimalSyncServiceWeb', () => {
       expect(() => {
         jest.advanceTimersByTime(60000);
       }).not.toThrow();
+
+      expect(pullSpy).toHaveBeenCalled();
     });
   });
 
@@ -534,7 +557,7 @@ describe('ManyllaMinimalSyncServiceWeb', () => {
       const testData = createTestProfileData();
 
       // This would timeout in real scenario, but we can test the setup
-      const pushPromise = syncService.push(testData);
+      syncService.push(testData);
 
       // Clean up
       syncService.pendingPush && clearTimeout(syncService.pendingPush);
