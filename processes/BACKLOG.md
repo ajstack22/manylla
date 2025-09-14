@@ -1,7 +1,7 @@
 # Development Backlog
 
 *Last Updated: 2025-01-14*
-*Next ID: S023, B004*
+*Next ID: S025, B004*
 
 ## Quick Start for Claude
 Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything needed to start immediately.
@@ -15,15 +15,14 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟠 P1 - High (Do Next)
 ### Stories
-*None currently*
+- [S025](backlog/S025-ios-deployment-and-app-store-setup.md) - iOS Deployment and App Store Setup ✅ **READY**
 
 ### Bugs
 *None*
 
 ## 🟡 P2 - Medium (Plan Soon)
 ### Stories
-- [S003](backlog/S003-test-coverage.md) - Comprehensive Test Coverage Implementation ✅ **READY**
-- [S004](backlog/S004-android-deployment.md) - Android Deployment Setup ✅ **READY**
+*None*
 
 ### Bugs
 *None*
@@ -41,16 +40,18 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 ---
 
 ## 📊 Metrics
-- **Total Stories**: 6 active (all ready)
+- **Total Stories**: 5 active (all ready)
 - **Total Bugs**: 0 active
-- **Completed Stories**: 8 (in completed-stories folder)
+- **Completed Stories**: 10 (in completed-stories folder)
 - **Resolved Bugs**: 2 (in bugs/resolved)
 - **P0 Items**: 0
-- **P1 Items**: 0
-- **P2 Items**: 2
+- **P1 Items**: 1
+- **P2 Items**: 0
 - **P3 Items**: 4
 
 ## ✅ Recently Completed
+- [S003](completed-stories/S003-test-coverage-COMPLETED.md) - Comprehensive Test Coverage Implementation ✨ **COMPLETED** (2025-09-14)
+- [S004](completed-stories/S004-android-deployment-COMPLETED.md) - Android Deployment Setup ✨ **COMPLETED** (2025-09-14)
 - [S007](completed-stories/S007-dead-code-elimination-COMPLETED.md) - Dead Code Elimination ✨ **COMPLETED** (2025-09-14)
 - [S015](completed-stories/S015-support-us-page-COMPLETED.md) - Support Us Page ✨ **COMPLETED** (2025-01-14)
 - [S016](completed-stories/S016-bottom-navigation-toolbar-COMPLETED.md) - Bottom Navigation Toolbar ✨ **COMPLETED** (2025-01-14)

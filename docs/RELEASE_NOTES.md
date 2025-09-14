@@ -1,5 +1,45 @@
 # Manylla Release Notes
 
+## Version 2025.09.15.1 - 2025-09-15
+iOS Deployment and App Store Setup Complete
+
+### Summary
+Comprehensive iOS deployment pipeline implemented with build automation, code signing management, and App Store submission preparation following established Android patterns
+
+### Added
+- **iOS Build Infrastructure (S025)**:
+  - Complete iOS deployment scripts matching Android capabilities
+  - Automated environment validation with 14+ system checks
+  - Debug and release build automation with IPA generation
+  - Code signing and certificate management utilities
+  - TestFlight deployment automation
+  - App Store submission validation and preparation
+  - Version synchronization with Android builds
+
+### Technical
+- Created 8 production-ready iOS scripts in `scripts/ios/`:
+  - `validate-environment.sh` - Comprehensive environment checking
+  - `build-ios.sh` - Debug/release build automation
+  - `clean-ios.sh` - Build artifact cleanup
+  - `run-ios.sh` - Device/simulator deployment
+  - `setup-certificates.sh` - Certificate management
+  - `prepare-appstore.sh` - Submission validation
+  - `deploy-testflight.sh` - TestFlight automation
+  - `configure-project.sh` - Project configuration
+- Updated Xcode project configuration:
+  - Bundle ID: com.manylla.mobile
+  - Version: 2025.09.14.2 (synced with Android)
+  - Build: 20250914
+  - Category: Medical (public.app-category.medical)
+- Enhanced privacy manifest for medical data compliance
+- All scripts follow Android deployment patterns for consistency
+
+### Security
+- Zero-knowledge encryption declarations properly configured
+- Medical data handling compliance for special needs information
+- Privacy manifest includes health data collection disclosure
+- No hardcoded credentials in deployment scripts
+
 ## Version 2025.09.14.3 - 2025-09-14
 Comprehensive Test Coverage and Android Deployment Setup
 

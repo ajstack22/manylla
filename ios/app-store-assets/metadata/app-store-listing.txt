@@ -1,0 +1,45 @@
+# Manylla App Store Listing
+
+## App Name (max 30 characters)
+Manylla
+
+## Subtitle (max 30 characters)
+Special Needs Medical Info
+
+## Keywords (max 100 characters, comma-separated)
+special needs,medical,autism,ADHD,therapy,IEP,504 plan,medical records,healthcare,family
+
+## Description (max 4000 characters)
+Manylla is a secure, zero-knowledge encrypted app designed specifically for families managing special needs medical information. Keep track of medical history, therapy progress, IEP/504 plans, and important medical documents all in one place.
+
+Key Features:
+• Zero-knowledge encryption - your data stays completely private
+• Medical history tracking for appointments and treatments
+• Therapy session notes and progress documentation
+• IEP and 504 plan management with easy access
+• Secure photo storage for medical documents and forms
+• Multi-device sync using encrypted recovery phrases
+• Print-friendly reports for medical appointments
+• No cloud storage - all data encrypted locally on your device
+
+Perfect for parents and caregivers of children with autism spectrum disorders, ADHD, learning disabilities, developmental delays, and other special needs conditions.
+
+Privacy First: Manylla uses military-grade encryption to protect your family's sensitive medical information. Your data never leaves your device unencrypted, and we never have access to your personal information.
+
+## Privacy Policy URL
+https://manylla.com/privacy
+
+## Support URL
+https://manylla.com/support
+
+## Marketing URL (optional)
+https://manylla.com
+
+## Category
+Medical
+
+## Content Rating
+4+ (Ages 4 and up)
+
+## What's New in This Version
+Initial release of Manylla for iOS. Includes full medical information management with zero-knowledge encryption, photo storage, and cross-device sync capabilities.

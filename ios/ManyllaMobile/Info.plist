@@ -9,7 +9,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>manylla</string>
+	<string>Manylla</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -28,6 +28,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.medical</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MinimumOSVersion</key>
@@ -40,7 +42,7 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Manylla needs access to your camera to take photos for your child's profile</string>
+	<string>Manylla needs camera access to capture photos for your child's medical profile. Photos are encrypted and stored securely on your device.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Manylla uses Face ID to secure your child's medical information</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -48,7 +50,7 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Manylla needs permission to save photos to your photo library</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Manylla needs access to your photo library to select photos for your child's profile</string>
+	<string>Manylla needs photo library access to select images for your child's medical profile. All photos are encrypted and stored securely on your device.</string>
 	<key>RCTNewArchEnabled</key>
 	<false/>
 	<key>UIAppFonts</key>
