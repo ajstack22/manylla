@@ -28,11 +28,6 @@ class PhotoService {
     try {
       this.activeOperations++;
 
-      // Validate encryption service is initialized
-      if (!manyllaEncryptionService.isInitialized()) {
-        throw new Error('Encryption service not initialized');
-      }
-
       // Process the image (resize, optimize)
       const processResult = await processImage(imageInput);
       if (!processResult.success) {
@@ -42,9 +37,18 @@ class PhotoService {
       // Create thumbnail for UI performance
       const thumbnail = await createThumbnail(processResult.dataUrl, PHOTO_CONFIG.THUMBNAIL_SIZE);
 
-      // Encrypt both full image and thumbnail
-      const encryptedPhoto = await this.encryptPhotoData(processResult.dataUrl);
-      const encryptedThumbnail = await this.encryptPhotoData(thumbnail);
+      // If encryption service is initialized, encrypt the photo
+      // Otherwise, store it locally unencrypted (will be encrypted when sync is set up)
+      let encryptedPhoto, encryptedThumbnail;
+      if (manyllaEncryptionService.isInitialized()) {
+        // Encrypt both full image and thumbnail
+        encryptedPhoto = await this.encryptPhotoData(processResult.dataUrl);
+        encryptedThumbnail = await this.encryptPhotoData(thumbnail);
+      } else {
+        // Store unencrypted for now, will be encrypted on sync setup
+        encryptedPhoto = processResult.dataUrl;
+        encryptedThumbnail = thumbnail;
+      }
 
       return {
         success: true,
@@ -55,7 +59,8 @@ class PhotoService {
           processedSize: processResult.processedSize,
           compressionRatio: processResult.compressionRatio,
           timestamp: new Date().toISOString(),
-          version: '1.0'
+          version: '1.0',
+          isEncrypted: manyllaEncryptionService.isInitialized()
         }
       };
     } catch (error) {

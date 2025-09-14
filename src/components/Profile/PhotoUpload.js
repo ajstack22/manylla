@@ -139,12 +139,7 @@ export const PhotoUpload = ({
       }, 500);
 
     } catch (error) {
-      // Check if it's an encryption initialization error
-      if (error.message === 'Encryption service not initialized') {
-        setError('Please set up sync first to enable encrypted photo storage');
-      } else {
-        setError(ImagePicker.getErrorMessage(error, 'upload photo'));
-      }
+      setError(ImagePicker.getErrorMessage(error, 'upload photo'));
       if (process.env.NODE_ENV === 'development') {
         console.error('Photo upload failed:', error);
       }
