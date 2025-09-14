@@ -1,5 +1,29 @@
 # Manylla Release Notes
 
+## Version 2025.09.13.3 - 2025-09-13
+PhotoUpload Component Fixes and UI Improvements
+
+### Summary
+Fixed PhotoUpload component integration issues and improved cross-platform compatibility
+
+### Fixed
+- PhotoUpload component now correctly appears in ProfileEditForm (was editing wrong component)
+- Material Icons rendering issues on web (using IconProvider for cross-platform support)
+- Delete button confirmation now works on web (using window.confirm instead of Alert.alert)
+- Photo upload works locally without requiring sync setup (local-first approach)
+
+### Changed
+- Delete button positioned top-left, Edit button positioned top-right
+- Photos stored locally unencrypted if sync not initialized (encrypted when sync is set up)
+- Added CameraAlt icon to IconProvider for photo placeholder
+- Improved error messages for better user guidance
+
+### Technical
+- Fixed import chain validation in adversarial review process
+- Updated ProfileEditForm in UnifiedApp.js (not ProfileEditDialog)
+- Added fallback for uninitialized encryption service
+- Browser-compatible confirmation dialogs for web platform
+
 ## Version 2025.09.14.1 - 2025-09-14
 Encrypted Photo Upload for User Profiles
 
