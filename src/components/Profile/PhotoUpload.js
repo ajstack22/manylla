@@ -12,7 +12,6 @@ import {
   StyleSheet,
   Alert
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useTheme } from '../../context/ThemeContext';
 import ImagePicker from '../Common/ImagePicker';
 import photoService from '../../services/photoService';
@@ -222,11 +221,10 @@ export const PhotoUpload = ({
             onPress={!disabled ? handlePhotoSelect : undefined}
             disabled={disabled}
           >
-            <Icon
-              name="camera-alt"
-              size={size / 3}
-              color={disabled ? colors.text.disabled : colors.text.secondary}
-            />
+            <Text style={[
+              styles.placeholderIcon,
+              { color: disabled ? colors.text.disabled : colors.text.secondary }
+            ]}>📷</Text>
             <Text style={[
               styles.placeholderText,
               disabled && styles.placeholderTextDisabled
@@ -242,7 +240,7 @@ export const PhotoUpload = ({
             style={styles.editButton}
             onPress={handlePhotoSelect}
           >
-            <Icon name="edit" size={18} color={colors.text.secondary} />
+            <Text style={styles.editIcon}>✏️</Text>
           </TouchableOpacity>
         )}
 
@@ -252,7 +250,7 @@ export const PhotoUpload = ({
             style={styles.deleteButton}
             onPress={handlePhotoRemove}
           >
-            <Icon name="delete" size={18} color={colors.error || '#F44336'} />
+            <Text style={styles.deleteIcon}>🗑️</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -260,7 +258,7 @@ export const PhotoUpload = ({
       {/* Error message */}
       {error && (
         <View style={styles.errorContainer}>
-          <Icon name="warning" size={16} color={colors.error} />
+          <Text style={{ fontSize: 16, color: colors.error }}>⚠️</Text>
           <Text style={styles.errorText}>{error}</Text>
         </View>
       )}
@@ -359,8 +357,8 @@ const getStyles = (colors, size) =>
     },
     editButton: {
       position: 'absolute',
-      top: -5,
-      right: -5,
+      top: -8,
+      right: -8,
       width: 28,
       height: 28,
       borderRadius: 14,
@@ -375,8 +373,8 @@ const getStyles = (colors, size) =>
     },
     deleteButton: {
       position: 'absolute',
-      top: -5,
-      left: -5,
+      top: -8,
+      left: -8,
       width: 28,
       height: 28,
       borderRadius: 14,
@@ -388,6 +386,15 @@ const getStyles = (colors, size) =>
       shadowOpacity: 0.2,
       shadowRadius: 2,
       elevation: 2
+    },
+    placeholderIcon: {
+      fontSize: size / 3
+    },
+    editIcon: {
+      fontSize: 16
+    },
+    deleteIcon: {
+      fontSize: 16
     },
     errorContainer: {
       flexDirection: 'row',
