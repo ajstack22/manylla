@@ -66,7 +66,7 @@ export const ProfileOverview = ({
         setPhotoDataUrl(profile.photo);
       }
     } catch (error) {
-      console.warn('Failed to load profile photo:', error);
+      console.warn("Failed to load profile photo:", error);
       setPhotoError(true);
       setPhotoDataUrl(null);
     } finally {

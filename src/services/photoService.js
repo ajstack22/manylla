@@ -2,14 +2,19 @@
  * PhotoService - Handles photo processing, encryption, and decryption
  * Integrates with ManyllaEncryptionService for zero-knowledge photo storage
  */
-import manyllaEncryptionService from './sync/manyllaEncryptionService';
-import { processImage, validateImage, createThumbnail, IMAGE_CONFIG } from '../utils/imageUtils';
+import manyllaEncryptionService from "./sync/manyllaEncryptionService";
+import {
+  processImage,
+  validateImage,
+  createThumbnail,
+  IMAGE_CONFIG,
+} from "../utils/imageUtils";
 
 // Photo-specific configuration
 const PHOTO_CONFIG = {
   THUMBNAIL_SIZE: 120,
   CACHE_DURATION: 5 * 60 * 1000, // 5 minutes in milliseconds
-  MAX_CONCURRENT_OPERATIONS: 3
+  MAX_CONCURRENT_OPERATIONS: 3,
 };
 
 class PhotoService {
@@ -35,7 +40,10 @@ class PhotoService {
       }
 
       // Create thumbnail for UI performance
-      const thumbnail = await createThumbnail(processResult.dataUrl, PHOTO_CONFIG.THUMBNAIL_SIZE);
+      const thumbnail = await createThumbnail(
+        processResult.dataUrl,
+        PHOTO_CONFIG.THUMBNAIL_SIZE,
+      );
 
       // If encryption service is initialized, encrypt the photo
       // Otherwise, store it locally unencrypted (will be encrypted when sync is set up)
@@ -59,14 +67,14 @@ class PhotoService {
           processedSize: processResult.processedSize,
           compressionRatio: processResult.compressionRatio,
           timestamp: new Date().toISOString(),
-          version: '1.0',
-          isEncrypted: manyllaEncryptionService.isInitialized()
-        }
+          version: "1.0",
+          isEncrypted: manyllaEncryptionService.isInitialized(),
+        },
       };
     } catch (error) {
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     } finally {
       this.activeOperations--;
@@ -81,14 +89,14 @@ class PhotoService {
    */
   async encryptPhotoData(photoDataUrl) {
     if (!manyllaEncryptionService.isInitialized()) {
-      throw new Error('Encryption service not initialized');
+      throw new Error("Encryption service not initialized");
     }
 
     // Create photo data object
     const photoData = {
       dataUrl: photoDataUrl,
       timestamp: new Date().toISOString(),
-      type: 'photo'
+      type: "photo",
     };
 
     // Encrypt using the existing encryption service
@@ -108,7 +116,7 @@ class PhotoService {
       }
 
       if (!manyllaEncryptionService.isInitialized()) {
-        throw new Error('Encryption service not initialized');
+        throw new Error("Encryption service not initialized");
       }
 
       // Check cache first
@@ -129,20 +137,20 @@ class PhotoService {
       const photoData = manyllaEncryptionService.decryptData(encryptedPhoto);
 
       if (!photoData || !photoData.dataUrl) {
-        throw new Error('Invalid photo data after decryption');
+        throw new Error("Invalid photo data after decryption");
       }
 
       // Cache the decrypted data URL
       if (useCache) {
         this.decryptionCache.set(cacheKey, {
           dataUrl: photoData.dataUrl,
-          timestamp: Date.now()
+          timestamp: Date.now(),
         });
       }
 
       return photoData.dataUrl;
     } catch (error) {
-      console.warn('Photo decryption failed:', error.message);
+      console.warn("Photo decryption failed:", error.message);
       return null;
     }
   }
@@ -202,12 +210,13 @@ class PhotoService {
    * Process queued operations
    */
   processQueue() {
-    while (this.operationQueue.length > 0 && this.activeOperations < PHOTO_CONFIG.MAX_CONCURRENT_OPERATIONS) {
+    while (
+      this.operationQueue.length > 0 &&
+      this.activeOperations < PHOTO_CONFIG.MAX_CONCURRENT_OPERATIONS
+    ) {
       const { operation, resolve, reject } = this.operationQueue.shift();
 
-      operation()
-        .then(resolve)
-        .catch(reject);
+      operation().then(resolve).catch(reject);
     }
   }
 
@@ -255,7 +264,7 @@ class PhotoService {
       validEntries,
       expiredEntries,
       activeOperations: this.activeOperations,
-      queuedOperations: this.operationQueue.length
+      queuedOperations: this.operationQueue.length,
     };
   }
 
@@ -279,28 +288,34 @@ class PhotoService {
   async migrateLegacyPhoto(legacyPhoto) {
     try {
       // If it's already a data URL, encrypt it
-      if (typeof legacyPhoto === 'string' && legacyPhoto.startsWith('data:image/')) {
+      if (
+        typeof legacyPhoto === "string" &&
+        legacyPhoto.startsWith("data:image/")
+      ) {
         return await this.processAndEncryptPhoto(legacyPhoto);
       }
 
       // If it's a URL, we can't migrate it automatically
-      if (typeof legacyPhoto === 'string' && (legacyPhoto.startsWith('http') || legacyPhoto.startsWith('/'))) {
+      if (
+        typeof legacyPhoto === "string" &&
+        (legacyPhoto.startsWith("http") || legacyPhoto.startsWith("/"))
+      ) {
         return {
           success: false,
-          error: 'Cannot migrate URL-based photos automatically',
+          error: "Cannot migrate URL-based photos automatically",
           requiresManualMigration: true,
-          legacyUrl: legacyPhoto
+          legacyUrl: legacyPhoto,
         };
       }
 
       return {
         success: false,
-        error: 'Unknown legacy photo format'
+        error: "Unknown legacy photo format",
       };
     } catch (error) {
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -311,15 +326,17 @@ class PhotoService {
    * @returns {boolean} True if encrypted
    */
   isPhotoEncrypted(photoData) {
-    if (!photoData || typeof photoData !== 'string') {
+    if (!photoData || typeof photoData !== "string") {
       return false;
     }
 
     // Encrypted photos are base64 encoded and don't start with data: or http:
-    return !photoData.startsWith('data:') &&
-           !photoData.startsWith('http') &&
-           !photoData.startsWith('/') &&
-           photoData.length > 50; // Encrypted data should be reasonably long
+    return (
+      !photoData.startsWith("data:") &&
+      !photoData.startsWith("http") &&
+      !photoData.startsWith("/") &&
+      photoData.length > 50
+    ); // Encrypted data should be reasonably long
   }
 
   /**
@@ -352,7 +369,8 @@ class PhotoService {
       encryptedPhotos,
       legacyPhotos,
       estimatedSize,
-      encryptionPercentage: totalPhotos > 0 ? (encryptedPhotos / totalPhotos) * 100 : 0
+      encryptionPercentage:
+        totalPhotos > 0 ? (encryptedPhotos / totalPhotos) * 100 : 0,
     };
   }
 }
@@ -361,7 +379,7 @@ class PhotoService {
 const photoService = new PhotoService();
 
 // Set up periodic cache cleanup
-if (typeof setInterval !== 'undefined') {
+if (typeof setInterval !== "undefined") {
   setInterval(() => {
     photoService.cleanExpiredCache();
   }, PHOTO_CONFIG.CACHE_DURATION);

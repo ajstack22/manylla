@@ -2,7 +2,7 @@
  * PhotoUpload Component - Photo upload interface for profile editing
  * Supports cross-platform image selection, preview, and removal
  */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -10,13 +10,13 @@ import {
   Image,
   ActivityIndicator,
   StyleSheet,
-  Alert
-} from 'react-native';
-import { useTheme } from '../../context/ThemeContext';
-import Icon from '../Common/IconProvider';
-import ImagePicker from '../Common/ImagePicker';
-import photoService from '../../services/photoService';
-import platform from '../../utils/platform';
+  Alert,
+} from "react-native";
+import { useTheme } from "../../context/ThemeContext";
+import Icon from "../Common/IconProvider";
+import ImagePicker from "../Common/ImagePicker";
+import photoService from "../../services/photoService";
+import platform from "../../utils/platform";
 
 /**
  * PhotoUpload Component
@@ -32,7 +32,7 @@ export const PhotoUpload = ({
   onPhotoChange,
   onPhotoRemove,
   disabled = false,
-  size = 100
+  size = 100,
 }) => {
   const { colors } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +54,11 @@ export const PhotoUpload = ({
       setError(null);
 
       // Check if photo is encrypted or legacy format
-      if (photoService && typeof photoService.isPhotoEncrypted === 'function' && photoService.isPhotoEncrypted(currentPhoto)) {
+      if (
+        photoService &&
+        typeof photoService.isPhotoEncrypted === "function" &&
+        photoService.isPhotoEncrypted(currentPhoto)
+      ) {
         const decryptedDataUrl = await photoService.decryptPhoto(currentPhoto);
         setPhotoPreview(decryptedDataUrl);
       } else {
@@ -62,10 +66,10 @@ export const PhotoUpload = ({
         setPhotoPreview(currentPhoto);
       }
     } catch (error) {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('Failed to load photo:', error);
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to load photo:", error);
       }
-      setError('Failed to load photo');
+      setError("Failed to load photo");
       setPhotoPreview(null);
     } finally {
       setIsLoading(false);
@@ -95,7 +99,7 @@ export const PhotoUpload = ({
       const result = await ImagePicker.showImagePicker({
         quality: 0.9,
         maxWidth: 1600,
-        maxHeight: 1600
+        maxHeight: 1600,
       });
 
       if (result.cancelled) {
@@ -112,11 +116,13 @@ export const PhotoUpload = ({
       // Show processing progress
       setProcessingProgress(0);
       const progressInterval = setInterval(() => {
-        setProcessingProgress(prev => Math.min(prev + 10, 90));
+        setProcessingProgress((prev) => Math.min(prev + 10, 90));
       }, 100);
 
       // Process and encrypt photo
-      const processResult = await photoService.processAndEncryptPhoto(result.dataUrl || result);
+      const processResult = await photoService.processAndEncryptPhoto(
+        result.dataUrl || result,
+      );
 
       clearInterval(progressInterval);
       setProcessingProgress(100);
@@ -137,11 +143,10 @@ export const PhotoUpload = ({
       setTimeout(() => {
         setProcessingProgress(0);
       }, 500);
-
     } catch (error) {
-      setError(ImagePicker.getErrorMessage(error, 'upload photo'));
-      if (process.env.NODE_ENV === 'development') {
-        console.error('Photo upload failed:', error);
+      setError(ImagePicker.getErrorMessage(error, "upload photo"));
+      if (process.env.NODE_ENV === "development") {
+        console.error("Photo upload failed:", error);
       }
     } finally {
       setIsLoading(false);
@@ -156,7 +161,7 @@ export const PhotoUpload = ({
 
     if (platform.isWeb) {
       // Use native browser confirm for web
-      if (window.confirm('Are you sure you want to remove this photo?')) {
+      if (window.confirm("Are you sure you want to remove this photo?")) {
         setPhotoPreview(null);
         setError(null);
         if (onPhotoRemove) {
@@ -166,22 +171,22 @@ export const PhotoUpload = ({
     } else {
       // Use React Native Alert for mobile
       Alert.alert(
-        'Remove Photo',
-        'Are you sure you want to remove this photo?',
+        "Remove Photo",
+        "Are you sure you want to remove this photo?",
         [
-          { text: 'Cancel', style: 'cancel' },
+          { text: "Cancel", style: "cancel" },
           {
-            text: 'Remove',
-            style: 'destructive',
+            text: "Remove",
+            style: "destructive",
             onPress: () => {
               setPhotoPreview(null);
               setError(null);
               if (onPhotoRemove) {
                 onPhotoRemove();
               }
-            }
-          }
-        ]
+            },
+          },
+        ],
       );
     }
   };
@@ -195,22 +200,19 @@ export const PhotoUpload = ({
       <View style={styles.photoContainer}>
         {isLoading ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator
-              size="large"
-              color={colors.primary}
-            />
+            <ActivityIndicator size="large" color={colors.primary} />
             {processingProgress > 0 && (
               <View style={styles.progressContainer}>
                 <View
                   style={[
                     styles.progressBar,
-                    { width: `${processingProgress}%` }
+                    { width: `${processingProgress}%` },
                   ]}
                 />
               </View>
             )}
             <Text style={styles.loadingText}>
-              {processingProgress > 0 ? 'Processing...' : 'Loading...'}
+              {processingProgress > 0 ? "Processing..." : "Loading..."}
             </Text>
           </View>
         ) : photoPreview ? (
@@ -227,10 +229,7 @@ export const PhotoUpload = ({
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
-            style={[
-              styles.placeholder,
-              disabled && styles.placeholderDisabled
-            ]}
+            style={[styles.placeholder, disabled && styles.placeholderDisabled]}
             onPress={!disabled ? handlePhotoSelect : undefined}
             disabled={disabled}
           >
@@ -239,11 +238,13 @@ export const PhotoUpload = ({
               size={size / 3}
               color={disabled ? colors.text.disabled : colors.text.secondary}
             />
-            <Text style={[
-              styles.placeholderText,
-              disabled && styles.placeholderTextDisabled
-            ]}>
-              {platform.isMobile ? 'Add Photo' : 'Upload Photo'}
+            <Text
+              style={[
+                styles.placeholderText,
+                disabled && styles.placeholderTextDisabled,
+              ]}
+            >
+              {platform.isMobile ? "Add Photo" : "Upload Photo"}
             </Text>
           </TouchableOpacity>
         )}
@@ -264,7 +265,7 @@ export const PhotoUpload = ({
             style={styles.deleteButton}
             onPress={handlePhotoRemove}
           >
-            <Icon name="Delete" size={18} color={colors.error || '#F44336'} />
+            <Icon name="Delete" size={18} color={colors.error || "#F44336"} />
           </TouchableOpacity>
         )}
       </View>
@@ -280,7 +281,8 @@ export const PhotoUpload = ({
       {/* Help text */}
       {!error && (
         <Text style={styles.helpText}>
-          Supports JPG and PNG images up to 2MB. Photos are encrypted for privacy.
+          Supports JPG and PNG images up to 2MB. Photos are encrypted for
+          privacy.
         </Text>
       )}
     </View>
@@ -290,140 +292,140 @@ export const PhotoUpload = ({
 const getStyles = (colors, size) =>
   StyleSheet.create({
     container: {
-      alignItems: 'center',
-      marginVertical: 16
+      alignItems: "center",
+      marginVertical: 16,
     },
     title: {
       fontSize: 14,
-      fontWeight: '500',
+      fontWeight: "500",
       color: colors.text.secondary,
       marginBottom: 8,
-      textAlign: 'center'
+      textAlign: "center",
     },
     photoContainer: {
-      position: 'relative',
-      marginBottom: 12
+      position: "relative",
+      marginBottom: 12,
     },
     loadingContainer: {
       width: size,
       height: size,
       borderRadius: size / 2,
       backgroundColor: colors.background.manila,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       borderWidth: 2,
       borderColor: colors.border,
-      borderStyle: 'dashed'
+      borderStyle: "dashed",
     },
     progressContainer: {
-      position: 'absolute',
+      position: "absolute",
       bottom: 10,
       left: 10,
       right: 10,
       height: 2,
       backgroundColor: colors.background.paper,
       borderRadius: 1,
-      overflow: 'hidden'
+      overflow: "hidden",
     },
     progressBar: {
-      height: '100%',
+      height: "100%",
       backgroundColor: colors.primary,
-      borderRadius: 1
+      borderRadius: 1,
     },
     loadingText: {
       fontSize: 10,
       color: colors.text.secondary,
-      marginTop: 4
+      marginTop: 4,
     },
     photoPreview: {
-      position: 'relative'
+      position: "relative",
     },
     photoImage: {
       width: size,
       height: size,
       borderRadius: size / 2,
       borderWidth: 2,
-      borderColor: colors.border
+      borderColor: colors.border,
     },
     placeholder: {
       width: size,
       height: size,
       borderRadius: size / 2,
       backgroundColor: colors.background.manila,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       borderWidth: 2,
       borderColor: colors.border,
-      borderStyle: 'dashed'
+      borderStyle: "dashed",
     },
     placeholderDisabled: {
-      backgroundColor: '#F0F0F0',
-      borderColor: colors.text.disabled
+      backgroundColor: "#F0F0F0",
+      borderColor: colors.text.disabled,
     },
     placeholderText: {
       fontSize: 11,
       color: colors.text.secondary,
       marginTop: 4,
-      textAlign: 'center'
+      textAlign: "center",
     },
     placeholderTextDisabled: {
-      color: colors.text.disabled
+      color: colors.text.disabled,
     },
     editButton: {
-      position: 'absolute',
+      position: "absolute",
       top: -8,
       right: -8,
       width: 28,
       height: 28,
       borderRadius: 14,
-      backgroundColor: 'white',
-      alignItems: 'center',
-      justifyContent: 'center',
-      shadowColor: '#000',
+      backgroundColor: "white",
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: "#000",
       shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.2,
       shadowRadius: 2,
-      elevation: 2
+      elevation: 2,
     },
     deleteButton: {
-      position: 'absolute',
+      position: "absolute",
       top: -8,
       left: -8,
       width: 28,
       height: 28,
       borderRadius: 14,
-      backgroundColor: 'white',
-      alignItems: 'center',
-      justifyContent: 'center',
-      shadowColor: '#000',
+      backgroundColor: "white",
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: "#000",
       shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.2,
       shadowRadius: 2,
-      elevation: 2
+      elevation: 2,
     },
     errorContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       marginTop: 8,
       paddingHorizontal: 12,
       paddingVertical: 6,
-      backgroundColor: colors.error + '15',
-      borderRadius: 6
+      backgroundColor: colors.error + "15",
+      borderRadius: 6,
     },
     errorText: {
       fontSize: 12,
       color: colors.error,
       flex: 1,
-      marginLeft: 6
+      marginLeft: 6,
     },
     helpText: {
       fontSize: 11,
       color: colors.text.secondary,
-      textAlign: 'center',
+      textAlign: "center",
       marginTop: 8,
       maxWidth: 250,
-      lineHeight: 16
-    }
+      lineHeight: 16,
+    },
   });
 
 export default PhotoUpload;
