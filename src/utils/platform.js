@@ -58,7 +58,9 @@ export const supportsSafeArea = () => isIOS();
 export const supportsBackHandler = () => isAndroid();
 export const supportsElevation = () => isAndroid();
 export const supportsShadow = () => !isAndroid();
-export const supportsShare = () => isMobile() || (isWeb() && typeof navigator !== 'undefined' && !!navigator.share);
+export const supportsShare = () =>
+  isMobile() ||
+  (isWeb() && typeof navigator !== "undefined" && !!navigator.share);
 export const supportsPrint = () => isWeb();
 export const supportsClipboard = () => true; // All platforms
 export const supportsDeepLinks = () => isMobile();
@@ -82,7 +84,7 @@ export const capabilities = {
 // ============================================
 export const select = (options) => {
   // Handle null/undefined options
-  if (!options || typeof options !== 'object') return null;
+  if (!options || typeof options !== "object") return null;
 
   if (isWeb() && options.web !== undefined) return options.web;
   if (isIOS() && options.ios !== undefined) return options.ios;
@@ -499,11 +501,21 @@ export const DEPRECATED = {
 // ============================================
 const platform = {
   // Detection (as functions)
-  get isWeb() { return isWeb(); },
-  get isIOS() { return isIOS(); },
-  get isAndroid() { return isAndroid(); },
-  get isMobile() { return isMobile(); },
-  get isNative() { return isNative(); },
+  get isWeb() {
+    return isWeb();
+  },
+  get isIOS() {
+    return isIOS();
+  },
+  get isAndroid() {
+    return isAndroid();
+  },
+  get isMobile() {
+    return isMobile();
+  },
+  get isNative() {
+    return isNative();
+  },
   isTablet,
   isPhone,
   isLandscape,
@@ -511,24 +523,60 @@ const platform = {
   getDeviceType,
 
   // Features (as functions)
-  get supportsHaptics() { return supportsHaptics(); },
-  get supportsFileInput() { return supportsFileInput(); },
-  get supportsTouch() { return supportsTouch(); },
-  get supportsHover() { return supportsHover(); },
-  get supportsCamera() { return supportsCamera(); },
-  get supportsStatusBar() { return supportsStatusBar(); },
-  get supportsSafeArea() { return supportsSafeArea(); },
-  get supportsBackHandler() { return supportsBackHandler(); },
-  get supportsElevation() { return supportsElevation(); },
-  get supportsShadow() { return supportsShadow(); },
-  get supportsShare() { return supportsShare(); },
-  get supportsPrint() { return supportsPrint(); },
-  get supportsClipboard() { return supportsClipboard(); },
-  get supportsDeepLinks() { return supportsDeepLinks(); },
-  get supportsLocalStorage() { return supportsLocalStorage(); },
-  get supportsAsyncStorage() { return supportsAsyncStorage(); },
-  get supportsImagePicker() { return supportsImagePicker(); },
-  get supportsNotifications() { return supportsNotifications(); },
+  get supportsHaptics() {
+    return supportsHaptics();
+  },
+  get supportsFileInput() {
+    return supportsFileInput();
+  },
+  get supportsTouch() {
+    return supportsTouch();
+  },
+  get supportsHover() {
+    return supportsHover();
+  },
+  get supportsCamera() {
+    return supportsCamera();
+  },
+  get supportsStatusBar() {
+    return supportsStatusBar();
+  },
+  get supportsSafeArea() {
+    return supportsSafeArea();
+  },
+  get supportsBackHandler() {
+    return supportsBackHandler();
+  },
+  get supportsElevation() {
+    return supportsElevation();
+  },
+  get supportsShadow() {
+    return supportsShadow();
+  },
+  get supportsShare() {
+    return supportsShare();
+  },
+  get supportsPrint() {
+    return supportsPrint();
+  },
+  get supportsClipboard() {
+    return supportsClipboard();
+  },
+  get supportsDeepLinks() {
+    return supportsDeepLinks();
+  },
+  get supportsLocalStorage() {
+    return supportsLocalStorage();
+  },
+  get supportsAsyncStorage() {
+    return supportsAsyncStorage();
+  },
+  get supportsImagePicker() {
+    return supportsImagePicker();
+  },
+  get supportsNotifications() {
+    return supportsNotifications();
+  },
 
   // Capabilities
   capabilities,

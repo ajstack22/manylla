@@ -1,40 +1,50 @@
-import manyllaMinimalSyncService from '../manyllaMinimalSyncServiceWeb';
-import manyllaEncryptionService from '../manyllaEncryptionService';
+import manyllaMinimalSyncService from "../manyllaMinimalSyncServiceWeb";
+import manyllaEncryptionService from "../manyllaEncryptionService";
 import {
   TEST_RECOVERY_PHRASE,
   createTestProfileData,
   waitForAsync,
-} from '../../../test/utils/encryption-helpers';
+} from "../../../test/utils/encryption-helpers";
 
 // Mock the encryption service
-jest.mock('../manyllaEncryptionService', () => ({
+jest.mock("../manyllaEncryptionService", () => ({
   __esModule: true,
   default: {
     isInitialized: jest.fn(() => true),
-    generateRecoveryPhrase: jest.fn(() => 'a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6'),
-    initialize: jest.fn(async () => ({ syncId: 'test_sync_id_12345678', salt: 'test_salt' })),
-    init: jest.fn(async () => ({ syncId: 'test_sync_id_12345678', salt: 'test_salt' })),
-    encrypt: jest.fn((data) => 'encrypted_test_data'),
-    encryptData: jest.fn((data) => 'encrypted_test_data'),
-    decrypt: jest.fn((encrypted) => ({ test: 'decrypted data' })),
-    decryptData: jest.fn((encrypted) => ({ test: 'decrypted data' })),
+    generateRecoveryPhrase: jest.fn(() => "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6"),
+    initialize: jest.fn(async () => ({
+      syncId: "test_sync_id_12345678",
+      salt: "test_salt",
+    })),
+    init: jest.fn(async () => ({
+      syncId: "test_sync_id_12345678",
+      salt: "test_salt",
+    })),
+    encrypt: jest.fn((data) => "encrypted_test_data"),
+    encryptData: jest.fn((data) => "encrypted_test_data"),
+    decrypt: jest.fn((encrypted) => ({ test: "decrypted data" })),
+    decryptData: jest.fn((encrypted) => ({ test: "decrypted data" })),
     clear: jest.fn(async () => {}),
     restore: jest.fn(async () => true),
     isEnabled: jest.fn(async () => true),
-    getSyncId: jest.fn(async () => 'test_sync_id_12345678'),
+    getSyncId: jest.fn(async () => "test_sync_id_12345678"),
     getDeviceKey: jest.fn(async () => new Uint8Array(32)),
-    encryptWithKey: jest.fn(async () => 'encrypted_with_key'),
+    encryptWithKey: jest.fn(async () => "encrypted_with_key"),
     deriveKeyFromPhrase: jest.fn(async (phrase, salt) => ({
       key: new Uint8Array(32),
-      salt: salt || 'dGVzdF9zYWx0XzEyMzQ1Njc4',
-      syncId: 'test_sync_id_12345678',
+      salt: salt || "dGVzdF9zYWx0XzEyMzQ1Njc4",
+      syncId: "test_sync_id_12345678",
     })),
   },
 }));
 
 // Mock conflictResolver
-jest.mock('../conflictResolver', () => ({
-  resolve: jest.fn((local, remote) => ({ ...local, ...remote, resolved: true })),
+jest.mock("../conflictResolver", () => ({
+  resolve: jest.fn((local, remote) => ({
+    ...local,
+    ...remote,
+    resolved: true,
+  })),
 }));
 
 // Mock localStorage
@@ -43,12 +53,12 @@ const mockLocalStorage = {
   setItem: jest.fn(),
   removeItem: jest.fn(),
 };
-Object.defineProperty(global, 'localStorage', { value: mockLocalStorage });
+Object.defineProperty(global, "localStorage", { value: mockLocalStorage });
 
 // Mock fetch
 global.fetch = jest.fn();
 
-describe('ManyllaMinimalSyncService (Comprehensive)', () => {
+describe("ManyllaMinimalSyncService (Comprehensive)", () => {
   beforeEach(() => {
     // Reset all mocks
     jest.clearAllMocks();
@@ -77,37 +87,39 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
     }
   });
 
-  describe('Initialization', () => {
-    test('should initialize with valid recovery phrase', async () => {
+  describe("Initialization", () => {
+    test("should initialize with valid recovery phrase", async () => {
       const result = await manyllaMinimalSyncService.init(TEST_RECOVERY_PHRASE);
 
       expect(result).toBe(true);
-      expect(manyllaEncryptionService.init).toHaveBeenCalledWith(TEST_RECOVERY_PHRASE);
+      expect(manyllaEncryptionService.init).toHaveBeenCalledWith(
+        TEST_RECOVERY_PHRASE,
+      );
       expect(manyllaMinimalSyncService.syncId).toBeTruthy();
     });
 
-    test('should reject invalid recovery phrase - too short', async () => {
-      await expect(
-        manyllaMinimalSyncService.init('tooshort')
-      ).rejects.toThrow('Invalid recovery phrase format');
+    test("should reject invalid recovery phrase - too short", async () => {
+      await expect(manyllaMinimalSyncService.init("tooshort")).rejects.toThrow(
+        "Invalid recovery phrase format",
+      );
     });
 
-    test('should reject invalid recovery phrase - too long', async () => {
+    test("should reject invalid recovery phrase - too long", async () => {
       await expect(
-        manyllaMinimalSyncService.init('a'.repeat(33))
-      ).rejects.toThrow('Invalid recovery phrase format');
+        manyllaMinimalSyncService.init("a".repeat(33)),
+      ).rejects.toThrow("Invalid recovery phrase format");
     });
 
-    test('should reject null recovery phrase', async () => {
-      await expect(
-        manyllaMinimalSyncService.init(null)
-      ).rejects.toThrow('Invalid recovery phrase format');
+    test("should reject null recovery phrase", async () => {
+      await expect(manyllaMinimalSyncService.init(null)).rejects.toThrow(
+        "Invalid recovery phrase format",
+      );
     });
 
-    test('should handle health check failure during init', async () => {
+    test("should handle health check failure during init", async () => {
       fetch.mockResolvedValueOnce({
         ok: false,
-        statusText: 'Service Unavailable',
+        statusText: "Service Unavailable",
       });
 
       // Should still succeed but log error
@@ -115,8 +127,8 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(result).toBe(true);
     });
 
-    test('should handle health check network error during init', async () => {
-      fetch.mockRejectedValueOnce(new Error('Network error'));
+    test("should handle health check network error during init", async () => {
+      fetch.mockRejectedValueOnce(new Error("Network error"));
 
       // Should still succeed but log error
       const result = await manyllaMinimalSyncService.init(TEST_RECOVERY_PHRASE);
@@ -124,46 +136,46 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
     });
   });
 
-  describe('Health Check', () => {
-    test('should return true for healthy service', async () => {
+  describe("Health Check", () => {
+    test("should return true for healthy service", async () => {
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ status: 'healthy' }),
+        json: () => Promise.resolve({ status: "healthy" }),
       });
 
       const isHealthy = await manyllaMinimalSyncService.checkHealth();
 
       expect(isHealthy).toBe(true);
       expect(fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/sync_health.php'),
+        expect.stringContaining("/sync_health.php"),
         expect.objectContaining({
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        })
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }),
       );
     });
 
-    test('should return false for unhealthy service', async () => {
+    test("should return false for unhealthy service", async () => {
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ status: 'unhealthy' }),
+        json: () => Promise.resolve({ status: "unhealthy" }),
       });
 
       const isHealthy = await manyllaMinimalSyncService.checkHealth();
       expect(isHealthy).toBe(false);
     });
 
-    test('should return false on network error', async () => {
-      fetch.mockRejectedValueOnce(new Error('Network error'));
+    test("should return false on network error", async () => {
+      fetch.mockRejectedValueOnce(new Error("Network error"));
 
       const isHealthy = await manyllaMinimalSyncService.checkHealth();
       expect(isHealthy).toBe(false);
     });
 
-    test('should return false on invalid response', async () => {
+    test("should return false on invalid response", async () => {
       fetch.mockResolvedValueOnce({
         ok: false,
-        statusText: 'Internal Server Error',
+        statusText: "Internal Server Error",
       });
 
       const isHealthy = await manyllaMinimalSyncService.checkHealth();
@@ -171,12 +183,12 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
     });
   });
 
-  describe('Push Operation', () => {
+  describe("Push Operation", () => {
     beforeEach(async () => {
       await manyllaMinimalSyncService.init(TEST_RECOVERY_PHRASE);
     });
 
-    test('should push data successfully', async () => {
+    test("should push data successfully", async () => {
       const testData = createTestProfileData();
 
       fetch.mockResolvedValueOnce({
@@ -189,16 +201,16 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(result.success).toBe(true);
       expect(manyllaEncryptionService.encrypt).toHaveBeenCalledWith(testData);
       expect(fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/sync_push.php'),
+        expect.stringContaining("/sync_push.php"),
         expect.objectContaining({
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: expect.stringContaining('sync_id'),
-        })
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: expect.stringContaining("sync_id"),
+        }),
       );
     });
 
-    test('should debounce multiple push calls', async () => {
+    test("should debounce multiple push calls", async () => {
       const testData = createTestProfileData();
 
       // Start multiple pushes quickly
@@ -213,19 +225,19 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(fetch).toHaveBeenCalledTimes(1);
     });
 
-    test('should retry on server error', async () => {
+    test("should retry on server error", async () => {
       const testData = createTestProfileData();
 
       fetch
         .mockResolvedValueOnce({
           ok: false,
           status: 500,
-          statusText: 'Internal Server Error',
+          statusText: "Internal Server Error",
         })
         .mockResolvedValueOnce({
           ok: false,
           status: 500,
-          statusText: 'Internal Server Error',
+          statusText: "Internal Server Error",
         })
         .mockResolvedValueOnce({
           ok: true,
@@ -238,49 +250,51 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(fetch).toHaveBeenCalledTimes(3); // Initial + 2 retries + success
     });
 
-    test('should fail after max retries', async () => {
+    test("should fail after max retries", async () => {
       const testData = createTestProfileData();
 
       fetch.mockResolvedValue({
         ok: false,
         status: 500,
-        statusText: 'Internal Server Error',
+        statusText: "Internal Server Error",
       });
 
-      await expect(manyllaMinimalSyncService.push(testData))
-        .rejects.toThrow();
+      await expect(manyllaMinimalSyncService.push(testData)).rejects.toThrow();
 
       expect(fetch).toHaveBeenCalledTimes(3); // Max retries
     });
 
-    test('should handle 401 unauthorized error', async () => {
+    test("should handle 401 unauthorized error", async () => {
       const testData = createTestProfileData();
 
       fetch.mockResolvedValueOnce({
         ok: false,
         status: 401,
-        statusText: 'Unauthorized',
+        statusText: "Unauthorized",
       });
 
-      await expect(manyllaMinimalSyncService.push(testData))
-        .rejects.toThrow('Invalid sync credentials');
+      await expect(manyllaMinimalSyncService.push(testData)).rejects.toThrow(
+        "Invalid sync credentials",
+      );
     });
 
-    test('should fail when not initialized', async () => {
+    test("should fail when not initialized", async () => {
       manyllaMinimalSyncService.syncId = null;
 
-      await expect(manyllaMinimalSyncService.push({}))
-        .rejects.toThrow('Sync not initialized');
+      await expect(manyllaMinimalSyncService.push({})).rejects.toThrow(
+        "Sync not initialized",
+      );
     });
 
-    test('should fail when encryption service not initialized', async () => {
+    test("should fail when encryption service not initialized", async () => {
       manyllaEncryptionService.isInitialized.mockReturnValueOnce(false);
 
-      await expect(manyllaMinimalSyncService.push({}))
-        .rejects.toThrow('Sync not initialized');
+      await expect(manyllaMinimalSyncService.push({})).rejects.toThrow(
+        "Sync not initialized",
+      );
     });
 
-    test('should notify listeners on successful push', async () => {
+    test("should notify listeners on successful push", async () => {
       const testData = createTestProfileData();
       const listener = jest.fn();
 
@@ -288,17 +302,17 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
 
       await manyllaMinimalSyncService.push(testData);
 
-      expect(listener).toHaveBeenCalledWith('pushed', testData);
+      expect(listener).toHaveBeenCalledWith("pushed", testData);
     });
 
-    test('should notify listeners on push error', async () => {
+    test("should notify listeners on push error", async () => {
       const testData = createTestProfileData();
       const listener = jest.fn();
 
       fetch.mockResolvedValueOnce({
         ok: false,
         status: 500,
-        statusText: 'Internal Server Error',
+        statusText: "Internal Server Error",
       });
 
       manyllaMinimalSyncService.addListener(listener);
@@ -309,25 +323,26 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
         // Expected to fail
       }
 
-      expect(listener).toHaveBeenCalledWith('push-error', expect.any(Object));
+      expect(listener).toHaveBeenCalledWith("push-error", expect.any(Object));
     });
   });
 
-  describe('Pull Operation', () => {
+  describe("Pull Operation", () => {
     beforeEach(async () => {
       await manyllaMinimalSyncService.init(TEST_RECOVERY_PHRASE);
     });
 
-    test('should pull data successfully', async () => {
-      const encryptedData = 'encrypted_test_data';
+    test("should pull data successfully", async () => {
+      const encryptedData = "encrypted_test_data";
       const decryptedData = createTestProfileData();
 
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({
-          success: true,
-          data: encryptedData,
-        }),
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: encryptedData,
+          }),
       });
 
       manyllaEncryptionService.decrypt.mockReturnValueOnce(decryptedData);
@@ -336,19 +351,22 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
 
       expect(result).toEqual(decryptedData);
       expect(fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/sync_pull.php?sync_id='),
-        expect.objectContaining({ method: 'GET' })
+        expect.stringContaining("/sync_pull.php?sync_id="),
+        expect.objectContaining({ method: "GET" }),
       );
-      expect(manyllaEncryptionService.decrypt).toHaveBeenCalledWith(encryptedData);
+      expect(manyllaEncryptionService.decrypt).toHaveBeenCalledWith(
+        encryptedData,
+      );
     });
 
-    test('should return null when no data found', async () => {
+    test("should return null when no data found", async () => {
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({
-          success: false,
-          error: 'No data found',
-        }),
+        json: () =>
+          Promise.resolve({
+            success: false,
+            error: "No data found",
+          }),
       });
 
       const result = await manyllaMinimalSyncService.pull();
@@ -356,13 +374,14 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(result).toBeNull();
     });
 
-    test('should return null when no data in response', async () => {
+    test("should return null when no data in response", async () => {
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({
-          success: true,
-          data: null,
-        }),
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: null,
+          }),
       });
 
       const result = await manyllaMinimalSyncService.pull();
@@ -370,61 +389,68 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(result).toBeNull();
     });
 
-    test('should handle 401 unauthorized error', async () => {
+    test("should handle 401 unauthorized error", async () => {
       fetch.mockResolvedValueOnce({
         ok: false,
         status: 401,
-        statusText: 'Unauthorized',
+        statusText: "Unauthorized",
       });
 
-      await expect(manyllaMinimalSyncService.pull())
-        .rejects.toThrow('Invalid sync credentials');
+      await expect(manyllaMinimalSyncService.pull()).rejects.toThrow(
+        "Invalid sync credentials",
+      );
     });
 
-    test('should handle 500 server error', async () => {
+    test("should handle 500 server error", async () => {
       fetch.mockResolvedValueOnce({
         ok: false,
         status: 500,
-        statusText: 'Internal Server Error',
+        statusText: "Internal Server Error",
       });
 
-      await expect(manyllaMinimalSyncService.pull())
-        .rejects.toThrow('Server error: Internal Server Error');
+      await expect(manyllaMinimalSyncService.pull()).rejects.toThrow(
+        "Server error: Internal Server Error",
+      );
     });
 
-    test('should fail when not initialized', async () => {
+    test("should fail when not initialized", async () => {
       manyllaMinimalSyncService.syncId = null;
 
-      await expect(manyllaMinimalSyncService.pull())
-        .rejects.toThrow('Sync not initialized');
+      await expect(manyllaMinimalSyncService.pull()).rejects.toThrow(
+        "Sync not initialized",
+      );
     });
 
-    test('should update lastPullTime on successful pull', async () => {
+    test("should update lastPullTime on successful pull", async () => {
       const before = Date.now();
 
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({
-          success: true,
-          data: 'encrypted_data',
-        }),
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: "encrypted_data",
+          }),
       });
 
       await manyllaMinimalSyncService.pull();
 
-      expect(manyllaMinimalSyncService.lastPullTime).toBeGreaterThanOrEqual(before);
+      expect(manyllaMinimalSyncService.lastPullTime).toBeGreaterThanOrEqual(
+        before,
+      );
     });
 
-    test('should call data callback on successful pull', async () => {
+    test("should call data callback on successful pull", async () => {
       const testData = createTestProfileData();
       const callback = jest.fn();
 
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({
-          success: true,
-          data: 'encrypted_data',
-        }),
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: "encrypted_data",
+          }),
       });
 
       manyllaEncryptionService.decrypt.mockReturnValueOnce(testData);
@@ -435,16 +461,17 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(callback).toHaveBeenCalledWith(testData);
     });
 
-    test('should notify listeners on successful pull', async () => {
+    test("should notify listeners on successful pull", async () => {
       const testData = createTestProfileData();
       const listener = jest.fn();
 
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({
-          success: true,
-          data: 'encrypted_data',
-        }),
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: "encrypted_data",
+          }),
       });
 
       manyllaEncryptionService.decrypt.mockReturnValueOnce(testData);
@@ -452,16 +479,16 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
 
       await manyllaMinimalSyncService.pull();
 
-      expect(listener).toHaveBeenCalledWith('pulled', testData);
+      expect(listener).toHaveBeenCalledWith("pulled", testData);
     });
 
-    test('should notify listeners on pull error', async () => {
+    test("should notify listeners on pull error", async () => {
       const listener = jest.fn();
 
       fetch.mockResolvedValueOnce({
         ok: false,
         status: 500,
-        statusText: 'Internal Server Error',
+        statusText: "Internal Server Error",
       });
 
       manyllaMinimalSyncService.addListener(listener);
@@ -472,16 +499,16 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
         // Expected to fail
       }
 
-      expect(listener).toHaveBeenCalledWith('pull-error', expect.any(Object));
+      expect(listener).toHaveBeenCalledWith("pull-error", expect.any(Object));
     });
   });
 
-  describe('Polling', () => {
+  describe("Polling", () => {
     beforeEach(async () => {
       await manyllaMinimalSyncService.init(TEST_RECOVERY_PHRASE);
     });
 
-    test('should start polling', async () => {
+    test("should start polling", async () => {
       fetch.mockResolvedValue({
         ok: true,
         json: () => Promise.resolve({ success: true, data: null }),
@@ -497,16 +524,16 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(fetch).toHaveBeenCalled();
     });
 
-    test('should not start polling if already polling', () => {
+    test("should not start polling if already polling", () => {
       manyllaMinimalSyncService.isPolling = true;
-      manyllaMinimalSyncService.pollInterval = 'existing';
+      manyllaMinimalSyncService.pollInterval = "existing";
 
       manyllaMinimalSyncService.startPolling();
 
-      expect(manyllaMinimalSyncService.pollInterval).toBe('existing');
+      expect(manyllaMinimalSyncService.pollInterval).toBe("existing");
     });
 
-    test('should stop polling', () => {
+    test("should stop polling", () => {
       manyllaMinimalSyncService.isPolling = true;
       manyllaMinimalSyncService.pollInterval = setTimeout(() => {}, 1000);
 
@@ -516,8 +543,8 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(manyllaMinimalSyncService.pollInterval).toBeNull();
     });
 
-    test('should handle polling errors gracefully', async () => {
-      fetch.mockRejectedValue(new Error('Network error'));
+    test("should handle polling errors gracefully", async () => {
+      fetch.mockRejectedValue(new Error("Network error"));
 
       manyllaMinimalSyncService.startPolling();
 
@@ -527,8 +554,8 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
     });
   });
 
-  describe('Listener Management', () => {
-    test('should add and remove listeners', () => {
+  describe("Listener Management", () => {
+    test("should add and remove listeners", () => {
       const listener1 = jest.fn();
       const listener2 = jest.fn();
 
@@ -544,47 +571,49 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(manyllaMinimalSyncService.listeners.size).toBe(0);
     });
 
-    test('should notify all listeners', () => {
+    test("should notify all listeners", () => {
       const listener1 = jest.fn();
       const listener2 = jest.fn();
-      const testData = { test: 'data' };
+      const testData = { test: "data" };
 
       manyllaMinimalSyncService.addListener(listener1);
       manyllaMinimalSyncService.addListener(listener2);
 
-      manyllaMinimalSyncService.notifyListeners('test-event', testData);
+      manyllaMinimalSyncService.notifyListeners("test-event", testData);
 
-      expect(listener1).toHaveBeenCalledWith('test-event', testData);
-      expect(listener2).toHaveBeenCalledWith('test-event', testData);
+      expect(listener1).toHaveBeenCalledWith("test-event", testData);
+      expect(listener2).toHaveBeenCalledWith("test-event", testData);
     });
 
-    test('should handle listener errors gracefully', () => {
-      const errorListener = jest.fn(() => { throw new Error('Listener error'); });
+    test("should handle listener errors gracefully", () => {
+      const errorListener = jest.fn(() => {
+        throw new Error("Listener error");
+      });
       const goodListener = jest.fn();
 
       manyllaMinimalSyncService.addListener(errorListener);
       manyllaMinimalSyncService.addListener(goodListener);
 
       // Should not throw error
-      manyllaMinimalSyncService.notifyListeners('test-event', {});
+      manyllaMinimalSyncService.notifyListeners("test-event", {});
 
       expect(errorListener).toHaveBeenCalled();
       expect(goodListener).toHaveBeenCalled();
     });
   });
 
-  describe('Local Data Management', () => {
-    test('should get local data from localStorage', () => {
+  describe("Local Data Management", () => {
+    test("should get local data from localStorage", () => {
       const testData = createTestProfileData();
       mockLocalStorage.getItem.mockReturnValueOnce(JSON.stringify(testData));
 
       const result = manyllaMinimalSyncService.getLocalData();
 
       expect(result).toEqual(testData);
-      expect(mockLocalStorage.getItem).toHaveBeenCalledWith('manylla_profile');
+      expect(mockLocalStorage.getItem).toHaveBeenCalledWith("manylla_profile");
     });
 
-    test('should return null when localStorage is empty', () => {
+    test("should return null when localStorage is empty", () => {
       mockLocalStorage.getItem.mockReturnValueOnce(null);
 
       const result = manyllaMinimalSyncService.getLocalData();
@@ -592,8 +621,8 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(result).toBeNull();
     });
 
-    test('should return null on localStorage JSON parse error', () => {
-      mockLocalStorage.getItem.mockReturnValueOnce('invalid-json');
+    test("should return null on localStorage JSON parse error", () => {
+      mockLocalStorage.getItem.mockReturnValueOnce("invalid-json");
 
       const result = manyllaMinimalSyncService.getLocalData();
 
@@ -601,8 +630,8 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
     });
   });
 
-  describe('Invite Code Management', () => {
-    test('should generate invite code from recovery phrase', () => {
+  describe("Invite Code Management", () => {
+    test("should generate invite code from recovery phrase", () => {
       const phrase = TEST_RECOVERY_PHRASE;
 
       const inviteCode = manyllaMinimalSyncService.generateInviteCode(phrase);
@@ -610,16 +639,17 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(inviteCode).toBe(phrase.toUpperCase());
     });
 
-    test('should join from valid invite code', async () => {
+    test("should join from valid invite code", async () => {
       const inviteCode = TEST_RECOVERY_PHRASE.toUpperCase();
       const testData = createTestProfileData();
 
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({
-          success: true,
-          data: 'encrypted_data',
-        }),
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: "encrypted_data",
+          }),
       });
 
       manyllaEncryptionService.decrypt.mockReturnValueOnce(testData);
@@ -630,27 +660,28 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(manyllaMinimalSyncService.isPolling).toBe(true);
     });
 
-    test('should reject invalid invite code - too short', async () => {
+    test("should reject invalid invite code - too short", async () => {
       await expect(
-        manyllaMinimalSyncService.joinFromInvite('short')
-      ).rejects.toThrow('Invalid invite code');
+        manyllaMinimalSyncService.joinFromInvite("short"),
+      ).rejects.toThrow("Invalid invite code");
     });
 
-    test('should reject invalid invite code - too long', async () => {
+    test("should reject invalid invite code - too long", async () => {
       await expect(
-        manyllaMinimalSyncService.joinFromInvite('A'.repeat(33))
-      ).rejects.toThrow('Invalid invite code');
+        manyllaMinimalSyncService.joinFromInvite("A".repeat(33)),
+      ).rejects.toThrow("Invalid invite code");
     });
 
-    test('should clean invite code with spaces and dashes', async () => {
-      const messyCode = 'A1B2-C3D4 E5F6-G7H8 I9J0-K1L2 M3N4-O5P6';
+    test("should clean invite code with spaces and dashes", async () => {
+      const messyCode = "A1B2-C3D4 E5F6-G7H8 I9J0-K1L2 M3N4-O5P6";
 
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({
-          success: true,
-          data: 'encrypted_data',
-        }),
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: "encrypted_data",
+          }),
       });
 
       await manyllaMinimalSyncService.joinFromInvite(messyCode);
@@ -660,12 +691,12 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
     });
   });
 
-  describe('Service Status and Management', () => {
+  describe("Service Status and Management", () => {
     beforeEach(async () => {
       await manyllaMinimalSyncService.init(TEST_RECOVERY_PHRASE);
     });
 
-    test('should get service status', () => {
+    test("should get service status", () => {
       manyllaMinimalSyncService.startPolling();
       manyllaMinimalSyncService.lastPullTime = 12345;
 
@@ -679,7 +710,7 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       });
     });
 
-    test('should check if sync is enabled', () => {
+    test("should check if sync is enabled", () => {
       manyllaEncryptionService.isInitialized.mockReturnValueOnce(true);
 
       const enabled = manyllaMinimalSyncService.isSyncEnabled();
@@ -687,7 +718,7 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(enabled).toBe(true);
     });
 
-    test('should return false if encryption service not initialized', () => {
+    test("should return false if encryption service not initialized", () => {
       manyllaEncryptionService.isInitialized.mockReturnValueOnce(false);
 
       const enabled = manyllaMinimalSyncService.isSyncEnabled();
@@ -695,13 +726,13 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(enabled).toBe(false);
     });
 
-    test('should get sync ID', () => {
+    test("should get sync ID", () => {
       const syncId = manyllaMinimalSyncService.getSyncId();
 
       expect(syncId).toBe(manyllaMinimalSyncService.syncId);
     });
 
-    test('should set data callback', () => {
+    test("should set data callback", () => {
       const callback = jest.fn();
 
       manyllaMinimalSyncService.setDataCallback(callback);
@@ -709,7 +740,7 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(manyllaMinimalSyncService.dataCallback).toBe(callback);
     });
 
-    test('should reset service state', async () => {
+    test("should reset service state", async () => {
       manyllaMinimalSyncService.startPolling();
       manyllaMinimalSyncService.lastPullTime = 12345;
 
@@ -718,16 +749,18 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(manyllaMinimalSyncService.isPolling).toBe(false);
       expect(manyllaMinimalSyncService.syncId).toBeNull();
       expect(manyllaMinimalSyncService.lastPullTime).toBeNull();
-      expect(mockLocalStorage.removeItem).toHaveBeenCalledWith('manylla_recovery_phrase');
+      expect(mockLocalStorage.removeItem).toHaveBeenCalledWith(
+        "manylla_recovery_phrase",
+      );
     });
   });
 
-  describe('Compatibility Methods', () => {
+  describe("Compatibility Methods", () => {
     beforeEach(async () => {
       await manyllaMinimalSyncService.init(TEST_RECOVERY_PHRASE);
     });
 
-    test('should enable sync with new sync', async () => {
+    test("should enable sync with new sync", async () => {
       const testData = createTestProfileData();
       mockLocalStorage.getItem.mockReturnValueOnce(JSON.stringify(testData));
 
@@ -736,19 +769,25 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
         json: () => Promise.resolve({ success: true }),
       });
 
-      const result = await manyllaMinimalSyncService.enableSync(TEST_RECOVERY_PHRASE, true);
+      const result = await manyllaMinimalSyncService.enableSync(
+        TEST_RECOVERY_PHRASE,
+        true,
+      );
 
       expect(result).toBe(true);
       expect(manyllaMinimalSyncService.isPolling).toBe(true);
       // Should push initial data for new sync
       expect(fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/sync_push.php'),
-        expect.any(Object)
+        expect.stringContaining("/sync_push.php"),
+        expect.any(Object),
       );
     });
 
-    test('should enable sync without pushing for existing sync', async () => {
-      const result = await manyllaMinimalSyncService.enableSync(TEST_RECOVERY_PHRASE, false);
+    test("should enable sync without pushing for existing sync", async () => {
+      const result = await manyllaMinimalSyncService.enableSync(
+        TEST_RECOVERY_PHRASE,
+        false,
+      );
 
       expect(result).toBe(true);
       expect(manyllaMinimalSyncService.isPolling).toBe(true);
@@ -756,7 +795,7 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(fetch).not.toHaveBeenCalled();
     });
 
-    test('should disable sync', async () => {
+    test("should disable sync", async () => {
       manyllaMinimalSyncService.startPolling();
 
       await manyllaMinimalSyncService.disableSync();
@@ -765,7 +804,7 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(manyllaMinimalSyncService.syncId).toBeNull();
     });
 
-    test('should push data with compatibility method', async () => {
+    test("should push data with compatibility method", async () => {
       const testData = createTestProfileData();
 
       fetch.mockResolvedValueOnce({
@@ -778,16 +817,17 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(result.success).toBe(true);
     });
 
-    test('should pull data with compatibility method and call callback', async () => {
+    test("should pull data with compatibility method and call callback", async () => {
       const testData = createTestProfileData();
       const callback = jest.fn();
 
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({
-          success: true,
-          data: 'encrypted_data',
-        }),
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: "encrypted_data",
+          }),
       });
 
       manyllaEncryptionService.decrypt.mockReturnValueOnce(testData);
@@ -799,64 +839,66 @@ describe('ManyllaMinimalSyncService (Comprehensive)', () => {
       expect(callback).toHaveBeenCalledWith(testData);
     });
 
-    test('should generate recovery phrase', () => {
+    test("should generate recovery phrase", () => {
       const phrase = manyllaMinimalSyncService.generateRecoveryPhrase();
 
-      expect(manyllaEncryptionService.generateRecoveryPhrase).toHaveBeenCalled();
-      expect(typeof phrase).toBe('string');
+      expect(
+        manyllaEncryptionService.generateRecoveryPhrase,
+      ).toHaveBeenCalled();
+      expect(typeof phrase).toBe("string");
     });
   });
 
-  describe('Error Edge Cases', () => {
+  describe("Error Edge Cases", () => {
     beforeEach(async () => {
       await manyllaMinimalSyncService.init(TEST_RECOVERY_PHRASE);
     });
 
-    test('should handle network timeout', async () => {
-      fetch.mockImplementation(() =>
-        new Promise((resolve, reject) => {
-          setTimeout(() => reject(new Error('Network timeout')), 100);
-        })
+    test("should handle network timeout", async () => {
+      fetch.mockImplementation(
+        () =>
+          new Promise((resolve, reject) => {
+            setTimeout(() => reject(new Error("Network timeout")), 100);
+          }),
       );
 
-      await expect(manyllaMinimalSyncService.push({}))
-        .rejects.toThrow();
+      await expect(manyllaMinimalSyncService.push({})).rejects.toThrow();
     });
 
-    test('should handle malformed JSON response', async () => {
+    test("should handle malformed JSON response", async () => {
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => { throw new Error('Invalid JSON'); },
+        json: () => {
+          throw new Error("Invalid JSON");
+        },
       });
 
-      await expect(manyllaMinimalSyncService.pull())
-        .rejects.toThrow();
+      await expect(manyllaMinimalSyncService.pull()).rejects.toThrow();
     });
 
-    test('should handle encryption service errors', async () => {
+    test("should handle encryption service errors", async () => {
       manyllaEncryptionService.encrypt.mockImplementation(() => {
-        throw new Error('Encryption failed');
+        throw new Error("Encryption failed");
       });
 
-      await expect(manyllaMinimalSyncService.push({}))
-        .rejects.toThrow();
+      await expect(manyllaMinimalSyncService.push({})).rejects.toThrow();
     });
 
-    test('should handle decryption service errors', async () => {
+    test("should handle decryption service errors", async () => {
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({
-          success: true,
-          data: 'encrypted_data',
-        }),
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: "encrypted_data",
+          }),
       });
 
       manyllaEncryptionService.decrypt.mockImplementation(() => {
-        throw new Error('Decryption failed');
+        throw new Error("Decryption failed");
       });
 
-      await expect(manyllaMinimalSyncService.pull())
-        .rejects.toThrow();
+      await expect(manyllaMinimalSyncService.pull()).rejects.toThrow();
     });
   });
 });

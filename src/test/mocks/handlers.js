@@ -1,15 +1,15 @@
 // Use require syntax for MSW v2 compatibility with Jest
-const { http, HttpResponse } = require('../../../../node_modules/msw/lib/core');
+const { http, HttpResponse } = require("../../../../node_modules/msw/lib/core");
 
 // Use hardcoded URLs to avoid window dependency in tests
-const API_BASE_URL = 'https://manylla.com/qual/api';
+const API_BASE_URL = "https://manylla.com/qual/api";
 
 // Mock API responses for testing
 const handlers = [
   // Health check endpoint
   http.get(`${API_BASE_URL}/sync_health.php`, () => {
     return HttpResponse.json({
-      status: 'healthy',
+      status: "healthy",
       timestamp: Date.now(),
     });
   }),
@@ -21,8 +21,8 @@ const handlers = [
     // Validate required fields
     if (!body.sync_id || !body.data) {
       return HttpResponse.json(
-        { success: false, error: 'Missing required fields' },
-        { status: 400 }
+        { success: false, error: "Missing required fields" },
+        { status: 400 },
       );
     }
 
@@ -36,19 +36,19 @@ const handlers = [
   // Sync pull endpoint
   http.get(`${API_BASE_URL}/sync_pull.php`, ({ request }) => {
     const url = new URL(request.url);
-    const syncId = url.searchParams.get('sync_id');
+    const syncId = url.searchParams.get("sync_id");
 
     if (!syncId) {
       return HttpResponse.json(
-        { success: false, error: 'Missing sync_id' },
-        { status: 400 }
+        { success: false, error: "Missing sync_id" },
+        { status: 400 },
       );
     }
 
     // Return no data found for most tests
     return HttpResponse.json({
       success: false,
-      error: 'No data found',
+      error: "No data found",
     });
   }),
 
@@ -58,16 +58,16 @@ const handlers = [
 
     if (!body.data) {
       return HttpResponse.json(
-        { success: false, error: 'Missing data' },
-        { status: 400 }
+        { success: false, error: "Missing data" },
+        { status: 400 },
       );
     }
 
     // Return mock share ID
     return HttpResponse.json({
       success: true,
-      share_id: 'test_share_123',
-      url: 'https://manylla.com/qual/share/test_share_123#testkey',
+      share_id: "test_share_123",
+      url: "https://manylla.com/qual/share/test_share_123#testkey",
       expires_at: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
     });
   }),
@@ -75,26 +75,26 @@ const handlers = [
   // Share access endpoint
   http.get(`${API_BASE_URL}/share_access.php`, ({ request }) => {
     const url = new URL(request.url);
-    const shareId = url.searchParams.get('share_id');
+    const shareId = url.searchParams.get("share_id");
 
     if (!shareId) {
       return HttpResponse.json(
-        { success: false, error: 'Missing share_id' },
-        { status: 400 }
+        { success: false, error: "Missing share_id" },
+        { status: 400 },
       );
     }
 
-    if (shareId === 'test_share_123') {
+    if (shareId === "test_share_123") {
       return HttpResponse.json({
         success: true,
-        data: 'encrypted_test_data',
+        data: "encrypted_test_data",
         expires_at: Date.now() + 24 * 60 * 60 * 1000,
       });
     }
 
     return HttpResponse.json(
-      { success: false, error: 'Share not found or expired' },
-      { status: 404 }
+      { success: false, error: "Share not found or expired" },
+      { status: 404 },
     );
   }),
 ];
