@@ -154,24 +154,36 @@ export const PhotoUpload = ({
   const handlePhotoRemove = () => {
     if (disabled) return;
 
-    Alert.alert(
-      'Remove Photo',
-      'Are you sure you want to remove this photo?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Remove',
-          style: 'destructive',
-          onPress: () => {
-            setPhotoPreview(null);
-            setError(null);
-            if (onPhotoRemove) {
-              onPhotoRemove();
+    if (platform.isWeb) {
+      // Use native browser confirm for web
+      if (window.confirm('Are you sure you want to remove this photo?')) {
+        setPhotoPreview(null);
+        setError(null);
+        if (onPhotoRemove) {
+          onPhotoRemove();
+        }
+      }
+    } else {
+      // Use React Native Alert for mobile
+      Alert.alert(
+        'Remove Photo',
+        'Are you sure you want to remove this photo?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Remove',
+            style: 'destructive',
+            onPress: () => {
+              setPhotoPreview(null);
+              setError(null);
+              if (onPhotoRemove) {
+                onPhotoRemove();
+              }
             }
           }
-        }
-      ]
-    );
+        ]
+      );
+    }
   };
 
   const styles = getStyles(colors, size);
