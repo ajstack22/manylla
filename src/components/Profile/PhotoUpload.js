@@ -12,7 +12,6 @@ import {
   StyleSheet,
   Alert
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useTheme } from '../../context/ThemeContext';
 import ImagePicker from '../Common/ImagePicker';
 import photoService from '../../services/photoService';
@@ -54,15 +53,17 @@ export const PhotoUpload = ({
       setError(null);
 
       // Check if photo is encrypted or legacy format
-      if (photoService.isPhotoEncrypted(currentPhoto)) {
+      if (photoService && typeof photoService.isPhotoEncrypted === 'function' && photoService.isPhotoEncrypted(currentPhoto)) {
         const decryptedDataUrl = await photoService.decryptPhoto(currentPhoto);
         setPhotoPreview(decryptedDataUrl);
       } else {
-        // Legacy format - display as-is
+        // Legacy format or service not ready - display as-is
         setPhotoPreview(currentPhoto);
       }
     } catch (error) {
-      console.warn('Failed to load photo:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Failed to load photo:', error);
+      }
       setError('Failed to load photo');
       setPhotoPreview(null);
     } finally {
@@ -72,7 +73,11 @@ export const PhotoUpload = ({
 
   // Load and decrypt current photo on mount/change
   useEffect(() => {
-    loadCurrentPhoto();
+    // Add a small delay to ensure services are initialized
+    const timer = setTimeout(() => {
+      loadCurrentPhoto();
+    }, 100);
+    return () => clearTimeout(timer);
   }, [loadCurrentPhoto]);
 
   /**
@@ -134,7 +139,9 @@ export const PhotoUpload = ({
 
     } catch (error) {
       setError(ImagePicker.getErrorMessage(error, 'upload photo'));
-      console.error('Photo upload failed:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Photo upload failed:', error);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -166,20 +173,12 @@ export const PhotoUpload = ({
     );
   };
 
-  /**
-   * Get appropriate icon for current state
-   */
-  const getIcon = () => {
-    if (platform.isMobile && ImagePicker.isCameraAvailable()) {
-      return 'photo-camera';
-    }
-    return 'photo';
-  };
-
   const styles = getStyles(colors, size);
 
+  // Ensure we always render something
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Profile Photo</Text>
       <View style={styles.photoContainer}>
         {isLoading ? (
           <View style={styles.loadingContainer}>
@@ -212,11 +211,6 @@ export const PhotoUpload = ({
               style={styles.photoImage}
               resizeMode="cover"
             />
-            {!disabled && (
-              <View style={styles.photoOverlay}>
-                <Icon name="edit" size={20} color="white" />
-              </View>
-            )}
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -227,11 +221,10 @@ export const PhotoUpload = ({
             onPress={!disabled ? handlePhotoSelect : undefined}
             disabled={disabled}
           >
-            <Icon
-              name={getIcon()}
-              size={size / 3}
-              color={disabled ? colors.text.disabled : colors.text.secondary}
-            />
+            <Text style={[
+              styles.placeholderIcon,
+              { color: disabled ? colors.text.disabled : colors.text.secondary }
+            ]}>📷</Text>
             <Text style={[
               styles.placeholderText,
               disabled && styles.placeholderTextDisabled
@@ -241,47 +234,23 @@ export const PhotoUpload = ({
           </TouchableOpacity>
         )}
 
-        {/* Remove button */}
-        {photoPreview && !disabled && (
+        {/* Edit button - top left */}
+        {!disabled && (
           <TouchableOpacity
-            style={styles.removeButton}
-            onPress={handlePhotoRemove}
+            style={styles.editButton}
+            onPress={handlePhotoSelect}
           >
-            <Icon name="close" size={18} color={colors.error} />
+            <Text style={styles.editIcon}>✏️</Text>
           </TouchableOpacity>
         )}
-      </View>
 
-      {/* Action buttons */}
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[
-            styles.actionButton,
-            disabled && styles.actionButtonDisabled
-          ]}
-          onPress={!disabled ? handlePhotoSelect : undefined}
-          disabled={disabled}
-        >
-          <Icon
-            name={getIcon()}
-            size={18}
-            color={disabled ? colors.text.disabled : colors.primary}
-          />
-          <Text style={[
-            styles.actionButtonText,
-            disabled && styles.actionButtonTextDisabled
-          ]}>
-            {photoPreview ? 'Change Photo' : 'Add Photo'}
-          </Text>
-        </TouchableOpacity>
-
+        {/* Delete button - left side, only when photo exists */}
         {photoPreview && !disabled && (
           <TouchableOpacity
-            style={styles.removeActionButton}
+            style={styles.deleteButton}
             onPress={handlePhotoRemove}
           >
-            <Icon name="delete" size={18} color={colors.error} />
-            <Text style={styles.removeActionButtonText}>Remove</Text>
+            <Text style={styles.deleteIcon}>🗑️</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -289,7 +258,7 @@ export const PhotoUpload = ({
       {/* Error message */}
       {error && (
         <View style={styles.errorContainer}>
-          <Icon name="error" size={16} color={colors.error} />
+          <Text style={{ fontSize: 16, color: colors.error }}>⚠️</Text>
           <Text style={styles.errorText}>{error}</Text>
         </View>
       )}
@@ -309,6 +278,13 @@ const getStyles = (colors, size) =>
     container: {
       alignItems: 'center',
       marginVertical: 16
+    },
+    title: {
+      fontSize: 14,
+      fontWeight: '500',
+      color: colors.text.secondary,
+      marginBottom: 8,
+      textAlign: 'center'
     },
     photoContainer: {
       position: 'relative',
@@ -355,18 +331,6 @@ const getStyles = (colors, size) =>
       borderWidth: 2,
       borderColor: colors.border
     },
-    photoOverlay: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      borderRadius: size / 2,
-      alignItems: 'center',
-      justifyContent: 'center',
-      opacity: 0
-    },
     placeholder: {
       width: size,
       height: size,
@@ -379,8 +343,11 @@ const getStyles = (colors, size) =>
       borderStyle: 'dashed'
     },
     placeholderDisabled: {
-      backgroundColor: colors.background.disabled,
+      backgroundColor: '#F0F0F0',
       borderColor: colors.text.disabled
+    },
+    placeholderIcon: {
+      fontSize: size / 3
     },
     placeholderText: {
       fontSize: 11,
@@ -391,13 +358,13 @@ const getStyles = (colors, size) =>
     placeholderTextDisabled: {
       color: colors.text.disabled
     },
-    removeButton: {
+    editButton: {
       position: 'absolute',
       top: -5,
-      right: -5,
-      width: 24,
-      height: 24,
-      borderRadius: 12,
+      left: -5,
+      width: 28,
+      height: 28,
+      borderRadius: 14,
       backgroundColor: 'white',
       alignItems: 'center',
       justifyContent: 'center',
@@ -407,51 +374,27 @@ const getStyles = (colors, size) =>
       shadowRadius: 2,
       elevation: 2
     },
-    buttonContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 12
-    },
-    actionButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingHorizontal: 16,
-      paddingVertical: 8,
-      borderRadius: 6,
-      borderWidth: 1,
-      borderColor: colors.primary,
-      backgroundColor: `${colors.primary}10`,
-      gap: 6
-    },
-    actionButtonDisabled: {
-      borderColor: colors.text.disabled,
-      backgroundColor: colors.background.disabled
-    },
-    actionButtonText: {
-      fontSize: 14,
-      color: colors.primary,
-      fontWeight: '500'
-    },
-    actionButtonTextDisabled: {
-      color: colors.text.disabled
-    },
-    removeActionButton: {
-      flexDirection: 'row',
+    deleteButton: {
+      position: 'absolute',
+      bottom: -5,
+      left: -5,
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      backgroundColor: 'white',
       alignItems: 'center',
       justifyContent: 'center',
-      paddingHorizontal: 12,
-      paddingVertical: 8,
-      borderRadius: 6,
-      borderWidth: 1,
-      borderColor: colors.error,
-      backgroundColor: `${colors.error}10`,
-      gap: 6
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.2,
+      shadowRadius: 2,
+      elevation: 2
     },
-    removeActionButtonText: {
-      fontSize: 14,
-      color: colors.error,
-      fontWeight: '500'
+    editIcon: {
+      fontSize: 16
+    },
+    deleteIcon: {
+      fontSize: 16
     },
     errorContainer: {
       flexDirection: 'row',
@@ -459,14 +402,14 @@ const getStyles = (colors, size) =>
       marginTop: 8,
       paddingHorizontal: 12,
       paddingVertical: 6,
-      backgroundColor: `${colors.error}15`,
-      borderRadius: 6,
-      gap: 6
+      backgroundColor: colors.error + '15',
+      borderRadius: 6
     },
     errorText: {
       fontSize: 12,
       color: colors.error,
-      flex: 1
+      flex: 1,
+      marginLeft: 6
     },
     helpText: {
       fontSize: 11,
@@ -475,20 +418,7 @@ const getStyles = (colors, size) =>
       marginTop: 8,
       maxWidth: 250,
       lineHeight: 16
-    },
-
-    // Platform-specific hover effects
-    ...(platform.isWeb && {
-      'photoPreview:hover photoOverlay': {
-        opacity: 1
-      },
-      'actionButton:hover': {
-        backgroundColor: `${colors.primary}20`
-      },
-      'removeActionButton:hover': {
-        backgroundColor: `${colors.error}20`
-      }
-    })
+    }
   });
 
 export default PhotoUpload;

@@ -14,11 +14,15 @@ You are the Developer for the Manylla project. Execute tasks precisely, validate
 
 ### 🔴 ALWAYS Verify Before Modifying
 ```bash
-# Before editing ANY component, trace its usage:
-grep -n "ComponentName" App.js  # Find import source
-grep -n "export.*ComponentName" [source-file]  # Verify actual component
+# Before editing ANY component, trace its FULL import chain:
+grep -r "ComponentName" src/ --include="*.js" | grep import  # ALL imports
+grep -r "<ComponentName" src/ --include="*.js"  # Where it's rendered
+grep "import.*{.*ComponentName" App.js  # Check App.js specifically
 
-# LESSON: Modified wrong EntryForm.js for 20 min - App used one from UnifiedApp.js!
+# LESSONS:
+# - Modified wrong EntryForm.js for 20 min - App used one from UnifiedApp.js!
+# - Modified ProfileEditDialog for HOURS - App used ProfileEditForm from UnifiedApp.js!
+# - Multiple "experts" reviewed the wrong component because no one traced imports!
 ```
 
 ### 🔴 Deployment Script Auto-Increments

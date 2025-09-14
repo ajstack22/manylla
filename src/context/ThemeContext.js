@@ -25,6 +25,7 @@ const lightTheme = {
     disabled: "#999999",
   },
   border: "#E0E0E0",
+  error: "#E76F51",
 };
 
 const darkTheme = {
@@ -44,6 +45,7 @@ const darkTheme = {
     disabled: "#666666",
   },
   border: "#404040",
+  error: "#E76F51",
 };
 
 const manyllaTheme = {
@@ -63,6 +65,7 @@ const manyllaTheme = {
     disabled: "#8A7862",
   },
   border: "#C8B59B",
+  error: "#E76F51",
 };
 
 // Export color values for compatibility (from theme.ts)

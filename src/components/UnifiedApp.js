@@ -19,6 +19,7 @@ import {
 } from "react-native";
 import { getTextStyle } from "../utils/platformStyles";
 import { ThemedModal } from "./Common";
+import PhotoUpload from "./Profile/PhotoUpload";
 // DatePicker handled through platform-specific implementations
 let DateTimePicker = null;
 if (platform.isMobile) {
@@ -273,6 +274,7 @@ export const ProfileEditForm = ({
     profile?.dateOfBirth ? new Date(profile.dateOfBirth) : new Date(),
   );
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [photo, setPhoto] = useState(profile?.photo || "");
 
   // Create dynamic styles based on active colors
   const dynamicStyles = createDynamicStyles(activeColors);
@@ -287,6 +289,7 @@ export const ProfileEditForm = ({
       name: name.trim(),
       preferredName: preferredName.trim() || name.trim(),
       dateOfBirth,
+      photo,
     });
     onClose();
   };
@@ -296,6 +299,16 @@ export const ProfileEditForm = ({
       style={dynamicStyles.formContainer}
       contentContainerStyle={dynamicStyles.formContentContainer}
     >
+      {/* Photo Upload Section */}
+      <View style={dynamicStyles.inputGroup}>
+        <PhotoUpload
+          currentPhoto={photo}
+          onPhotoChange={(encryptedPhoto) => setPhoto(encryptedPhoto)}
+          onPhotoRemove={() => setPhoto("")}
+          size={100}
+        />
+      </View>
+
       <View style={dynamicStyles.inputGroup}>
         <Text style={dynamicStyles.label}>Name *</Text>
         <TextInput

@@ -22,11 +22,12 @@ The Developer Task tool receives:
 
 ### Phase 2: Peer Review (Task Tool Instance)
 The Peer Reviewer Task tool:
-1. Validates EVERY requirement independently
-2. Tests all edge cases
-3. Verifies no regressions
-4. REJECTS if ANY requirement fails
-5. Provides detailed feedback report
+1. **TRACES IMPORT CHAINS** - Verifies the modified component is actually used
+2. Validates EVERY requirement independently
+3. Tests all edge cases
+4. Verifies no regressions
+5. REJECTS if ANY requirement fails
+6. Provides detailed feedback report
 
 ### Phase 3: Iteration (Coordinated by Project Manager)
 Project Manager coordinates iterations:
@@ -119,11 +120,20 @@ You are an adversarial Peer Reviewer. Rigorously validate this implementation an
 [INSERT PEER REVIEWER ROLE DEFINITION HERE]
 
 ## VALIDATION PROCESS
-1. Run ALL verification commands independently
-2. Check EVERY requirement from the story
-3. Test edge cases the developer might have missed
-4. Look for any regressions introduced
-5. Verify no shortcuts were taken
+1. **TRACE COMPONENT USAGE FIRST**
+   ```bash
+   # Find where component is imported
+   grep -r "ComponentName" src/ --include="*.js" | grep import
+   # Verify it's actually used in the render tree
+   grep -r "<ComponentName" src/ --include="*.js"
+   # Check App.js imports specifically
+   grep "import.*ComponentName" App.js
+   ```
+2. Run ALL verification commands independently
+3. Check EVERY requirement from the story
+4. Test edge cases the developer might have missed
+5. Look for any regressions introduced
+6. Verify no shortcuts were taken
 
 ## OUTPUT FORMAT
 ```
@@ -305,6 +315,14 @@ Report: REJECTED or APPROVED with evidence
 5. **Demand evidence** - Reject vague claims with specific reasons
 
 ## COMMON REJECTION PATTERNS
+
+### 🔴 Wrong Component Modified
+```
+REJECTED: Modified component not actually used
+Evidence: grep "import.*ProfileEditDialog" App.js - No results
+Actual: App.js imports ProfileEditForm from UnifiedApp.js
+Required Fix: Modify ProfileEditForm, not ProfileEditDialog
+```
 
 ### 🔴 Incomplete Implementation
 ```
