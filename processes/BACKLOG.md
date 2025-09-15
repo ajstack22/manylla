@@ -1,7 +1,7 @@
 # Development Backlog
 
 *Last Updated: 2025-09-14*
-*Next ID: S038, B004*
+*Next ID: S000, B004*
 
 ## Quick Start for Claude
 Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything needed to start immediately.
@@ -36,6 +36,7 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟢 P3 - Low (Nice to Have)
 ### Stories
+- [S000](backlog/S000-fixprettierformattingin2files.md) - Fix Prettier formatting in 2 files ✅ **READY** (Auto-Generated)
 - [S019](backlog/S019-add-default-case-to-switch-statements.md) - Add default case to switch statements ✅ **READY**
 - [S020](backlog/S020-fix-unreachable-code-warnings-in-imagepicker.md) - Fix unreachable code warnings in ImagePicker ✅ **READY**
 - [S021](backlog/S021-fix-unused-variable-warnings-in-codebase.md) - Fix unused variable warnings in codebase ✅ **READY**
