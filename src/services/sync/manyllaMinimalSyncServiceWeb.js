@@ -42,10 +42,14 @@ class ManyllaMinimalSyncService {
     // Initialize encryption
     manyllaEncryptionService.init(recoveryPhrase);
 
-    // Generate sync ID from recovery phrase
+    // Generate sync ID from recovery phrase (32 hex characters to match API requirement)
     const phraseBytes = util.decodeUTF8(recoveryPhrase);
     const hash = nacl.hash(phraseBytes);
-    this.syncId = util.encodeBase64(hash.slice(0, 16));
+    // Convert first 16 bytes of hash to 32 hex characters
+    const hashBytes = hash.slice(0, 16);
+    this.syncId = Array.from(hashBytes)
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
 
     // Test sync health
     try {
