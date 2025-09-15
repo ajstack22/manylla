@@ -1,5 +1,23 @@
 # Manylla Release Notes
 
+## Version 2025.09.14.5 - 2025-09-14
+API Configuration Update - Dev Environment for Local Testing
+
+### Summary
+Updated API configuration to use dedicated dev environment for local development, keeping test data separate from qual and production environments.
+
+### Changed
+- **API Routing**:
+  - Local development now uses `https://manylla.com/dev/api/`
+  - Qual deployment uses `/qual/api/`
+  - Production uses `/api/`
+  - Prevents local testing from affecting qual/production data
+
+### Technical
+- Modified src/config/api.js to route localhost to dev API
+- Maintains separation of dev, qual, and production environments
+- Sync functionality now works properly in local development
+
 ## Version 2025.09.14.4 - 2025-09-14
 Test Infrastructure and ESLint Compliance - Story S030 Phase 1
 
