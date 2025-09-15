@@ -1,7 +1,7 @@
 # Development Backlog
 
 *Last Updated: 2025-09-14*
-*Next ID: S002, B004*
+*Next ID: S003, B004*
 
 ## Quick Start for Claude
 Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything needed to start immediately.
@@ -36,6 +36,7 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟢 P3 - Low (Nice to Have)
 ### Stories
+- [S002](backlog/S002-fixprettierformattingin2files.md) - Fix Prettier formatting in 2 files ✅ **READY** (Auto-Generated)
 - [S001](backlog/S001-fixprettierformattingin2files.md) - Fix Prettier formatting in 2 files ✅ **READY** (Auto-Generated)
 - [S000](backlog/S000-fixprettierformattingin2files.md) - Fix Prettier formatting in 2 files ✅ **READY** (Auto-Generated)
 - [S000](backlog/S000-fixprettierformattingin2files.md) - Fix Prettier formatting in 2 files ✅ **READY** (Auto-Generated)
