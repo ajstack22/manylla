@@ -1,18 +1,25 @@
 # Development Backlog
 
 *Last Updated: 2025-09-15*
-*Next ID: S049, B004*
+*Next ID: S053, B009*
 
 ## Quick Start for Claude
 Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything needed to start immediately.
 
 ## 🔴 P0 - Critical (Do Now)
 ### Stories
+- [S050](backlog/S050-fix-regex-dos-vulnerabilities.md) - Fix Regex DoS Vulnerabilities ✅ **READY** (Security Hotspot)
+- [S051](backlog/S051-fix-weak-cryptography-issues.md) - Fix Weak Cryptography Issues ✅ **READY** (Security Hotspot)
+- [S052](backlog/S052-fix-javascript-uri-security-issue.md) - Fix JavaScript URI Security Issue ✅ **READY** (Security Hotspot)
 - [S040](backlog/S040-fix-type-comparison-bugs.md) - Fix Type Comparison Bugs in Components ✅ **READY** (SonarQube Blocker)
 - [S041](backlog/S041-fix-testing-library-node-access.md) - Fix Testing Library Node Access Issues ✅ **READY** (Code Quality)
 
 ### Bugs
-*None*
+- [B004](bugs/B004-fix-strict-equality-checks-in-progressiveonboarding.md) - Fix Strict Equality Checks in ProgressiveOnboarding ✅ **READY** (13 issues)
+- [B005](bugs/B005-fix-conditional-rendering-value-leaks.md) - Fix Conditional Rendering Value Leaks ✅ **READY** (5 issues)
+- [B006](bugs/B006-fix-typeerror-risk-in-shareaccessview.md) - Fix TypeError Risk in ShareAccessView ✅ **READY**
+- [B007](bugs/B007-fix-duplicate-code-blocks-in-buymecoffeebutton.md) - Fix Duplicate Code Blocks in BuyMeCoffeeButton ✅ **READY**
+- [B008](bugs/B008-fix-setstate-callback-issue-in-errorboundary.md) - Fix setState Callback Issue in ErrorBoundary ✅ **READY**
 
 ## 🟠 P1 - High (Do Next)
 ### Stories
@@ -61,8 +68,8 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 ---
 
 ## 📊 Metrics
-- **Total Stories**: 21 active (all ready)
-- **Total Bugs**: 0 active
+- **Total Stories**: 24 active (all ready)
+- **Total Bugs**: 5 active
 - **Completed Stories**: 11 (in completed-stories folder)
 - **Resolved Bugs**: 2 (in bugs/resolved)
 - **P0 Items**: 2 (SonarQube critical fixes)

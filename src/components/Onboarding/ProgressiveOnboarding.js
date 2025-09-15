@@ -45,7 +45,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
     if (currentIndex < stepOrder.length - 1) {
       // Skip child-info if demo mode or join mode
       if (
-        (mode === "demo" || mode === "join") &&
+        mode && (mode === "demo" || mode === "join") &&
         stepOrder[currentIndex + 1] === "child-info"
       ) {
         setCurrentStep(stepOrder[currentIndex + 2]);
@@ -67,7 +67,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
     if (currentIndex > 0) {
       // Skip child-info if demo mode or join mode when going back
       if (
-        (mode === "demo" || mode === "join") &&
+        mode && (mode === "demo" || mode === "join") &&
         stepOrder[currentIndex - 1] === "child-info"
       ) {
         setCurrentStep(stepOrder[currentIndex - 2]);
@@ -108,7 +108,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
   };
 
   const getStepNumber = () => {
-    if (mode === "demo" || mode === "join") {
+    if (mode && (mode === "demo" || mode === "join")) {
       switch (currentStep) {
         case "welcome":
           return 0;
@@ -138,7 +138,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
     }
   };
 
-  const getTotalSteps = () => (mode === "demo" || mode === "join" ? 4 : 5);
+  const getTotalSteps = () => (mode && (mode === "demo" || mode === "join") ? 4 : 5);
 
   const styles = StyleSheet.create({
     container: {
