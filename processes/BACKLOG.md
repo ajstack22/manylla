@@ -1,7 +1,7 @@
 # Development Backlog
 
 *Last Updated: 2025-09-14*
-*Next ID: S028, B004*
+*Next ID: S037, B004*
 
 ## Quick Start for Claude
 Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything needed to start immediately.
@@ -15,7 +15,10 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟠 P1 - High (Do Next)
 ### Stories
-- [S029](backlog/S029-increase-test-coverage-from-7-to-60-minimum.md) - Increase Test Coverage from 7% to 60% Minimum ✅ **READY**
+- [S033](backlog/S033-deployment-pre-flight-checks-and-validation-suite.md) - Deployment Pre-flight Checks and Validation Suite ✅ **READY**
+- [S032](backlog/S032-emergency-recovery-automation-scripts.md) - Emergency Recovery Automation Scripts ✅ **READY**
+- [S031](backlog/S031-automated-port-management-and-cleanup-tool.md) - Automated Port Management and Cleanup Tool ✅ **READY**
+- [S030](backlog/S030-increase-test-coverage-from-7-to-60-minimum.md) - Increase Test Coverage from 7% to 60% Minimum ✅ **READY**
 - [S026](backlog/S026-comprehensive-code-quality-cleanup.md) - Comprehensive Code Quality Cleanup ✅ **READY**
 - [S027](backlog/S027-implement-jest-and-react-testing-library-infrastructure.md) - Implement Jest and React Testing Library Infrastructure ✅ **READY**
 
@@ -24,7 +27,9 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟡 P2 - Medium (Plan Soon)
 ### Stories
-*None*
+- [S036](backlog/S036-enhanced-health-check-with-performance-baselines.md) - Enhanced Health Check with Performance Baselines ✅ **READY**
+- [S035](backlog/S035-automated-dependency-and-cache-management-system.md) - Automated Dependency and Cache Management System ✅ **READY**
+- [S034](backlog/S034-continuous-monitoring-and-alerting-system.md) - Continuous Monitoring and Alerting System ✅ **READY**
 
 ### Bugs
 *None*

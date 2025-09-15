@@ -1,6 +1,9 @@
 // Jest setup file for mocking React Native components
 import '@testing-library/jest-dom';
 
+// Define __DEV__ global for React Native modules
+global.__DEV__ = process.env.NODE_ENV === 'development';
+
 // Mock React Native modules
 jest.mock('react-native', () => {
   const platform = {
@@ -60,6 +63,11 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
 
 // Mock React Native Vector Icons
 jest.mock('react-native-vector-icons/MaterialIcons', () => 'MaterialIcons');
+
+// Mock React Native Picker
+jest.mock('@react-native-picker/picker', () => ({
+  Picker: 'Picker'
+}));
 
 // Mock crypto for encryption services
 Object.defineProperty(global, 'crypto', {
@@ -132,3 +140,54 @@ if (typeof window !== 'undefined') {
 
 // Additional polyfills for testing environment
 global.URL = require('url').URL;
+
+// Mock Canvas API for image processing tests
+const mockCanvas = {
+  getContext: jest.fn(() => ({
+    drawImage: jest.fn(),
+    getImageData: jest.fn(() => ({
+      data: new Uint8ClampedArray(4),
+      width: 100,
+      height: 100,
+    })),
+    putImageData: jest.fn(),
+    fillRect: jest.fn(),
+    clearRect: jest.fn(),
+    strokeRect: jest.fn(),
+  })),
+  toDataURL: jest.fn(() => 'data:image/jpeg;base64,test_data'),
+  toBlob: jest.fn((callback) => {
+    callback(new Blob(['test'], { type: 'image/jpeg' }));
+  }),
+  width: 100,
+  height: 100,
+};
+
+// Mock HTMLCanvasElement constructor
+global.HTMLCanvasElement = jest.fn(() => mockCanvas);
+
+// Mock document.createElement for canvas
+const originalCreateElement = document.createElement.bind(document);
+document.createElement = jest.fn((tagName, options) => {
+  if (tagName === 'canvas') {
+    return mockCanvas;
+  }
+  return originalCreateElement(tagName, options);
+});
+
+// Mock Image constructor for image loading tests
+global.Image = jest.fn(() => ({
+  addEventListener: jest.fn((event, callback) => {
+    if (event === 'load') {
+      setTimeout(() => callback(), 0);
+    }
+  }),
+  removeEventListener: jest.fn(),
+  onload: null,
+  onerror: null,
+  src: '',
+  width: 100,
+  height: 100,
+  naturalWidth: 100,
+  naturalHeight: 100,
+}));

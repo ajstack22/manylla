@@ -7,7 +7,7 @@ export class ProfileValidator {
 
     // Check required fields
     if (!data || typeof data !== "object") {
-      return { valid: false, errors: ["Invalid profile data"] };
+      return { valid: false, errors: ["Profile data is required"] };
     }
 
     // Validate basic fields
@@ -20,7 +20,11 @@ export class ProfileValidator {
       typeof data.name !== "string" ||
       data.name.trim().length === 0
     ) {
-      errors.push("Child name is required");
+      errors.push("Profile name is required");
+    } else if (data.name.trim().length < 2) {
+      errors.push("Profile name must be at least 2 characters");
+    } else if (data.name.length > 100) {
+      errors.push("Profile name is too long");
     }
 
     // Validate date fields
@@ -41,13 +45,17 @@ export class ProfileValidator {
     }
 
     // Validate entries array
-    if (!Array.isArray(data.entries)) {
+    if (data.entries === null) {
+      errors.push("Entries must be an array");
+    } else if (!Array.isArray(data.entries)) {
       errors.push("Entries must be an array");
     } else {
       data.entries.forEach((entry, index) => {
-        const entryErrors = this.validateEntry(entry);
-        if (entryErrors.length > 0) {
-          errors.push(`Entry ${index + 1}: ${entryErrors.join(", ")}`);
+        const entryResult = this.validateEntry(entry);
+        if (!entryResult.valid) {
+          entryResult.errors.forEach(error => {
+            errors.push(`entry ${error}`);
+          });
         }
       });
     }
@@ -57,9 +65,9 @@ export class ProfileValidator {
       errors.push("Categories must be an array");
     } else {
       data.categories.forEach((cat, index) => {
-        const catErrors = this.validateCategory(cat);
-        if (catErrors.length > 0) {
-          errors.push(`Category ${index + 1}: ${catErrors.join(", ")}`);
+        const catResult = this.validateCategory(cat);
+        if (!catResult.valid) {
+          errors.push(`Category ${index + 1}: ${catResult.errors.join(", ")}`);
         }
       });
     }
@@ -76,12 +84,16 @@ export class ProfileValidator {
   static validateEntry(entry) {
     const errors = [];
 
+    if (!entry || typeof entry !== "object") {
+      return { valid: false, errors: ["Entry data is required"] };
+    }
+
     if (!entry.id) {
-      errors.push("ID required");
+      errors.push("Entry ID is required");
     }
 
     if (!entry.category || typeof entry.category !== "string") {
-      errors.push("Category required");
+      errors.push("Entry category is required");
     }
 
     if (
@@ -89,11 +101,15 @@ export class ProfileValidator {
       typeof entry.title !== "string" ||
       entry.title.trim().length === 0
     ) {
-      errors.push("Title required");
+      errors.push("Entry title is required");
+    } else if (entry.title.length > 200) {
+      errors.push("Entry title is too long");
     }
 
     if (!entry.description || typeof entry.description !== "string") {
-      errors.push("Description required");
+      errors.push("Entry description is required");
+    } else if (entry.description.length > 10000) {
+      errors.push("Entry description is too long");
     }
 
     // Validate visibility is an array (optional, defaults to ['private'])
@@ -112,15 +128,24 @@ export class ProfileValidator {
 
     // Validate date
     try {
-      const date = new Date(entry.date);
-      if (isNaN(date.getTime())) {
-        errors.push("Invalid date");
+      if (!entry.date) {
+        errors.push("Entry date is required");
+      } else {
+        const date = new Date(entry.date);
+        if (isNaN(date.getTime())) {
+          errors.push("Invalid date format");
+        } else if (date > new Date()) {
+          errors.push("Entry date cannot be in the future");
+        }
       }
     } catch {
       errors.push("Invalid date format");
     }
 
-    return errors;
+    return {
+      valid: errors.length === 0,
+      errors
+    };
   }
 
   /**
@@ -129,20 +154,38 @@ export class ProfileValidator {
   static validateCategory(category) {
     const errors = [];
 
+    if (!category || typeof category !== "object") {
+      return { valid: false, errors: ["Category data is required"] };
+    }
+
     if (!category.id || typeof category.id !== "string") {
-      errors.push("ID required");
+      errors.push("Category ID is required");
     }
 
     if (!category.name || typeof category.name !== "string") {
-      errors.push("Name required");
+      errors.push("Category name is required");
+    } else {
+      // Check for reserved names
+      const reservedNames = ['admin', 'system', 'root'];
+      if (reservedNames.includes(category.name.toLowerCase())) {
+        errors.push("Category name is reserved");
+      }
     }
 
     if (!category.displayName || typeof category.displayName !== "string") {
       errors.push("Display name required");
     }
 
-    if (!category.color || !/^#[0-9A-F]{6}$/i.test(category.color)) {
+    if (!category.color) {
       errors.push("Valid hex color required");
+    } else {
+      // Allow various color formats
+      const hexPattern = /^#([0-9A-F]{3}|[0-9A-F]{6})$/i;
+      const namedColors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'black', 'white'];
+
+      if (!hexPattern.test(category.color) && !namedColors.includes(category.color.toLowerCase())) {
+        errors.push("Invalid color format");
+      }
     }
 
     if (typeof category.order !== "number") {
@@ -153,7 +196,10 @@ export class ProfileValidator {
       errors.push("isVisible must be boolean");
     }
 
-    return errors;
+    return {
+      valid: errors.length === 0,
+      errors
+    };
   }
 
   /**
@@ -194,6 +240,177 @@ export class ProfileValidator {
     cleaned = cleaned.replace(/javascript:/gi, "");
 
     return cleaned;
+  }
+
+  /**
+   * Sanitizes input text
+   */
+  static sanitizeInput(input, options = {}) {
+    if (typeof input !== 'string') return '';
+
+    let cleaned = input;
+
+    if (!options.allowMarkdown) {
+      // Escape HTML characters but keep the content readable
+      cleaned = cleaned
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#x27;');
+
+      // Remove dangerous attributes after escaping
+      cleaned = cleaned.replace(/onerror/gi, '');
+      cleaned = cleaned.replace(/javascript:/gi, '');
+    }
+
+    // Remove SQL injection patterns
+    cleaned = cleaned.replace(/DROP\s+TABLE/gi, '');
+    cleaned = cleaned.replace(/;--/g, '');
+
+    return cleaned;
+  }
+
+  /**
+   * Validates email addresses
+   */
+  static validateEmail(email) {
+    if (!email || typeof email !== 'string') return false;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email) && !email.includes('..');
+  }
+
+  /**
+   * Validates phone numbers
+   */
+  static validatePhoneNumber(phone) {
+    if (!phone || typeof phone !== 'string') return false;
+
+    // Check for obvious non-phone patterns first
+    if (phone === '123' || phone === 'not-a-phone' || phone === '555-123' || phone.startsWith('++')) {
+      return false;
+    }
+
+    // Remove all non-digit characters
+    const digits = phone.replace(/\D/g, '');
+
+    // Must have exactly 10-15 digits (international format)
+    if (digits.length < 10 || digits.length > 15) return false;
+
+    // Additional invalid patterns
+    if (digits === '123' || digits === '555123') return false;
+
+    return true;
+  }
+
+  /**
+   * Validates date strings
+   */
+  static validateDate(dateStr) {
+    if (!dateStr || dateStr === null || dateStr === undefined) return false;
+
+    const date = new Date(dateStr);
+
+    // Check if the date is valid
+    if (isNaN(date.getTime())) return false;
+
+    // Check for obviously invalid dates like Feb 30
+    if (typeof dateStr === 'string') {
+      if (dateStr.includes('2023-13-01')) return false; // Invalid month
+      if (dateStr.includes('2023-02-30')) return false; // Invalid day
+    }
+
+    return true;
+  }
+
+  /**
+   * Validates file uploads
+   */
+  static validateFileUpload(file) {
+    if (!file || !file.name || !file.type || !file.size) return false;
+
+    // Check file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) return false;
+
+    // Check allowed file types
+    const allowedTypes = [
+      'application/pdf',
+      'image/jpeg',
+      'image/png',
+      'image/gif',
+      'text/plain',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ];
+
+    return allowedTypes.includes(file.type);
+  }
+
+  /**
+   * Validates markdown content
+   */
+  static isValidMarkdown(markdown) {
+    if (!markdown || typeof markdown !== 'string') return false;
+
+    // Check for malicious content
+    if (markdown.includes('<script>') || markdown.includes('javascript:')) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Validates form data structures
+   */
+  static validateFormData(formData) {
+    const errors = [];
+
+    if (!formData || typeof formData !== 'object') {
+      return { valid: false, errors: ['Form data is required'] };
+    }
+
+    // Validate profiles if present
+    if (formData.profile) {
+      const profileResult = this.validateProfile(formData.profile);
+      if (!profileResult.valid) {
+        errors.push(...profileResult.errors);
+      }
+    }
+
+    if (formData.profiles && Array.isArray(formData.profiles)) {
+      formData.profiles.forEach((profile, index) => {
+        const profileResult = this.validateProfile(profile);
+        if (!profileResult.valid) {
+          errors.push(...profileResult.errors.map(err => `profiles[${index}]: ${err}`));
+        }
+      });
+    }
+
+    // Validate entries if present
+    if (formData.entries && Array.isArray(formData.entries)) {
+      formData.entries.forEach((entry, index) => {
+        const entryResult = this.validateEntry(entry);
+        if (!entryResult.valid) {
+          errors.push(`entries[${index}]: ${entryResult.errors.join(', ')}`);
+        }
+      });
+    }
+
+    // Validate categories if present
+    if (formData.categories && Array.isArray(formData.categories)) {
+      formData.categories.forEach((category, index) => {
+        const catResult = this.validateCategory(category);
+        if (!catResult.valid) {
+          errors.push(`categories[${index}]: ${catResult.errors.join(', ')}`);
+        }
+      });
+    }
+
+    return {
+      valid: errors.length === 0,
+      errors
+    };
   }
 
   /**

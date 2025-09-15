@@ -1,5 +1,41 @@
 # Manylla Release Notes
 
+## Version 2025.09.15.6 - 2025-09-15
+Test Coverage Expansion - Progress Toward 60% Target
+
+### Summary
+Expanded test infrastructure with comprehensive real integration tests for critical components. While the 60% target was not achieved due to infrastructure challenges, significant progress was made in creating meaningful tests that validate actual behavior rather than mocks.
+
+### Added
+- **Comprehensive Test Suites (S029)**:
+  - manyllaEncryptionService: Full integration tests for encryption/decryption
+  - UnifiedApp components: Tests for EntryForm and ProfileEditForm
+  - ProfileValidator: Complete validation logic tests
+  - Real tests that execute actual code, not shallow mocks
+  - Focus on critical paths and security-sensitive code
+
+### Fixed
+- Fixed DatePicker test import paths
+- Fixed validation test imports to use ProfileValidator class correctly
+- Corrected jest.setup.js mocking for @react-native-picker/picker
+- Improved Canvas API mocking for image processing tests
+
+### Technical
+- Created test patterns that avoid excessive mocking
+- Tests now validate real encryption/decryption flows
+- Integration tests use actual service implementations
+- Established foundation for continued coverage improvement
+
+### Known Issues
+- Coverage currently at ~18% due to many untested UI components
+- Some component tests still failing due to React Native Web compatibility
+- Need additional work on UI component coverage to reach 60% target
+
+### Next Steps
+- Focus on high-value component testing
+- Fix remaining test failures in UI components
+- Continue replacing mock tests with integration tests
+
 ## Version 2025.09.15.5 - 2025-09-15
 Test Coverage Infrastructure Improvements
 

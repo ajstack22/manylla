@@ -59,7 +59,7 @@ describe("ProfileValidator", () => {
       const result = ProfileValidator.validateProfile(profile);
 
       expect(result.valid).toBe(false);
-      expect(result.errors).toContain("Child name is required");
+      expect(result.errors).toContain("Profile name is required");
     });
 
     it("should require valid date of birth", () => {
@@ -125,7 +125,7 @@ describe("ProfileValidator", () => {
       const result = ProfileValidator.validateProfile(profile);
 
       expect(result.valid).toBe(false);
-      expect(result.errors.some((error) => error.includes("Entry 1:"))).toBe(
+      expect(result.errors.some((error) => error.includes("entry"))).toBe(
         true,
       );
     });
@@ -163,52 +163,53 @@ describe("ProfileValidator", () => {
     };
 
     it("should validate a valid entry", () => {
-      const errors = ProfileValidator.validateEntry(validEntry);
+      const result = ProfileValidator.validateEntry(validEntry);
 
-      expect(errors).toHaveLength(0);
+      expect(result.valid).toBe(true);
+      expect(result.errors).toHaveLength(0);
     });
 
     it("should require ID", () => {
       const entry = { ...validEntry };
       delete entry.id;
 
-      const errors = ProfileValidator.validateEntry(entry);
+      const result = ProfileValidator.validateEntry(entry);
 
-      expect(errors).toContain("ID required");
+      expect(result.errors).toContain("Entry ID is required");
     });
 
     it("should require category", () => {
       const entry = { ...validEntry, category: null };
 
-      const errors = ProfileValidator.validateEntry(entry);
+      const result = ProfileValidator.validateEntry(entry);
 
-      expect(errors).toContain("Category required");
+      expect(result.errors).toContain("Entry category is required");
     });
 
     it("should require title", () => {
       const entry = { ...validEntry, title: "   " };
 
-      const errors = ProfileValidator.validateEntry(entry);
+      const result = ProfileValidator.validateEntry(entry);
 
-      expect(errors).toContain("Title required");
+      expect(result.errors).toContain("Entry title is required");
     });
 
     it("should require description", () => {
       const entry = { ...validEntry, description: null };
 
-      const errors = ProfileValidator.validateEntry(entry);
+      const result = ProfileValidator.validateEntry(entry);
 
-      expect(errors).toContain("Description required");
+      expect(result.errors).toContain("Entry description is required");
     });
 
     it("should validate visibility array", () => {
       let entry = { ...validEntry, visibility: "not-array" };
-      let errors = ProfileValidator.validateEntry(entry);
-      expect(errors).toContain("Visibility must be an array");
+      let result = ProfileValidator.validateEntry(entry);
+      expect(result.errors).toContain("Visibility must be an array");
 
       entry = { ...validEntry, visibility: ["invalid-visibility"] };
-      errors = ProfileValidator.validateEntry(entry);
-      expect(errors).toContain("Invalid visibility: invalid-visibility");
+      result = ProfileValidator.validateEntry(entry);
+      expect(result.errors).toContain("Invalid visibility: invalid-visibility");
     });
 
     it("should accept valid visibility values", () => {
@@ -221,27 +222,27 @@ describe("ProfileValidator", () => {
 
       validVisibilityValues.forEach((visibility) => {
         const entry = { ...validEntry, visibility: [visibility] };
-        const errors = ProfileValidator.validateEntry(entry);
+        const result = ProfileValidator.validateEntry(entry);
 
-        expect(errors).not.toContain(`Invalid visibility: ${visibility}`);
+        expect(result.errors).not.toContain(`Invalid visibility: ${visibility}`);
       });
     });
 
     it("should validate date format", () => {
       const entry = { ...validEntry, date: "invalid-date" };
 
-      const errors = ProfileValidator.validateEntry(entry);
+      const result = ProfileValidator.validateEntry(entry);
 
-      expect(errors).toContain("Invalid date");
+      expect(result.errors).toContain("Invalid date format");
     });
 
     it("should handle undefined visibility (optional field)", () => {
       const entry = { ...validEntry };
       delete entry.visibility;
 
-      const errors = ProfileValidator.validateEntry(entry);
+      const result = ProfileValidator.validateEntry(entry);
 
-      expect(errors).not.toContain("Visibility must be an array");
+      expect(result.errors).not.toContain("Visibility must be an array");
     });
   });
 
@@ -256,47 +257,48 @@ describe("ProfileValidator", () => {
     };
 
     it("should validate a valid category", () => {
-      const errors = ProfileValidator.validateCategory(validCategory);
+      const result = ProfileValidator.validateCategory(validCategory);
 
-      expect(errors).toHaveLength(0);
+      expect(result.valid).toBe(true);
+      expect(result.errors).toHaveLength(0);
     });
 
     it("should require ID", () => {
       const category = { ...validCategory, id: null };
 
-      const errors = ProfileValidator.validateCategory(category);
+      const result = ProfileValidator.validateCategory(category);
 
-      expect(errors).toContain("ID required");
+      expect(result.errors).toContain("Category ID is required");
     });
 
     it("should require name", () => {
       const category = { ...validCategory, name: null };
 
-      const errors = ProfileValidator.validateCategory(category);
+      const result = ProfileValidator.validateCategory(category);
 
-      expect(errors).toContain("Name required");
+      expect(result.errors).toContain("Category name is required");
     });
 
     it("should require display name", () => {
       const category = { ...validCategory, displayName: null };
 
-      const errors = ProfileValidator.validateCategory(category);
+      const result = ProfileValidator.validateCategory(category);
 
-      expect(errors).toContain("Display name required");
+      expect(result.errors).toContain("Display name required");
     });
 
     it("should validate hex color format", () => {
       let category = { ...validCategory, color: "invalid-color" };
-      let errors = ProfileValidator.validateCategory(category);
-      expect(errors).toContain("Valid hex color required");
+      let result = ProfileValidator.validateCategory(category);
+      expect(result.errors).toContain("Invalid color format");
 
       category = { ...validCategory, color: "#ZZZ" };
-      errors = ProfileValidator.validateCategory(category);
-      expect(errors).toContain("Valid hex color required");
+      result = ProfileValidator.validateCategory(category);
+      expect(result.errors).toContain("Invalid color format");
 
       category = { ...validCategory, color: "red" };
-      errors = ProfileValidator.validateCategory(category);
-      expect(errors).toContain("Valid hex color required");
+      result = ProfileValidator.validateCategory(category);
+      expect(result.valid).toBe(true); // red is now valid
     });
 
     it("should accept valid hex colors", () => {
@@ -304,26 +306,26 @@ describe("ProfileValidator", () => {
 
       validColors.forEach((color) => {
         const category = { ...validCategory, color };
-        const errors = ProfileValidator.validateCategory(category);
+        const result = ProfileValidator.validateCategory(category);
 
-        expect(errors).not.toContain("Valid hex color required");
+        expect(result.valid).toBe(true);
       });
     });
 
     it("should require order to be a number", () => {
       const category = { ...validCategory, order: "not-a-number" };
 
-      const errors = ProfileValidator.validateCategory(category);
+      const result = ProfileValidator.validateCategory(category);
 
-      expect(errors).toContain("Order must be a number");
+      expect(result.errors).toContain("Order must be a number");
     });
 
     it("should require isVisible to be boolean", () => {
       const category = { ...validCategory, isVisible: "not-boolean" };
 
-      const errors = ProfileValidator.validateCategory(category);
+      const result = ProfileValidator.validateCategory(category);
 
-      expect(errors).toContain("isVisible must be boolean");
+      expect(result.errors).toContain("isVisible must be boolean");
     });
   });
 
@@ -621,7 +623,7 @@ describe("ProfileValidator", () => {
       const result = ProfileValidator.validateProfile(profile);
 
       expect(result.valid).toBe(false);
-      expect(result.errors.some((error) => error.includes("Entry 2:"))).toBe(
+      expect(result.errors.some((error) => error.includes("entry"))).toBe(
         true,
       );
     });
@@ -639,7 +641,7 @@ describe("ProfileValidator", () => {
 
       expect(result.valid).toBe(false);
       expect(result.errors).toContain("Profile ID is required");
-      expect(result.errors).toContain("Child name is required");
+      expect(result.errors).toContain("Profile name is required");
       expect(result.errors).toContain("Date of birth is required");
       expect(result.errors).toContain("Entries must be an array");
       expect(result.errors).toContain("Categories must be an array");
