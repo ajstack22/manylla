@@ -5,17 +5,13 @@
 
 // Determine the API base URL based on environment
 const getApiBaseUrl = () => {
-  // Check for development environment
-  if (process.env.NODE_ENV === "development") {
-    // Use local API during development
-    return "http://localhost:3000/api";
-  }
-
   // Production/staging detection based on hostname
   const hostname = window.location.hostname;
 
+  // For local development, use the dev API environment we set up for testing
   if (hostname === "localhost" || hostname === "127.0.0.1") {
-    return "/api";
+    // Point to dev API for local development and testing
+    return "https://manylla.com/dev/api";
   } else if (hostname.includes("manylla.com")) {
     // Check if we're on qual/staging
     if (window.location.pathname.startsWith("/qual")) {
