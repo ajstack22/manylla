@@ -9,10 +9,16 @@ TYPE="${3:-TECH_DEBT}"
 DETAILS="${4:-No additional details provided}"
 TIMESTAMP=$(date +"%Y-%m-%d %H:%M")
 
-# Generate next story ID
-NEXT_ID=$(grep "Next ID:" processes/BACKLOG.md | sed 's/.*S\([0-9]*\).*/\1/')
+# Generate next story ID - get the actual next available ID
+NEXT_ID=$(grep "Next ID:" processes/BACKLOG.md | sed 's/.*Next ID: S\([0-9]*\).*/\1/')
 if [ -z "$NEXT_ID" ]; then
-    NEXT_ID="037"  # Fallback if can't parse
+    # If can't parse, find the highest existing story ID and add 1
+    HIGHEST=$(ls processes/backlog/S*.md 2>/dev/null | sed 's/.*\/S\([0-9]*\)-.*/\1/' | sort -n | tail -1)
+    if [ -n "$HIGHEST" ]; then
+        NEXT_ID=$((HIGHEST + 1))
+    else
+        NEXT_ID="001"
+    fi
 fi
 
 STORY_ID="S$(printf "%03d" $NEXT_ID)"

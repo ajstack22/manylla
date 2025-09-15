@@ -1,7 +1,7 @@
 # Development Backlog
 
 *Last Updated: 2025-09-14*
-*Next ID: S024, B004*
+*Next ID: S038, B004*
 
 ## Quick Start for Claude
 Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything needed to start immediately.
@@ -36,13 +36,11 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟢 P3 - Low (Nice to Have)
 ### Stories
-- [S023](backlog/S023-fixprettierformattingin1files.md) - Fix Prettier formatting in 1 files ✅ **READY** (Auto-Generated)
-- [S026](backlog/S026-fixprettierformattingin1files.md) - Fix Prettier formatting in 1 files ✅ **READY** (Auto-Generated)
-- [S031](backlog/S031-fixprettierformattingin1files.md) - Fix Prettier formatting in 1 files ✅ **READY** (Auto-Generated)
 - [S019](backlog/S019-add-default-case-to-switch-statements.md) - Add default case to switch statements ✅ **READY**
 - [S020](backlog/S020-fix-unreachable-code-warnings-in-imagepicker.md) - Fix unreachable code warnings in ImagePicker ✅ **READY**
 - [S021](backlog/S021-fix-unused-variable-warnings-in-codebase.md) - Fix unused variable warnings in codebase ✅ **READY**
 - [S022](backlog/S022-update-licensestxt-with-current-package-dependencies.md) - Update LICENSES.txt with current package dependencies ✅ **READY**
+- [S037](backlog/S037-fix-prettier-formatting-issues.md) - Fix Prettier formatting issues ✅ **READY**
 
 ### Bugs
 *None*
