@@ -17,7 +17,7 @@ jest.mock("@react-native-async-storage/async-storage", () => ({
 
 const AsyncStorage = require("@react-native-async-storage/async-storage");
 const service = require("../manyllaEncryptionService").default;
-const syncService = require("../manyllaMinimalSyncServiceWeb").default;
+// const syncService = require("../manyllaMinimalSyncServiceWeb").default;
 
 describe("ManyllaEncryptionService Integration Tests", () => {
   const testConfig = getTestConfig();

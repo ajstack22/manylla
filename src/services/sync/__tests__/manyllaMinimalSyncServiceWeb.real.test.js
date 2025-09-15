@@ -5,7 +5,7 @@
  */
 
 import manyllaMinimalSyncService, {
-  ManyllaMinimalSyncService,
+  // ManyllaMinimalSyncService,
 } from "../manyllaMinimalSyncServiceWeb";
 import ManyllaEncryptionService from "../manyllaEncryptionService";
 

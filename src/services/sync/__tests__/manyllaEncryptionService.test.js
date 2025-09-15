@@ -5,7 +5,7 @@
  */
 
 import nacl from "tweetnacl";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 import encryptionService from "../manyllaEncryptionService";
 
 // Mock AsyncStorage
@@ -48,7 +48,7 @@ describe("manyllaEncryptionService", () => {
     pako.inflate = jest.fn().mockReturnValue(new Uint8Array([4, 5, 6]));
 
     // Mock tweetnacl-util
-    const util = require("tweetnacl-util");
+    // const util = require("tweetnacl-util");
     jest.doMock("tweetnacl-util", () => ({
       encodeBase64: jest.fn().mockReturnValue("base64string"),
       decodeBase64: jest.fn().mockReturnValue(new Uint8Array([1, 2, 3])),

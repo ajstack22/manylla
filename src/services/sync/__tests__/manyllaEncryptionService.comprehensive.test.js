@@ -5,8 +5,8 @@
  */
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import nacl from "tweetnacl";
-import pako from "pako";
+// import nacl from "tweetnacl";
+// import pako from "pako";
 
 // Import the actual service - not mocked!
 import manyllaEncryptionService from "../manyllaEncryptionService";

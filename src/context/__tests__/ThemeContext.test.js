@@ -161,7 +161,7 @@ describe("ThemeContext", () => {
     it("should load saved theme preference", async () => {
       AsyncStorage.getItem.mockResolvedValue("dark");
 
-      const { result, waitForNextUpdate } = renderHook(() => useTheme(), {
+      const { result } = renderHook(() => useTheme(), {
         wrapper,
       });
 
