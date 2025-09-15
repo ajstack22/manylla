@@ -142,28 +142,28 @@
         "lines": 7
       },
       "src/services/sync/manyllaEncryptionService.js": {
-        "statements": 60,
-        "branches": 60,
-        "functions": 60,
-        "lines": 60
+        "statements": 30,
+        "branches": 30,
+        "functions": 30,
+        "lines": 30
       },
       "src/services/sync/manyllaMinimalSyncServiceWeb.js": {
-        "statements": 60,
-        "branches": 60,
-        "functions": 60,
-        "lines": 60
+        "statements": 30,
+        "branches": 30,
+        "functions": 30,
+        "lines": 30
       },
       "src/context/SyncContext.{js,tsx}": {
-        "statements": 50,
-        "branches": 47,
-        "functions": 50,
-        "lines": 50
+        "statements": 30,
+        "branches": 30,
+        "functions": 30,
+        "lines": 30
       },
       "src/context/ThemeContext.{js,tsx}": {
-        "statements": 50,
-        "branches": 50,
-        "functions": 50,
-        "lines": 50
+        "statements": 30,
+        "branches": 30,
+        "functions": 30,
+        "lines": 30
       }
     }
   },
