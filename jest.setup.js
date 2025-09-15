@@ -39,6 +39,7 @@ jest.mock('react-native', () => {
     TouchableOpacity: 'button',
     Image: 'img',
     TextInput: 'input',
+    ActivityIndicator: 'div',
     Share: {
       share: jest.fn(() => Promise.resolve()),
     },
