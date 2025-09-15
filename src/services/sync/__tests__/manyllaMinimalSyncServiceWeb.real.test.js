@@ -4,9 +4,8 @@
  * Focus: Real behavior testing as required by Story S029
  */
 
-import manyllaMinimalSyncService, {
-  // ManyllaMinimalSyncService,
-} from "../manyllaMinimalSyncServiceWeb";
+import manyllaMinimalSyncService from // ManyllaMinimalSyncService,
+"../manyllaMinimalSyncServiceWeb";
 import ManyllaEncryptionService from "../manyllaEncryptionService";
 
 // Test data helpers

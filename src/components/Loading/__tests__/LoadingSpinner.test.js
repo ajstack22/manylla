@@ -101,7 +101,7 @@ describe("LoadingSpinner", () => {
       expect(screen.getByText("Loading...")).toBeInTheDocument();
 
       // Check that the loading spinner renders properly
-      expect(screen.getByRole('progressbar')).toBeInTheDocument();
+      expect(screen.getByRole("progressbar")).toBeInTheDocument();
     });
 
     it("should render in full screen mode when fullScreen is true", () => {
@@ -111,7 +111,7 @@ describe("LoadingSpinner", () => {
       expect(screen.getByText("Loading...")).toBeInTheDocument();
 
       // Check that container renders in full screen mode
-      expect(screen.getByRole('progressbar')).toBeInTheDocument();
+      expect(screen.getByRole("progressbar")).toBeInTheDocument();
       // In JSDOM, styles are applied but may not be directly accessible
     });
 
@@ -131,7 +131,7 @@ describe("LoadingSpinner", () => {
       // Verify both ActivityIndicator and message are present
       expect(screen.getByTestId("activity-indicator")).toBeInTheDocument();
       expect(screen.getByText("Test message")).toBeInTheDocument();
-      expect(screen.getByRole('progressbar')).toBeInTheDocument();
+      expect(screen.getByRole("progressbar")).toBeInTheDocument();
     });
 
     it("should apply correct styling to components", () => {

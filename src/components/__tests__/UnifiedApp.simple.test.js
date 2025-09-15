@@ -47,9 +47,7 @@ describe("UnifiedApp Components", () => {
     });
 
     test("does not render when not visible", () => {
-      render(
-        <EntryForm {...defaultProps} visible={false} />,
-      );
+      render(<EntryForm {...defaultProps} visible={false} />);
       expect(screen.queryByPlaceholderText(/enter title/i)).toBeNull();
     });
 
@@ -63,11 +61,12 @@ describe("UnifiedApp Components", () => {
     });
 
     test("saves with valid data", () => {
-      render(
-        <EntryForm {...defaultProps} category="medical" />,
-      );
+      render(<EntryForm {...defaultProps} category="medical" />);
 
-      fireEvent.changeText(screen.getByPlaceholderText(/enter title/i), "Test Title");
+      fireEvent.changeText(
+        screen.getByPlaceholderText(/enter title/i),
+        "Test Title",
+      );
       fireEvent.changeText(
         screen.getByPlaceholderText(/enter description/i),
         "Test Desc",
@@ -92,9 +91,7 @@ describe("UnifiedApp Components", () => {
         date: new Date(),
       };
 
-      render(
-        <EntryForm {...defaultProps} entry={entry} />,
-      );
+      render(<EntryForm {...defaultProps} entry={entry} />);
 
       expect(screen.getByDisplayValue("Existing")).toBeTruthy();
       expect(screen.getByDisplayValue("Existing Desc")).toBeTruthy();
@@ -128,9 +125,7 @@ describe("UnifiedApp Components", () => {
     };
 
     test("renders when visible", () => {
-      render(
-        <ProfileEditForm {...defaultProps} />,
-      );
+      render(<ProfileEditForm {...defaultProps} />);
       expect(screen.getByPlaceholderText(/enter name/i)).toBeTruthy();
     });
 
@@ -144,11 +139,12 @@ describe("UnifiedApp Components", () => {
     });
 
     test("saves with valid name", () => {
-      render(
-        <ProfileEditForm {...defaultProps} />,
-      );
+      render(<ProfileEditForm {...defaultProps} />);
 
-      fireEvent.changeText(screen.getByPlaceholderText(/enter name/i), "Test Name");
+      fireEvent.changeText(
+        screen.getByPlaceholderText(/enter name/i),
+        "Test Name",
+      );
       fireEvent.press(screen.getByText(/save/i));
 
       expect(defaultProps.onSave).toHaveBeenCalledWith({
@@ -166,9 +162,7 @@ describe("UnifiedApp Components", () => {
         personalNotes: "Notes",
       };
 
-      render(
-        <ProfileEditForm {...defaultProps} profile={profile} />,
-      );
+      render(<ProfileEditForm {...defaultProps} profile={profile} />);
 
       expect(screen.getByDisplayValue("Existing Name")).toBeTruthy();
       expect(screen.getByDisplayValue("Notes")).toBeTruthy();
