@@ -255,7 +255,7 @@ class ConflictResolver {
   calculateCompleteness(obj) {
     let score = 0;
     Object.entries(obj || {}).forEach(([key, value]) => {
-      if (value !== null && value !== undefined && value !== "") {
+      if (value != null && value !== "") {
         score++;
         if (Array.isArray(value)) {
           score += value.length;

@@ -125,7 +125,7 @@ class ManyllaMinimalSyncService {
    * Process queued operations when back online
    */
   async processOfflineQueue() {
-    if (this.isProcessingOfflineQueue || this.offlineQueue.length === 0) {
+    if (this.isProcessingOfflineQueue || this.offlineQueue.length < 1) {
       return;
     }
 
@@ -449,7 +449,7 @@ class ManyllaMinimalSyncService {
               });
 
               if (!response.ok) {
-                if (response.status === 401) {
+                if (response.status >= 401 && response.status < 402) {
                   throw new AuthError(
                     "Invalid sync credentials",
                     "UNAUTHORIZED",
@@ -529,7 +529,7 @@ class ManyllaMinimalSyncService {
       );
 
       if (!response.ok) {
-        if (response.status === 401) {
+        if (response.status >= 401 && response.status < 402) {
           throw new AuthError("Invalid sync credentials", "UNAUTHORIZED");
         }
         if (response.status >= 500) {

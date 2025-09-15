@@ -1,0 +1,48 @@
+src/utils/placeholders.js:  if (!config?.examples || config.examples.length === 0) {
+src/utils/platformStyles.js:    return numColumns === 2 ? "48%" : "100%";
+src/utils/validation.js:      data.name.trim().length === 0
+src/utils/validation.js:      valid: errors.length === 0,
+src/utils/validation.js:      entry.title.trim().length === 0
+src/utils/validation.js:      valid: errors.length === 0,
+src/utils/validation.js:      valid: errors.length === 0,
+src/utils/validation.js:      valid: errors.length === 0,
+src/utils/inviteCode.js:    if (i === 4) {
+src/screens/Onboarding/OnboardingScreen.js:  if (step === 1) {
+src/screens/Onboarding/OnboardingScreen.js:            {!platform.isWeb && dateOfBirth.length === 0 && (
+src/components/Sharing/ShareDialogOptimized.js:          ? `${expirationDays} ${expirationDays === 1 ? "day" : "days"}`
+src/components/Sharing/ShareDialogOptimized.js:          : expirationDays === 90
+src/components/Sharing/ShareDialogOptimized.js:          (selectedCategories.length === 0 || loading) && styles.buttonDisabled,
+src/components/Sharing/ShareDialogOptimized.js:        disabled={selectedCategories.length === 0 || loading}
+src/components/Sharing/ShareDialogOptimized.js:            ? `${expirationDays} ${expirationDays === 1 ? "day" : "days"}`
+src/components/Sharing/ShareDialogOptimized.js:            : expirationDays === 90
+src/components/Sharing/PrintPreview.js:                        if (categoryEntries.length === 0) return null;
+src/components/Sharing/SharedView.js:            if (response.status === 404) {
+src/components/Sharing/SharedView.js:            } else if (response.status === 403) {
+src/components/Sharing/SharedView.js:            if (entries.length === 0 && !category.isQuickInfo) return null;
+src/components/Sharing/SharedView.js:                quickInfoEntries.length === 0 &&
+src/components/Sharing/SharedView.js:                  sharedProfile.quickInfoPanels.length === 0)
+src/components/Sharing/ShareAccessView.js:    if (!entries || entries.length === 0) return null;
+src/components/Forms/MarkdownRenderer.js:    if (parts.length === 0) {
+src/components/Forms/SmartTextInput.js:      {value.length === 0 && !isFocused && (
+src/components/ErrorBoundary/__tests__/ErrorBoundary.real.test.js:            if (prevState.count === 0) {
+src/components/Toast/ToastManager.js:    if (this.currentToast || this.queue.length === 0) {
+src/components/Profile/ProfileOverview.js:      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+src/components/Profile/ProfileOverview.js:                  isFirst={index === 0}
+src/components/Profile/CategorySection.js:  if (!entries || entries.length === 0) {
+src/components/Profile/CategorySection.js:        {entries.length === 0 ? (
+src/components/Profile/ProfileEditDialog.js:      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+src/components/Profile/ProfileCreateDialog.js:    if (activeStep === 0) {
+src/components/Profile/ProfileCreateDialog.js:      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+src/components/Profile/ProfileCreateDialog.js:          {activeStep === 0 ? renderBasicInfo() : renderPhotoStep()}
+src/components/Onboarding/ProgressiveOnboarding.js:    if (accessCode.length === 6) {
+src/hooks/useFormWithRecovery.js:    isValid: Object.keys(errors).length === 0,
+src/services/sync/manyllaMinimalSyncServiceWeb.js:                if (response.status === 401) {
+src/services/sync/manyllaMinimalSyncServiceWeb.js:        if (response.status === 401) {
+src/services/sync/manyllaEncryptionService.js:  if (arr.length === 0) return "";
+src/services/sync/manyllaEncryptionService.js:    } else if ((byte1 & 0xe0) === 0xc0) {
+src/services/sync/manyllaEncryptionService.js:    } else if ((byte1 & 0xf0) === 0xe0) {
+src/services/sync/manyllaEncryptionService.js:    } else if ((byte1 & 0xf8) === 0xf0) {
+src/services/sync/manyllaEncryptionService.js:    const isCompressed = combined[1] === 1;
+src/services/sync/manyllaMinimalSyncServiceNative.js:    if (this.isProcessingOfflineQueue || this.offlineQueue.length === 0) {
+src/services/sync/manyllaMinimalSyncServiceNative.js:                if (response.status === 401) {
+src/services/sync/manyllaMinimalSyncServiceNative.js:        if (response.status === 401) {

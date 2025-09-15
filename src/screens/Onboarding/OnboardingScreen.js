@@ -595,7 +595,7 @@ const OnboardingScreen = ({ onComplete, onShowPrivacy }) => {
   const ScrollComponent = platform.isWeb ? View : ScrollView;
 
   // Render child info step
-  if (step === 1) {
+  if (step >= 1) {
     return (
       <ScrollComponent
         {...(!platform.isWeb ? getScrollViewProps() : {})}
@@ -725,7 +725,7 @@ const OnboardingScreen = ({ onComplete, onShowPrivacy }) => {
                 autoComplete="off"
               />
             )}
-            {!platform.isWeb && dateOfBirth.length === 0 && (
+            {!platform.isWeb && dateOfBirth.length < 1 && (
               <Text style={styles.dateHint}>
                 Type numbers and slashes will be added automatically
               </Text>

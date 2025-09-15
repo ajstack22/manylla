@@ -150,7 +150,7 @@ class ToastManagerClass {
    */
   processQueue() {
     // Don't process if already showing a toast
-    if (this.currentToast || this.queue.length === 0) {
+    if (this.currentToast || this.queue.length < 1) {
       return;
     }
 

@@ -151,7 +151,7 @@ export const CategorySection = ({
   const iconName = getCategoryIcon(title);
 
   // Don't render if no entries (auto-hide empty categories)
-  if (!entries || entries.length === 0) {
+  if (!entries || entries.length < 1) {
     // Exception: Quick Info always shows even if empty
     if (!isQuickInfo) {
       return null;
@@ -200,7 +200,7 @@ export const CategorySection = ({
       </View>
 
       <View style={styles.entriesContainer}>
-        {entries.length === 0 ? (
+        {entries.length < 1 ? (
           <View style={styles.emptyCard}>
             <Text style={styles.emptyText}>
               No {title.toLowerCase()} added yet.

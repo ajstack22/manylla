@@ -1,0 +1,2791 @@
+{
+    "total": 134,
+    "p": 1,
+    "ps": 50,
+    "paging": {
+        "pageIndex": 1,
+        "pageSize": 50,
+        "total": 134
+    },
+    "effortTotal": 368,
+    "debtTotal": 368,
+    "issues": [
+        {
+            "key": "AZlNuF2EY2zCGgwuToFw",
+            "rule": "javascript:S3403",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+            "project": "ajstack22_manylla",
+            "line": 48,
+            "hash": "c80d27d8a4e4b8bdc20640a531440f1e",
+            "textRange": {
+                "startLine": 48,
+                "endLine": 48,
+                "startOffset": 14,
+                "endOffset": 17
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 48,
+                                "endLine": 48,
+                                "startOffset": 9,
+                                "endOffset": 13
+                            }
+                        }
+                    ]
+                },
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 48,
+                                "endLine": 48,
+                                "startOffset": 18,
+                                "endOffset": 24
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Remove this \"===\" check; it will always be false. Did you mean to use \"==\"?",
+            "effort": "5min",
+            "debt": "5min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNuF2FY2zCGgwuToFx",
+            "rule": "javascript:S3403",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+            "project": "ajstack22_manylla",
+            "line": 48,
+            "hash": "c80d27d8a4e4b8bdc20640a531440f1e",
+            "textRange": {
+                "startLine": 48,
+                "endLine": 48,
+                "startOffset": 33,
+                "endOffset": 36
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 48,
+                                "endLine": 48,
+                                "startOffset": 28,
+                                "endOffset": 32
+                            }
+                        }
+                    ]
+                },
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 48,
+                                "endLine": 48,
+                                "startOffset": 37,
+                                "endOffset": 43
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Remove this \"===\" check; it will always be false. Did you mean to use \"==\"?",
+            "effort": "5min",
+            "debt": "5min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNuF2FY2zCGgwuToFy",
+            "rule": "javascript:S3403",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+            "project": "ajstack22_manylla",
+            "line": 70,
+            "hash": "c80d27d8a4e4b8bdc20640a531440f1e",
+            "textRange": {
+                "startLine": 70,
+                "endLine": 70,
+                "startOffset": 14,
+                "endOffset": 17
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 70,
+                                "endLine": 70,
+                                "startOffset": 9,
+                                "endOffset": 13
+                            }
+                        }
+                    ]
+                },
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 70,
+                                "endLine": 70,
+                                "startOffset": 18,
+                                "endOffset": 24
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Remove this \"===\" check; it will always be false. Did you mean to use \"==\"?",
+            "effort": "5min",
+            "debt": "5min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNuF2FY2zCGgwuToFz",
+            "rule": "javascript:S3403",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+            "project": "ajstack22_manylla",
+            "line": 70,
+            "hash": "c80d27d8a4e4b8bdc20640a531440f1e",
+            "textRange": {
+                "startLine": 70,
+                "endLine": 70,
+                "startOffset": 33,
+                "endOffset": 36
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 70,
+                                "endLine": 70,
+                                "startOffset": 28,
+                                "endOffset": 32
+                            }
+                        }
+                    ]
+                },
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 70,
+                                "endLine": 70,
+                                "startOffset": 37,
+                                "endOffset": 43
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Remove this \"===\" check; it will always be false. Did you mean to use \"==\"?",
+            "effort": "5min",
+            "debt": "5min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNuF2FY2zCGgwuToF0",
+            "rule": "javascript:S3403",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+            "project": "ajstack22_manylla",
+            "line": 102,
+            "hash": "e6281e0b40df5c23e1d094f04cbb3a43",
+            "textRange": {
+                "startLine": 102,
+                "endLine": 102,
+                "startOffset": 22,
+                "endOffset": 25
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 102,
+                                "endLine": 102,
+                                "startOffset": 17,
+                                "endOffset": 21
+                            }
+                        }
+                    ]
+                },
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 102,
+                                "endLine": 102,
+                                "startOffset": 26,
+                                "endOffset": 32
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Remove this \"===\" check; it will always be false. Did you mean to use \"==\"?",
+            "effort": "5min",
+            "debt": "5min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNuF2FY2zCGgwuToF1",
+            "rule": "javascript:S3403",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+            "project": "ajstack22_manylla",
+            "line": 103,
+            "hash": "f57acf0d31e4942b2b29250e280b2526",
+            "textRange": {
+                "startLine": 103,
+                "endLine": 103,
+                "startOffset": 24,
+                "endOffset": 27
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 103,
+                                "endLine": 103,
+                                "startOffset": 19,
+                                "endOffset": 23
+                            }
+                        }
+                    ]
+                },
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 103,
+                                "endLine": 103,
+                                "startOffset": 28,
+                                "endOffset": 34
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Remove this \"===\" check; it will always be false. Did you mean to use \"==\"?",
+            "effort": "5min",
+            "debt": "5min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNuF2FY2zCGgwuToF2",
+            "rule": "javascript:S3403",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+            "project": "ajstack22_manylla",
+            "line": 104,
+            "hash": "c701a105cbec7bf877cc2ef8914927d0",
+            "textRange": {
+                "startLine": 104,
+                "endLine": 104,
+                "startOffset": 18,
+                "endOffset": 21
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 104,
+                                "endLine": 104,
+                                "startOffset": 13,
+                                "endOffset": 17
+                            }
+                        }
+                    ]
+                },
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 104,
+                                "endLine": 104,
+                                "startOffset": 22,
+                                "endOffset": 28
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Remove this \"===\" check; it will always be false. Did you mean to use \"==\"?",
+            "effort": "5min",
+            "debt": "5min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNuF2FY2zCGgwuToF3",
+            "rule": "javascript:S3403",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+            "project": "ajstack22_manylla",
+            "line": 106,
+            "hash": "5cefed50492d12777878cbda73925028",
+            "textRange": {
+                "startLine": 106,
+                "endLine": 106,
+                "startOffset": 23,
+                "endOffset": 26
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 106,
+                                "endLine": 106,
+                                "startOffset": 18,
+                                "endOffset": 22
+                            }
+                        }
+                    ]
+                },
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 106,
+                                "endLine": 106,
+                                "startOffset": 27,
+                                "endOffset": 33
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Remove this \"===\" check; it will always be false. Did you mean to use \"==\"?",
+            "effort": "5min",
+            "debt": "5min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNuF2FY2zCGgwuToF4",
+            "rule": "javascript:S3403",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+            "project": "ajstack22_manylla",
+            "line": 111,
+            "hash": "c49709fb831339af6c5fe48be1b6f87b",
+            "textRange": {
+                "startLine": 111,
+                "endLine": 111,
+                "startOffset": 13,
+                "endOffset": 16
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 111,
+                                "endLine": 111,
+                                "startOffset": 8,
+                                "endOffset": 12
+                            }
+                        }
+                    ]
+                },
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 111,
+                                "endLine": 111,
+                                "startOffset": 17,
+                                "endOffset": 23
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Remove this \"===\" check; it will always be false. Did you mean to use \"==\"?",
+            "effort": "5min",
+            "debt": "5min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNuF2FY2zCGgwuToF5",
+            "rule": "javascript:S3403",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+            "project": "ajstack22_manylla",
+            "line": 111,
+            "hash": "c49709fb831339af6c5fe48be1b6f87b",
+            "textRange": {
+                "startLine": 111,
+                "endLine": 111,
+                "startOffset": 32,
+                "endOffset": 35
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 111,
+                                "endLine": 111,
+                                "startOffset": 27,
+                                "endOffset": 31
+                            }
+                        }
+                    ]
+                },
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 111,
+                                "endLine": 111,
+                                "startOffset": 36,
+                                "endOffset": 42
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Remove this \"===\" check; it will always be false. Did you mean to use \"==\"?",
+            "effort": "5min",
+            "debt": "5min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNuF2FY2zCGgwuToF6",
+            "rule": "javascript:S3403",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+            "project": "ajstack22_manylla",
+            "line": 141,
+            "hash": "e7e8b13e1826ec247e604e29f9fdce54",
+            "textRange": {
+                "startLine": 141,
+                "endLine": 141,
+                "startOffset": 36,
+                "endOffset": 39
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 141,
+                                "endLine": 141,
+                                "startOffset": 31,
+                                "endOffset": 35
+                            }
+                        }
+                    ]
+                },
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 141,
+                                "endLine": 141,
+                                "startOffset": 40,
+                                "endOffset": 46
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Remove this \"===\" check; it will always be false. Did you mean to use \"==\"?",
+            "effort": "5min",
+            "debt": "5min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNuF2FY2zCGgwuToF7",
+            "rule": "javascript:S3403",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+            "project": "ajstack22_manylla",
+            "line": 141,
+            "hash": "e7e8b13e1826ec247e604e29f9fdce54",
+            "textRange": {
+                "startLine": 141,
+                "endLine": 141,
+                "startOffset": 55,
+                "endOffset": 58
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 141,
+                                "endLine": 141,
+                                "startOffset": 50,
+                                "endOffset": 54
+                            }
+                        }
+                    ]
+                },
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 141,
+                                "endLine": 141,
+                                "startOffset": 59,
+                                "endOffset": 65
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Remove this \"===\" check; it will always be false. Did you mean to use \"==\"?",
+            "effort": "5min",
+            "debt": "5min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNuF2FY2zCGgwuToF8",
+            "rule": "javascript:S3403",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+            "project": "ajstack22_manylla",
+            "line": 443,
+            "hash": "e45bcb61b7752077e4d3ceb17f3b378b",
+            "textRange": {
+                "startLine": 443,
+                "endLine": 443,
+                "startOffset": 23,
+                "endOffset": 26
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 443,
+                                "endLine": 443,
+                                "startOffset": 18,
+                                "endOffset": 22
+                            }
+                        }
+                    ]
+                },
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 443,
+                                "endLine": 443,
+                                "startOffset": 27,
+                                "endOffset": 34
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Remove this \"===\" check; it will always be false. Did you mean to use \"==\"?",
+            "effort": "5min",
+            "debt": "5min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNuF2FY2zCGgwuToF9",
+            "rule": "javascript:S3403",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+            "project": "ajstack22_manylla",
+            "line": 468,
+            "hash": "53b75581b13051222f8a901cccaefed3",
+            "textRange": {
+                "startLine": 468,
+                "endLine": 468,
+                "startOffset": 23,
+                "endOffset": 26
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 468,
+                                "endLine": 468,
+                                "startOffset": 18,
+                                "endOffset": 22
+                            }
+                        }
+                    ]
+                },
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 468,
+                                "endLine": 468,
+                                "startOffset": 27,
+                                "endOffset": 33
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Remove this \"===\" check; it will always be false. Did you mean to use \"==\"?",
+            "effort": "5min",
+            "debt": "5min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNuF2FY2zCGgwuToF-",
+            "rule": "javascript:S3403",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+            "project": "ajstack22_manylla",
+            "line": 625,
+            "hash": "361daeab401dff0742807a8e6a323738",
+            "textRange": {
+                "startLine": 625,
+                "endLine": 625,
+                "startOffset": 24,
+                "endOffset": 27
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 625,
+                                "endLine": 625,
+                                "startOffset": 19,
+                                "endOffset": 23
+                            }
+                        }
+                    ]
+                },
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 625,
+                                "endLine": 625,
+                                "startOffset": 28,
+                                "endOffset": 34
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Remove this \"===\" check; it will always be false. Did you mean to use \"==\"?",
+            "effort": "5min",
+            "debt": "5min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNuF2FY2zCGgwuToF_",
+            "rule": "javascript:S3403",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+            "project": "ajstack22_manylla",
+            "line": 628,
+            "hash": "aa07ed0c19b6b5da2b49cb3b3a9d1858",
+            "textRange": {
+                "startLine": 628,
+                "endLine": 628,
+                "startOffset": 24,
+                "endOffset": 27
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 628,
+                                "endLine": 628,
+                                "startOffset": 19,
+                                "endOffset": 23
+                            }
+                        }
+                    ]
+                },
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 628,
+                                "endLine": 628,
+                                "startOffset": 28,
+                                "endOffset": 34
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Remove this \"===\" check; it will always be false. Did you mean to use \"==\"?",
+            "effort": "5min",
+            "debt": "5min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNuF2FY2zCGgwuToGA",
+            "rule": "javascript:S3403",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+            "project": "ajstack22_manylla",
+            "line": 646,
+            "hash": "71f32138db618845ef92b1f3a87e4cde",
+            "textRange": {
+                "startLine": 646,
+                "endLine": 646,
+                "startOffset": 26,
+                "endOffset": 29
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 646,
+                                "endLine": 646,
+                                "startOffset": 21,
+                                "endOffset": 25
+                            }
+                        }
+                    ]
+                },
+                {
+                    "locations": [
+                        {
+                            "component": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+                            "textRange": {
+                                "startLine": 646,
+                                "endLine": 646,
+                                "startOffset": 30,
+                                "endOffset": 36
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Remove this \"===\" check; it will always be false. Did you mean to use \"==\"?",
+            "effort": "5min",
+            "debt": "5min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNuFxLY2zCGgwuToFt",
+            "rule": "javascript:S2259",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Sharing/ShareAccessView.js",
+            "project": "ajstack22_manylla",
+            "line": 89,
+            "hash": "4a00878064f0713a09a335f37b8b9fcf",
+            "textRange": {
+                "startLine": 89,
+                "endLine": 89,
+                "startOffset": 21,
+                "endOffset": 34
+            },
+            "flows": [],
+            "status": "OPEN",
+            "message": "TypeError can be thrown as \"sharedProfile\" might be null or undefined here.",
+            "effort": "10min",
+            "debt": "10min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "cwe",
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNuF0DY2zCGgwuToFv",
+            "rule": "javascript:S6439",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Sharing/ShareDialogOptimized.js",
+            "project": "ajstack22_manylla",
+            "line": 275,
+            "hash": "df0ff61a7477ce5baba0f0cc643dda9b",
+            "textRange": {
+                "startLine": 275,
+                "endLine": 275,
+                "startOffset": 9,
+                "endOffset": 23
+            },
+            "flows": [],
+            "status": "OPEN",
+            "message": "Convert the conditional to a boolean to avoid leaked value",
+            "effort": "5min",
+            "debt": "5min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "react",
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNuFzzY2zCGgwuToFu",
+            "rule": "javascript:S6439",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:src/components/Sharing/SharedProfileView.js",
+            "project": "ajstack22_manylla",
+            "line": 125,
+            "hash": "5c43c7c5d7d67be3125eab8c34978849",
+            "textRange": {
+                "startLine": 125,
+                "endLine": 125,
+                "startOffset": 13,
+                "endOffset": 18
+            },
+            "flows": [],
+            "status": "OPEN",
+            "message": "Convert the conditional to a boolean to avoid leaked value",
+            "effort": "5min",
+            "debt": "5min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "react",
+                "type-dependent"
+            ],
+            "creationDate": "2025-09-15T14:12:00+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "LOGICAL",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "OPEN",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4cuv_JETxtynR16",
+            "rule": "css:S4649",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/base.css",
+            "project": "ajstack22_manylla",
+            "hash": "e6632c4921d7b5e9b4ca58d6dcb36013",
+            "textRange": {
+                "startLine": 6,
+                "endLine": 6,
+                "startOffset": 0,
+                "endOffset": 50
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Unexpected missing generic font family",
+            "effort": "1min",
+            "debt": "1min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4Nvv_JETxtynNDh",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/BuyMeCoffeeButton/BuyMeCoffeeButton.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4Dbv_JETxtynJw1",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Common/IconProvider.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4Dzv_JETxtynJ7I",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Common/ImagePicker.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4Ctv_JETxtynJlO",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Common/ThemeSwitcher.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4C7v_JETxtynJot",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Common/ThemedModal.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4DLv_JETxtynJuy",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Common/index.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr38Rv_JETxtynG_u",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/DatePicker/DatePicker.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr38fv_JETxtynHBZ",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/DatePicker/index.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4LYv_JETxtynMDh",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Dialogs/UnifiedAddDialog.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4LGv_JETxtynMDU",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Dialogs/index.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4Awv_JETxtynI58",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/ErrorBoundary/ErrorBoundary.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4BDv_JETxtynI_5",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/ErrorBoundary/ErrorFallback.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4Afv_JETxtynIxz",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/ErrorBoundary/ErrorRecovery.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4Hev_JETxtynLJC",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Forms/HighlightedText.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4GAv_JETxtynKpI",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Forms/HtmlRenderer.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4GZv_JETxtynKsR",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Forms/MarkdownField.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4HFv_JETxtynLDB",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Forms/MarkdownRenderer.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4G0v_JETxtynK74",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Forms/RichTextInput.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4Fnv_JETxtynKct",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Forms/SmartTextInput.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4FWv_JETxtynKca",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Forms/index.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4FDv_JETxtynKVP",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Layout/Header.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4E5v_JETxtynKVI",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Layout/index.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4Njv_JETxtynNB2",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Loading/LoadingOverlay.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4NOv_JETxtynM_0",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Loading/LoadingSpinner.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4Nbv_JETxtynNBr",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Loading/index.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4Bkv_JETxtynJOP",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Modals/PrivacyModal/PrivacyModal.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4Buv_JETxtynJSy",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Modals/PrivacyModal/index.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4BXv_JETxtynJJa",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Modals/PrivacyModal/styles.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        },
+        {
+            "key": "AZlNr4CBv_JETxtynJS3",
+            "rule": "Web:S5256",
+            "severity": "MAJOR",
+            "component": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Modals/SupportModal/SupportModal.js.html",
+            "project": "ajstack22_manylla",
+            "hash": "102286a9f2e17432a4d5455d8deac15c",
+            "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 9,
+                "endOffset": 33
+            },
+            "flows": [],
+            "resolution": "FIXED",
+            "status": "CLOSED",
+            "message": "Add \"<th>\" headers to this \"<table>\".",
+            "effort": "2min",
+            "debt": "2min",
+            "assignee": "ajstack22-SxT6Q@github",
+            "tags": [
+                "accessibility",
+                "wcag2-a"
+            ],
+            "creationDate": "2025-09-14T22:07:40+0000",
+            "updateDate": "2025-09-15T14:12:00+0000",
+            "closeDate": "2025-09-15T14:12:00+0000",
+            "type": "BUG",
+            "organization": "ajstack22",
+            "cleanCodeAttribute": "COMPLETE",
+            "cleanCodeAttributeCategory": "INTENTIONAL",
+            "impacts": [
+                {
+                    "softwareQuality": "RELIABILITY",
+                    "severity": "MEDIUM"
+                }
+            ],
+            "issueStatus": "FIXED",
+            "projectName": "Manylla"
+        }
+    ],
+    "components": [
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:src/components/Sharing/ShareDialogOptimized.js",
+            "uuid": "AZlNr3Orv_JETxtynFaG",
+            "enabled": true,
+            "qualifier": "FIL",
+            "name": "ShareDialogOptimized.js",
+            "longName": "src/components/Sharing/ShareDialogOptimized.js",
+            "path": "src/components/Sharing/ShareDialogOptimized.js"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:src/components/Sharing/ShareAccessView.js",
+            "uuid": "AZlNr3Orv_JETxtynFaJ",
+            "enabled": true,
+            "qualifier": "FIL",
+            "name": "ShareAccessView.js",
+            "longName": "src/components/Sharing/ShareAccessView.js",
+            "path": "src/components/Sharing/ShareAccessView.js"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/ErrorBoundary/ErrorBoundary.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFcL",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "ErrorBoundary.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/ErrorBoundary/ErrorBoundary.js.html",
+            "path": "coverage-utils/lcov-report/src/components/ErrorBoundary/ErrorBoundary.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/ErrorBoundary/ErrorRecovery.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFcK",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "ErrorRecovery.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/ErrorBoundary/ErrorRecovery.js.html",
+            "path": "coverage-utils/lcov-report/src/components/ErrorBoundary/ErrorRecovery.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:src/components/Sharing/SharedProfileView.js",
+            "uuid": "AZlNr3Orv_JETxtynFaL",
+            "enabled": true,
+            "qualifier": "FIL",
+            "name": "SharedProfileView.js",
+            "longName": "src/components/Sharing/SharedProfileView.js",
+            "path": "src/components/Sharing/SharedProfileView.js"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/DatePicker/DatePicker.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFb-",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "DatePicker.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/DatePicker/DatePicker.js.html",
+            "path": "coverage-utils/lcov-report/src/components/DatePicker/DatePicker.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/ErrorBoundary/ErrorFallback.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFcN",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "ErrorFallback.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/ErrorBoundary/ErrorFallback.js.html",
+            "path": "coverage-utils/lcov-report/src/components/ErrorBoundary/ErrorFallback.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/DatePicker/index.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFb_",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "index.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/DatePicker/index.js.html",
+            "path": "coverage-utils/lcov-report/src/components/DatePicker/index.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Modals/PrivacyModal/styles.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFcP",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "styles.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Modals/PrivacyModal/styles.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Modals/PrivacyModal/styles.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Modals/PrivacyModal/index.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFcR",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "index.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Modals/PrivacyModal/index.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Modals/PrivacyModal/index.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Modals/PrivacyModal/PrivacyModal.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFcQ",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "PrivacyModal.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Modals/PrivacyModal/PrivacyModal.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Modals/PrivacyModal/PrivacyModal.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:src/components/Onboarding/ProgressiveOnboarding.js",
+            "uuid": "AZlNr3Orv_JETxtynFaR",
+            "enabled": true,
+            "qualifier": "FIL",
+            "name": "ProgressiveOnboarding.js",
+            "longName": "src/components/Onboarding/ProgressiveOnboarding.js",
+            "path": "src/components/Onboarding/ProgressiveOnboarding.js"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Modals/SupportModal/SupportModal.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFcU",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "SupportModal.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Modals/SupportModal/SupportModal.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Modals/SupportModal/SupportModal.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/BuyMeCoffeeButton/BuyMeCoffeeButton.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFdI",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "BuyMeCoffeeButton.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/BuyMeCoffeeButton/BuyMeCoffeeButton.js.html",
+            "path": "coverage-utils/lcov-report/src/components/BuyMeCoffeeButton/BuyMeCoffeeButton.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla",
+            "uuid": "AZlNrjq4vN9sDU36k_o8",
+            "enabled": true,
+            "qualifier": "TRK",
+            "name": "Manylla",
+            "longName": "Manylla"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Layout/Header.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFcn",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "Header.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Layout/Header.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Layout/Header.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Layout/index.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFcm",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "index.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Layout/index.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Layout/index.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/base.css",
+            "uuid": "AZlNr3Orv_JETxtynFeb",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "base.css",
+            "longName": "coverage-utils/lcov-report/base.css",
+            "path": "coverage-utils/lcov-report/base.css"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Common/ThemedModal.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFcb",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "ThemedModal.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Common/ThemedModal.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Common/ThemedModal.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Loading/LoadingSpinner.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFdC",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "LoadingSpinner.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Loading/LoadingSpinner.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Loading/LoadingSpinner.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Common/ThemeSwitcher.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFca",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "ThemeSwitcher.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Common/ThemeSwitcher.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Common/ThemeSwitcher.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Common/IconProvider.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFcd",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "IconProvider.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Common/IconProvider.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Common/IconProvider.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Loading/index.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFdE",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "index.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Loading/index.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Loading/index.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Common/index.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFcc",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "index.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Common/index.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Common/index.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Common/ImagePicker.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFce",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "ImagePicker.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Common/ImagePicker.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Common/ImagePicker.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Loading/LoadingOverlay.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFdF",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "LoadingOverlay.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Loading/LoadingOverlay.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Loading/LoadingOverlay.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Dialogs/UnifiedAddDialog.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFc8",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "UnifiedAddDialog.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Dialogs/UnifiedAddDialog.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Dialogs/UnifiedAddDialog.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Forms/HighlightedText.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFcx",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "HighlightedText.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Forms/HighlightedText.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Forms/HighlightedText.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Forms/MarkdownRenderer.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFcw",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "MarkdownRenderer.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Forms/MarkdownRenderer.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Forms/MarkdownRenderer.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Forms/index.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFcr",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "index.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Forms/index.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Forms/index.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Forms/HtmlRenderer.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFct",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "HtmlRenderer.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Forms/HtmlRenderer.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Forms/HtmlRenderer.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Forms/SmartTextInput.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFcs",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "SmartTextInput.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Forms/SmartTextInput.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Forms/SmartTextInput.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Dialogs/index.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFc6",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "index.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Dialogs/index.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Dialogs/index.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Forms/RichTextInput.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFcv",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "RichTextInput.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Forms/RichTextInput.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Forms/RichTextInput.js.html"
+        },
+        {
+            "organization": "ajstack22",
+            "key": "ajstack22_manylla:coverage-utils/lcov-report/src/components/Forms/MarkdownField.js.html",
+            "uuid": "AZlNr3Orv_JETxtynFcu",
+            "enabled": false,
+            "qualifier": "FIL",
+            "name": "MarkdownField.js.html",
+            "longName": "coverage-utils/lcov-report/src/components/Forms/MarkdownField.js.html",
+            "path": "coverage-utils/lcov-report/src/components/Forms/MarkdownField.js.html"
+        }
+    ],
+    "organizations": [
+        {
+            "key": "ajstack22",
+            "name": "ajstack22"
+        }
+    ],
+    "facets": []
+}

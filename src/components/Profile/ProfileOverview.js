@@ -136,7 +136,7 @@ export const ProfileOverview = ({
 
     if (
       monthDiff < 0 ||
-      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+      (monthDiff < 1 && today.getDate() < birthDate.getDate())
     ) {
       age--;
     }
@@ -317,7 +317,7 @@ export const ProfileOverview = ({
                   color={category.color}
                   icon={null}
                   categoryId={category.id}
-                  isFirst={index === 0}
+                  isFirst={index < 1}
                   isLast={index === visibleCategories.length - 1}
                   isQuickInfo={
                     category.id === "quick-info" || category.isQuickInfo

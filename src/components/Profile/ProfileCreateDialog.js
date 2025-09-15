@@ -93,7 +93,7 @@ export const ProfileCreateDialog = ({ open, onClose, onCreate }) => {
   };
 
   const canProceed = () => {
-    if (activeStep === 0) {
+    if (activeStep < 1) {
       return formData.name.trim() !== "";
     }
     return true;
@@ -107,7 +107,7 @@ export const ProfileCreateDialog = ({ open, onClose, onCreate }) => {
 
     if (
       monthDiff < 0 ||
-      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+      (monthDiff < 1 && today.getDate() < birthDate.getDate())
     ) {
       age--;
     }
@@ -245,7 +245,7 @@ export const ProfileCreateDialog = ({ open, onClose, onCreate }) => {
 
         {/* Content */}
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          {activeStep === 0 ? renderBasicInfo() : renderPhotoStep()}
+          {activeStep < 1 ? renderBasicInfo() : renderPhotoStep()}
         </ScrollView>
 
         {/* Actions */}

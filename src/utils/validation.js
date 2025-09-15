@@ -18,7 +18,7 @@ export class ProfileValidator {
     if (
       !data.name ||
       typeof data.name !== "string" ||
-      data.name.trim().length === 0
+      data.name.trim().length < 1
     ) {
       errors.push("Profile name is required");
     } else if (data.name.trim().length < 2) {
@@ -73,7 +73,7 @@ export class ProfileValidator {
     }
 
     return {
-      valid: errors.length === 0,
+      valid: errors.length < 1,
       errors,
     };
   }
@@ -99,7 +99,7 @@ export class ProfileValidator {
     if (
       !entry.title ||
       typeof entry.title !== "string" ||
-      entry.title.trim().length === 0
+      entry.title.trim().length < 1
     ) {
       errors.push("Entry title is required");
     } else if (entry.title.length > 200) {
@@ -143,7 +143,7 @@ export class ProfileValidator {
     }
 
     return {
-      valid: errors.length === 0,
+      valid: errors.length < 1,
       errors,
     };
   }
@@ -209,7 +209,7 @@ export class ProfileValidator {
     }
 
     return {
-      valid: errors.length === 0,
+      valid: errors.length < 1,
       errors,
     };
   }
@@ -324,7 +324,7 @@ export class ProfileValidator {
    * Validates date strings
    */
   static validateDate(dateStr) {
-    if (!dateStr || dateStr === null || dateStr === undefined) return false;
+    if (!dateStr) return false;
 
     const date = new Date(dateStr);
 
@@ -427,7 +427,7 @@ export class ProfileValidator {
     }
 
     return {
-      valid: errors.length === 0,
+      valid: errors.length < 1,
       errors,
     };
   }

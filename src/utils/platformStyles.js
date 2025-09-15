@@ -5,7 +5,7 @@ import platform from "./platform";
 export const getFontFamily = (weight) => {
   if (platform.isAndroid) {
     // Android can't use fontWeight, needs font variants
-    if (weight === "bold" || weight === "700" || weight === "600") {
+    if (weight === "bold" || String(weight) === "700" || String(weight) === "600") {
       return "System"; // Will use system bold variant
     }
     return "System"; // Will use system regular
@@ -57,7 +57,7 @@ export const getNumColumns = () => {
 export const getCardWidth = (numColumns = 1) => {
   if (platform.isAndroid) {
     // Android FlexWrap needs percentage widths
-    return numColumns === 2 ? "48%" : "100%";
+    return numColumns >= 2 ? "48%" : "100%";
   }
   // iOS can use calculated widths
   const { width } = Dimensions.get("window");

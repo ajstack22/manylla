@@ -641,7 +641,7 @@ export const PrintPreview = ({
                           actualEntries && actualEntries[cat]
                             ? actualEntries[cat]
                             : [];
-                        if (categoryEntries.length === 0) return null;
+                        if (categoryEntries.length < 1) return null;
 
                         return (
                           <View key={cat}>

@@ -16,8 +16,8 @@ const { width } = Dimensions.get("window");
 export const ProgressiveOnboarding = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState("welcome");
   const [mode, setMode] = useState(null);
-  const [childName] = useState("");
-  const [dateOfBirth] = useState(null);
+  const [childName, setChildName] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState(null);
   const [photo] = useState("");
   const [accessCode, setAccessCode] = useState("");
   const [showAccessCode, setShowAccessCode] = useState(false);
@@ -91,7 +91,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
   };
 
   const handleJoinWithCode = () => {
-    if (accessCode.length === 6) {
+    if (accessCode.length >= 6) {
       setMode("join");
       setCurrentStep("privacy"); // Skip directly to privacy step for join mode
     }
@@ -533,6 +533,68 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
                     </TouchableOpacity>
                   </View>
                 )}
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {currentStep === "child-info" && (
+            <View>
+              <Text style={[styles.title, styles.centerText]}>
+                Tell us about your child
+              </Text>
+              <Text style={[styles.subtitle, styles.centerText]}>
+                This helps us personalize your experience
+              </Text>
+
+              <View style={styles.infoAlert}>
+                <Text style={styles.infoText}>
+                  This information is stored securely on your device and never shared without your permission.
+                </Text>
+              </View>
+
+              <View style={{ marginBottom: 16 }}>
+                <Text style={[styles.optionTitle, { marginBottom: 8 }]}>
+                  Child's Name
+                </Text>
+                <TextInput
+                  style={[
+                    styles.textInput,
+                    getTextStyle("input"),
+                    isAndroid && { color: "#000000" },
+                  ]}
+                  value={childName}
+                  onChangeText={setChildName}
+                  placeholder="Enter your child's name"
+                  placeholderTextColor={isAndroid ? "#999" : undefined}
+                />
+              </View>
+
+              <View style={{ marginBottom: 16 }}>
+                <Text style={[styles.optionTitle, { marginBottom: 8 }]}>
+                  Date of Birth (Optional)
+                </Text>
+                <TextInput
+                  style={[
+                    styles.textInput,
+                    getTextStyle("input"),
+                    isAndroid && { color: "#000000" },
+                  ]}
+                  value={dateOfBirth || ""}
+                  onChangeText={setDateOfBirth}
+                  placeholder="YYYY-MM-DD"
+                  placeholderTextColor={isAndroid ? "#999" : undefined}
+                />
+              </View>
+
+              <TouchableOpacity
+                style={[
+                  styles.button,
+                  childName.trim().length === 0 && { opacity: 0.5 }
+                ]}
+                onPress={handleNext}
+                disabled={childName.trim().length === 0}
+              >
+                <Text style={styles.buttonText}>Continue</Text>
               </TouchableOpacity>
             </View>
           )}

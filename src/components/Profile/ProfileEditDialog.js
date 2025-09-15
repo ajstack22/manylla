@@ -59,7 +59,7 @@ export const ProfileEditDialog = ({ open, onClose, profile, onSave }) => {
 
     if (
       monthDiff < 0 ||
-      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+      (monthDiff < 1 && today.getDate() < birthDate.getDate())
     ) {
       age--;
     }

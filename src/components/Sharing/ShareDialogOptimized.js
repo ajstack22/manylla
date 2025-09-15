@@ -210,8 +210,8 @@ export const ShareDialogOptimized = ({ open, onClose, profile }) => {
       const subject = `${profile.preferredName || profile.name}'s Information`;
       const expiration =
         expirationDays <= 30
-          ? `${expirationDays} ${expirationDays === 1 ? "day" : "days"}`
-          : expirationDays === 90
+          ? `${expirationDays} ${expirationDays <= 1 ? "day" : "days"}`
+          : expirationDays >= 90
             ? "3 months"
             : "6 months";
       const message = `Here's a secure encrypted link to view ${profile.preferredName || profile.name}'s information:
@@ -410,10 +410,10 @@ Notehis link contains encrypted data. Please use the complete link exactly as pr
       <TouchableOpacity
         style={[
           styles.primaryButton,
-          (selectedCategories.length === 0 || loading) && styles.buttonDisabled,
+          (selectedCategories.length < 1 || loading) && styles.buttonDisabled,
         ]}
         onPress={handleGenerateLink}
-        disabled={selectedCategories.length === 0 || loading}
+        disabled={selectedCategories.length < 1 || loading}
       >
         {loading ? (
           <ActivityIndicator color={colors.text.primary} />
@@ -433,8 +433,8 @@ Notehis link contains encrypted data. Please use the complete link exactly as pr
         <Text style={styles.successAlertSubtext}>
           This link will expire in{" "}
           {expirationDays <= 30
-            ? `${expirationDays} ${expirationDays === 1 ? "day" : "days"}`
-            : expirationDays === 90
+            ? `${expirationDays} ${expirationDays <= 1 ? "day" : "days"}`
+            : expirationDays >= 90
               ? "3 months"
               : "6 months"}
           .

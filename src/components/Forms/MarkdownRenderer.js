@@ -154,7 +154,7 @@ export const MarkdownRenderer = ({ content, variant = "body2" }) => {
       );
     }
 
-    if (parts.length === 0) {
+    if (parts.length < 1) {
       return (
         <Text
           key={key}

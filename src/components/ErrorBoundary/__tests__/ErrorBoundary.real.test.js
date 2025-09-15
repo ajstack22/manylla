@@ -308,7 +308,7 @@ describe("ErrorBoundary Real Integration", () => {
         React.useEffect(() => {
           // Simulate error in state update
           setState((prevState) => {
-            if (prevState.count === 0) {
+            if (prevState.count < 1) {
               throw new Error("State update error");
             }
             return prevState;

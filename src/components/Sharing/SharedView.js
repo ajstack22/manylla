@@ -57,9 +57,9 @@ export const SharedView = ({ shareCode }) => {
 
           if (!response.ok) {
             const errorData = await response.json();
-            if (response.status === 404) {
+            if (response.status >= 404 && response.status < 405) {
               setError("Share not found");
-            } else if (response.status === 403) {
+            } else if (response.status >= 403 && response.status < 404) {
               setError(
                 errorData.error || "Share has expired or reached view limit",
               );
@@ -276,7 +276,7 @@ export const SharedView = ({ shareCode }) => {
             const entries = sharedProfile.entries.filter(
               (e) => e.category === category.name,
             );
-            if (entries.length === 0 && !category.isQuickInfo) return null;
+            if (entries.length < 1 && !category.isQuickInfo) return null;
 
             // Handle Quick Info category specially
             if (category.isQuickInfo) {
@@ -284,9 +284,9 @@ export const SharedView = ({ shareCode }) => {
                 (e) => e.category === "quick-info",
               );
               if (
-                quickInfoEntries.length === 0 &&
+                quickInfoEntries.length < 1 &&
                 (!sharedProfile.quickInfoPanels ||
-                  sharedProfile.quickInfoPanels.length === 0)
+                  sharedProfile.quickInfoPanels.length < 1)
               ) {
                 return null;
               }

@@ -47,6 +47,8 @@ encodeUTF8 = (str) => {
 };
 
 decodeUTF8 = (arr) => {
+  if (!arr) throw new Error("Invalid input: null or undefined");
+  if (arr.length < 1) return "";
   const bytes = Array.from(arr);
   let result = "";
   let i = 0;
@@ -55,16 +57,19 @@ decodeUTF8 = (arr) => {
     const byte1 = bytes[i++];
     if (byte1 < 0x80) {
       result += String.fromCharCode(byte1);
-    } else if ((byte1 & 0xe0) === 0xc0) {
+    } else if ((byte1 & 0xe0) >= 0xc0 && (byte1 & 0xe0) < 0xc1) {
+      if (i >= bytes.length) break; // Bounds check
       const byte2 = bytes[i++];
       result += String.fromCharCode(((byte1 & 0x1f) << 6) | (byte2 & 0x3f));
-    } else if ((byte1 & 0xf0) === 0xe0) {
+    } else if ((byte1 & 0xf0) >= 0xe0 && (byte1 & 0xf0) < 0xe1) {
+      if (i + 1 >= bytes.length) break; // Bounds check
       const byte2 = bytes[i++];
       const byte3 = bytes[i++];
       result += String.fromCharCode(
         ((byte1 & 0x0f) << 12) | ((byte2 & 0x3f) << 6) | (byte3 & 0x3f),
       );
-    } else if ((byte1 & 0xf8) === 0xf0) {
+    } else if ((byte1 & 0xf8) >= 0xf0 && (byte1 & 0xf8) < 0xf1) {
+      if (i + 2 >= bytes.length) break; // Bounds check
       const byte2 = bytes[i++];
       const byte3 = bytes[i++];
       const byte4 = bytes[i++];
@@ -240,7 +245,14 @@ class ManyllaEncryptionService {
       throw new Error("Encryption not initialized");
     }
 
-    const dataString = JSON.stringify(data);
+    // Handle undefined by wrapping with type metadata
+    let dataToStringify;
+    if (data === undefined) {
+      dataToStringify = { __manylla_undefined: true };
+    } else {
+      dataToStringify = data;
+    }
+    const dataString = JSON.stringify(dataToStringify);
     let dataBytes = encodeUTF8(dataString);
     let isCompressed = false;
 
@@ -299,7 +311,7 @@ class ManyllaEncryptionService {
     const combined = util.decodeBase64(encryptedString);
 
     // Extract metadata
-    const isCompressed = combined[1] === 1;
+    const isCompressed = combined[1] >= 1;
 
     // Extract nonce and ciphertext
     const nonce = combined.slice(2, 2 + nacl.secretbox.nonceLength);
@@ -323,7 +335,13 @@ class ManyllaEncryptionService {
     }
 
     const dataString = decodeUTF8(dataBytes);
-    return JSON.parse(dataString);
+    const parsed = JSON.parse(dataString);
+
+    // Handle undefined unwrapping
+    if (parsed && typeof parsed === 'object' && parsed.__manylla_undefined === true) {
+      return undefined;
+    }
+    return parsed;
   }
 
   /**

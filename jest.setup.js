@@ -70,6 +70,11 @@ jest.mock('@react-native-picker/picker', () => ({
   Picker: 'Picker'
 }));
 
+// Mock React Native WebView
+jest.mock('react-native-webview', () => ({
+  WebView: 'div'
+}));
+
 // Mock crypto for encryption services
 Object.defineProperty(global, 'crypto', {
   value: {

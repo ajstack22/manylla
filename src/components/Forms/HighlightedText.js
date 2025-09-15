@@ -63,6 +63,8 @@ export const HighlightedText = ({
   variant = "body2",
   highlightTerms = DEFAULT_HIGHLIGHT_TERMS,
 }) => {
+  // Ensure content is a string
+  const textContent = content != null ? String(content) : '';
   // Create regex pattern for highlighting
   const createHighlightRegex = () => {
     const terms = highlightTerms.map(
@@ -113,7 +115,7 @@ export const HighlightedText = ({
         color: colors.text,
       }}
     >
-      {highlightContent(content)}
+      {highlightContent(textContent)}
     </Text>
   );
 };

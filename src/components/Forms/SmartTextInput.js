@@ -221,7 +221,7 @@ export const SmartTextInput = ({
       {helperText && <Text style={styles.helperText}>{helperText}</Text>}
 
       {/* Tips */}
-      {value.length === 0 && !isFocused && (
+      {value.length < 1 && !isFocused && (
         <Text style={styles.tipText}>
           Tipse **text** for bold, _text_ for italic, - for lists
         </Text>

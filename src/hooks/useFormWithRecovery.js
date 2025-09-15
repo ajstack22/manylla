@@ -406,7 +406,7 @@ export const useFormWithRecovery = (
     getFieldProps,
 
     // Computed values
-    isValid: Object.keys(errors).length === 0,
+    isValid: Object.keys(errors).length < 1,
     isDirty: JSON.stringify(values) !== JSON.stringify(initialValues),
   };
 };

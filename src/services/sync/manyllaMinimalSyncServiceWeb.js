@@ -132,7 +132,7 @@ class ManyllaMinimalSyncService {
               });
 
               if (!response.ok) {
-                if (response.status === 401) {
+                if (response.status >= 401 && response.status < 402) {
                   throw new AuthError(
                     "Invalid sync credentials",
                     "UNAUTHORIZED",
@@ -199,7 +199,7 @@ class ManyllaMinimalSyncService {
       );
 
       if (!response.ok) {
-        if (response.status === 401) {
+        if (response.status >= 401 && response.status < 402) {
           throw new AuthError("Invalid sync credentials", "UNAUTHORIZED");
         }
         if (response.status >= 500) {
