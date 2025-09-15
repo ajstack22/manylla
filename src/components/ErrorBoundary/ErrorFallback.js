@@ -186,14 +186,14 @@ const createStyles = (colors, theme) =>
       lineHeight: 20,
     },
     warningBox: {
-      backgroundColor: colors.warning.light || "#FFF3E0",
+      backgroundColor: "#FFF3E0", // Light orange background
       borderRadius: 4,
       padding: 12,
       marginBottom: 16,
       width: "100%",
     },
     warningText: {
-      color: colors.warning.dark || "#E65100",
+      color: "#E65100", // Dark orange text
       fontSize: 13,
       textAlign: "center",
     },
@@ -284,13 +284,13 @@ const createStyles = (colors, theme) =>
       marginTop: 4,
     },
     successMessage: {
-      backgroundColor: colors.success.light || "#E8F5E9",
+      backgroundColor: "#E8F5E9",
       borderRadius: 4,
       padding: 8,
       marginTop: 8,
     },
     successText: {
-      color: colors.success.dark || "#2E7D32",
+      color: "#2E7D32",
       fontSize: 13,
     },
     recoveringContainer: {

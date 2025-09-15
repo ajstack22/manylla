@@ -31,7 +31,9 @@ describe("manyllaEncryptionService - Comprehensive Real Tests", () => {
 
       expect(phrase).toHaveLength(32);
       expect(phrase).toMatch(/^[a-f0-9]{32}$/);
-      expect(phrase).not.toBe(manyllaEncryptionService.generateRecoveryPhrase()); // Should be unique
+      expect(phrase).not.toBe(
+        manyllaEncryptionService.generateRecoveryPhrase(),
+      ); // Should be unique
     });
 
     test("should generate cryptographically random phrases", () => {
@@ -47,8 +49,10 @@ describe("manyllaEncryptionService - Comprehensive Real Tests", () => {
     test("should derive consistent key from recovery phrase", async () => {
       const phrase = "a1b2c3d4e5f6789012345678901234567890abcdef123456";
 
-      const result1 = await manyllaEncryptionService.deriveKeyFromPhrase(phrase);
-      const result2 = await manyllaEncryptionService.deriveKeyFromPhrase(phrase);
+      const result1 =
+        await manyllaEncryptionService.deriveKeyFromPhrase(phrase);
+      const result2 =
+        await manyllaEncryptionService.deriveKeyFromPhrase(phrase);
 
       expect(result1.key).toHaveLength(32);
       expect(result1.key).toEqual(result2.key); // Same phrase = same key
@@ -59,8 +63,10 @@ describe("manyllaEncryptionService - Comprehensive Real Tests", () => {
       const phrase1 = "a1b2c3d4e5f6789012345678901234567890abcdef123456";
       const phrase2 = "b1b2c3d4e5f6789012345678901234567890abcdef123456";
 
-      const result1 = await manyllaEncryptionService.deriveKeyFromPhrase(phrase1);
-      const result2 = await manyllaEncryptionService.deriveKeyFromPhrase(phrase2);
+      const result1 =
+        await manyllaEncryptionService.deriveKeyFromPhrase(phrase1);
+      const result2 =
+        await manyllaEncryptionService.deriveKeyFromPhrase(phrase2);
 
       expect(result1.key).not.toEqual(result2.key);
     });
@@ -83,7 +89,7 @@ describe("manyllaEncryptionService - Comprehensive Real Tests", () => {
 
       const originalData = {
         message: "Test data with unicode: 你好世界 🎉",
-        nested: { value: 123 }
+        nested: { value: 123 },
       };
 
       const encrypted = manyllaEncryptionService.encrypt(originalData);
@@ -99,16 +105,20 @@ describe("manyllaEncryptionService - Comprehensive Real Tests", () => {
       await manyllaEncryptionService.initialize(phrase);
 
       const largeData = {
-        profiles: Array(100).fill(null).map((_, i) => ({
-          id: `profile-${i}`,
-          name: `Child ${i}`,
-          description: "Lorem ipsum dolor sit amet ".repeat(50),
-          entries: Array(20).fill(null).map((_, j) => ({
-            id: `entry-${i}-${j}`,
-            title: `Entry ${j}`,
-            content: "Content text ".repeat(100)
-          }))
-        }))
+        profiles: Array(100)
+          .fill(null)
+          .map((_, i) => ({
+            id: `profile-${i}`,
+            name: `Child ${i}`,
+            description: "Lorem ipsum dolor sit amet ".repeat(50),
+            entries: Array(20)
+              .fill(null)
+              .map((_, j) => ({
+                id: `entry-${i}-${j}`,
+                title: `Entry ${j}`,
+                content: "Content text ".repeat(100),
+              })),
+          })),
       };
 
       const encrypted = manyllaEncryptionService.encrypt(largeData);
@@ -139,7 +149,7 @@ describe("manyllaEncryptionService - Comprehensive Real Tests", () => {
         text: "Special chars: éñ ü ß € £ ¥",
         emojis: "😀 🎉 🚀 ❤️ 🌟",
         rtl: "مرحبا بالعالم",
-        cjk: "中文 日本語 한국어"
+        cjk: "中文 日本語 한국어",
       };
 
       const encrypted = manyllaEncryptionService.encrypt(data);
@@ -157,7 +167,7 @@ describe("manyllaEncryptionService - Comprehensive Real Tests", () => {
         boolean: true,
         null: null,
         array: [1, 2, 3],
-        date: new Date().toISOString()
+        date: new Date().toISOString(),
       };
 
       const encrypted = manyllaEncryptionService.encrypt(data);
@@ -178,7 +188,7 @@ describe("manyllaEncryptionService - Comprehensive Real Tests", () => {
 
       const data = {
         profile: "Test Profile",
-        entries: ["Entry 1", "Entry 2"]
+        entries: ["Entry 1", "Entry 2"],
       };
 
       const encrypted = manyllaEncryptionService.encrypt(data);
@@ -228,23 +238,31 @@ describe("manyllaEncryptionService - Comprehensive Real Tests", () => {
       expect(result.syncId).toBeTruthy();
       expect(AsyncStorage.setItem).toHaveBeenCalledWith(
         "secure_manylla_salt",
-        expect.any(String)
+        expect.any(String),
       );
     });
 
     test("should clear stored keys", async () => {
       await manyllaEncryptionService.clear();
 
-      expect(AsyncStorage.removeItem).toHaveBeenCalledWith("secure_manylla_salt");
-      expect(AsyncStorage.removeItem).toHaveBeenCalledWith("secure_manylla_sync_id");
-      expect(AsyncStorage.removeItem).toHaveBeenCalledWith("secure_manylla_recovery");
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
+        "secure_manylla_salt",
+      );
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
+        "secure_manylla_sync_id",
+      );
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
+        "secure_manylla_recovery",
+      );
     });
 
     test("should handle storage errors gracefully", async () => {
       AsyncStorage.setItem.mockRejectedValue(new Error("Storage error"));
 
       try {
-        await manyllaEncryptionService.initialize("test1234567890abcdef1234567890ab");
+        await manyllaEncryptionService.initialize(
+          "test1234567890abcdef1234567890ab",
+        );
       } catch (error) {
         expect(error).toBeInstanceOf(Error);
       }
@@ -261,7 +279,8 @@ describe("manyllaEncryptionService - Comprehensive Real Tests", () => {
       expect(decryptedNull).toBeNull();
 
       const encryptedUndefined = manyllaEncryptionService.encrypt(undefined);
-      const decryptedUndefined = manyllaEncryptionService.decrypt(encryptedUndefined);
+      const decryptedUndefined =
+        manyllaEncryptionService.decrypt(encryptedUndefined);
       expect(decryptedUndefined).toBeUndefined();
     });
 
@@ -272,7 +291,7 @@ describe("manyllaEncryptionService - Comprehensive Real Tests", () => {
       const data = {
         emptyObject: {},
         emptyArray: [],
-        emptyString: ""
+        emptyString: "",
       };
 
       const encrypted = manyllaEncryptionService.encrypt(data);
@@ -342,7 +361,7 @@ describe("manyllaEncryptionService - Comprehensive Real Tests", () => {
         null,
         { object: true },
         [1, 2, 3],
-        { nested: { deep: { value: "test" } } }
+        { nested: { deep: { value: "test" } } },
       ];
 
       for (const testData of testCases) {

@@ -4,31 +4,31 @@
  * Focus: Real behavior testing as required by Story S029
  */
 
-import manyllaMinimalSyncService, { ManyllaMinimalSyncService } from '../manyllaMinimalSyncServiceWeb';
-import ManyllaEncryptionService from '../manyllaEncryptionService';
+import manyllaMinimalSyncService, {
+  ManyllaMinimalSyncService,
+} from "../manyllaMinimalSyncServiceWeb";
+import ManyllaEncryptionService from "../manyllaEncryptionService";
 
 // Test data helpers
 const createTestProfileData = () => ({
-  id: 'test-profile-sync-1',
-  name: 'Sync Test Child',
+  id: "test-profile-sync-1",
+  name: "Sync Test Child",
   entries: [
     {
-      id: 'sync-entry-1',
-      category: 'medical',
-      title: 'Sync Test Entry',
-      description: 'This is a test entry for sync testing',
+      id: "sync-entry-1",
+      category: "medical",
+      title: "Sync Test Entry",
+      description: "This is a test entry for sync testing",
       date: new Date().toISOString(),
-    }
+    },
   ],
-  categories: [
-    { id: 'medical', name: 'Medical', color: '#e74c3c' }
-  ],
-  lastModified: Date.now()
+  categories: [{ id: "medical", name: "Medical", color: "#e74c3c" }],
+  lastModified: Date.now(),
 });
 
-const TEST_RECOVERY_PHRASE = 'abcdef1234567890abcdef1234567890';
+const TEST_RECOVERY_PHRASE = "abcdef1234567890abcdef1234567890";
 
-describe('ManyllaMinimalSyncService Real Integration', () => {
+describe("ManyllaMinimalSyncService Real Integration", () => {
   let service;
 
   beforeEach(() => {
@@ -51,23 +51,31 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
     }
   });
 
-  describe('Service Initialization', () => {
-    test('should initialize with valid recovery phrase', async () => {
+  describe("Service Initialization", () => {
+    test("should initialize with valid recovery phrase", async () => {
       const result = await service.init(TEST_RECOVERY_PHRASE);
 
       expect(result).toBe(true);
       expect(service.syncId).toBeDefined();
-      expect(typeof service.syncId).toBe('string');
+      expect(typeof service.syncId).toBe("string");
     });
 
-    test('should reject invalid recovery phrases', async () => {
-      await expect(service.init('')).rejects.toThrow('Invalid recovery phrase format');
-      await expect(service.init('too-short')).rejects.toThrow('Invalid recovery phrase format');
-      await expect(service.init('not-hex-characters-here')).rejects.toThrow('Invalid recovery phrase format');
-      await expect(service.init(null)).rejects.toThrow('Invalid recovery phrase format');
+    test("should reject invalid recovery phrases", async () => {
+      await expect(service.init("")).rejects.toThrow(
+        "Invalid recovery phrase format",
+      );
+      await expect(service.init("too-short")).rejects.toThrow(
+        "Invalid recovery phrase format",
+      );
+      await expect(service.init("not-hex-characters-here")).rejects.toThrow(
+        "Invalid recovery phrase format",
+      );
+      await expect(service.init(null)).rejects.toThrow(
+        "Invalid recovery phrase format",
+      );
     });
 
-    test('should generate consistent sync ID for same phrase', async () => {
+    test("should generate consistent sync ID for same phrase", async () => {
       await service.init(TEST_RECOVERY_PHRASE);
       const syncId1 = service.syncId;
 
@@ -79,9 +87,9 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
       expect(syncId1).toBe(syncId2);
     });
 
-    test('should handle network failures during initialization gracefully', async () => {
+    test("should handle network failures during initialization gracefully", async () => {
       // Mock network failure
-      global.fetch.mockRejectedValueOnce(new Error('Network timeout'));
+      global.fetch.mockRejectedValueOnce(new Error("Network timeout"));
 
       // Should not throw - just log the error
       await expect(service.init(TEST_RECOVERY_PHRASE)).resolves.toBe(true);
@@ -89,75 +97,77 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
     });
   });
 
-  describe('API Integration Tests', () => {
+  describe("API Integration Tests", () => {
     beforeEach(async () => {
       await service.init(TEST_RECOVERY_PHRASE);
     });
 
-    test('should complete health check with real response', async () => {
+    test("should complete health check with real response", async () => {
       // Mock successful health check
       global.fetch.mockResolvedValueOnce({
         ok: true,
         status: 200,
-        json: () => Promise.resolve({
-          status: 'healthy',
-          timestamp: Date.now(),
-          version: '1.0'
-        }),
+        json: () =>
+          Promise.resolve({
+            status: "healthy",
+            timestamp: Date.now(),
+            version: "1.0",
+          }),
       });
 
       const isHealthy = await service.checkHealth();
 
       expect(isHealthy).toBe(true);
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/sync_health.php'),
+        expect.stringContaining("/api/sync_health.php"),
         expect.objectContaining({
-          method: 'POST',
+          method: "POST",
           headers: expect.objectContaining({
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           }),
-        })
+        }),
       );
     });
 
-    test('should handle health check failures', async () => {
+    test("should handle health check failures", async () => {
       global.fetch.mockResolvedValueOnce({
         ok: false,
         status: 500,
-        statusText: 'Internal Server Error'
+        statusText: "Internal Server Error",
       });
 
       const isHealthy = await service.checkHealth();
       expect(isHealthy).toBe(false);
     });
 
-    test('should complete full push workflow', async () => {
+    test("should complete full push workflow", async () => {
       const testProfile = createTestProfileData();
 
       // Mock successful push response
       global.fetch.mockResolvedValueOnce({
         ok: true,
         status: 200,
-        json: () => Promise.resolve({
-          success: true,
-          syncId: service.syncId,
-          timestamp: Date.now()
-        }),
+        json: () =>
+          Promise.resolve({
+            success: true,
+            syncId: service.syncId,
+            timestamp: Date.now(),
+          }),
       });
 
       const result = await service.pushData(testProfile);
 
       expect(result.success).toBe(true);
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/sync_push.php'),
+        expect.stringContaining("/api/sync_push.php"),
         expect.objectContaining({
-          method: 'POST',
+          method: "POST",
           body: expect.stringContaining(service.syncId),
-        })
+        }),
       );
     });
 
-    test('should complete full pull workflow', async () => {
+    test("should complete full pull workflow", async () => {
       const testProfile = createTestProfileData();
       const encryptedData = ManyllaEncryptionService.encryptData(testProfile);
 
@@ -165,43 +175,44 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
       global.fetch.mockResolvedValueOnce({
         ok: true,
         status: 200,
-        json: () => Promise.resolve({
-          success: true,
-          data: encryptedData,
-          timestamp: Date.now()
-        }),
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: encryptedData,
+            timestamp: Date.now(),
+          }),
       });
 
       const result = await service.pullData();
 
       expect(result).toEqual(testProfile);
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/sync_pull.php'),
+        expect.stringContaining("/api/sync_pull.php"),
         expect.objectContaining({
-          method: 'POST',
-        })
+          method: "POST",
+        }),
       );
     });
 
-    test('should handle network failures gracefully', async () => {
+    test("should handle network failures gracefully", async () => {
       const testProfile = createTestProfileData();
 
       // Mock network failure
-      global.fetch.mockRejectedValueOnce(new Error('Network error'));
+      global.fetch.mockRejectedValueOnce(new Error("Network error"));
 
       const result = await service.pushData(testProfile);
       expect(result.success).toBe(false);
-      expect(result.error).toContain('Network error');
+      expect(result.error).toContain("Network error");
     });
 
-    test('should handle HTTP error responses', async () => {
+    test("should handle HTTP error responses", async () => {
       const testProfile = createTestProfileData();
 
       global.fetch.mockResolvedValueOnce({
         ok: false,
         status: 400,
-        statusText: 'Bad Request',
-        json: () => Promise.resolve({ error: 'Invalid sync ID' })
+        statusText: "Bad Request",
+        json: () => Promise.resolve({ error: "Invalid sync ID" }),
       });
 
       const result = await service.pushData(testProfile);
@@ -210,32 +221,33 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
     });
   });
 
-  describe('Data Conflict Resolution', () => {
+  describe("Data Conflict Resolution", () => {
     beforeEach(async () => {
       await service.init(TEST_RECOVERY_PHRASE);
     });
 
-    test('should handle last-write-wins conflicts', async () => {
+    test("should handle last-write-wins conflicts", async () => {
       const profile1 = createTestProfileData();
       const profile2 = {
         ...profile1,
-        name: 'Updated Name',
-        lastModified: Date.now() + 1000
+        name: "Updated Name",
+        lastModified: Date.now() + 1000,
       };
 
       // Mock pull returning older data
       global.fetch
         .mockResolvedValueOnce({
           ok: true,
-          json: () => Promise.resolve({ success: true })
+          json: () => Promise.resolve({ success: true }),
         })
         .mockResolvedValueOnce({
           ok: true,
-          json: () => Promise.resolve({
-            success: true,
-            data: ManyllaEncryptionService.encryptData(profile1),
-            timestamp: Date.now() - 1000
-          })
+          json: () =>
+            Promise.resolve({
+              success: true,
+              data: ManyllaEncryptionService.encryptData(profile1),
+              timestamp: Date.now() - 1000,
+            }),
         });
 
       // Push newer data
@@ -248,23 +260,24 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
       expect(result).toBeDefined();
     });
 
-    test('should handle missing remote data', async () => {
+    test("should handle missing remote data", async () => {
       global.fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ success: false, error: 'No data found' })
+        json: () => Promise.resolve({ success: false, error: "No data found" }),
       });
 
       const result = await service.pullData();
       expect(result).toBeNull();
     });
 
-    test('should handle corrupted remote data', async () => {
+    test("should handle corrupted remote data", async () => {
       global.fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({
-          success: true,
-          data: 'corrupted-data-that-cannot-be-decrypted'
-        })
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: "corrupted-data-that-cannot-be-decrypted",
+          }),
       });
 
       const result = await service.pullData();
@@ -272,12 +285,12 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
     });
   });
 
-  describe('Polling and Real-time Sync', () => {
+  describe("Polling and Real-time Sync", () => {
     beforeEach(async () => {
       await service.init(TEST_RECOVERY_PHRASE);
     });
 
-    test('should start and stop polling correctly', (done) => {
+    test("should start and stop polling correctly", (done) => {
       expect(service.isPolling).toBe(false);
 
       service.startPolling(() => {
@@ -297,18 +310,18 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
       }, 100);
     });
 
-    test('should handle polling errors gracefully', (done) => {
+    test("should handle polling errors gracefully", (done) => {
       let errorCount = 0;
 
       // Mock fetch to fail first few times, then succeed
       global.fetch.mockImplementation(() => {
         errorCount++;
         if (errorCount <= 2) {
-          return Promise.reject(new Error('Network timeout'));
+          return Promise.reject(new Error("Network timeout"));
         }
         return Promise.resolve({
           ok: true,
-          json: () => Promise.resolve({ success: false, error: 'No data' })
+          json: () => Promise.resolve({ success: false, error: "No data" }),
         });
       });
 
@@ -322,7 +335,7 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
       }, 200);
     });
 
-    test('should respect poll interval configuration', (done) => {
+    test("should respect poll interval configuration", (done) => {
       const originalInterval = service.POLL_INTERVAL;
       service.POLL_INTERVAL = 50; // Very short for testing
 
@@ -331,8 +344,8 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
         ok: true,
         json: () => {
           pollCount++;
-          return Promise.resolve({ success: false, error: 'No data' });
-        }
+          return Promise.resolve({ success: false, error: "No data" });
+        },
       });
 
       service.startPolling(() => Promise.resolve());
@@ -347,23 +360,23 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
     });
   });
 
-  describe('Error Handling and Retry Logic', () => {
+  describe("Error Handling and Retry Logic", () => {
     beforeEach(async () => {
       await service.init(TEST_RECOVERY_PHRASE);
     });
 
-    test('should retry failed requests up to max retries', async () => {
+    test("should retry failed requests up to max retries", async () => {
       const testProfile = createTestProfileData();
       let attemptCount = 0;
 
       global.fetch.mockImplementation(() => {
         attemptCount++;
         if (attemptCount <= 2) {
-          return Promise.reject(new Error('Temporary network error'));
+          return Promise.reject(new Error("Temporary network error"));
         }
         return Promise.resolve({
           ok: true,
-          json: () => Promise.resolve({ success: true })
+          json: () => Promise.resolve({ success: true }),
         });
       });
 
@@ -373,32 +386,32 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
       expect(attemptCount).toBe(3); // Initial + 2 retries
     });
 
-    test('should give up after max retries', async () => {
+    test("should give up after max retries", async () => {
       const testProfile = createTestProfileData();
 
-      global.fetch.mockRejectedValue(new Error('Persistent network error'));
+      global.fetch.mockRejectedValue(new Error("Persistent network error"));
 
       const result = await service.pushData(testProfile);
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('Persistent network error');
+      expect(result.error).toContain("Persistent network error");
       expect(global.fetch).toHaveBeenCalledTimes(4); // Initial + 3 retries
     });
 
-    test('should handle malformed API responses', async () => {
+    test("should handle malformed API responses", async () => {
       global.fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve('not-an-object')
+        json: () => Promise.resolve("not-an-object"),
       });
 
       const isHealthy = await service.checkHealth();
       expect(isHealthy).toBe(false);
     });
 
-    test('should handle JSON parsing errors', async () => {
+    test("should handle JSON parsing errors", async () => {
       global.fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.reject(new Error('Invalid JSON'))
+        json: () => Promise.reject(new Error("Invalid JSON")),
       });
 
       const isHealthy = await service.checkHealth();
@@ -406,17 +419,17 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
     });
   });
 
-  describe('Performance and Optimization', () => {
+  describe("Performance and Optimization", () => {
     beforeEach(async () => {
       await service.init(TEST_RECOVERY_PHRASE);
     });
 
-    test('should complete sync operations within performance bounds', async () => {
+    test("should complete sync operations within performance bounds", async () => {
       const testProfile = createTestProfileData();
 
       global.fetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ success: true })
+        json: () => Promise.resolve({ success: true }),
       });
 
       const startTime = Date.now();
@@ -426,21 +439,21 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
       expect(endTime - startTime).toBeLessThan(1000); // Should be fast
     });
 
-    test('should handle large profile data efficiently', async () => {
+    test("should handle large profile data efficiently", async () => {
       const largeProfile = {
         ...createTestProfileData(),
         entries: new Array(100).fill(null).map((_, i) => ({
           id: `entry-${i}`,
-          category: 'medical',
+          category: "medical",
           title: `Entry ${i}`,
-          description: 'Large dataset test entry '.repeat(50),
-          date: new Date().toISOString()
-        }))
+          description: "Large dataset test entry ".repeat(50),
+          date: new Date().toISOString(),
+        })),
       };
 
       global.fetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ success: true })
+        json: () => Promise.resolve({ success: true }),
       });
 
       const startTime = Date.now();
@@ -451,19 +464,19 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
       expect(endTime - startTime).toBeLessThan(2000); // Should handle large data efficiently
     });
 
-    test('should debounce rapid push requests', async () => {
+    test("should debounce rapid push requests", async () => {
       const testProfile = createTestProfileData();
 
       global.fetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ success: true })
+        json: () => Promise.resolve({ success: true }),
       });
 
       // Make multiple rapid push requests
       const promises = [
         service.pushData(testProfile),
         service.pushData(testProfile),
-        service.pushData(testProfile)
+        service.pushData(testProfile),
       ];
 
       await Promise.all(promises);
@@ -473,16 +486,16 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
     });
   });
 
-  describe('Real-world Usage Scenarios', () => {
+  describe("Real-world Usage Scenarios", () => {
     beforeEach(async () => {
       await service.init(TEST_RECOVERY_PHRASE);
     });
 
-    test('should handle complete sync setup workflow', async () => {
+    test("should handle complete sync setup workflow", async () => {
       // 1. Health check
       global.fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ status: 'healthy' })
+        json: () => Promise.resolve({ status: "healthy" }),
       });
 
       const isHealthy = await service.checkHealth();
@@ -492,7 +505,7 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
       const testProfile = createTestProfileData();
       global.fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ success: true })
+        json: () => Promise.resolve({ success: true }),
       });
 
       const pushResult = await service.pushData(testProfile);
@@ -501,37 +514,38 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
       // 3. Data pull verification
       global.fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({
-          success: true,
-          data: ManyllaEncryptionService.encryptData(testProfile)
-        })
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: ManyllaEncryptionService.encryptData(testProfile),
+          }),
       });
 
       const pullResult = await service.pullData();
       expect(pullResult).toEqual(testProfile);
     });
 
-    test('should handle multi-device sync scenario', async () => {
+    test("should handle multi-device sync scenario", async () => {
       const device1Profile = createTestProfileData();
       const device2Profile = {
         ...device1Profile,
         entries: [
           ...device1Profile.entries,
           {
-            id: 'new-entry-device2',
-            category: 'education',
-            title: 'Added from device 2',
-            description: 'This entry was added from another device',
-            date: new Date().toISOString()
-          }
+            id: "new-entry-device2",
+            category: "education",
+            title: "Added from device 2",
+            description: "This entry was added from another device",
+            date: new Date().toISOString(),
+          },
         ],
-        lastModified: Date.now() + 1000
+        lastModified: Date.now() + 1000,
       };
 
       // Device 1 pushes data
       global.fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ success: true })
+        json: () => Promise.resolve({ success: true }),
       });
 
       await service.pushData(device1Profile);
@@ -540,14 +554,15 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
       global.fetch
         .mockResolvedValueOnce({
           ok: true,
-          json: () => Promise.resolve({
-            success: true,
-            data: ManyllaEncryptionService.encryptData(device1Profile)
-          })
+          json: () =>
+            Promise.resolve({
+              success: true,
+              data: ManyllaEncryptionService.encryptData(device1Profile),
+            }),
         })
         .mockResolvedValueOnce({
           ok: true,
-          json: () => Promise.resolve({ success: true })
+          json: () => Promise.resolve({ success: true }),
         });
 
       const pulledData = await service.pullData();
@@ -558,22 +573,25 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
       // Device 1 pulls updated data
       global.fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({
-          success: true,
-          data: ManyllaEncryptionService.encryptData(device2Profile)
-        })
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: ManyllaEncryptionService.encryptData(device2Profile),
+          }),
       });
 
       const finalData = await service.pullData();
       expect(finalData.entries).toHaveLength(2);
-      expect(finalData.entries.some(e => e.title === 'Added from device 2')).toBe(true);
+      expect(
+        finalData.entries.some((e) => e.title === "Added from device 2"),
+      ).toBe(true);
     });
 
-    test('should handle offline/online transitions', async () => {
+    test("should handle offline/online transitions", async () => {
       const testProfile = createTestProfileData();
 
       // Simulate offline - network requests fail
-      global.fetch.mockRejectedValue(new Error('Network unreachable'));
+      global.fetch.mockRejectedValue(new Error("Network unreachable"));
 
       const offlineResult = await service.pushData(testProfile);
       expect(offlineResult.success).toBe(false);
@@ -581,7 +599,7 @@ describe('ManyllaMinimalSyncService Real Integration', () => {
       // Simulate coming back online
       global.fetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ success: true })
+        json: () => Promise.resolve({ success: true }),
       });
 
       const onlineResult = await service.pushData(testProfile);

@@ -6,11 +6,14 @@ import platform from "../../utils/platform";
 const DatePicker = ({ value, onChange, label, ...props }) => {
   if (platform.isWeb) {
     // Web implementation - use HTML5 date input
+    // Handle null/undefined values
+    const normalizedValue = value || "";
+
     return (
       <input
         type="date"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        value={normalizedValue}
+        onChange={(e) => onChange && onChange(e.target.value)}
         style={{
           padding: "12px 15px",
           fontSize: "16px",

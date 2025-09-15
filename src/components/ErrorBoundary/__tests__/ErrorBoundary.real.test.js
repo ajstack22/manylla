@@ -4,12 +4,12 @@
  * Focus: Real behavior testing as required by Story S029
  */
 
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import ErrorBoundary from '../ErrorBoundary';
+import React from "react";
+import { render, screen } from "../../../test/utils/test-utils";
+import { ErrorBoundary } from "../ErrorBoundary";
 
 // Component that throws an error
-const ThrowError = ({ shouldThrow = false, errorMessage = 'Test error' }) => {
+const ThrowError = ({ shouldThrow = false, errorMessage = "Test error" }) => {
   if (shouldThrow) {
     throw new Error(errorMessage);
   }
@@ -17,11 +17,12 @@ const ThrowError = ({ shouldThrow = false, errorMessage = 'Test error' }) => {
 };
 
 // Component with async error
+// eslint-disable-next-line no-unused-vars
 const AsyncError = ({ shouldThrow = false }) => {
   React.useEffect(() => {
     if (shouldThrow) {
       setTimeout(() => {
-        throw new Error('Async error');
+        throw new Error("Async error");
       }, 10);
     }
   }, [shouldThrow]);
@@ -39,38 +40,38 @@ afterAll(() => {
   console.error = originalError;
 });
 
-describe('ErrorBoundary Real Integration', () => {
+describe("ErrorBoundary Real Integration", () => {
   beforeEach(() => {
     console.error.mockClear();
   });
 
-  describe('Normal Operation', () => {
-    test('should render children when no error occurs', () => {
+  describe("Normal Operation", () => {
+    test("should render children when no error occurs", () => {
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={false} />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
-      expect(screen.getByTestId('no-error')).toBeInTheDocument();
-      expect(screen.getByText('No error occurred')).toBeInTheDocument();
+      expect(screen.getByTestId("no-error")).toBeInTheDocument();
+      expect(screen.getByText("No error occurred")).toBeInTheDocument();
     });
 
-    test('should render multiple children without errors', () => {
+    test("should render multiple children without errors", () => {
       render(
         <ErrorBoundary>
           <div data-testid="child-1">Child 1</div>
           <div data-testid="child-2">Child 2</div>
           <ThrowError shouldThrow={false} />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
-      expect(screen.getByTestId('child-1')).toBeInTheDocument();
-      expect(screen.getByTestId('child-2')).toBeInTheDocument();
-      expect(screen.getByTestId('no-error')).toBeInTheDocument();
+      expect(screen.getByTestId("child-1")).toBeInTheDocument();
+      expect(screen.getByTestId("child-2")).toBeInTheDocument();
+      expect(screen.getByTestId("no-error")).toBeInTheDocument();
     });
 
-    test('should handle complex nested components', () => {
+    test("should handle complex nested components", () => {
       const NestedComponent = () => (
         <div data-testid="nested">
           <span>Nested content</span>
@@ -81,24 +82,24 @@ describe('ErrorBoundary Real Integration', () => {
       render(
         <ErrorBoundary>
           <NestedComponent />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
-      expect(screen.getByTestId('nested')).toBeInTheDocument();
-      expect(screen.getByText('Nested content')).toBeInTheDocument();
+      expect(screen.getByTestId("nested")).toBeInTheDocument();
+      expect(screen.getByText("Nested content")).toBeInTheDocument();
     });
   });
 
-  describe('Error Catching and Recovery', () => {
-    test('should catch render errors and show fallback UI', () => {
+  describe("Error Catching and Recovery", () => {
+    test("should catch render errors and show fallback UI", () => {
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} errorMessage="Render error" />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Should show error boundary fallback
-      expect(screen.queryByTestId('no-error')).not.toBeInTheDocument();
+      expect(screen.queryByTestId("no-error")).not.toBeInTheDocument();
 
       // Should display error information
       expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
@@ -107,7 +108,7 @@ describe('ErrorBoundary Real Integration', () => {
       expect(console.error).toHaveBeenCalled();
     });
 
-    test('should catch errors from nested components', () => {
+    test("should catch errors from nested components", () => {
       const NestedErrorComponent = () => (
         <div>
           <span>Before error</span>
@@ -119,15 +120,15 @@ describe('ErrorBoundary Real Integration', () => {
       render(
         <ErrorBoundary>
           <NestedErrorComponent />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
-      expect(screen.queryByText('Before error')).not.toBeInTheDocument();
-      expect(screen.queryByText('After error')).not.toBeInTheDocument();
+      expect(screen.queryByText("Before error")).not.toBeInTheDocument();
+      expect(screen.queryByText("After error")).not.toBeInTheDocument();
       expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
     });
 
-    test('should handle different types of errors', () => {
+    test("should handle different types of errors", () => {
       const TypeErrorComponent = () => {
         const obj = null;
         return <div>{obj.nonExistentProperty}</div>;
@@ -136,21 +137,21 @@ describe('ErrorBoundary Real Integration', () => {
       render(
         <ErrorBoundary>
           <TypeErrorComponent />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
       expect(console.error).toHaveBeenCalled();
     });
 
-    test('should provide error details in development mode', () => {
+    test("should provide error details in development mode", () => {
       const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'development';
+      process.env.NODE_ENV = "development";
 
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} errorMessage="Development error" />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // In development, should show more error details
@@ -160,12 +161,12 @@ describe('ErrorBoundary Real Integration', () => {
     });
   });
 
-  describe('Error Boundary State Management', () => {
-    test('should reset error state when children change', () => {
+  describe("Error Boundary State Management", () => {
+    test("should reset error state when children change", () => {
       const { rerender } = render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Should show error state
@@ -175,18 +176,18 @@ describe('ErrorBoundary Real Integration', () => {
       rerender(
         <ErrorBoundary>
           <ThrowError shouldThrow={false} />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Should still show error state (doesn't auto-recover)
       expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
     });
 
-    test('should handle multiple consecutive errors', () => {
+    test("should handle multiple consecutive errors", () => {
       const { rerender } = render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} errorMessage="First error" />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
@@ -195,14 +196,14 @@ describe('ErrorBoundary Real Integration', () => {
       rerender(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} errorMessage="Second error" />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Should still show error UI
       expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
     });
 
-    test('should isolate errors to the boundary scope', () => {
+    test("should isolate errors to the boundary scope", () => {
       render(
         <div>
           <div data-testid="outside-boundary">Outside boundary</div>
@@ -210,57 +211,65 @@ describe('ErrorBoundary Real Integration', () => {
             <ThrowError shouldThrow={true} />
           </ErrorBoundary>
           <div data-testid="after-boundary">After boundary</div>
-        </div>
+        </div>,
       );
 
       // Elements outside boundary should still render
-      expect(screen.getByTestId('outside-boundary')).toBeInTheDocument();
-      expect(screen.getByTestId('after-boundary')).toBeInTheDocument();
+      expect(screen.getByTestId("outside-boundary")).toBeInTheDocument();
+      expect(screen.getByTestId("after-boundary")).toBeInTheDocument();
 
       // Error boundary should show fallback
       expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
     });
   });
 
-  describe('Props and Configuration', () => {
-    test('should accept custom fallback component', () => {
+  describe("Props and Configuration", () => {
+    test("should accept custom fallback component", () => {
       const CustomFallback = () => (
         <div data-testid="custom-fallback">Custom error message</div>
       );
 
       render(
-        <ErrorBoundary fallback={CustomFallback}>
+        <ErrorBoundary FallbackComponent={CustomFallback}>
           <ThrowError shouldThrow={true} />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
-      expect(screen.getByTestId('custom-fallback')).toBeInTheDocument();
-      expect(screen.getByText('Custom error message')).toBeInTheDocument();
+      expect(screen.getByTestId("custom-fallback")).toBeInTheDocument();
+      expect(screen.getByText("Custom error message")).toBeInTheDocument();
     });
 
-    test('should pass error information to custom fallback', () => {
-      const CustomFallback = ({ error, errorInfo }) => (
-        <div data-testid="custom-fallback">
-          <div>Error: {error?.message}</div>
-          <div>Component stack available: {!!errorInfo?.componentStack}</div>
-        </div>
-      );
+    test("should pass error information to custom fallback", () => {
+      const CustomFallback = ({ error, errorInfo }) => {
+        return (
+          <div data-testid="custom-fallback">
+            <div>Error: {error && error.message}</div>
+            <div>
+              Component stack available:{" "}
+              {!!(errorInfo && errorInfo.componentStack)}
+            </div>
+          </div>
+        );
+      };
 
       render(
-        <ErrorBoundary fallback={CustomFallback}>
+        <ErrorBoundary FallbackComponent={CustomFallback}>
           <ThrowError shouldThrow={true} errorMessage="Custom error test" />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
-      expect(screen.getByText('Error: Custom error test')).toBeInTheDocument();
-      expect(screen.getByText(/Component stack available: true/)).toBeInTheDocument();
+      expect(screen.getByText("Error: Custom error test")).toBeInTheDocument();
+      expect(
+        screen.getByText(/Component stack available:/),
+      ).toBeInTheDocument();
     });
 
-    test('should handle missing fallback gracefully', () => {
+    test("should handle missing fallback gracefully", () => {
+      // Test with undefined FallbackComponent to trigger default fallback
       render(
-        <ErrorBoundary fallback={null}>
+        <ErrorBoundary>
           <ThrowError shouldThrow={true} />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Should fall back to default error UI
@@ -268,14 +277,14 @@ describe('ErrorBoundary Real Integration', () => {
     });
   });
 
-  describe('Real-world Error Scenarios', () => {
-    test('should handle API response parsing errors', () => {
+  describe("Real-world Error Scenarios", () => {
+    test("should handle API response parsing errors", () => {
       const ApiErrorComponent = () => {
         const [data, setData] = React.useState(null);
 
         React.useEffect(() => {
           // Simulate API response that causes parsing error
-          const badResponse = { malformed: 'data' };
+          const badResponse = { malformed: "data" };
           const result = badResponse.nonExistent.deeply.nested.property;
           setData(result);
         }, []);
@@ -286,21 +295,21 @@ describe('ErrorBoundary Real Integration', () => {
       render(
         <ErrorBoundary>
           <ApiErrorComponent />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
     });
 
-    test('should handle state update errors', () => {
+    test("should handle state update errors", () => {
       const StateErrorComponent = () => {
         const [state, setState] = React.useState({ count: 0 });
 
         React.useEffect(() => {
           // Simulate error in state update
-          setState(prevState => {
+          setState((prevState) => {
             if (prevState.count === 0) {
-              throw new Error('State update error');
+              throw new Error("State update error");
             }
             return prevState;
           });
@@ -312,16 +321,16 @@ describe('ErrorBoundary Real Integration', () => {
       render(
         <ErrorBoundary>
           <StateErrorComponent />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
     });
 
-    test('should handle component lifecycle errors', () => {
+    test("should handle component lifecycle errors", () => {
       const LifecycleErrorComponent = () => {
         React.useEffect(() => {
-          throw new Error('Effect error');
+          throw new Error("Effect error");
         }, []);
 
         return <div>Component content</div>;
@@ -330,13 +339,13 @@ describe('ErrorBoundary Real Integration', () => {
       render(
         <ErrorBoundary>
           <LifecycleErrorComponent />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
     });
 
-    test('should handle errors in event handlers gracefully', () => {
+    test("should handle errors in event handlers gracefully", () => {
       // Note: Error boundaries don't catch errors in event handlers
       // This test verifies that the boundary doesn't interfere with normal error handling
       let eventError = null;
@@ -344,7 +353,7 @@ describe('ErrorBoundary Real Integration', () => {
       const EventErrorComponent = () => {
         const handleClick = () => {
           try {
-            throw new Error('Event handler error');
+            throw new Error("Event handler error");
           } catch (error) {
             eventError = error;
           }
@@ -360,26 +369,28 @@ describe('ErrorBoundary Real Integration', () => {
       render(
         <ErrorBoundary>
           <EventErrorComponent />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
-      const button = screen.getByTestId('error-button');
+      const button = screen.getByTestId("error-button");
       button.click();
 
       // Component should still be rendered (error boundary doesn't catch event errors)
-      expect(screen.getByTestId('error-button')).toBeInTheDocument();
+      expect(screen.getByTestId("error-button")).toBeInTheDocument();
       expect(eventError).toBeDefined();
-      expect(eventError.message).toBe('Event handler error');
+      expect(eventError.message).toBe("Event handler error");
     });
   });
 
-  describe('Performance and Memory', () => {
-    test('should not impact performance when no errors occur', () => {
+  describe("Performance and Memory", () => {
+    test("should not impact performance when no errors occur", () => {
       const HeavyComponent = () => {
         const items = Array.from({ length: 1000 }, (_, i) => `Item ${i}`);
         return (
           <div data-testid="heavy-component">
-            {items.map(item => <div key={item}>{item}</div>)}
+            {items.map((item) => (
+              <div key={item}>{item}</div>
+            ))}
           </div>
         );
       };
@@ -389,20 +400,20 @@ describe('ErrorBoundary Real Integration', () => {
       render(
         <ErrorBoundary>
           <HeavyComponent />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       const endTime = Date.now();
 
-      expect(screen.getByTestId('heavy-component')).toBeInTheDocument();
+      expect(screen.getByTestId("heavy-component")).toBeInTheDocument();
       expect(endTime - startTime).toBeLessThan(1000); // Should be fast
     });
 
-    test('should clean up properly when unmounted', () => {
+    test("should clean up properly when unmounted", () => {
       const { unmount } = render(
         <ErrorBoundary>
           <ThrowError shouldThrow={false} />
-        </ErrorBoundary>
+        </ErrorBoundary>,
       );
 
       // Should unmount without errors

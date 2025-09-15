@@ -71,7 +71,11 @@ export const ChildProfile = {};
 
 // Helper functions for type validation
 export const isEntry = (obj) => {
-  return !!(obj && typeof obj.id === "string" && typeof obj.category === "string");
+  return !!(
+    obj &&
+    typeof obj.id === "string" &&
+    typeof obj.category === "string"
+  );
 };
 
 export const isCategoryConfig = (obj) => {

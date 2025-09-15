@@ -52,7 +52,7 @@ export const UnifiedAddDialog = ({
   onAdd,
   existingItems = [],
 }) => {
-  const { theme } = useTheme();
+  const { colors } = useTheme();
   const isWeb = platform.isWeb;
 
   // Quick Info state
@@ -127,7 +127,7 @@ export const UnifiedAddDialog = ({
   const styles = StyleSheet.create({
     modal: {
       flex: 1,
-      backgroundColor: theme.colors.background,
+      backgroundColor: colors.background.default,
     },
     header: {
       flexDirection: "row",
@@ -135,20 +135,20 @@ export const UnifiedAddDialog = ({
       justifyContent: "space-between",
       padding: 16,
       borderBottomWidth: 1,
-      borderBottomColor: theme.colors.border,
-      backgroundColor: theme.colors.surface,
+      borderBottomColor: colors.border,
+      backgroundColor: colors.surface,
     },
     headerTitle: {
       fontSize: 18,
       fontWeight: "600",
-      color: theme.colors.text,
+      color: colors.text.primary,
     },
     closeButton: {
       padding: 8,
     },
     closeButtonText: {
       fontSize: 16,
-      color: theme.colors.text,
+      color: colors.text.primary,
     },
     content: {
       flex: 1,
@@ -160,23 +160,23 @@ export const UnifiedAddDialog = ({
     label: {
       fontSize: 14,
       fontWeight: "500",
-      color: theme.colors.text,
+      color: colors.text.primary,
       marginBottom: 8,
     },
     input: {
       borderWidth: 1,
-      borderColor: theme.colors.border,
+      borderColor: colors.border,
       borderRadius: 8,
       padding: 12,
       fontSize: 16,
-      color: theme.colors.text,
-      backgroundColor: theme.colors.surface,
+      color: colors.text.primary,
+      backgroundColor: colors.surface,
     },
     picker: {
       borderWidth: 1,
-      borderColor: theme.colors.border,
+      borderColor: colors.border,
       borderRadius: 8,
-      backgroundColor: theme.colors.surface,
+      backgroundColor: colors.surface,
     },
     privacyContainer: {
       flexDirection: "row",
@@ -188,16 +188,16 @@ export const UnifiedAddDialog = ({
       paddingVertical: 8,
       borderRadius: 20,
       borderWidth: 1,
-      borderColor: theme.colors.border,
-      backgroundColor: theme.colors.surface,
+      borderColor: colors.border,
+      backgroundColor: colors.surface,
     },
     privacyButtonActive: {
-      backgroundColor: theme.colors.primary,
-      borderColor: theme.colors.primary,
+      backgroundColor: colors.primary,
+      borderColor: colors.primary,
     },
     privacyButtonText: {
       fontSize: 14,
-      color: theme.colors.text,
+      color: colors.text.primary,
     },
     privacyButtonTextActive: {
       color: "#FFFFFF",
@@ -213,18 +213,18 @@ export const UnifiedAddDialog = ({
       height: 40,
       borderRadius: 8,
       borderWidth: 1,
-      borderColor: theme.colors.border,
+      borderColor: colors.border,
     },
     colorSwatchSelected: {
       borderWidth: 3,
-      borderColor: theme.colors.text,
+      borderColor: colors.text.primary,
     },
     customColorButton: {
       width: 40,
       height: 40,
       borderRadius: 8,
       borderWidth: 1,
-      borderColor: theme.colors.border,
+      borderColor: colors.border,
       justifyContent: "center",
       alignItems: "center",
       background: "linear-gradient(45deg, #ff0000, #00ff00, #0000ff)",
@@ -232,7 +232,7 @@ export const UnifiedAddDialog = ({
     customColorText: {
       fontSize: 20,
       fontWeight: "bold",
-      color: theme.colors.text,
+      color: colors.text.primary,
     },
     colorPickerRow: {
       flexDirection: "row",
@@ -260,8 +260,8 @@ export const UnifiedAddDialog = ({
       gap: 12,
       padding: 16,
       borderTopWidth: 1,
-      borderTopColor: theme.colors.border,
-      backgroundColor: theme.colors.surface,
+      borderTopColor: colors.border,
+      backgroundColor: colors.surface,
     },
     button: {
       paddingHorizontal: 20,
@@ -272,14 +272,14 @@ export const UnifiedAddDialog = ({
       backgroundColor: "transparent",
     },
     cancelButtonText: {
-      color: theme.colors.text,
+      color: colors.text.primary,
       fontSize: 16,
     },
     addButton: {
-      backgroundColor: theme.colors.primary,
+      backgroundColor: colors.primary,
     },
     addButtonDisabled: {
-      backgroundColor: theme.colors.disabled,
+      backgroundColor: colors.text.disabled,
     },
     addButtonText: {
       color: "#FFFFFF",
@@ -316,7 +316,7 @@ export const UnifiedAddDialog = ({
                     value={selectedOption}
                     onChangeText={setSelectedOption}
                     placeholder="Enter or select type"
-                    placeholderTextColor={theme.colors.placeholder}
+                    placeholderTextColor={colors.text.secondary}
                   />
                 ) : (
                   <View style={styles.picker}>
@@ -345,7 +345,7 @@ export const UnifiedAddDialog = ({
                     value={customName}
                     onChangeText={setCustomName}
                     placeholder="Enter custom name"
-                    placeholderTextColor={theme.colors.placeholder}
+                    placeholderTextColor={colors.text.secondary}
                   />
                 </View>
               )}
@@ -395,7 +395,7 @@ export const UnifiedAddDialog = ({
                   value={categoryName}
                   onChangeText={setCategoryName}
                   placeholder="Enter category name"
-                  placeholderTextColor={theme.colors.placeholder}
+                  placeholderTextColor={colors.text.secondary}
                 />
               </View>
 
@@ -431,7 +431,7 @@ export const UnifiedAddDialog = ({
                         style={{
                           width: 60,
                           height: 40,
-                          border: `1px solid ${theme.colors.border}`,
+                          border: `1px solid ${colors.border}`,
                           borderRadius: 4,
                           cursor: "pointer",
                         }}
@@ -442,7 +442,7 @@ export const UnifiedAddDialog = ({
                       value={categoryColor}
                       onChangeText={setCategoryColor}
                       placeholder="#000000"
-                      placeholderTextColor={theme.colors.placeholder}
+                      placeholderTextColor={colors.text.secondary}
                     />
                   </View>
                 )}

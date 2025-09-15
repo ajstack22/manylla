@@ -53,7 +53,7 @@ export class ProfileValidator {
       data.entries.forEach((entry, index) => {
         const entryResult = this.validateEntry(entry);
         if (!entryResult.valid) {
-          entryResult.errors.forEach(error => {
+          entryResult.errors.forEach((error) => {
             errors.push(`entry ${error}`);
           });
         }
@@ -144,7 +144,7 @@ export class ProfileValidator {
 
     return {
       valid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
@@ -166,7 +166,7 @@ export class ProfileValidator {
       errors.push("Category name is required");
     } else {
       // Check for reserved names
-      const reservedNames = ['admin', 'system', 'root'];
+      const reservedNames = ["admin", "system", "root"];
       if (reservedNames.includes(category.name.toLowerCase())) {
         errors.push("Category name is reserved");
       }
@@ -181,9 +181,21 @@ export class ProfileValidator {
     } else {
       // Allow various color formats
       const hexPattern = /^#([0-9A-F]{3}|[0-9A-F]{6})$/i;
-      const namedColors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'black', 'white'];
+      const namedColors = [
+        "red",
+        "blue",
+        "green",
+        "yellow",
+        "purple",
+        "orange",
+        "black",
+        "white",
+      ];
 
-      if (!hexPattern.test(category.color) && !namedColors.includes(category.color.toLowerCase())) {
+      if (
+        !hexPattern.test(category.color) &&
+        !namedColors.includes(category.color.toLowerCase())
+      ) {
         errors.push("Invalid color format");
       }
     }
@@ -198,7 +210,7 @@ export class ProfileValidator {
 
     return {
       valid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
@@ -246,27 +258,27 @@ export class ProfileValidator {
    * Sanitizes input text
    */
   static sanitizeInput(input, options = {}) {
-    if (typeof input !== 'string') return '';
+    if (typeof input !== "string") return "";
 
     let cleaned = input;
 
     if (!options.allowMarkdown) {
       // Escape HTML characters but keep the content readable
       cleaned = cleaned
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#x27;');
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#x27;");
 
       // Remove dangerous attributes after escaping
-      cleaned = cleaned.replace(/onerror/gi, '');
-      cleaned = cleaned.replace(/javascript:/gi, '');
+      cleaned = cleaned.replace(/onerror/gi, "");
+      cleaned = cleaned.replace(/javascript:/gi, "");
     }
 
     // Remove SQL injection patterns
-    cleaned = cleaned.replace(/DROP\s+TABLE/gi, '');
-    cleaned = cleaned.replace(/;--/g, '');
+    cleaned = cleaned.replace(/DROP\s+TABLE/gi, "");
+    cleaned = cleaned.replace(/;--/g, "");
 
     return cleaned;
   }
@@ -275,30 +287,35 @@ export class ProfileValidator {
    * Validates email addresses
    */
   static validateEmail(email) {
-    if (!email || typeof email !== 'string') return false;
+    if (!email || typeof email !== "string") return false;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email) && !email.includes('..');
+    return emailRegex.test(email) && !email.includes("..");
   }
 
   /**
    * Validates phone numbers
    */
   static validatePhoneNumber(phone) {
-    if (!phone || typeof phone !== 'string') return false;
+    if (!phone || typeof phone !== "string") return false;
 
     // Check for obvious non-phone patterns first
-    if (phone === '123' || phone === 'not-a-phone' || phone === '555-123' || phone.startsWith('++')) {
+    if (
+      phone === "123" ||
+      phone === "not-a-phone" ||
+      phone === "555-123" ||
+      phone.startsWith("++")
+    ) {
       return false;
     }
 
     // Remove all non-digit characters
-    const digits = phone.replace(/\D/g, '');
+    const digits = phone.replace(/\D/g, "");
 
     // Must have exactly 10-15 digits (international format)
     if (digits.length < 10 || digits.length > 15) return false;
 
     // Additional invalid patterns
-    if (digits === '123' || digits === '555123') return false;
+    if (digits === "123" || digits === "555123") return false;
 
     return true;
   }
@@ -315,9 +332,9 @@ export class ProfileValidator {
     if (isNaN(date.getTime())) return false;
 
     // Check for obviously invalid dates like Feb 30
-    if (typeof dateStr === 'string') {
-      if (dateStr.includes('2023-13-01')) return false; // Invalid month
-      if (dateStr.includes('2023-02-30')) return false; // Invalid day
+    if (typeof dateStr === "string") {
+      if (dateStr.includes("2023-13-01")) return false; // Invalid month
+      if (dateStr.includes("2023-02-30")) return false; // Invalid day
     }
 
     return true;
@@ -334,13 +351,13 @@ export class ProfileValidator {
 
     // Check allowed file types
     const allowedTypes = [
-      'application/pdf',
-      'image/jpeg',
-      'image/png',
-      'image/gif',
-      'text/plain',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      "application/pdf",
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "text/plain",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ];
 
     return allowedTypes.includes(file.type);
@@ -350,10 +367,10 @@ export class ProfileValidator {
    * Validates markdown content
    */
   static isValidMarkdown(markdown) {
-    if (!markdown || typeof markdown !== 'string') return false;
+    if (!markdown || typeof markdown !== "string") return false;
 
     // Check for malicious content
-    if (markdown.includes('<script>') || markdown.includes('javascript:')) {
+    if (markdown.includes("<script>") || markdown.includes("javascript:")) {
       return false;
     }
 
@@ -366,8 +383,8 @@ export class ProfileValidator {
   static validateFormData(formData) {
     const errors = [];
 
-    if (!formData || typeof formData !== 'object') {
-      return { valid: false, errors: ['Form data is required'] };
+    if (!formData || typeof formData !== "object") {
+      return { valid: false, errors: ["Form data is required"] };
     }
 
     // Validate profiles if present
@@ -382,7 +399,9 @@ export class ProfileValidator {
       formData.profiles.forEach((profile, index) => {
         const profileResult = this.validateProfile(profile);
         if (!profileResult.valid) {
-          errors.push(...profileResult.errors.map(err => `profiles[${index}]: ${err}`));
+          errors.push(
+            ...profileResult.errors.map((err) => `profiles[${index}]: ${err}`),
+          );
         }
       });
     }
@@ -392,7 +411,7 @@ export class ProfileValidator {
       formData.entries.forEach((entry, index) => {
         const entryResult = this.validateEntry(entry);
         if (!entryResult.valid) {
-          errors.push(`entries[${index}]: ${entryResult.errors.join(', ')}`);
+          errors.push(`entries[${index}]: ${entryResult.errors.join(", ")}`);
         }
       });
     }
@@ -402,14 +421,14 @@ export class ProfileValidator {
       formData.categories.forEach((category, index) => {
         const catResult = this.validateCategory(category);
         if (!catResult.valid) {
-          errors.push(`categories[${index}]: ${catResult.errors.join(', ')}`);
+          errors.push(`categories[${index}]: ${catResult.errors.join(", ")}`);
         }
       });
     }
 
     return {
       valid: errors.length === 0,
-      errors
+      errors,
     };
   }
 

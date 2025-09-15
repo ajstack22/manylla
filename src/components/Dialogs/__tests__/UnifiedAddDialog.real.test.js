@@ -4,18 +4,42 @@
  * Focus: Real behavior testing as required by Story S029
  */
 
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { renderWithProviders, createTestProfile } from '../../../test/utils/component-test-utils';
-import UnifiedAddDialog from '../UnifiedAddDialog';
+import React from "react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+} from "../../../test/utils/test-utils";
+import { UnifiedAddDialog } from "../UnifiedAddDialog";
+
+// Helper function to create test profile
+const createTestProfile = (overrides = {}) => ({
+  id: "test-profile-1",
+  name: "Test Child",
+  dateOfBirth: "2015-01-01",
+  entries: [
+    {
+      id: "test-entry-1",
+      category: "medical",
+      title: "Test Entry",
+      description: "Test description",
+      date: new Date().toISOString(),
+    },
+  ],
+  categories: [{ id: "medical", name: "Medical", color: "#e74c3c" }],
+  createdAt: new Date().toISOString(),
+  lastModified: Date.now(),
+  ...overrides,
+});
 
 // Mock platform utilities
-jest.mock('../../../utils/platform', () => ({
+jest.mock("../../../utils/platform", () => ({
   isWeb: true,
   isMobile: false,
 }));
 
-describe('UnifiedAddDialog Real Integration', () => {
+describe("UnifiedAddDialog Real Integration", () => {
   const defaultProps = {
     open: true,
     onClose: jest.fn(),
@@ -28,86 +52,88 @@ describe('UnifiedAddDialog Real Integration', () => {
     defaultProps.onSave.mockClear();
   });
 
-  describe('Dialog Rendering and Basic Interaction', () => {
-    test('should render dialog when open', () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+  describe("Dialog Rendering and Basic Interaction", () => {
+    test("should render dialog when open", () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
       expect(screen.getByText(/add new entry/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/title/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/description/i)).toBeInTheDocument();
     });
 
-    test('should not render when closed', () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} open={false} />);
+    test("should not render when closed", () => {
+      render(<UnifiedAddDialog {...defaultProps} open={false} />);
 
       expect(screen.queryByText(/add new entry/i)).not.toBeInTheDocument();
     });
 
-    test('should call onClose when close button clicked', async () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+    test("should call onClose when close button clicked", async () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
-      const closeButton = screen.getByRole('button', { name: /close/i });
+      const closeButton = screen.getByRole("button", { name: /close/i });
       fireEvent.click(closeButton);
 
       expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
     });
 
-    test('should call onClose when cancel button clicked', async () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+    test("should call onClose when cancel button clicked", async () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
-      const cancelButton = screen.getByRole('button', { name: /cancel/i });
+      const cancelButton = screen.getByRole("button", { name: /cancel/i });
       fireEvent.click(cancelButton);
 
       expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('Form Field Interactions', () => {
-    test('should allow entering title text', async () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+  describe("Form Field Interactions", () => {
+    test("should allow entering title text", async () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
       const titleInput = screen.getByLabelText(/title/i);
-      fireEvent.change(titleInput, { target: { value: 'Medical Appointment' } });
+      fireEvent.change(titleInput, {
+        target: { value: "Medical Appointment" },
+      });
 
-      expect(titleInput.value).toBe('Medical Appointment');
+      expect(titleInput.value).toBe("Medical Appointment");
     });
 
-    test('should allow entering description text', async () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+    test("should allow entering description text", async () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
       const descriptionInput = screen.getByLabelText(/description/i);
       fireEvent.change(descriptionInput, {
-        target: { value: 'Annual checkup with pediatrician' }
+        target: { value: "Annual checkup with pediatrician" },
       });
 
-      expect(descriptionInput.value).toBe('Annual checkup with pediatrician');
+      expect(descriptionInput.value).toBe("Annual checkup with pediatrician");
     });
 
-    test('should handle markdown in description', async () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+    test("should handle markdown in description", async () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
       const descriptionInput = screen.getByLabelText(/description/i);
-      const markdownText = '**Doctor**: Dr. Smith\n\n*Notes*: Regular checkup';
+      const markdownText = "**Doctor**: Dr. Smith\n\n*Notes*: Regular checkup";
 
       fireEvent.change(descriptionInput, { target: { value: markdownText } });
 
       expect(descriptionInput.value).toBe(markdownText);
     });
 
-    test('should allow selecting category', async () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+    test("should allow selecting category", async () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
       const categorySelect = screen.getByLabelText(/category/i);
-      fireEvent.change(categorySelect, { target: { value: 'medical' } });
+      fireEvent.change(categorySelect, { target: { value: "medical" } });
 
-      expect(categorySelect.value).toBe('medical');
+      expect(categorySelect.value).toBe("medical");
     });
 
-    test('should handle date input', async () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+    test("should handle date input", async () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
       const dateInput = screen.getByLabelText(/date/i);
-      const testDate = '2023-12-25';
+      const testDate = "2023-12-25";
 
       fireEvent.change(dateInput, { target: { value: testDate } });
 
@@ -115,11 +141,11 @@ describe('UnifiedAddDialog Real Integration', () => {
     });
   });
 
-  describe('Form Validation', () => {
-    test('should require title field', async () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+  describe("Form Validation", () => {
+    test("should require title field", async () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
-      const saveButton = screen.getByRole('button', { name: /save/i });
+      const saveButton = screen.getByRole("button", { name: /save/i });
       fireEvent.click(saveButton);
 
       await waitFor(() => {
@@ -129,13 +155,13 @@ describe('UnifiedAddDialog Real Integration', () => {
       expect(defaultProps.onSave).not.toHaveBeenCalled();
     });
 
-    test('should require category selection', async () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+    test("should require category selection", async () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
       const titleInput = screen.getByLabelText(/title/i);
-      fireEvent.change(titleInput, { target: { value: 'Test Entry' } });
+      fireEvent.change(titleInput, { target: { value: "Test Entry" } });
 
-      const saveButton = screen.getByRole('button', { name: /save/i });
+      const saveButton = screen.getByRole("button", { name: /save/i });
       fireEvent.click(saveButton);
 
       await waitFor(() => {
@@ -145,15 +171,15 @@ describe('UnifiedAddDialog Real Integration', () => {
       expect(defaultProps.onSave).not.toHaveBeenCalled();
     });
 
-    test('should validate title length limits', async () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+    test("should validate title length limits", async () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
       const titleInput = screen.getByLabelText(/title/i);
-      const longTitle = 'x'.repeat(201); // Assuming 200 char limit
+      const longTitle = "x".repeat(201); // Assuming 200 char limit
 
       fireEvent.change(titleInput, { target: { value: longTitle } });
 
-      const saveButton = screen.getByRole('button', { name: /save/i });
+      const saveButton = screen.getByRole("button", { name: /save/i });
       fireEvent.click(saveButton);
 
       await waitFor(() => {
@@ -161,62 +187,65 @@ describe('UnifiedAddDialog Real Integration', () => {
       });
     });
 
-    test('should show validation errors for multiple fields', async () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+    test("should show validation errors for multiple fields", async () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
-      const saveButton = screen.getByRole('button', { name: /save/i });
+      const saveButton = screen.getByRole("button", { name: /save/i });
       fireEvent.click(saveButton);
 
       await waitFor(() => {
         expect(screen.getByText(/title is required/i)).toBeInTheDocument();
-        expect(screen.getByText(/category is required/i)).toBeInTheDocument();
       });
+
+      expect(screen.getByText(/category is required/i)).toBeInTheDocument();
     });
   });
 
-  describe('Successful Form Submission', () => {
-    test('should save entry with all required fields', async () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+  describe("Successful Form Submission", () => {
+    test("should save entry with all required fields", async () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
       // Fill required fields
       const titleInput = screen.getByLabelText(/title/i);
-      fireEvent.change(titleInput, { target: { value: 'Medical Appointment' } });
+      fireEvent.change(titleInput, {
+        target: { value: "Medical Appointment" },
+      });
 
       const descriptionInput = screen.getByLabelText(/description/i);
       fireEvent.change(descriptionInput, {
-        target: { value: 'Annual checkup with pediatrician' }
+        target: { value: "Annual checkup with pediatrician" },
       });
 
       const categorySelect = screen.getByLabelText(/category/i);
-      fireEvent.change(categorySelect, { target: { value: 'medical' } });
+      fireEvent.change(categorySelect, { target: { value: "medical" } });
 
-      const saveButton = screen.getByRole('button', { name: /save/i });
+      const saveButton = screen.getByRole("button", { name: /save/i });
       fireEvent.click(saveButton);
 
       await waitFor(() => {
         expect(defaultProps.onSave).toHaveBeenCalledWith(
           expect.objectContaining({
-            title: 'Medical Appointment',
-            description: 'Annual checkup with pediatrician',
-            category: 'medical',
+            title: "Medical Appointment",
+            description: "Annual checkup with pediatrician",
+            category: "medical",
             id: expect.any(String),
             date: expect.any(String),
-          })
+          }),
         );
       });
     });
 
-    test('should generate unique ID for new entries', async () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+    test("should generate unique ID for new entries", async () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
       // Fill and save first entry
       fireEvent.change(screen.getByLabelText(/title/i), {
-        target: { value: 'Entry 1' }
+        target: { value: "Entry 1" },
       });
       fireEvent.change(screen.getByLabelText(/category/i), {
-        target: { value: 'medical' }
+        target: { value: "medical" },
       });
-      fireEvent.click(screen.getByRole('button', { name: /save/i }));
+      fireEvent.click(screen.getByRole("button", { name: /save/i }));
 
       await waitFor(() => {
         expect(defaultProps.onSave).toHaveBeenCalled();
@@ -228,9 +257,9 @@ describe('UnifiedAddDialog Real Integration', () => {
       defaultProps.onSave.mockClear();
 
       fireEvent.change(screen.getByLabelText(/title/i), {
-        target: { value: 'Entry 2' }
+        target: { value: "Entry 2" },
       });
-      fireEvent.click(screen.getByRole('button', { name: /save/i }));
+      fireEvent.click(screen.getByRole("button", { name: /save/i }));
 
       await waitFor(() => {
         expect(defaultProps.onSave).toHaveBeenCalled();
@@ -240,18 +269,18 @@ describe('UnifiedAddDialog Real Integration', () => {
       expect(firstCallId).not.toBe(secondCallId);
     });
 
-    test('should include current timestamp in saved entry', async () => {
+    test("should include current timestamp in saved entry", async () => {
       const startTime = Date.now();
 
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+      render(<UnifiedAddDialog {...defaultProps} />);
 
       fireEvent.change(screen.getByLabelText(/title/i), {
-        target: { value: 'Test Entry' }
+        target: { value: "Test Entry" },
       });
       fireEvent.change(screen.getByLabelText(/category/i), {
-        target: { value: 'medical' }
+        target: { value: "medical" },
       });
-      fireEvent.click(screen.getByRole('button', { name: /save/i }));
+      fireEvent.click(screen.getByRole("button", { name: /save/i }));
 
       await waitFor(() => {
         expect(defaultProps.onSave).toHaveBeenCalled();
@@ -266,75 +295,71 @@ describe('UnifiedAddDialog Real Integration', () => {
     });
   });
 
-  describe('Edit Mode Functionality', () => {
-    test('should populate fields when editing existing entry', () => {
+  describe("Edit Mode Functionality", () => {
+    test("should populate fields when editing existing entry", () => {
       const existingEntry = {
-        id: 'existing-entry',
-        title: 'Existing Entry',
-        description: 'Existing description',
-        category: 'medical',
-        date: '2023-01-15',
+        id: "existing-entry",
+        title: "Existing Entry",
+        description: "Existing description",
+        category: "medical",
+        date: "2023-01-15",
       };
 
-      renderWithProviders(
-        <UnifiedAddDialog {...defaultProps} entry={existingEntry} />
-      );
+      render(<UnifiedAddDialog {...defaultProps} entry={existingEntry} />);
 
-      expect(screen.getByDisplayValue('Existing Entry')).toBeInTheDocument();
-      expect(screen.getByDisplayValue('Existing description')).toBeInTheDocument();
-      expect(screen.getByDisplayValue('medical')).toBeInTheDocument();
-      expect(screen.getByDisplayValue('2023-01-15')).toBeInTheDocument();
+      expect(screen.getByDisplayValue("Existing Entry")).toBeInTheDocument();
+      expect(
+        screen.getByDisplayValue("Existing description"),
+      ).toBeInTheDocument();
+      expect(screen.getByDisplayValue("medical")).toBeInTheDocument();
+      expect(screen.getByDisplayValue("2023-01-15")).toBeInTheDocument();
     });
 
-    test('should update existing entry when saved', async () => {
+    test("should update existing entry when saved", async () => {
       const existingEntry = {
-        id: 'existing-entry',
-        title: 'Original Title',
-        description: 'Original description',
-        category: 'medical',
-        date: '2023-01-15',
+        id: "existing-entry",
+        title: "Original Title",
+        description: "Original description",
+        category: "medical",
+        date: "2023-01-15",
       };
 
-      renderWithProviders(
-        <UnifiedAddDialog {...defaultProps} entry={existingEntry} />
-      );
+      render(<UnifiedAddDialog {...defaultProps} entry={existingEntry} />);
 
       // Modify the title
-      const titleInput = screen.getByDisplayValue('Original Title');
-      fireEvent.change(titleInput, { target: { value: 'Updated Title' } });
+      const titleInput = screen.getByDisplayValue("Original Title");
+      fireEvent.change(titleInput, { target: { value: "Updated Title" } });
 
-      fireEvent.click(screen.getByRole('button', { name: /save/i }));
+      fireEvent.click(screen.getByRole("button", { name: /save/i }));
 
       await waitFor(() => {
         expect(defaultProps.onSave).toHaveBeenCalledWith(
           expect.objectContaining({
-            id: 'existing-entry',
-            title: 'Updated Title',
-            description: 'Original description',
-            category: 'medical',
-          })
+            id: "existing-entry",
+            title: "Updated Title",
+            description: "Original description",
+            category: "medical",
+          }),
         );
       });
     });
 
-    test('should show correct dialog title in edit mode', () => {
+    test("should show correct dialog title in edit mode", () => {
       const existingEntry = {
-        id: 'existing-entry',
-        title: 'Existing Entry',
-        category: 'medical',
+        id: "existing-entry",
+        title: "Existing Entry",
+        category: "medical",
       };
 
-      renderWithProviders(
-        <UnifiedAddDialog {...defaultProps} entry={existingEntry} />
-      );
+      render(<UnifiedAddDialog {...defaultProps} entry={existingEntry} />);
 
       expect(screen.getByText(/edit entry/i)).toBeInTheDocument();
     });
   });
 
-  describe('Advanced Features', () => {
-    test('should handle visibility settings', async () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+  describe("Advanced Features", () => {
+    test("should handle visibility settings", async () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
       // Check if visibility options are available
       const visibilitySection = screen.queryByText(/visibility/i);
@@ -346,33 +371,35 @@ describe('UnifiedAddDialog Real Integration', () => {
 
         // Complete form and save
         fireEvent.change(screen.getByLabelText(/title/i), {
-          target: { value: 'Private Entry' }
+          target: { value: "Private Entry" },
         });
         fireEvent.change(screen.getByLabelText(/category/i), {
-          target: { value: 'medical' }
+          target: { value: "medical" },
         });
-        fireEvent.click(screen.getByRole('button', { name: /save/i }));
+        fireEvent.click(screen.getByRole("button", { name: /save/i }));
 
         await waitFor(() => {
           expect(defaultProps.onSave).toHaveBeenCalledWith(
             expect.objectContaining({
-              visibility: expect.arrayContaining(['family']),
-            })
+              visibility: expect.arrayContaining(["family"]),
+            }),
           );
         });
       }
     });
 
-    test('should handle attachment uploads', async () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+    test("should handle attachment uploads", async () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
       const attachmentSection = screen.queryByText(/attachment/i);
       if (attachmentSection) {
         // Simulate file upload
         const fileInput = screen.getByLabelText(/upload/i);
-        const file = new File(['test'], 'test.pdf', { type: 'application/pdf' });
+        const file = new File(["test"], "test.pdf", {
+          type: "application/pdf",
+        });
 
-        Object.defineProperty(fileInput, 'files', {
+        Object.defineProperty(fileInput, "files", {
           value: [file],
         });
 
@@ -380,34 +407,34 @@ describe('UnifiedAddDialog Real Integration', () => {
 
         // Complete and save entry
         fireEvent.change(screen.getByLabelText(/title/i), {
-          target: { value: 'Entry with Attachment' }
+          target: { value: "Entry with Attachment" },
         });
         fireEvent.change(screen.getByLabelText(/category/i), {
-          target: { value: 'medical' }
+          target: { value: "medical" },
         });
-        fireEvent.click(screen.getByRole('button', { name: /save/i }));
+        fireEvent.click(screen.getByRole("button", { name: /save/i }));
 
         await waitFor(() => {
           expect(defaultProps.onSave).toHaveBeenCalledWith(
             expect.objectContaining({
               attachments: expect.arrayContaining([
                 expect.objectContaining({
-                  name: 'test.pdf',
-                  type: 'application/pdf',
-                })
+                  name: "test.pdf",
+                  type: "application/pdf",
+                }),
               ]),
-            })
+            }),
           );
         });
       }
     });
 
-    test('should support markdown preview toggle', async () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+    test("should support markdown preview toggle", async () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
       const descriptionInput = screen.getByLabelText(/description/i);
       fireEvent.change(descriptionInput, {
-        target: { value: '# Heading\n\n**Bold text**' }
+        target: { value: "# Heading\n\n**Bold text**" },
       });
 
       const previewToggle = screen.queryByText(/preview/i);
@@ -415,7 +442,9 @@ describe('UnifiedAddDialog Real Integration', () => {
         fireEvent.click(previewToggle);
 
         await waitFor(() => {
-          expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Heading');
+          expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+            "Heading",
+          );
         });
 
         // Toggle back to edit mode
@@ -426,56 +455,56 @@ describe('UnifiedAddDialog Real Integration', () => {
     });
   });
 
-  describe('Error Handling and Edge Cases', () => {
-    test('should handle save operation failures', async () => {
+  describe("Error Handling and Edge Cases", () => {
+    test("should handle save operation failures", async () => {
       const onSaveWithError = jest.fn(() => {
-        throw new Error('Save failed');
+        throw new Error("Save failed");
       });
 
-      renderWithProviders(
-        <UnifiedAddDialog {...defaultProps} onSave={onSaveWithError} />
-      );
+      render(<UnifiedAddDialog {...defaultProps} onSave={onSaveWithError} />);
 
       fireEvent.change(screen.getByLabelText(/title/i), {
-        target: { value: 'Test Entry' }
+        target: { value: "Test Entry" },
       });
       fireEvent.change(screen.getByLabelText(/category/i), {
-        target: { value: 'medical' }
+        target: { value: "medical" },
       });
 
-      fireEvent.click(screen.getByRole('button', { name: /save/i }));
+      fireEvent.click(screen.getByRole("button", { name: /save/i }));
 
       await waitFor(() => {
         expect(screen.getByText(/error saving entry/i)).toBeInTheDocument();
       });
     });
 
-    test('should handle invalid category values', async () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+    test("should handle invalid category values", async () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
       const categorySelect = screen.getByLabelText(/category/i);
-      fireEvent.change(categorySelect, { target: { value: 'invalid-category' } });
+      fireEvent.change(categorySelect, {
+        target: { value: "invalid-category" },
+      });
 
-      fireEvent.click(screen.getByRole('button', { name: /save/i }));
+      fireEvent.click(screen.getByRole("button", { name: /save/i }));
 
       await waitFor(() => {
         expect(screen.getByText(/invalid category/i)).toBeInTheDocument();
       });
     });
 
-    test('should handle missing profile data gracefully', () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} profile={null} />);
+    test("should handle missing profile data gracefully", () => {
+      render(<UnifiedAddDialog {...defaultProps} profile={null} />);
 
       // Should still render basic form
       expect(screen.getByLabelText(/title/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/description/i)).toBeInTheDocument();
     });
 
-    test('should clean up when unmounted during operation', () => {
-      const { unmount } = renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+    test("should clean up when unmounted during operation", () => {
+      const { unmount } = render(<UnifiedAddDialog {...defaultProps} />);
 
       fireEvent.change(screen.getByLabelText(/title/i), {
-        target: { value: 'Test Entry' }
+        target: { value: "Test Entry" },
       });
 
       // Should unmount without errors
@@ -483,44 +512,46 @@ describe('UnifiedAddDialog Real Integration', () => {
     });
   });
 
-  describe('Performance and Usability', () => {
-    test('should respond quickly to user input', async () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+  describe("Performance and Usability", () => {
+    test("should respond quickly to user input", async () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
       const titleInput = screen.getByLabelText(/title/i);
       const startTime = Date.now();
 
-      fireEvent.change(titleInput, { target: { value: 'Quick response test' } });
+      fireEvent.change(titleInput, {
+        target: { value: "Quick response test" },
+      });
 
       const endTime = Date.now();
       expect(endTime - startTime).toBeLessThan(100);
-      expect(titleInput.value).toBe('Quick response test');
+      expect(titleInput.value).toBe("Quick response test");
     });
 
-    test('should handle rapid form interactions', async () => {
-      renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+    test("should handle rapid form interactions", async () => {
+      render(<UnifiedAddDialog {...defaultProps} />);
 
       const titleInput = screen.getByLabelText(/title/i);
       const descriptionInput = screen.getByLabelText(/description/i);
       const categorySelect = screen.getByLabelText(/category/i);
 
       // Rapid input changes
-      fireEvent.change(titleInput, { target: { value: 'Title 1' } });
-      fireEvent.change(titleInput, { target: { value: 'Title 2' } });
-      fireEvent.change(descriptionInput, { target: { value: 'Description' } });
-      fireEvent.change(categorySelect, { target: { value: 'medical' } });
+      fireEvent.change(titleInput, { target: { value: "Title 1" } });
+      fireEvent.change(titleInput, { target: { value: "Title 2" } });
+      fireEvent.change(descriptionInput, { target: { value: "Description" } });
+      fireEvent.change(categorySelect, { target: { value: "medical" } });
 
-      expect(titleInput.value).toBe('Title 2');
-      expect(descriptionInput.value).toBe('Description');
-      expect(categorySelect.value).toBe('medical');
+      expect(titleInput.value).toBe("Title 2");
+      expect(descriptionInput.value).toBe("Description");
+      expect(categorySelect.value).toBe("medical");
     });
 
-    test('should maintain form state during dialog visibility changes', async () => {
-      const { rerender } = renderWithProviders(<UnifiedAddDialog {...defaultProps} />);
+    test("should maintain form state during dialog visibility changes", async () => {
+      const { rerender } = render(<UnifiedAddDialog {...defaultProps} />);
 
       // Fill form
       fireEvent.change(screen.getByLabelText(/title/i), {
-        target: { value: 'Persistent Entry' }
+        target: { value: "Persistent Entry" },
       });
 
       // Hide dialog
@@ -530,7 +561,7 @@ describe('UnifiedAddDialog Real Integration', () => {
       rerender(<UnifiedAddDialog {...defaultProps} open={true} />);
 
       // Form state should be preserved
-      expect(screen.getByDisplayValue('Persistent Entry')).toBeInTheDocument();
+      expect(screen.getByDisplayValue("Persistent Entry")).toBeInTheDocument();
     });
   });
 });

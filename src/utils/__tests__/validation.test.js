@@ -125,9 +125,7 @@ describe("ProfileValidator", () => {
       const result = ProfileValidator.validateProfile(profile);
 
       expect(result.valid).toBe(false);
-      expect(result.errors.some((error) => error.includes("entry"))).toBe(
-        true,
-      );
+      expect(result.errors.some((error) => error.includes("entry"))).toBe(true);
     });
 
     it("should validate individual categories", () => {
@@ -224,7 +222,9 @@ describe("ProfileValidator", () => {
         const entry = { ...validEntry, visibility: [visibility] };
         const result = ProfileValidator.validateEntry(entry);
 
-        expect(result.errors).not.toContain(`Invalid visibility: ${visibility}`);
+        expect(result.errors).not.toContain(
+          `Invalid visibility: ${visibility}`,
+        );
       });
     });
 
@@ -623,9 +623,7 @@ describe("ProfileValidator", () => {
       const result = ProfileValidator.validateProfile(profile);
 
       expect(result.valid).toBe(false);
-      expect(result.errors.some((error) => error.includes("entry"))).toBe(
-        true,
-      );
+      expect(result.errors.some((error) => error.includes("entry"))).toBe(true);
     });
 
     it("should handle null and undefined values in nested objects", () => {

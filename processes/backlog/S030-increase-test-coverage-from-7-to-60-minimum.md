@@ -1,7 +1,9 @@
 # Story S030: Increase Test Coverage from 7% to 60% Minimum
 
 ## Overview
-Comprehensive test coverage improvement to meet deployment quality standards and ensure code reliability. This story will systematically increase test coverage from the current 7% to a minimum of 60% across all metrics (statements, branches, functions, lines) to meet deployment gate requirements and improve code reliability.
+**CRITICAL DEPLOYMENT BLOCKER**: Comprehensive test coverage improvement to meet deployment quality standards and ensure code reliability. This story will systematically increase test coverage from the current 19.57% to a minimum of 60% across all metrics (statements, branches, functions, lines) to meet deployment gate requirements and improve code reliability.
+
+**🚨 ADVERSARIAL PEER REVIEW REQUIRED**: This story MUST follow the Adversarial Peer Review Process documented in `processes/ADVERSARIAL_REVIEW_PROCESS.md`. No exceptions.
 
 ## Status
 - **Priority**: P1 (CRITICAL - Blocks deployment quality gates)
@@ -195,9 +197,379 @@ src/theme/theme.js                                # LOW - Theme configuration
 src/theme/modalTheme.js                           # LOW - Modal theming
 ```
 
-## Technical Specifications
+## COMPREHENSIVE TECHNICAL REQUIREMENTS
 
-### Testing Patterns to Follow
+### COMPONENT PRIORITY MATRIX (EXECUTION ORDER)
+
+#### TIER 1: CRITICAL PATH COMPONENTS (MUST ACHIEVE 80%+ COVERAGE)
+**Execution Order: Complete ALL Tier 1 before proceeding**
+
+```bash
+# Security & Data Integrity (HIGHEST PRIORITY)
+src/services/sync/manyllaEncryptionService.js
+# Current: ~65% → Target: 85%+
+# Test Focus: Key derivation, encryption/decryption cycles, error handling
+# Risk: Zero-knowledge encryption integrity
+
+src/services/sync/manyllaMinimalSyncServiceWeb.js
+# Current: ~65% → Target: 85%+
+# Test Focus: Sync protocols, network failures, data consistency
+# Risk: Data loss, sync conflicts
+
+# State Management (HIGH PRIORITY)
+src/context/SyncContext.tsx
+# Current: ~65% → Target: 80%+
+# Test Focus: State transitions, recovery phrase handling, polling
+# Risk: Application state corruption
+
+src/context/ThemeContext.tsx
+# Current: ~65% → Target: 80%+
+# Test Focus: Theme persistence, system detection, switching
+# Risk: UI consistency issues
+```
+
+#### TIER 2: HIGH-VALUE COMPONENTS (MUST ACHIEVE 65%+ COVERAGE)
+**Execution Order: Priority sequence within tier**
+
+```bash
+# Core Navigation (USER-FACING)
+src/components/Navigation/BottomToolbar.js
+# Current: ~5% → Target: 75%+
+# Test Focus: Navigation state, user interactions, accessibility
+# Impact: Primary user interface
+
+src/components/Navigation/BottomSheetMenu.js
+# Current: 0% → Target: 65%+
+# Test Focus: Menu behavior, touch interactions, state management
+# Impact: Mobile user experience
+
+# Profile Management (CORE FUNCTIONALITY)
+src/components/Profile/ProfileCard.js
+# Current: 0% → Target: 65%+
+# Test Focus: Data display, photo handling, profile switching
+# Impact: Core data presentation
+
+src/components/Profile/ProfileEditDialog.js
+# Current: 0% → Target: 65%+
+# Test Focus: Form validation, data persistence, modal behavior
+# Impact: Data entry accuracy
+
+src/components/Profile/ProfileCreateDialog.js
+# Current: 0% → Target: 65%+
+# Test Focus: Profile creation flow, validation, error handling
+# Impact: User onboarding
+
+# Critical Dialogs (DATA OPERATIONS)
+src/components/Dialogs/UnifiedAddDialog.js
+# Current: ~5% → Target: 65%+ (EXTEND existing tests)
+# Test Focus: Form handling, category management, data submission
+# Impact: Primary data entry
+
+src/components/Sharing/ShareDialogOptimized.js
+# Current: 0% → Target: 60%+
+# Test Focus: Share URL generation, encryption, access control
+# Impact: Data sharing security
+```
+
+#### TIER 3: SUPPORTING COMPONENTS (MUST ACHIEVE 50%+ COVERAGE)
+
+```bash
+# Error Handling (STABILITY)
+src/components/ErrorBoundary/ErrorBoundary.js
+# Current: ~5% → Target: 75%+
+# Test Focus: Error catching, fallback UI, recovery
+# Impact: Application stability
+
+# Form Components (DATA INTEGRITY)
+src/components/Forms/MarkdownField.js
+# Current: 0% → Target: 50%+
+# Test Focus: Rich text editing, validation, rendering
+# Impact: Content quality
+
+src/components/Forms/SmartTextInput.js
+# Current: 0% → Target: 50%+
+# Test Focus: Input validation, formatting, accessibility
+# Impact: Data entry quality
+
+# Common Components (CONSISTENCY)
+src/components/Common/ThemeSwitcher.js
+# Current: ~10% → Target: 60%+
+# Test Focus: Theme switching, persistence, system detection
+# Impact: User experience consistency
+```
+
+### TESTING STRATEGY BY COMPONENT TYPE
+
+#### Strategy 1: Service Layer Testing
+**Applied to: Encryption, Sync, API services**
+
+```javascript
+// PATTERN: Comprehensive service testing
+// File: src/services/__tests__/[ServiceName].comprehensive.test.js
+
+describe('[ServiceName] Comprehensive Testing', () => {
+  // 1. HAPPY PATH TESTING (30% of effort)
+  describe('Normal Operations', () => {
+    it('should handle standard workflow correctly');
+    it('should return expected data format');
+    it('should maintain performance benchmarks');
+  });
+
+  // 2. ERROR CONDITION TESTING (40% of effort)
+  describe('Error Handling', () => {
+    it('should handle network timeouts gracefully');
+    it('should recover from malformed data');
+    it('should validate input parameters');
+    it('should prevent data corruption');
+  });
+
+  // 3. EDGE CASE TESTING (20% of effort)
+  describe('Edge Cases', () => {
+    it('should handle boundary conditions');
+    it('should work with empty/null inputs');
+    it('should manage concurrent operations');
+  });
+
+  // 4. INTEGRATION TESTING (10% of effort)
+  describe('Integration Points', () => {
+    it('should integrate with dependent services');
+    it('should maintain API contracts');
+  });
+});
+```
+
+#### Strategy 2: Context Provider Testing
+**Applied to: SyncContext, ThemeContext, ProfileContext**
+
+```javascript
+// PATTERN: Context provider with state transitions
+// File: src/context/__tests__/[Context].comprehensive.test.js
+
+const TestComponent = () => {
+  const context = useContext(YourContext);
+  return (
+    <div>
+      <span data-testid="state">{JSON.stringify(context.state)}</span>
+      <button onClick={() => context.action('test')}>Action</button>
+    </div>
+  );
+};
+
+describe('[Context] Provider Testing', () => {
+  // 1. INITIAL STATE TESTING
+  it('should provide correct initial state');
+
+  // 2. STATE TRANSITION TESTING
+  it('should handle state transitions correctly');
+  it('should validate state changes');
+
+  // 3. ERROR STATE TESTING
+  it('should handle provider errors gracefully');
+  it('should recover from invalid state');
+
+  // 4. PERSISTENCE TESTING
+  it('should persist state across re-renders');
+  it('should restore state from localStorage');
+});
+```
+
+#### Strategy 3: Component Integration Testing
+**Applied to: Dialogs, Forms, Navigation components**
+
+```javascript
+// PATTERN: Component with providers and interactions
+// File: src/components/[Component]/__tests__/[Component].integration.test.js
+
+const ComponentWithProviders = ({ children, ...props }) => (
+  <ThemeProvider theme={theme}>
+    <SyncProvider>
+      <ProfileProvider>
+        <ComponentName {...props}>{children}</ComponentName>
+      </ProfileProvider>
+    </SyncProvider>
+  </ThemeProvider>
+);
+
+describe('[Component] Integration Testing', () => {
+  // 1. RENDERING TESTING
+  it('should render with all providers correctly');
+  it('should handle missing props gracefully');
+
+  // 2. USER INTERACTION TESTING
+  it('should respond to user interactions');
+  it('should validate form inputs');
+  it('should submit data correctly');
+
+  // 3. ERROR SCENARIO TESTING
+  it('should display error messages appropriately');
+  it('should handle submission failures');
+
+  // 4. ACCESSIBILITY TESTING
+  it('should meet accessibility standards');
+  it('should support keyboard navigation');
+});
+```
+
+### MOCKING STRATEGY FRAMEWORK
+
+#### Mock Level 1: External Dependencies
+```javascript
+// Mock all external libraries
+jest.mock('@react-native-async-storage/async-storage');
+jest.mock('tweetnacl');
+jest.mock('react-native', () => require('react-native-web'));
+jest.mock('@mui/material/Dialog', () => ({ children }) =>
+  <div data-testid="mock-dialog">{children}</div>
+);
+```
+
+#### Mock Level 2: Internal Services
+```javascript
+// Mock internal services for component testing
+jest.mock('../../../services/sync/manyllaEncryptionService', () => ({
+  encryptData: jest.fn(() => Promise.resolve('encrypted')),
+  decryptData: jest.fn(() => Promise.resolve('decrypted')),
+  generateRecoveryPhrase: jest.fn(() => 'mock-phrase')
+}));
+```
+
+#### Mock Level 3: Context Providers
+```javascript
+// Mock context providers for isolated component testing
+jest.mock('../../../context/SyncContext', () => ({
+  useSyncContext: () => ({
+    syncEnabled: false,
+    enableSync: jest.fn(),
+    syncData: jest.fn(),
+    recoveryPhrase: null
+  })
+}));
+```
+
+### COVERAGE MEASUREMENT AND REPORTING
+
+#### Coverage Tracking Script
+```bash
+#!/bin/bash
+# scripts/track-coverage-progress.sh
+
+echo "=== S030 COVERAGE PROGRESS TRACKING ==="
+echo "Timestamp: $(date)"
+
+# Global coverage check
+echo "\n=== GLOBAL COVERAGE ==="
+npm run test:coverage | grep "All files" | tee -a coverage-progress.log
+
+# Critical component coverage
+echo "\n=== CRITICAL COMPONENTS ==="
+npm run test:coverage -- --testPathPattern="services/sync" | grep -E "(manyllaEncryption|manyllaMinimalSync)"
+npm run test:coverage -- --testPathPattern="context" | grep -E "(SyncContext|ThemeContext)"
+
+# Component coverage by tier
+echo "\n=== COMPONENT TIERS ==="
+echo "Tier 1 (Critical): Services & Context"
+echo "Tier 2 (High-Value): Navigation & Profiles"
+echo "Tier 3 (Supporting): Forms & Common"
+
+# Progress calculation
+CURRENT_COVERAGE=$(npm run test:coverage 2>/dev/null | grep "All files" | awk '{print $4}' | sed 's/%//')
+TARGET_COVERAGE=60
+PROGRESS=$((($CURRENT_COVERAGE * 100) / $TARGET_COVERAGE))
+
+echo "\n=== PROGRESS SUMMARY ==="
+echo "Current: ${CURRENT_COVERAGE}%"
+echo "Target: ${TARGET_COVERAGE}%"
+echo "Progress: ${PROGRESS}%"
+
+if [ "$CURRENT_COVERAGE" -ge "$TARGET_COVERAGE" ]; then
+  echo "✅ COVERAGE TARGET ACHIEVED"
+  exit 0
+else
+  echo "🔄 COVERAGE TARGET IN PROGRESS"
+  exit 1
+fi
+```
+
+### INTEGRATION POINTS WITH CI/CD
+
+#### Pre-Deployment Coverage Gate
+```javascript
+// __tests__/coverage-gate.test.js
+// Integration with deployment pipeline
+
+describe('Deployment Coverage Gate', () => {
+  it('should meet minimum coverage requirements for deployment', async () => {
+    const coverageReport = await runCoverageReport();
+
+    expect(coverageReport.global.statements).toBeGreaterThanOrEqual(60);
+    expect(coverageReport.global.branches).toBeGreaterThanOrEqual(60);
+    expect(coverageReport.global.functions).toBeGreaterThanOrEqual(60);
+    expect(coverageReport.global.lines).toBeGreaterThanOrEqual(60);
+
+    // Critical component requirements
+    expect(coverageReport.services.encryption).toBeGreaterThanOrEqual(80);
+    expect(coverageReport.services.sync).toBeGreaterThanOrEqual(80);
+    expect(coverageReport.context.sync).toBeGreaterThanOrEqual(80);
+    expect(coverageReport.context.theme).toBeGreaterThanOrEqual(80);
+  });
+
+  it('should have meaningful test quality metrics', () => {
+    // Verify test quality, not just coverage
+    const testFiles = glob.sync('src/**/*.test.js');
+    let meaningfulAssertions = 0;
+    let coveragePaddingTests = 0;
+
+    testFiles.forEach(file => {
+      const content = fs.readFileSync(file, 'utf8');
+      meaningfulAssertions += (content.match(/expect.*toBeInTheDocument/g) || []).length;
+      meaningfulAssertions += (content.match(/fireEvent/g) || []).length;
+      coveragePaddingTests += (content.match(/expect.*toBeDefined/g) || []).length;
+    });
+
+    const qualityRatio = meaningfulAssertions / (meaningfulAssertions + coveragePaddingTests);
+    expect(qualityRatio).toBeGreaterThan(0.8); // 80% meaningful tests
+  });
+});
+```
+
+### VALIDATION CHECKPOINTS
+
+#### Checkpoint 1: Infrastructure Repair (Before Implementation)
+```bash
+# CP1: Verify starting state
+npm run test:ci  # Must pass before starting
+npm test -- imageUtils.test.js  # Must fix failing tests first
+```
+
+#### Checkpoint 2: Tier 1 Completion
+```bash
+# CP2: Critical components at 80%+
+npm run test:coverage -- --testPathPattern="(services|context)"
+# All critical components must show >= 80%
+```
+
+#### Checkpoint 3: Global Target Achievement
+```bash
+# CP3: Global 60% target reached
+npm run test:coverage | grep "All files"
+# All metrics must show >= 60%
+```
+
+#### Checkpoint 4: Quality Validation
+```bash
+# CP4: Test quality assessment
+./scripts/validate-test-quality.sh
+# Custom script to check for meaningful vs padding tests
+```
+
+#### Checkpoint 5: Final Integration
+```bash
+# CP5: Full pipeline validation
+npm run test:ci && npm run build:web && npm run lint
+# All must pass for completion
+```
+
+### PROVEN TESTING PATTERNS (MANDATORY TEMPLATES)
 
 #### 1. Component Testing Template
 ```javascript
@@ -411,106 +783,319 @@ jest.mock('@mui/material/Dialog', () => ({ children }) => <div data-testid="mock
 jest.mock('react-native', () => require('react-native-web'));
 ```
 
-## Acceptance Criteria
+## DETAILED ACCEPTANCE CRITERIA
 
-### Functional Requirements
-- [ ] **Global coverage >= 60%** on all four metrics (statements, branches, functions, lines)
-- [ ] **All existing tests continue to pass** (no regressions)
-- [ ] **CI pipeline passes** with `npm run test:ci`
-- [ ] **New tests follow established patterns** in `__tests__/` directories
-- [ ] **Critical components have 80%+ coverage**: encryption, sync, profile management
-- [ ] **No snapshot tests** unless absolutely necessary and well-justified
+### MANDATORY FUNCTIONAL REQUIREMENTS (BLOCKING)
+- [ ] **AC-1: Global Coverage Targets**
+  - Statements coverage: >= 60.00% (currently 19.57%)
+  - Branches coverage: >= 60.00% (currently 12.82%)
+  - Functions coverage: >= 60.00% (currently 14.31%)
+  - Lines coverage: >= 60.00% (currently 19.76%)
+  - **Verification**: `npm run test:coverage | grep "All files"`
 
-### Quality Requirements
-- [ ] **Tests are meaningful**: Test user behavior, not implementation details
-- [ ] **Error conditions tested**: All major error paths have test coverage
-- [ ] **Mocking is appropriate**: External dependencies properly mocked
-- [ ] **Performance acceptable**: Test suite runs in reasonable time (<200ms increase)
-- [ ] **Documentation updated**: Any new testing patterns documented
+- [ ] **AC-2: Critical Component Coverage (80%+ Required)**
+  - `src/services/sync/manyllaEncryptionService.js`: >= 80%
+  - `src/services/sync/manyllaMinimalSyncServiceWeb.js`: >= 80%
+  - `src/context/SyncContext.tsx`: >= 80%
+  - `src/context/ThemeContext.tsx`: >= 80%
+  - **Verification**: `npm run test:coverage -- --testPathPattern="(services|context)"`
 
-### Integration Requirements
-- [ ] **Deployment integration test passes**: `__tests__/deployment-integration.test.js`
-- [ ] **Coverage thresholds updated**: `package.json` jest.coverageThreshold reflects new minimums
-- [ ] **No console warnings**: Test execution produces no warnings or errors
-- [ ] **Cross-platform compatibility**: Tests work in CI environment (jsdom)
+- [ ] **AC-3: Zero Test Regressions**
+  - ALL existing tests MUST continue to pass
+  - NO modifications to existing test expectations without justification
+  - **Verification**: `npm run test:ci` exits with code 0
 
-## ADVERSARIAL REVIEW REQUIREMENTS
+- [ ] **AC-4: Test Infrastructure Repair**
+  - Fix ALL 14 failing tests in `src/utils/__tests__/imageUtils.test.js`
+  - Clean up console error noise in test output
+  - **Verification**: `npm test -- imageUtils.test.js` all pass
 
-**⚠️ CRITICAL: This story MUST go through the Adversarial Peer Review Process documented in `processes/ADVERSARIAL_REVIEW_PROCESS.md`.**
+### MANDATORY QUALITY REQUIREMENTS (BLOCKING)
+- [ ] **AC-5: Meaningful Test Coverage**
+  - Tests validate USER BEHAVIOR, not implementation details
+  - NO "coverage padding" tests (e.g., `expect(component).toBeDefined()`)
+  - Each test MUST have meaningful assertions using React Testing Library patterns
+  - **Verification**: Manual review of test quality by peer reviewer
 
-### Pre-Review Requirements
-**Before submitting for review:**
-1. **ALL existing tests MUST pass** (`npm run test:ci` exits with code 0)
-2. **Coverage MUST be ≥60%** on all four metrics
-3. **No new failing tests** introduced
-4. **Performance regression <100ms** for full test suite
-5. **Console warnings cleaned up** (except intentional error logging)
+- [ ] **AC-6: Error Condition Coverage**
+  - ALL error paths in critical services tested
+  - Network failure scenarios covered in sync services
+  - Form validation error states tested
+  - **Verification**: Check error handling in `manyllaEncryptionService` and `manyllaMinimalSyncServiceWeb`
 
-### Developer Deliverables
-The implementing developer MUST provide:
+- [ ] **AC-7: Comprehensive Edge Case Testing**
+  - Boundary conditions (empty arrays, null values, undefined)
+  - Malformed data inputs
+  - Race conditions in async operations
+  - **Verification**: Test files include edge case sections
 
-1. **APPROACH.md Document** detailing:
-   - Testing strategy for each component type
-   - Rationale for coverage priorities
-   - Mocking decisions and justifications
-   - Edge cases identified and tested
-   - Any uncovered code paths with explanations
+### MANDATORY INTEGRATION REQUIREMENTS (BLOCKING)
+- [ ] **AC-8: CI Pipeline Compatibility**
+  - `npm run test:ci` passes (exit code 0)
+  - Tests run successfully in jsdom environment
+  - NO additional dependencies required for CI
+  - **Verification**: CI pipeline validation
 
-2. **Implementation Report** including:
-   - List of all test files created/modified
-   - Coverage metrics before and after each phase
-   - Verification commands executed with results
-   - Any tech debt or issues discovered
-   - Completion confidence assessment
+- [ ] **AC-9: Build Process Integration**
+  - `npm run build:web` continues to work
+  - `npm run lint` passes with no new errors
+  - Coverage thresholds updated in `package.json`
+  - **Verification**: Full build cycle test
 
-### Peer Review Validation Points
-The peer reviewer MUST verify:
+- [ ] **AC-10: Performance Requirements**
+  - Total test suite execution time increase < 100ms
+  - Individual test files complete in < 10 seconds
+  - NO memory leaks in test environment
+  - **Verification**: `time npm run test:ci` comparison
 
-1. **Coverage Verification**:
-   ```bash
-   npm run test:coverage                    # Independent coverage check
-   grep -A 10 "Coverage summary" coverage/lcov-report/index.html
-   ```
+### MANDATORY DOCUMENTATION REQUIREMENTS (BLOCKING)
+- [ ] **AC-11: Testing Pattern Documentation**
+  - Create `APPROACH.md` documenting testing strategy
+  - Document mock configuration patterns
+  - Include examples of proper React Testing Library usage
+  - **Verification**: Document review by peer reviewer
 
-2. **Test Quality Assessment**:
-   ```bash
-   # Check test files follow patterns
-   find src -name "*.test.js" -exec head -20 {} \;
-   # Verify no snapshot tests
-   grep -r "toMatchSnapshot" src/
-   # Check meaningful assertions
-   grep -r "expect.*toBeInTheDocument" src/
-   ```
+## ADVERSARIAL PEER REVIEW REQUIREMENTS
 
-3. **CI Integration**:
-   ```bash
-   npm run test:ci                          # Full CI test run
-   echo $?                                  # Exit code must be 0
-   ```
+**🚨 CRITICAL: This story MUST go through the Adversarial Peer Review Process documented in `processes/ADVERSARIAL_REVIEW_PROCESS.md`. NO EXCEPTIONS.**
 
-4. **Performance Impact**:
-   ```bash
-   time npm run test:ci                     # Time full test suite
-   ```
+### PRE-REVIEW DEVELOPER DELIVERABLES (MANDATORY)
 
-5. **No Regressions**:
-   ```bash
-   npm run lint                             # Linting still passes
-   npm run typecheck                        # TypeScript still passes
-   npm run build:web                        # Build still works
-   ```
+The implementing developer MUST provide ALL of the following before peer review:
 
-### Review Rejection Criteria
-The peer reviewer MUST reject if ANY of the following:
-- **BLOCKING**: Global coverage < 60% on any metric (statements, branches, functions, lines)
-- **BLOCKING**: ANY existing tests fail (`npm run test:ci` exit code ≠ 0)
-- **BLOCKING**: Tests are "coverage padding" without meaningful assertions
-- **BLOCKING**: Performance degradation > 100ms test suite increase
-- **BLOCKING**: CI pipeline fails
-- **MAJOR**: Console errors/warnings introduced (excluding intentional error logging)
-- **MAJOR**: Documentation promises not delivered
-- **MAJOR**: Modified existing tests inappropriately without justification
-- **MINOR**: Test quality below established patterns in the codebase
+#### 1. APPROACH.md Document (REQUIRED)
+Create `/Users/adamstack/manylla/APPROACH.md` containing:
+
+```markdown
+# S030 Testing Strategy Implementation Approach
+
+## Coverage Strategy
+- **Priority Rationale**: Why each component was prioritized
+- **Testing Patterns**: Specific patterns used for different component types
+- **Mock Strategy**: Detailed mocking decisions and justifications
+- **Edge Cases**: Complete list of edge cases identified and tested
+- **Uncovered Paths**: Any code paths not covered with technical justification
+
+## Implementation Details
+- **Phase Execution**: How each phase was executed
+- **Challenges Encountered**: Technical obstacles and solutions
+- **Performance Considerations**: Test execution optimization approaches
+- **Reusable Patterns**: Testing patterns that can be applied to future components
+
+## Quality Assurance
+- **Test Quality Standards**: How meaningful assertions were ensured
+- **Regression Prevention**: Steps taken to prevent breaking existing functionality
+- **Cross-Platform Compatibility**: Ensuring tests work in CI environment
+```
+
+#### 2. Implementation Report (REQUIRED)
+Create `/Users/adamstack/manylla/IMPLEMENTATION_REPORT.md` containing:
+
+```markdown
+# S030 Implementation Report
+
+## Coverage Metrics
+**BEFORE:**
+- Statements: 19.57%
+- Branches: 12.82%
+- Functions: 14.31%
+- Lines: 19.76%
+
+**AFTER:**
+- Statements: [ACTUAL]%
+- Branches: [ACTUAL]%
+- Functions: [ACTUAL]%
+- Lines: [ACTUAL]%
+
+**IMPROVEMENT:** +[DELTA]% average improvement
+
+## Files Created/Modified
+[Complete list of all test files with absolute paths]
+
+## Verification Commands Executed
+[All commands run with their results]
+
+## Tech Debt Discovered
+[Any issues found during implementation]
+
+## Completion Confidence
+[0-100%] with justification
+```
+
+#### 3. Coverage Evidence (REQUIRED)
+```bash
+# Create coverage snapshots
+npm run test:coverage > coverage-final.txt
+npm run test:coverage -- --outputFile=coverage-detailed.json --json
+```
+
+### PEER REVIEWER VALIDATION PROTOCOL
+
+The peer reviewer MUST execute ALL validation commands independently:
+
+#### PHASE 1: Coverage Verification (BLOCKING)
+```bash
+# 1.1 Global Coverage Check (MUST BE >= 60% ALL METRICS)
+npm run test:coverage | grep "All files"
+# Expected format: All files | 60.xx | 60.xx | 60.xx | 60.xx |
+# ANY metric < 60% = AUTOMATIC REJECTION
+
+# 1.2 Critical Component Coverage Check (MUST BE >= 80%)
+npm run test:coverage -- --testPathPattern="services/sync" | grep -E "(manyllaEncryption|manyllaMinimalSync)"
+npm run test:coverage -- --testPathPattern="context" | grep -E "(SyncContext|ThemeContext)"
+# ALL critical components MUST show >= 80%
+
+# 1.3 Coverage Consistency Check
+npm run test:coverage > peer-review-coverage.txt
+diff coverage-final.txt peer-review-coverage.txt
+# Files MUST match (no coverage discrepancies)
+```
+
+#### PHASE 2: Test Quality Assessment (BLOCKING)
+```bash
+# 2.1 Test File Existence Verification
+find src -name "*.test.js" | wc -l
+# Must show significant increase in test files
+
+# 2.2 Meaningful Assertion Check
+grep -r "expect.*toBeInTheDocument" src/**/__tests__/ | wc -l
+grep -r "fireEvent" src/**/__tests__/ | wc -l
+grep -r "waitFor" src/**/__tests__/ | wc -l
+# Must show substantial use of meaningful React Testing Library patterns
+
+# 2.3 Coverage Padding Detection
+grep -r "expect.*toBeDefined" src/**/__tests__/ | wc -l
+grep -r "expect.*toBeTruthy" src/**/__tests__/ | wc -l
+# Should be minimal compared to behavioral assertions
+
+# 2.4 Snapshot Test Verification
+grep -r "toMatchSnapshot" src/**/__tests__/
+# Should return empty or have specific justification
+```
+
+#### PHASE 3: Test Suite Execution (BLOCKING)
+```bash
+# 3.1 Full Test Suite Validation
+npm run test:ci
+echo "Exit code: $?"
+# Exit code MUST be 0 (no failures)
+
+# 3.2 Performance Impact Assessment
+time npm run test:ci > test-performance.txt 2>&1
+# Compare with baseline, increase must be < 100ms
+
+# 3.3 Individual Component Test Validation
+# Test each major component independently
+npm test -- SyncContext.test.js
+npm test -- manyllaEncryptionService
+npm test -- ProfileCard.test.js
+# ALL must pass independently
+```
+
+#### PHASE 4: Integration Verification (BLOCKING)
+```bash
+# 4.1 Build Process Verification
+npm run build:web
+echo "Build exit code: $?"
+# Must complete successfully
+
+# 4.2 Linting Verification
+npm run lint
+echo "Lint exit code: $?"
+# Must pass with no new errors
+
+# 4.3 TypeScript Verification
+npm run typecheck
+echo "TypeScript exit code: $?"
+# Must pass with no new errors
+
+# 4.4 Package.json Threshold Verification
+grep -A 5 "coverageThreshold" package.json
+# Must show updated thresholds to 60%
+```
+
+#### PHASE 5: Regression Detection (BLOCKING)
+```bash
+# 5.1 No Unintended File Changes
+git status --porcelain
+# Should only show intended test files and package.json
+
+# 5.2 No New Console Pollution
+npm run test:ci 2>&1 | grep -i "error" | grep -v "intentional" | wc -l
+# Should be 0 or minimal
+
+# 5.3 Existing Functionality Verification
+# Run key application flows manually if necessary
+```
+
+### AUTOMATIC REJECTION CRITERIA (IMMEDIATE FAILURE)
+
+The peer reviewer MUST reject immediately if ANY of these conditions exist:
+
+#### BLOCKING CONDITIONS
+- **COVERAGE-01**: ANY global metric < 60.00%
+- **COVERAGE-02**: ANY critical component < 80.00%
+- **TESTS-01**: `npm run test:ci` exit code ≠ 0
+- **TESTS-02**: Any existing test failures introduced
+- **PERFORMANCE-01**: Test suite time increase > 100ms
+- **BUILD-01**: `npm run build:web` fails
+- **BUILD-02**: `npm run lint` exit code ≠ 0
+- **BUILD-03**: `npm run typecheck` exit code ≠ 0
+
+#### MAJOR CONDITIONS (REQUIRE JUSTIFICATION)
+- **QUALITY-01**: >50% of new tests are "coverage padding"
+- **QUALITY-02**: Missing APPROACH.md or IMPLEMENTATION_REPORT.md
+- **QUALITY-03**: Console error noise introduced without justification
+- **QUALITY-04**: Existing tests modified without clear rationale
+
+### PEER REVIEWER REPORTING FORMAT
+
+The peer reviewer MUST use this exact format:
+
+```
+🔴 REJECTED: S030 Test Coverage Implementation
+or
+✅ APPROVED: S030 Test Coverage Implementation
+
+=== VERIFICATION EVIDENCE ===
+
+Coverage Verification:
+- Global Statements: [X]% [PASS/FAIL - threshold 60%]
+- Global Branches: [X]% [PASS/FAIL - threshold 60%]
+- Global Functions: [X]% [PASS/FAIL - threshold 60%]
+- Global Lines: [X]% [PASS/FAIL - threshold 60%]
+- Critical Components: [PASS/FAIL - all >= 80%]
+
+Test Suite Verification:
+- Test Execution: [PASS/FAIL - npm run test:ci exit code]
+- Performance Impact: [PASS/FAIL - <100ms increase]
+- Test Count: [X] new test files created
+
+Quality Verification:
+- Meaningful Assertions: [PASS/FAIL - behavioral tests]
+- Coverage Padding: [PASS/FAIL - minimal padding detected]
+- Error Handling: [PASS/FAIL - error paths tested]
+
+Integration Verification:
+- Build Process: [PASS/FAIL - npm run build:web]
+- Linting: [PASS/FAIL - npm run lint]
+- TypeScript: [PASS/FAIL - npm run typecheck]
+- Package.json: [PASS/FAIL - thresholds updated]
+
+=== DETAILED FINDINGS ===
+[Specific evidence for each PASS/FAIL]
+
+[If REJECTED]
+=== REQUIRED FIXES ===
+1. [Specific fix with file/line]
+2. [Specific fix with file/line]
+3. [Specific fix with file/line]
+
+=== COMPLETION ASSESSMENT ===
+Overall Grade: [A/B/C/D/F]
+Confidence Level: [0-100%]
+Recommendation: [APPROVE/REJECT/CONDITIONAL]
+```
 
 ## Dependencies
 **None** - This story can be implemented independently
@@ -855,28 +1440,158 @@ await waitFor(() => {
 // Mock heavy dependencies at module level
 ```
 
-## Definition of Done
+## FINAL IMPLEMENTATION CHECKLIST
 
-### Technical Completion
-- [ ] Global test coverage >= 60% (statements, branches, functions, lines)
-- [ ] All new tests pass in local and CI environments
-- [ ] All existing tests continue to pass (zero regressions)
-- [ ] Coverage thresholds updated in `package.json`
-- [ ] Deployment integration test passes
+### PHASE 0: PRE-IMPLEMENTATION (MANDATORY FIRST)
+- [ ] **Infrastructure Repair**: Fix ALL 14 failing tests in `imageUtils.test.js`
+- [ ] **Baseline Recording**: Execute `npm run test:coverage > coverage-baseline.txt`
+- [ ] **Environment Verification**: Confirm `npm run test:ci` exits with code 0
+- [ ] **Performance Baseline**: Record `time npm run test:ci` execution time
 
-### Quality Completion
-- [ ] Tests follow React Testing Library best practices
-- [ ] Critical business logic has comprehensive test coverage
-- [ ] Error conditions and edge cases are tested
-- [ ] Tests are maintainable and well-documented
-- [ ] No unnecessary snapshot tests added
+### PHASE 1: TIER 1 CRITICAL COMPONENTS (MUST COMPLETE FIRST)
+- [ ] **Services Enhancement (Target: 85%)**
+  - [ ] `manyllaEncryptionService.js`: Edge cases, error handling, performance
+  - [ ] `manyllaMinimalSyncServiceWeb.js`: Network failures, conflicts, validation
+- [ ] **Context Enhancement (Target: 80%)**
+  - [ ] `SyncContext.tsx`: State transitions, polling, error recovery
+  - [ ] `ThemeContext.tsx`: Persistence, system detection, switching
+- [ ] **Checkpoint 1**: Verify Tier 1 components all >= 80% coverage
 
-### Process Completion
-- [ ] Adversarial peer review completed with APPROVAL
-- [ ] APPROACH.md document created with testing strategy
-- [ ] All verification commands pass independently
-- [ ] Performance impact assessed and acceptable
-- [ ] Documentation updated with any new testing patterns
+### PHASE 2: TIER 2 HIGH-VALUE COMPONENTS (AFTER TIER 1)
+- [ ] **Navigation Components (Target: 65-75%)**
+  - [ ] `BottomToolbar.js`: User interactions, accessibility
+  - [ ] `BottomSheetMenu.js`: Touch behavior, state management
+- [ ] **Profile Components (Target: 65%)**
+  - [ ] `ProfileCard.js`: Data display, photo handling
+  - [ ] `ProfileEditDialog.js`: Form validation, persistence
+  - [ ] `ProfileCreateDialog.js`: Creation flow, validation
+- [ ] **Dialog Components (Target: 60-65%)**
+  - [ ] `UnifiedAddDialog.js`: Extend existing tests
+  - [ ] `ShareDialogOptimized.js`: URL generation, encryption
+- [ ] **Checkpoint 2**: Verify Tier 2 components all >= 60% coverage
+
+### PHASE 3: TIER 3 SUPPORTING COMPONENTS (FINAL PHASE)
+- [ ] **Error Handling (Target: 75%)**
+  - [ ] `ErrorBoundary.js`: Error catching, fallback UI
+- [ ] **Form Components (Target: 50%)**
+  - [ ] `MarkdownField.js`: Rich text, validation
+  - [ ] `SmartTextInput.js`: Input validation, formatting
+- [ ] **Common Components (Target: 60%)**
+  - [ ] `ThemeSwitcher.js`: Theme switching, persistence
+- [ ] **Checkpoint 3**: Verify global coverage >= 60% all metrics
+
+### FINAL VALIDATION PHASE
+- [ ] **Coverage Verification**: ALL metrics >= 60% (`npm run test:coverage`)
+- [ ] **Test Quality Check**: Meaningful assertions, no coverage padding
+- [ ] **Performance Validation**: Test suite increase < 100ms
+- [ ] **Integration Testing**: CI pipeline passes (`npm run test:ci`)
+- [ ] **Build Verification**: `npm run build:web && npm run lint` succeeds
+- [ ] **Documentation**: Create APPROACH.md and IMPLEMENTATION_REPORT.md
+
+### ADVERSARIAL REVIEW COMPLETION
+- [ ] **Developer Deliverables**: Submit all required documents
+- [ ] **Peer Review**: Independent validation by peer reviewer
+- [ ] **Review Outcome**: Receive ✅ APPROVED from peer reviewer
+- [ ] **Final Sign-off**: Story marked COMPLETE in backlog
+
+## COMPREHENSIVE DEFINITION OF DONE
+
+### TECHNICAL COMPLETION (BLOCKING REQUIREMENTS)
+- [ ] **TC-1**: Global coverage >= 60.00% (statements, branches, functions, lines)
+- [ ] **TC-2**: Critical components >= 80.00% (encryption, sync, contexts)
+- [ ] **TC-3**: Zero test regressions (`npm run test:ci` exit code = 0)
+- [ ] **TC-4**: Package.json thresholds updated to reflect new minimums
+- [ ] **TC-5**: Build process unchanged (`npm run build:web` succeeds)
+- [ ] **TC-6**: Linting passes with no new errors (`npm run lint`)
+- [ ] **TC-7**: TypeScript compilation succeeds (`npm run typecheck`)
+
+### QUALITY COMPLETION (BLOCKING REQUIREMENTS)
+- [ ] **QC-1**: Tests validate USER BEHAVIOR (React Testing Library patterns)
+- [ ] **QC-2**: Error conditions comprehensively tested
+- [ ] **QC-3**: Edge cases covered (null, undefined, boundary conditions)
+- [ ] **QC-4**: NO "coverage padding" tests (meaningless assertions)
+- [ ] **QC-5**: Mocking strategy appropriate and consistent
+- [ ] **QC-6**: Test execution time increase < 100ms
+- [ ] **QC-7**: Cross-platform compatibility maintained (jsdom)
+
+### PROCESS COMPLETION (BLOCKING REQUIREMENTS)
+- [ ] **PC-1**: Adversarial peer review completed with ✅ APPROVED
+- [ ] **PC-2**: APPROACH.md document created with complete strategy
+- [ ] **PC-3**: IMPLEMENTATION_REPORT.md with metrics and evidence
+- [ ] **PC-4**: All validation commands independently verified
+- [ ] **PC-5**: Performance impact assessed and documented
+- [ ] **PC-6**: Testing patterns documented for future use
+
+### DOCUMENTATION COMPLETION (BLOCKING REQUIREMENTS)
+- [ ] **DC-1**: Testing patterns documented in APPROACH.md
+- [ ] **DC-2**: Mock configuration patterns recorded
+- [ ] **DC-3**: Coverage improvement strategy documented
+- [ ] **DC-4**: Common pitfalls and solutions documented
+- [ ] **DC-5**: Reusable test templates created
+
+## RISK MITIGATION STRATEGIES
+
+### HIGH RISK: Scope Creep
+**Mitigation**: Strict tier-based execution. Complete Tier 1 before Tier 2.
+**Trigger**: If any phase takes >150% estimated time, break into sub-stories.
+
+### HIGH RISK: Test Quality Degradation
+**Mitigation**: Peer reviewer has veto power on "coverage padding" tests.
+**Trigger**: If >30% of tests are coverage padding, automatic rejection.
+
+### MEDIUM RISK: Performance Impact
+**Mitigation**: Continuous monitoring of test execution time.
+**Trigger**: If test suite time increases >100ms, optimize before proceeding.
+
+### MEDIUM RISK: Existing Test Breakage
+**Mitigation**: Run full test suite after each major component.
+**Trigger**: If ANY existing test fails, stop and fix immediately.
+
+### LOW RISK: CI Environment Issues
+**Mitigation**: Test in CI environment early and frequently.
+**Trigger**: If CI tests fail but local tests pass, investigate mocking.
+
+## SUCCESS METRICS DASHBOARD
+
+### Coverage Progress Tracking
+```bash
+# Execute daily during implementation
+npm run test:coverage | grep "All files" >> daily-coverage.log
+echo "$(date): Statements=$(extract_statements)% Branches=$(extract_branches)% Functions=$(extract_functions)% Lines=$(extract_lines)%" >> progress.log
+```
+
+### Quality Metrics Tracking
+```bash
+# Count meaningful vs padding tests
+MEANINGFUL=$(grep -r "expect.*toBeInTheDocument\|fireEvent\|waitFor" src/**/__tests__/ | wc -l)
+PADDING=$(grep -r "expect.*toBeDefined\|expect.*toBeTruthy" src/**/__tests__/ | wc -l)
+QUALITY_RATIO=$((MEANINGFUL * 100 / (MEANINGFUL + PADDING)))
+echo "Quality Ratio: ${QUALITY_RATIO}% (Target: >80%)"
+```
+
+### Performance Impact Tracking
+```bash
+# Track test execution time
+echo "=== PERFORMANCE TRACKING ===" >> performance.log
+time npm run test:ci 2>&1 | grep "real" >> performance.log
+echo "Baseline: [RECORD_BASELINE]" >> performance.log
+```
+
+## STORY COMPLETION CERTIFICATE
+
+**This story is considered COMPLETE only when ALL of the following are true:**
+1. ✅ Global coverage >= 60% (all 4 metrics independently verified)
+2. ✅ Critical components >= 80% (encryption, sync, contexts verified)
+3. ✅ ALL existing tests pass (`npm run test:ci` exit code = 0)
+4. ✅ Adversarial peer review gives ✅ APPROVED
+5. ✅ Performance impact < 100ms test suite increase
+6. ✅ Build process unchanged (no regressions introduced)
+7. ✅ All required documentation delivered (APPROACH.md, IMPLEMENTATION_REPORT.md)
+8. ✅ Package.json coverage thresholds updated to 60%
+
+**Completion Authority**: Only the peer reviewer can mark this story COMPLETE by providing ✅ APPROVED status.
+
+**Rollback Plan**: If ANY completion requirement fails, the story returns to IN PROGRESS status until ALL requirements are met.
 
 ## COMPLETE PRIORITY FILE LIST (EXECUTION ORDER)
 

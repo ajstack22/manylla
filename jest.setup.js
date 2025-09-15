@@ -31,13 +31,14 @@ jest.mock('react-native', () => {
     Alert: {
       alert: jest.fn(),
     },
-    View: 'View',
-    Text: 'Text',
-    Modal: 'Modal',
-    ScrollView: 'ScrollView',
-    TouchableHighlight: 'TouchableHighlight',
-    TouchableOpacity: 'TouchableOpacity',
-    Image: 'Image',
+    View: 'div',
+    Text: 'span',
+    Modal: 'div',
+    ScrollView: 'div',
+    TouchableHighlight: 'button',
+    TouchableOpacity: 'button',
+    Image: 'img',
+    TextInput: 'input',
     Share: {
       share: jest.fn(() => Promise.resolve()),
     },
@@ -140,6 +141,10 @@ if (typeof window !== 'undefined') {
 
 // Additional polyfills for testing environment
 global.URL = require('url').URL;
+
+// TextEncoder/TextDecoder for encryption tests
+global.TextEncoder = require('util').TextEncoder;
+global.TextDecoder = require('util').TextDecoder;
 
 // Mock Canvas API for image processing tests
 const mockCanvas = {
