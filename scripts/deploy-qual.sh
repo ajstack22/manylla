@@ -309,7 +309,7 @@ echo -e "${GREEN}✅ No debugger statements${NC}"
 
 # Check for potential hardcoded secrets
 SECRET_PATTERNS="(api[_-]?key|secret|password|token|private[_-]?key|ACCESS_KEY|SECRET_KEY)"
-SECRET_COUNT=$(grep -riE "$SECRET_PATTERNS\s*[:=]\s*['\"][^'\"]{10,}['\"]" src/ --include="*.js" --include="*.ts" --include="*.tsx" 2>/dev/null || true | wc -l | tr -d ' ')
+SECRET_COUNT=$(grep -riE "$SECRET_PATTERNS\s*[:=]\s*['\"][^'\"]{10,}['\"]" src/ --include="*.js" --include="*.ts" --include="*.tsx" 2>/dev/null | wc -l | tr -d ' ' || echo "0")
 if [ "$SECRET_COUNT" -gt "0" ]; then
     show_warning "Potential hardcoded secrets found ($SECRET_COUNT). Please review:"
     grep -riE "$SECRET_PATTERNS\s*[:=]\s*['\"][^'\"]{10,}['\"]" src/ --include="*.js" --include="*.ts" --include="*.tsx" 2>/dev/null | head -3
