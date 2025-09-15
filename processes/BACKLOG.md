@@ -1,7 +1,7 @@
 # Development Backlog
 
 *Last Updated: 2025-09-14*
-*Next ID: S027, B004*
+*Next ID: S024, B004*
 
 ## Quick Start for Claude
 Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything needed to start immediately.
@@ -36,6 +36,7 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟢 P3 - Low (Nice to Have)
 ### Stories
+- [S023](backlog/S023-fixprettierformattingin1files.md) - Fix Prettier formatting in 1 files ✅ **READY** (Auto-Generated)
 - [S026](backlog/S026-fixprettierformattingin1files.md) - Fix Prettier formatting in 1 files ✅ **READY** (Auto-Generated)
 - [S031](backlog/S031-fixprettierformattingin1files.md) - Fix Prettier formatting in 1 files ✅ **READY** (Auto-Generated)
 - [S019](backlog/S019-add-default-case-to-switch-statements.md) - Add default case to switch statements ✅ **READY**
