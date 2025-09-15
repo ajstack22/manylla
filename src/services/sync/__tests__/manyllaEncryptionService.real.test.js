@@ -182,51 +182,35 @@ describe("ManyllaEncryptionService Real Implementation", () => {
     });
 
     test("should handle invalid recovery phrases", async () => {
-      // Test that service can handle various inputs - may not always throw
-      try {
+      // Test that service can handle various inputs
+      await expect(async () => {
         await ManyllaEncryptionService.init("");
-        // If it doesn't throw, it should still have some state
-        expect(ManyllaEncryptionService.syncId).toBeDefined();
-      } catch (error) {
-        expect(error).toBeDefined();
-      }
+      }).rejects.toThrow();
 
       await ManyllaEncryptionService.clear();
 
-      try {
+      await expect(async () => {
         await ManyllaEncryptionService.init("too-short");
-        expect(ManyllaEncryptionService.syncId).toBeDefined();
-      } catch (error) {
-        expect(error).toBeDefined();
-      }
+      }).rejects.toThrow();
 
       await ManyllaEncryptionService.clear();
 
-      try {
+      await expect(async () => {
         await ManyllaEncryptionService.init(null);
-        expect(ManyllaEncryptionService.syncId).toBeDefined();
-      } catch (error) {
-        expect(error).toBeDefined();
-      }
+      }).rejects.toThrow();
     });
 
     test("should handle null and undefined data", async () => {
       await ManyllaEncryptionService.init(TEST_RECOVERY_PHRASE);
 
-      // Test behavior with null/undefined - may not throw, so just verify it handles them
-      try {
-        const result1 = ManyllaEncryptionService.encryptData(null);
-        expect(typeof result1).toBe("string");
-      } catch (error) {
-        expect(error).toBeDefined();
-      }
+      // Test behavior with null/undefined - should throw
+      expect(() => {
+        ManyllaEncryptionService.encryptData(null);
+      }).toThrow();
 
-      try {
-        const result2 = ManyllaEncryptionService.encryptData(undefined);
-        expect(typeof result2).toBe("string");
-      } catch (error) {
-        expect(error).toBeDefined();
-      }
+      expect(() => {
+        ManyllaEncryptionService.encryptData(undefined);
+      }).toThrow();
     });
 
     test("should handle edge case data types", async () => {

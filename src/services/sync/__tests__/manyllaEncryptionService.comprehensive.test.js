@@ -259,13 +259,11 @@ describe("manyllaEncryptionService - Comprehensive Real Tests", () => {
     test("should handle storage errors gracefully", async () => {
       AsyncStorage.setItem.mockRejectedValue(new Error("Storage error"));
 
-      try {
-        await manyllaEncryptionService.initialize(
+      await expect(
+        manyllaEncryptionService.initialize(
           "test1234567890abcdef1234567890ab",
-        );
-      } catch (error) {
-        expect(error).toBeInstanceOf(Error);
-      }
+        )
+      ).rejects.toThrow();
     });
   });
 

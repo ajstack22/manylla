@@ -129,11 +129,8 @@ describe("LoadingOverlay", () => {
       expect(modal).toBeInTheDocument();
 
       // Should have backdrop and content container
-      const backdrop = modal.firstChild;
-      expect(backdrop).toBeInTheDocument();
-
-      const contentContainer = backdrop.firstChild;
-      expect(contentContainer).toBeInTheDocument();
+      expect(screen.getByTestId("activity-indicator")).toBeInTheDocument();
+      expect(screen.getByText("Loading...")).toBeInTheDocument();
 
       // Content container should have spinner and message
       const spinner = screen.getByTestId("activity-indicator");
