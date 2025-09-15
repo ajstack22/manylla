@@ -10,39 +10,21 @@ import {
 const BuyMeCoffeeButton = ({ onPress, style, disabled = false }) => {
   const styles = createStyles();
 
-  if (Platform.OS === "web") {
-    // Web: Show as a visible button that calls onPress
-    return (
-      <TouchableOpacity
-        onPress={onPress}
-        style={[styles.button, style]}
-        disabled={disabled}
-        accessibilityRole="button"
-        accessibilityLabel="Support us on Buy Me a Coffee"
-      >
-        <View style={styles.content}>
-          <Text style={styles.emoji}>☕</Text>
-          <Text style={styles.text}>Buy Me a Coffee</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  } else {
-    // Mobile: Show as button that calls onPress (which opens external link)
-    return (
-      <TouchableOpacity
-        onPress={onPress}
-        style={[styles.button, style]}
-        disabled={disabled}
-        accessibilityRole="button"
-        accessibilityLabel="Support us on Buy Me a Coffee"
-      >
-        <View style={styles.content}>
-          <Text style={styles.emoji}>☕</Text>
-          <Text style={styles.text}>Buy Me a Coffee</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  }
+  // Both web and mobile use the same button that calls onPress
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.button, style]}
+      disabled={disabled}
+      accessibilityRole="button"
+      accessibilityLabel="Support us on Buy Me a Coffee"
+    >
+      <View style={styles.content}>
+        <Text style={styles.emoji}>☕</Text>
+        <Text style={styles.text}>Buy Me a Coffee</Text>
+      </View>
+    </TouchableOpacity>
+  );
 };
 
 const createStyles = () => {

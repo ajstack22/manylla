@@ -245,8 +245,8 @@ export class ProfileValidator {
       "",
     );
 
-    // Remove on* event handlers
-    cleaned = cleaned.replace(/\s*on\w+\s*=\s*["'][^"']*["']/gi, "");
+    // Remove on* event handlers (fixed to prevent ReDoS)
+    cleaned = cleaned.replace(/\bon\w+\s*=\s*["'][^"']*["']/gi, "");
 
     // Remove javascriptrotocol
     cleaned = cleaned.replace(/javascript:/gi, "");
@@ -288,8 +288,9 @@ export class ProfileValidator {
    */
   static validateEmail(email) {
     if (!email || typeof email !== "string") return false;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email) && !email.includes("..");
+    // Simplified regex to prevent ReDoS
+    const emailRegex = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/;
+    return emailRegex.test(email) && !email.includes("..") && email.length < 320;
   }
 
   /**

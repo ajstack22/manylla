@@ -38,11 +38,11 @@ class ErrorBoundaryClass extends Component {
     this.props.onError?.(normalizedError, errorInfo);
 
     // Update state with error info
-    this.setState({
+    this.setState((prevState) => ({
       error: normalizedError,
       errorInfo,
-      errorCount: (this.state.errorCount || 0) + 1,
-    });
+      errorCount: (prevState.errorCount || 0) + 1,
+    }));
   }
 
   resetError = () => {
