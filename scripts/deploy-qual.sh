@@ -18,6 +18,11 @@ echo
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
+# Load SonarCloud token from secure location (if exists)
+if [ -f "$HOME/.manylla-env" ]; then
+    source "$HOME/.manylla-env"
+fi
+
 # Colors for output
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -351,6 +356,34 @@ if [ -d "build" ]; then
     CURRENT_BUILD_SIZE=$(du -sh build 2>/dev/null | cut -f1)
     echo "Current build size: $CURRENT_BUILD_SIZE"
     echo "New build size will be checked after building"
+fi
+echo
+
+# Step 12: SonarCloud Code Quality Analysis (Optional but Recommended)
+echo -e "${BLUE}Step 12: SonarCloud Code Quality Analysis${NC}"
+echo "────────────────────────────────"
+
+if [ -n "$SONAR_TOKEN" ]; then
+    echo "SonarCloud token detected. Running smart analysis..."
+
+    # Use smart analysis to conserve quota
+    if [ -f "$SCRIPT_DIR/sonar-smart.sh" ]; then
+        "$SCRIPT_DIR/sonar-smart.sh" || {
+            echo -e "${YELLOW}⚠️  SonarCloud analysis failed (non-blocking)${NC}"
+            echo "Continuing with deployment..."
+        }
+    else
+        echo "Running standard SonarCloud analysis..."
+        npm run test:coverage >/dev/null 2>&1
+        sonar-scanner -Dsonar.token="$SONAR_TOKEN" || {
+            echo -e "${YELLOW}⚠️  SonarCloud analysis failed (non-blocking)${NC}"
+        }
+    fi
+
+    echo -e "${GREEN}✓ Code quality check completed${NC}"
+else
+    echo -e "${YELLOW}ℹ️  SonarCloud token not found. Skipping code quality analysis.${NC}"
+    echo "   To enable: echo 'SONAR_TOKEN=\"your-token\"' > ~/.manylla-env"
 fi
 echo
 

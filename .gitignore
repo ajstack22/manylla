@@ -147,9 +147,7 @@ id_ecdsa*
 id_ed25519*
 
 # Scripts that might contain sensitive info
-scripts/deploy-*.sh
-scripts/*.sh
-!scripts/setup-ssh.sh
+# (Removed - scripts should be in version control)
 
 # Test files
 test-*.sh
@@ -175,4 +173,5 @@ stackmap_sync/
 
 # Old project folders (from migration)
 /ManyllaMobile
-/manylla-app
+/manylla-app.last-sonar-analysis
+.claude/

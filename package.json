@@ -27,7 +27,13 @@
     "license:report:json": "npx license-checker --json --out licenses-report.json",
     "clean": "cd android && ./gradlew clean && cd ../ios && rm -rf build && cd ..",
     "pod-install": "cd ios && pod install && cd ..",
-    "_DEPRECATED_deploy:qual": "echo '❌ DO NOT USE - Run ./scripts/deploy-qual.sh instead'"
+    "_DEPRECATED_deploy:qual": "echo '❌ DO NOT USE - Run ./scripts/deploy-qual.sh instead'",
+    "sonar": "./scripts/sonar-analysis.sh",
+    "sonar:quick": "sonar-scanner -Dsonar.token=$SONAR_TOKEN",
+    "sonar:smart": "./scripts/sonar-smart.sh",
+    "sonar:quota": "./scripts/sonar-quota-check.sh",
+    "quality": "./scripts/quality-gate.sh",
+    "predeploy:check": "npm run quality"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
