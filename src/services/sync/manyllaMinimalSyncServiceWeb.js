@@ -48,8 +48,8 @@ class ManyllaMinimalSyncService {
     // Convert first 16 bytes of hash to 32 hex characters
     const hashBytes = hash.slice(0, 16);
     this.syncId = Array.from(hashBytes)
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('');
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
 
     // Test sync health
     try {
