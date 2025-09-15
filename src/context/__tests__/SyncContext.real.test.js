@@ -24,8 +24,8 @@ const TestSyncConsumer = ({ onContextUpdate, testActions = {} }) => {
       <div data-testid="sync-status">{syncContext.syncStatus}</div>
       <div data-testid="recovery-phrase">{syncContext.recoveryPhrase || 'none'}</div>
       <div data-testid="sync-id">{syncContext.syncId || 'none'}</div>
-      <div data-testid="last-pull">{syncContext.lastPull || 'never'}</div>
-      <div data-testid="error-message">{syncContext.error || 'none'}</div>
+      <div data-testid="last-pull">{syncContext.lastSync ? syncContext.lastSync.toString() : 'never'}</div>
+      <div data-testid="error-message">{syncContext.syncError || 'none'}</div>
 
       <button
         data-testid="generate-phrase"
@@ -50,21 +50,26 @@ const TestSyncConsumer = ({ onContextUpdate, testActions = {} }) => {
 
       <button
         data-testid="push-data"
-        onClick={() => syncContext.pushData(testActions.testData || { test: 'data' })}
+        onClick={() => syncContext.pushSync(testActions.testData || { test: 'data' })}
       >
         Push Data
       </button>
 
       <button
         data-testid="pull-data"
-        onClick={() => syncContext.pullData()}
+        onClick={() => syncContext.pullSync()}
       >
         Pull Data
       </button>
 
       <button
         data-testid="clear-error"
-        onClick={() => syncContext.clearError()}
+        onClick={() => {
+          // Simulate clearing error by enabling sync again
+          if (syncContext.recoveryPhrase) {
+            syncContext.enableSync(syncContext.recoveryPhrase);
+          }
+        }}
       >
         Clear Error
       </button>
@@ -114,10 +119,10 @@ describe('SyncContext Real Integration', () => {
       );
 
       expect(capturedContext.syncEnabled).toBe(false);
-      expect(capturedContext.syncStatus).toBe('inactive');
-      expect(capturedContext.recoveryPhrase).toBe('');
-      expect(capturedContext.syncId).toBe('');
-      expect(capturedContext.error).toBe('');
+      expect(capturedContext.syncStatus).toBe('not-setup');
+      expect(capturedContext.recoveryPhrase).toBeNull();
+      expect(capturedContext.syncId).toBeNull();
+      expect(capturedContext.syncError).toBeNull();
       expect(typeof capturedContext.generateRecoveryPhrase).toBe('function');
       expect(typeof capturedContext.enableSync).toBe('function');
       expect(typeof capturedContext.disableSync).toBe('function');
@@ -225,7 +230,7 @@ describe('SyncContext Real Integration', () => {
 
       await waitFor(() => {
         expect(screen.getByTestId('sync-enabled')).toHaveTextContent('enabled');
-        expect(screen.getByTestId('sync-status')).not.toHaveTextContent('inactive');
+        expect(screen.getByTestId('sync-status')).not.toHaveTextContent('not-setup');
       });
 
       expect(capturedContext.syncEnabled).toBe(true);
@@ -259,7 +264,7 @@ describe('SyncContext Real Integration', () => {
 
       await waitFor(() => {
         expect(screen.getByTestId('sync-enabled')).toHaveTextContent('disabled');
-        expect(screen.getByTestId('sync-status')).toHaveTextContent('inactive');
+        expect(screen.getByTestId('sync-status')).toHaveTextContent('not-setup');
       });
     });
 
@@ -460,7 +465,12 @@ describe('SyncContext Real Integration', () => {
 
       // Set invalid phrase manually (simulate user input)
       await act(async () => {
-        capturedContext.setRecoveryPhrase('invalid-phrase');
+        // Since setRecoveryPhrase doesn't exist, we'll try to enable sync with an invalid phrase directly
+        try {
+          await capturedContext.enableSync('invalid-phrase');
+        } catch (error) {
+          // Expected to fail
+        }
       });
 
       await act(async () => {

@@ -97,6 +97,25 @@ describe("imageUtils", () => {
     jest.clearAllMocks();
     // Reset platform to web
     platform.isWeb = true;
+
+    // Reset global mocks to default state
+    global.Image = jest.fn(() => {
+      mockImage = createMockImage();
+      return mockImage;
+    });
+
+    global.document.createElement = jest.fn((tag) => {
+      if (tag === "canvas") {
+        mockCanvas = createMockCanvas();
+        return mockCanvas;
+      }
+      return {};
+    });
+
+    global.FileReader = jest.fn(() => {
+      mockFileReader = createMockFileReader();
+      return mockFileReader;
+    });
   });
 
   describe("IMAGE_CONFIG", () => {
@@ -285,6 +304,19 @@ describe("imageUtils", () => {
       platform.isWeb = true;
       const dataUrl = "data:image/jpeg;base64,test_data";
 
+      // Mock Image to have large dimensions so resizing actually happens
+      global.Image = jest.fn(() => ({
+        width: 1200,
+        height: 800,
+        onload: null,
+        onerror: null,
+        set src(value) {
+          setTimeout(() => {
+            if (this.onload) this.onload();
+          }, 0);
+        },
+      }));
+
       const result = await resizeImage(dataUrl);
 
       expect(global.Image).toHaveBeenCalled();
@@ -334,6 +366,19 @@ describe("imageUtils", () => {
       platform.isWeb = true;
       const dataUrl = "data:image/jpeg;base64,test_data";
 
+      // Mock Image to have large dimensions so resizing actually happens
+      global.Image = jest.fn(() => ({
+        width: 1200,
+        height: 800,
+        onload: null,
+        onerror: null,
+        set src(value) {
+          setTimeout(() => {
+            if (this.onload) this.onload();
+          }, 0);
+        },
+      }));
+
       // Mock document.createElement to return a canvas that throws on toDataURL
       global.document.createElement = jest.fn((tag) => {
         if (tag === "canvas") {
@@ -349,15 +394,6 @@ describe("imageUtils", () => {
       await expect(resizeImage(dataUrl)).rejects.toThrow(
         "Failed to resize image",
       );
-
-      // Restore original mock
-      global.document.createElement = jest.fn((tag) => {
-        if (tag === "canvas") {
-          mockCanvas = createMockCanvas();
-          return mockCanvas;
-        }
-        return {};
-      });
     });
 
     it("should use higher quality for PNG images", async () => {
