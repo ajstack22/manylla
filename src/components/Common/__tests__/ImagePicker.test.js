@@ -1,7 +1,6 @@
 /**
  * ImagePicker Component Tests
  */
-import { renderWithProviders } from '../../../test/utils/test-utils';
 import ImagePicker from '../ImagePicker';
 
 // Mock platform utility

@@ -272,7 +272,7 @@ Notehis link contains encrypted data. Please use the complete link exactly as pr
             </TouchableOpacity>
           ))}
         </View>
-        {selectedPreset && (
+        {!!selectedPreset && (
           <Text style={styles.presetDescription}>
             {sharePresets.find((p) => p.id === selectedPreset)?.description}
           </Text>

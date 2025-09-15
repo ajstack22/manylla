@@ -177,7 +177,7 @@ export const resetAllMocks = () => {
   // Reset any other global mocks
 };
 
-export default {
+const testUtils = {
   renderWithProviders,
   mockApiResponse,
   createTestProfile,
@@ -188,3 +188,5 @@ export default {
   mockCommonApiResponses,
   resetAllMocks,
 };
+
+export default testUtils;

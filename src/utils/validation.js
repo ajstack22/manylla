@@ -370,6 +370,7 @@ export class ProfileValidator {
     if (!markdown || typeof markdown !== "string") return false;
 
     // Check for malicious content
+    // eslint-disable-next-line no-script-url
     if (markdown.includes("<script>") || markdown.includes("javascript:")) {
       return false;
     }

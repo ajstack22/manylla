@@ -33,7 +33,13 @@
     "sonar:smart": "./scripts/sonar-smart.sh",
     "sonar:quota": "./scripts/sonar-quota-check.sh",
     "quality": "./scripts/quality-gate.sh",
-    "predeploy:check": "npm run quality"
+    "predeploy:check": "npm run quality",
+    "ports:check": "./scripts/check-ports.sh",
+    "ports:clean": "./scripts/port-manager.sh clean",
+    "ports:free": "./scripts/free-port.sh",
+    "ports:kill-dev": "./scripts/kill-dev-servers.sh",
+    "ports:scan": "./scripts/port-manager.sh scan",
+    "ports:interactive": "./scripts/port-manager.sh interactive"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

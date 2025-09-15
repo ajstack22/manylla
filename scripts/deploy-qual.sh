@@ -51,6 +51,39 @@ show_warning() {
 cd "$PROJECT_ROOT"
 
 # ============================================================================
+# PHASE 0: DEPLOYMENT PRE-FLIGHT CHECKS
+# Infrastructure and connectivity validation before any other operations
+# ============================================================================
+
+echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
+echo -e "${CYAN}    PHASE 0: DEPLOYMENT PRE-FLIGHT CHECKS              ${NC}"
+echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
+echo
+
+echo -e "${BLUE}Running comprehensive pre-flight validation...${NC}"
+echo "─────────────────────────────────────────────────"
+
+# Run pre-flight checks script
+if [ -f "$SCRIPT_DIR/deployment-preflight.sh" ]; then
+    "$SCRIPT_DIR/deployment-preflight.sh"
+    PREFLIGHT_EXIT_CODE=$?
+
+    if [ $PREFLIGHT_EXIT_CODE -ne 0 ]; then
+        handle_error "Pre-flight checks failed" \
+            "Resolve all pre-flight issues before deployment. Check output above for details."
+    fi
+
+    echo -e "${GREEN}✅ All pre-flight checks passed${NC}"
+    echo -e "${GREEN}   Deployment infrastructure validated${NC}"
+    echo -e "${GREEN}   Backup and rollback plan created${NC}"
+else
+    handle_error "Pre-flight check script not found" \
+        "Ensure scripts/deployment-preflight.sh exists and is executable"
+fi
+
+echo
+
+# ============================================================================
 # PHASE 1: PRE-COMMIT VALIDATION
 # All checks must pass before ANY commits or deployments
 # ============================================================================

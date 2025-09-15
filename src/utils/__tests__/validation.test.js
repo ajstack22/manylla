@@ -436,6 +436,7 @@ describe("ProfileValidator", () => {
 
       const sanitized = ProfileValidator.sanitizeHtml(html);
 
+      // eslint-disable-next-line no-script-url
       expect(sanitized).not.toContain("javascript:");
     });
 

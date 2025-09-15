@@ -561,7 +561,7 @@ class ManyllaMinimalSyncService {
       // Handle conflicts if local data exists
       const localData = await this.getLocalData();
       if (localData) {
-        const resolved = conflictResolver.resolve(localData, decrypted);
+        const resolved = conflictResolver.mergeProfiles(localData, decrypted);
         this.notifyListeners("pulled", resolved);
         // Call data callback if set
         if (this.dataCallback) {
