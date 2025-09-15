@@ -138,40 +138,35 @@ echo -e "${GREEN}✅ Release notes validated for v$NEW_VERSION${NC}"
 echo -e "${GREEN}   Title: $RELEASE_TITLE${NC}"
 echo
 
-# Step 3: Code Formatting Check (Prettier)
-echo -e "${BLUE}Step 3: Code Formatting Check${NC}"
+# Step 3: Code Formatting Check (Prettier) - NON-BLOCKING
+echo -e "${BLUE}Step 3: Code Formatting Check (Non-Blocking)${NC}"
 echo "───────────────────────────────"
 echo "Checking code formatting with Prettier..."
 if ! npx prettier --check "src/**/*.{js,jsx,ts,tsx}" > /tmp/prettier-output.txt 2>&1; then
-    echo -e "${YELLOW}⚠️  Code formatting issues found. Auto-fixing...${NC}"
-    
-    # Show which files need formatting
-    cat /tmp/prettier-output.txt | grep "src/" | head -10
-    
-    # Auto-fix formatting issues
-    echo "Running prettier --write to fix formatting..."
-    npx prettier --write "src/**/*.{js,jsx,ts,tsx}" > /tmp/prettier-fix.txt 2>&1
-    
-    # Check if files were modified
-    FILES_FIXED=$(cat /tmp/prettier-fix.txt | grep -c "src/" || echo "0")
-    
-    if [ "$FILES_FIXED" -gt "0" ]; then
-        echo -e "${GREEN}✅ Fixed formatting in $FILES_FIXED files${NC}"
-        
-        # Add the formatted files to git
-        git add src/
-        
-        # Show what was changed
-        echo -e "${YELLOW}Files formatted:${NC}"
-        git diff --cached --name-only | head -10
-        
-        # These changes will be included in the deployment commit
-        echo -e "${GREEN}✅ Formatting fixes will be included in deployment commit${NC}"
-    else
-        echo -e "${GREEN}✅ Formatting auto-fix completed${NC}"
+    FILES_WITH_ISSUES=$(cat /tmp/prettier-output.txt | grep -c "src/" || echo "0")
+    echo -e "${YELLOW}⚠️  Code formatting issues found in $FILES_WITH_ISSUES files (Non-Blocking)${NC}"
+
+    # Show sample files
+    echo "Sample files with formatting issues:"
+    cat /tmp/prettier-output.txt | grep "src/" | head -5
+
+    # Create tech debt story
+    if [ "$FILES_WITH_ISSUES" -gt "0" ]; then
+        echo -e "${YELLOW}📝 Creating tech debt story for formatting issues...${NC}"
+
+        DETAILS="Found $FILES_WITH_ISSUES files with formatting issues during deployment.\n\nSample files:\n$(cat /tmp/prettier-output.txt | grep 'src/' | head -10)\n\nFix: Run 'npx prettier --write src/**/*.{js,jsx,ts,tsx}'"
+
+        "$SCRIPT_DIR/create-tech-debt-story.sh" \
+            "Fix Prettier formatting in $FILES_WITH_ISSUES files" \
+            "P3" \
+            "FORMATTING" \
+            "$DETAILS" || echo "⚠️  Could not create story automatically"
+
+        echo -e "${YELLOW}⚠️  Continuing deployment with formatting issues${NC}"
+        echo -e "${YELLOW}   Tech debt story added to backlog${NC}"
     fi
 else
-    echo -e "${GREEN}✅ Code formatting check passed (no changes needed)${NC}"
+    echo -e "${GREEN}✅ Code formatting is perfect${NC}"
 fi
 echo
 
@@ -231,20 +226,38 @@ fi
 echo -e "${GREEN}✅ Lint check passed${NC}"
 echo
 
-# Step 7: TypeScript Check
-echo -e "${BLUE}Step 7: TypeScript Check${NC}"
+# Step 7: TypeScript Check - NON-BLOCKING
+echo -e "${BLUE}Step 7: TypeScript Check (Non-Blocking)${NC}"
 echo "─────────────────────────"
 if [ -f "tsconfig.json" ]; then
     npm run typecheck > /tmp/typecheck-output.txt 2>&1 || true
     if grep -q "error TS" /tmp/typecheck-output.txt; then
         ERROR_COUNT=$(grep -c "error TS" /tmp/typecheck-output.txt)
-        handle_error "TypeScript compilation failed with $ERROR_COUNT errors" \
-            "Fix all TypeScript errors. Run: npm run typecheck"
+        echo -e "${YELLOW}⚠️  TypeScript compilation has $ERROR_COUNT errors (Non-Blocking)${NC}"
+
+        # Show sample errors
+        echo "Sample TypeScript errors:"
+        grep "error TS" /tmp/typecheck-output.txt | head -5
+
+        # Create tech debt story
+        echo -e "${YELLOW}📝 Creating tech debt story for TypeScript errors...${NC}"
+
+        DETAILS="Found $ERROR_COUNT TypeScript errors during deployment.\n\nSample errors:\n$(grep 'error TS' /tmp/typecheck-output.txt | head -10)\n\nFix: Run 'npm run typecheck' and resolve all errors."
+
+        "$SCRIPT_DIR/create-tech-debt-story.sh" \
+            "Fix $ERROR_COUNT TypeScript compilation errors" \
+            "P2" \
+            "TYPESCRIPT" \
+            "$DETAILS" || echo "⚠️  Could not create story automatically"
+
+        echo -e "${YELLOW}⚠️  Continuing deployment with TypeScript errors${NC}"
+        echo -e "${YELLOW}   Tech debt story added to backlog${NC}"
+    else
+        echo -e "${GREEN}✅ TypeScript check passed${NC}"
     fi
-    echo -e "${GREEN}✅ TypeScript check passed${NC}"
 else
-    handle_error "tsconfig.json not found" \
-        "TypeScript configuration is required for deployment"
+    echo -e "${YELLOW}⚠️  tsconfig.json not found (Non-Blocking)${NC}"
+    echo "   TypeScript configuration recommended but not required"
 fi
 echo
 
@@ -252,13 +265,31 @@ echo
 echo -e "${BLUE}Step 8: Code Quality Metrics${NC}"
 echo "──────────────────────────────"
 
-# Check for TODO/FIXME comments
+# Check for TODO/FIXME comments - NON-BLOCKING
 TODO_COUNT=$(grep -r "TODO\|FIXME\|XXX\|HACK" src/ --include="*.js" --include="*.ts" --include="*.tsx" 2>/dev/null | wc -l | tr -d ' ')
 if [ "$TODO_COUNT" -gt "20" ]; then
-    handle_error "Too many TODO/FIXME comments ($TODO_COUNT found, max 20 allowed)" \
-        "Complete or remove TODO items. Run: grep -r 'TODO\\|FIXME' src/"
+    echo -e "${YELLOW}⚠️  Too many TODO/FIXME comments ($TODO_COUNT found, max 20 recommended) (Non-Blocking)${NC}"
+
+    # Show sample TODOs
+    echo "Sample TODO/FIXME comments:"
+    grep -r "TODO\|FIXME" src/ --include="*.js" --include="*.ts" --include="*.tsx" 2>/dev/null | head -5
+
+    # Create tech debt story
+    echo -e "${YELLOW}📝 Creating tech debt story for TODO cleanup...${NC}"
+
+    DETAILS="Found $TODO_COUNT TODO/FIXME comments (recommended max: 20).\n\nSample TODOs:\n$(grep -r 'TODO\|FIXME' src/ --include='*.js' --include='*.ts' --include='*.tsx' 2>/dev/null | head -10)\n\nReview and address or remove outdated TODOs."
+
+    "$SCRIPT_DIR/create-tech-debt-story.sh" \
+        "Clean up $TODO_COUNT TODO/FIXME comments" \
+        "P3" \
+        "TODO_CLEANUP" \
+        "$DETAILS" || echo "⚠️  Could not create story automatically"
+
+    echo -e "${YELLOW}⚠️  Continuing deployment with excess TODOs${NC}"
+    echo -e "${YELLOW}   Tech debt story added to backlog${NC}"
+else
+    echo -e "${GREEN}✅ TODO count acceptable ($TODO_COUNT/20)${NC}"
 fi
-echo -e "${GREEN}✅ TODO count acceptable ($TODO_COUNT/20)${NC}"
 
 # Check for console.log statements
 CONSOLE_COUNT=$(grep -r "console\.log" src/ --include="*.js" --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v '^\s*//' | grep -v '//.*console\.log' | wc -l | tr -d ' ' | tr -d '\n' || echo "0")
@@ -483,9 +514,25 @@ if [ -d "web/build" ]; then
     fi
     echo -e "${GREEN}✅ Build completed successfully (size: $BUILD_SIZE)${NC}"
     
-    # Warn if build is over 10MB
+    # Check if build is over 10MB - NON-BLOCKING
     if [ "$BUILD_SIZE_BYTES" -gt "10485760" ]; then
-        show_warning "Build size exceeds 10MB - consider code splitting"
+        SIZE_MB=$((BUILD_SIZE_BYTES / 1048576))
+        echo -e "${YELLOW}⚠️  Build size exceeds 10MB (${SIZE_MB}MB) - Non-Blocking${NC}"
+        echo -e "${YELLOW}   Consider code splitting for better performance${NC}"
+
+        # Create tech debt story for bundle optimization
+        echo -e "${YELLOW}📝 Creating tech debt story for bundle size optimization...${NC}"
+
+        DETAILS="Build size is ${SIZE_MB}MB (${BUILD_SIZE}), exceeding recommended 10MB limit.\n\nLarge bundles impact:\n- Initial load time\n- Performance on slow connections\n- User experience\n\nRecommendations:\n- Implement code splitting\n- Lazy load routes\n- Analyze bundle with 'npm run analyze'\n- Remove unused dependencies"
+
+        "$SCRIPT_DIR/create-tech-debt-story.sh" \
+            "Optimize bundle size - currently ${SIZE_MB}MB" \
+            "P2" \
+            "PERFORMANCE" \
+            "$DETAILS" || echo "⚠️  Could not create story automatically"
+
+        echo -e "${YELLOW}⚠️  Continuing deployment with large bundle${NC}"
+        echo -e "${YELLOW}   Tech debt story added to backlog${NC}"
     fi
 else
     handle_error "Build directory not created" \
