@@ -64,9 +64,9 @@ const QRCodeModal = lazy(() =>
 );
 
 // Import Share and Sync dialogs - lazy loaded for better performance
-const ShareDialogOptimized = lazy(() =>
+const ShareDialog = lazy(() =>
   import("./src/components/Sharing").then((module) => ({
-    default: module.ShareDialogOptimized,
+    default: module.ShareDialog,
   })),
 );
 const SyncDialog = lazy(() =>
@@ -742,8 +742,23 @@ function AppContent() {
         const storedProfile = await StorageService.getProfile();
 
         if (onboardingCompleted && storedProfile && storedProfile.name) {
+          // Migrate categories to ensure isVisible property exists
+          const migratedProfile = {
+            ...storedProfile,
+            categories: storedProfile.categories?.map(cat => ({
+              ...cat,
+              isVisible: cat.isVisible !== undefined ? cat.isVisible : true,
+            })) || unifiedCategories,
+          };
+
           // Preserve the stored profile with its entries and categories
-          setProfile(storedProfile);
+          setProfile(migratedProfile);
+
+          // Save the migration if needed
+          if (JSON.stringify(storedProfile.categories) !== JSON.stringify(migratedProfile.categories)) {
+            await StorageService.saveProfile(migratedProfile);
+          }
+
           setShowOnboarding(false);
         } else {
           setShowOnboarding(true);
@@ -1385,7 +1400,7 @@ function AppContent() {
       {/* Share Dialog */}
       {shareDialogOpen && (
         <Suspense fallback={<LoadingOverlay message="Loading..." />}>
-          <ShareDialogOptimized
+          <ShareDialog
             open={shareDialogOpen}
             onClose={() => setShareDialogOpen(false)}
             profile={profile}

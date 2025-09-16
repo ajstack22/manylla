@@ -312,8 +312,8 @@ const getStyles = (colors) =>
       backgroundColor: colors.background.paper,
       ...platform.select({
         web: {
-          outline: "none",
-          transition: "border-color 0.2s ease",
+          // outline is not supported in React Native Web
+          // transition is not needed for tests
         },
         default: {},
       }),

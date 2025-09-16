@@ -5,6 +5,8 @@
  * FormatXXX-XXXX (avoiding confusing characters)
  */
 
+import secureRandomService from './SecureRandomService';
+
 // Character set excluding confusing characters (0/O, 1/I/L)
 const INVITE_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
 
@@ -17,7 +19,7 @@ export function generateInviteCode() {
     if (i === 4) {
       code += "-";
     }
-    const randomIndex = Math.floor(Math.random() * INVITE_CHARS.length);
+    const randomIndex = secureRandomService.getRandomInt(INVITE_CHARS.length);
     code += INVITE_CHARS[randomIndex];
   }
   return code;

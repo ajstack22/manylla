@@ -6,9 +6,107 @@ global.__DEV__ = process.env.NODE_ENV === 'development';
 
 // Mock React Native modules
 jest.mock('react-native', () => {
+  const React = require('react');
+
   const platform = {
     OS: 'web',
     select: (obj) => obj.web || obj.default,
+  };
+
+  // Create a proper React component that handles React Native props correctly
+  const createMockComponent = (displayName) => {
+    const Component = React.forwardRef((props, ref) => {
+      const {
+        accessibilityLabel,
+        onPress,
+        onLayout,
+        activeOpacity,
+        underlayColor,
+        hitSlop,
+        pressRetentionOffset,
+        delayLongPress,
+        delayPressIn,
+        delayPressOut,
+        disabled,
+        onLongPress,
+        onPressIn,
+        onPressOut,
+        visible,
+        children,
+        style,
+        ...otherProps
+      } = props;
+
+      // Handle Modal visibility and special Modal behavior
+      if (displayName === 'Modal') {
+        if (visible === false) {
+          return null;
+        }
+        // For Modal, we need to handle it specially to avoid DOM issues
+        // Create a portal-like div that properly handles React Native Modal props
+        const modalProps = {
+          'data-testid': 'modal',
+          style: {
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            zIndex: 1000,
+            ...style
+          },
+          role: 'dialog',
+          'aria-modal': 'true',
+        };
+        return React.createElement('div', modalProps, children);
+      }
+
+      // Convert React Native props to web-compatible props
+      const webProps = {
+        ...otherProps,
+        style,
+        ref,
+      };
+
+      // Handle disabled state
+      if (disabled !== undefined) {
+        webProps.disabled = disabled;
+      }
+
+      // Handle accessibility
+      if (accessibilityLabel) {
+        webProps['aria-label'] = accessibilityLabel;
+      }
+
+      // Handle onPress for touchable components
+      if (onPress && (displayName === 'TouchableOpacity' || displayName === 'TouchableHighlight')) {
+        webProps.onClick = onPress;
+      }
+
+      // Handle onLayout (common in React Native)
+      if (onLayout) {
+        webProps.onLoad = onLayout;
+      }
+
+
+      const tagName = {
+        View: 'div',
+        Text: 'span',
+        TouchableOpacity: 'button',
+        TouchableHighlight: 'button',
+        Image: 'img',
+        TextInput: 'input',
+        ScrollView: 'div',
+        Modal: 'div',
+        ActivityIndicator: 'div',
+        SafeAreaView: 'div',
+      }[displayName] || 'div';
+
+      return React.createElement(tagName, webProps, children);
+    });
+
+    Component.displayName = displayName;
+    return Component;
   };
 
   return {
@@ -31,15 +129,16 @@ jest.mock('react-native', () => {
     Alert: {
       alert: jest.fn(),
     },
-    View: 'div',
-    Text: 'span',
-    Modal: 'div',
-    ScrollView: 'div',
-    TouchableHighlight: 'button',
-    TouchableOpacity: 'button',
-    Image: 'img',
-    TextInput: 'input',
-    ActivityIndicator: 'div',
+    View: createMockComponent('View'),
+    Text: createMockComponent('Text'),
+    Modal: createMockComponent('Modal'),
+    ScrollView: createMockComponent('ScrollView'),
+    TouchableHighlight: createMockComponent('TouchableHighlight'),
+    TouchableOpacity: createMockComponent('TouchableOpacity'),
+    Image: createMockComponent('Image'),
+    TextInput: createMockComponent('TextInput'),
+    ActivityIndicator: createMockComponent('ActivityIndicator'),
+    SafeAreaView: createMockComponent('SafeAreaView'),
     Share: {
       share: jest.fn(() => Promise.resolve()),
     },
@@ -87,6 +186,8 @@ Object.defineProperty(global, 'crypto', {
     }),
   },
 });
+
+// SecureRandomService mock will be handled in individual test files that need it
 
 // Mock fetch for API calls
 global.fetch = jest.fn(() =>

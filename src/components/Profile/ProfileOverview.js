@@ -74,7 +74,7 @@ export const ProfileOverview = ({
   }, [loadProfilePhoto]);
 
   const getEntriesByCategory = (category) =>
-    profile.entries.filter((entry) => entry.category === category);
+    (profile.entries || []).filter((entry) => entry.category === category);
 
   const allCategories = getVisibleCategories(profile.categories);
 

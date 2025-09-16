@@ -23,5 +23,9 @@
     "**/web/build/**": true,
     "**/ios/build/**": true,
     "**/android/build/**": true
+  },
+  "sonarlint.connectedMode.project": {
+    "connectionId": "ajstack22",
+    "projectKey": "ajstack22_manylla"
   }
 }

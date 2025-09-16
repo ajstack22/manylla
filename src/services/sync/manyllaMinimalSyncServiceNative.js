@@ -5,6 +5,7 @@ import util from "tweetnacl-util";
 import manyllaEncryptionService from "./manyllaEncryptionService";
 import conflictResolver from "./conflictResolver";
 import platform from "../../utils/platform";
+import secureRandomService from "../../utils/SecureRandomService";
 import {
   SyncError,
   NetworkError,
@@ -222,25 +223,20 @@ class ManyllaMinimalSyncService {
     try {
       // Check if AsyncStorage is available
       if (!AsyncStorage || !AsyncStorage.getItem) {
-        return (
-          Date.now().toString(36) + Math.random().toString(36).substr(2, 9)
-        );
+        // Use secure random service for fallback
+        return secureRandomService.generateTimestampId();
       }
 
       let deviceId = await AsyncStorage.getItem("manylla_device_id");
       if (!deviceId) {
-        // Generate new device ID
-        const bytes = nacl.randomBytes(8);
-        deviceId = Array.from(bytes)
-          .map((b) => b.toString(16).padStart(2, "0"))
-          .join("");
-
+        // Generate new secure device ID (16 characters hex)
+        deviceId = secureRandomService.generateDeviceId();
         await AsyncStorage.setItem("manylla_device_id", deviceId);
       }
       return deviceId;
     } catch (error) {
-      // Fallback device ID
-      return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+      // Secure fallback device ID
+      return secureRandomService.generateTimestampId();
     }
   }
 

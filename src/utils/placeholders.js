@@ -1,5 +1,7 @@
 // Smart placeholder text for different categories and contexts
 
+import secureRandomService from './SecureRandomService';
+
 export const categoryPlaceholders = {
   goals: {
     title: "What skill are we working on?",
@@ -188,7 +190,7 @@ export const getRandomExample = (category) => {
     return undefined;
   }
 
-  const randomIndex = Math.floor(Math.random() * config.examples.length);
+  const randomIndex = secureRandomService.getRandomInt(config.examples.length);
   return config.examples[randomIndex];
 };
 

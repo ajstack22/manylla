@@ -140,7 +140,9 @@ export const CategorySection = ({
   });
 
   const formatDate = (dateString) => {
+    if (!dateString) return '';
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '';
     return new Intl.DateTimeFormat("en-US", {
       month: "short",
       day: "numeric",
@@ -239,9 +241,11 @@ export const CategorySection = ({
                 <HtmlRenderer content={entry.description} variant="body2" />
               </View>
 
-              <Text style={styles.entryDate}>
-                {formatDate(entry.updatedAt || entry.date)}
-              </Text>
+              {(entry.updatedAt || entry.date) && (
+                <Text style={styles.entryDate}>
+                  {formatDate(entry.updatedAt || entry.date)}
+                </Text>
+              )}
             </View>
           ))
         )}

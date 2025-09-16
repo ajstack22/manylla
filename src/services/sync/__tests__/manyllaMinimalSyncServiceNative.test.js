@@ -18,6 +18,54 @@ import {
   ErrorHandler,
 } from "../../../utils/errors";
 
+// Mock SecureRandomService
+jest.mock("../../../utils/SecureRandomService", () => {
+  const mockSecureRandomService = {
+    isAvailable: true,
+    checkAvailability: jest.fn(() => true),
+    getRandomBytes: jest.fn((length) => {
+      const array = new Uint8Array(length);
+      for (let i = 0; i < length; i++) {
+        array[i] = Math.floor(Math.random() * 256);
+      }
+      return array;
+    }),
+    getRandomInt: jest.fn((max) => Math.floor(Math.random() * max)),
+    getRandomFloat: jest.fn(() => Math.random()),
+    getRandomHex: jest.fn((length) => {
+      const chars = '0123456789abcdef';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return result;
+    }),
+    getRandomString: jest.fn((charset, length) => {
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += charset[Math.floor(Math.random() * charset.length)];
+      }
+      return result;
+    }),
+    getRandomAlphanumeric: jest.fn((length) => {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return result;
+    }),
+    generateDeviceId: jest.fn(() => 'test1234567890ab'),
+    generateTimestampId: jest.fn(() => 'test' + Date.now().toString(36) + 'randomid'),
+    selfTest: jest.fn(() => true),
+  };
+
+  return {
+    SecureRandomService: jest.fn().mockImplementation(() => mockSecureRandomService),
+    default: mockSecureRandomService,
+  };
+});
+
 // Mock dependencies
 jest.mock("@react-native-async-storage/async-storage");
 jest.mock("../manyllaEncryptionService");

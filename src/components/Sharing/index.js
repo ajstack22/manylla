@@ -1,6 +1,6 @@
 // Export web versions for web build
 // Metro will handle .native resolution for mobile
-export { ShareDialogOptimized } from "./ShareDialogOptimized";
+export { ShareDialog } from "./ShareDialog";
 export { QRCodeModal } from "./QRCodeModal";
 export { SharedProfileView } from "./SharedProfileView";
 export { SharedView } from "./SharedView";

@@ -1,7 +1,7 @@
 # Development Backlog
 
 *Last Updated: 2025-09-15*
-*Next ID: S053, B009*
+*Next ID: S056, B009*
 
 ## Quick Start for Claude
 Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything needed to start immediately.
@@ -24,6 +24,7 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟠 P1 - High (Do Next)
 ### Stories
+- [S057](backlog/S057-test-coverage-for-profile-components.md) - Test Coverage for Profile Components ✅ **READY**
 - [S054](backlog/S054-security-hotspot-review-and-resolution.md) - Security Hotspot Review and Resolution ✅ **READY**
 - [S042](backlog/S042-test-coverage-sync-services.md) - Test Coverage for Sync Services ✅ **READY** (80%+ Coverage Target)
 - [S043](backlog/S043-test-coverage-profile-components.md) - Test Coverage for Profile Components ✅ **READY** (60%+ Coverage Target)
@@ -41,6 +42,8 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟡 P2 - Medium (Plan Soon)
 ### Stories
+- [S055](backlog/S055-refactor-remaining-large-components-phase-2.md) - Refactor Remaining Large Components Phase 2 ✅ **READY**
+- [S054](backlog/S054-refactor-large-components-for-maintainability.md) - Refactor Large Components for Maintainability ✅ **READY**
 - [S046](backlog/S046-refactor-large-components.md) - Refactor Large Components ✅ **READY** (>500 lines)
 - [S047](backlog/S047-remove-console-statements.md) - Remove Console Statements and Clean Code ✅ **READY**
 - [S048](backlog/S048-reduce-code-duplication.md) - Reduce Code Duplication ✅ **READY** (<3% target)

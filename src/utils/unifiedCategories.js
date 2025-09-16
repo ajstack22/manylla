@@ -9,6 +9,7 @@ export const unifiedCategories = [
     order: 0,
     isCustom: false,
     isQuickInfo: true, // This flag keeps it pinned to top
+    isVisible: true,
   },
 
   // Core categories - simplified and meaningful
@@ -20,6 +21,7 @@ export const unifiedCategories = [
     order: 1,
     isCustom: false,
     isQuickInfo: false,
+    isVisible: true,
   },
   {
     id: "health-therapy",
@@ -29,6 +31,7 @@ export const unifiedCategories = [
     order: 2,
     isCustom: false,
     isQuickInfo: false,
+    isVisible: true,
   },
   {
     id: "education-goals",
@@ -38,6 +41,7 @@ export const unifiedCategories = [
     order: 3,
     isCustom: false,
     isQuickInfo: false,
+    isVisible: true,
   },
   {
     id: "behavior-social",
@@ -47,6 +51,7 @@ export const unifiedCategories = [
     order: 4,
     isCustom: false,
     isQuickInfo: false,
+    isVisible: true,
   },
   {
     id: "family-resources",
@@ -56,6 +61,7 @@ export const unifiedCategories = [
     order: 5,
     isCustom: false,
     isQuickInfo: false,
+    isVisible: true,
   },
 ];
 
