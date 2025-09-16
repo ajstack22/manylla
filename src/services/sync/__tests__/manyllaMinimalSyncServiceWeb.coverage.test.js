@@ -20,6 +20,7 @@ jest.mock("../../../utils/errors");
 
 // Mock fetch globally
 global.fetch = jest.fn();
+const fetch = global.fetch;
 
 // Mock localStorage properly using Object.defineProperty
 Object.defineProperty(global, 'localStorage', {
@@ -36,7 +37,11 @@ describe("ManyllaMinimalSyncServiceWeb - Coverage Tests", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    fetch.mockClear();
     service = new ManyllaMinimalSyncService();
+
+    // Reduce debounce for faster testing
+    service.PUSH_DEBOUNCE = 10; // 10ms instead of 2000ms
 
     // Mock encryption service
     manyllaEncryptionService.init.mockResolvedValue(true);
@@ -54,12 +59,15 @@ describe("ManyllaMinimalSyncServiceWeb - Coverage Tests", () => {
     // Mock localStorage
     global.localStorage.getItem.mockReturnValue(null);
     global.localStorage.setItem.mockImplementation(() => {});
+
+    // Set up sync state for tests that need it
+    service.syncId = "test-sync-id-12345678901234567890";
     global.localStorage.removeItem.mockImplementation(() => {});
   });
 
   describe("Health Check Edge Cases", () => {
     test("should handle health check failure during init", async () => {
-      const phrase = "a1b2c3d4e5f6789012345678901234567890abcd";
+      const phrase = "a1b2c3d4e5f678901234567890123456";
 
       // Mock health check to fail
       fetch.mockRejectedValueOnce(new Error("Network error"));
@@ -71,10 +79,10 @@ describe("ManyllaMinimalSyncServiceWeb - Coverage Tests", () => {
     });
 
     test("should handle health check returning unhealthy status", async () => {
-      const phrase = "a1b2c3d4e5f6789012345678901234567890abcd";
+      const phrase = "a1b2c3d4e5f678901234567890123456";
 
       // Mock health check to return unhealthy
-      fetch.mockResolvedValueOnce({
+      fetch.mockResolvedValue({
         ok: true,
         json: () => Promise.resolve({ status: "unhealthy" }),
       });
@@ -87,14 +95,10 @@ describe("ManyllaMinimalSyncServiceWeb - Coverage Tests", () => {
   });
 
   describe("Push Error Scenarios", () => {
-    beforeEach(() => {
-      service.syncId = "test-sync-id";
-    });
-
     test("should handle push with invalid response format", async () => {
       const data = { test: "data" };
 
-      fetch.mockResolvedValueOnce({
+      fetch.mockResolvedValue({
         ok: true,
         json: () => Promise.resolve({ success: false, error: "Custom error" }),
       });
@@ -105,7 +109,7 @@ describe("ManyllaMinimalSyncServiceWeb - Coverage Tests", () => {
     test("should handle push with response missing success field", async () => {
       const data = { test: "data" };
 
-      fetch.mockResolvedValueOnce({
+      fetch.mockResolvedValue({
         ok: true,
         json: () => Promise.resolve({ error: "Missing success field" }),
       });
@@ -115,12 +119,8 @@ describe("ManyllaMinimalSyncServiceWeb - Coverage Tests", () => {
   });
 
   describe("Pull Error Scenarios", () => {
-    beforeEach(() => {
-      service.syncId = "test-sync-id";
-    });
-
     test("should handle pull with server error status", async () => {
-      fetch.mockResolvedValueOnce({
+      fetch.mockResolvedValue({
         ok: false,
         status: 500,
         statusText: "Internal Server Error",
@@ -130,7 +130,7 @@ describe("ManyllaMinimalSyncServiceWeb - Coverage Tests", () => {
     });
 
     test("should handle pull with generic error message", async () => {
-      fetch.mockResolvedValueOnce({
+      fetch.mockResolvedValue({
         ok: true,
         json: () => Promise.resolve({ success: false, error: "Generic pull error" }),
       });
@@ -201,7 +201,7 @@ describe("ManyllaMinimalSyncServiceWeb - Coverage Tests", () => {
 
   describe("Sync Enablement", () => {
     test("should enable sync with new data push", async () => {
-      const phrase = "a1b2c3d4e5f6789012345678901234567890abcd";
+      const phrase = "a1b2c3d4e5f678901234567890123456";
       const localData = { profile: "local" };
 
       jest.spyOn(service, "getLocalData").mockReturnValue(localData);
@@ -216,7 +216,7 @@ describe("ManyllaMinimalSyncServiceWeb - Coverage Tests", () => {
     });
 
     test("should enable sync without pushing when no local data", async () => {
-      const phrase = "a1b2c3d4e5f6789012345678901234567890abcd";
+      const phrase = "a1b2c3d4e5f678901234567890123456";
 
       jest.spyOn(service, "getLocalData").mockReturnValue(null);
       const pushSpy = jest.spyOn(service, "push");
@@ -230,7 +230,7 @@ describe("ManyllaMinimalSyncServiceWeb - Coverage Tests", () => {
     });
 
     test("should enable sync for existing sync without new data", async () => {
-      const phrase = "a1b2c3d4e5f6789012345678901234567890abcd";
+      const phrase = "a1b2c3d4e5f678901234567890123456";
 
       const pushSpy = jest.spyOn(service, "push");
       const startPollingSpy = jest.spyOn(service, "startPolling");
@@ -318,10 +318,9 @@ describe("ManyllaMinimalSyncServiceWeb - Coverage Tests", () => {
 
   describe("Alias Methods", () => {
     test("should use pushData alias", async () => {
-      service.syncId = "test-sync-id";
       const data = { test: "data" };
 
-      fetch.mockResolvedValueOnce({
+      fetch.mockResolvedValue({
         ok: true,
         json: () => Promise.resolve({ success: true }),
       });
