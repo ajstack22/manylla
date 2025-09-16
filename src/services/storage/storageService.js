@@ -46,6 +46,10 @@ export class StorageService {
 
       return profile;
     } catch (error) {
+      // Log error in development for debugging storage issues
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to get profile from storage:", error.message);
+      }
       return null;
     }
   }

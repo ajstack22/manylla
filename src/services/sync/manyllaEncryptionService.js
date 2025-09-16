@@ -92,6 +92,10 @@ const SecureStorage = {
     try {
       return await AsyncStorage.getItem(`secure_${key}`);
     } catch (error) {
+      // Log error in development for debugging secure storage issues
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to get secure item from storage:", error.message);
+      }
       return null;
     }
   },
@@ -101,6 +105,10 @@ const SecureStorage = {
       await AsyncStorage.setItem(`secure_${key}`, value);
       return true;
     } catch (error) {
+      // Log error in development for debugging secure storage issues
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to set secure item in storage:", error.message);
+      }
       return false;
     }
   },
@@ -110,6 +118,10 @@ const SecureStorage = {
       await AsyncStorage.removeItem(`secure_${key}`);
       return true;
     } catch (error) {
+      // Log error in development for debugging secure storage issues
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to remove secure item from storage:", error.message);
+      }
       return false;
     }
   },

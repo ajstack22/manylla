@@ -210,7 +210,11 @@ class ManyllaMinimalSyncService {
     try {
       const stored = await AsyncStorage.getItem("manylla_profile");
       return stored ? JSON.parse(stored) : null;
-    } catch {
+    } catch (error) {
+      // Log error in development for debugging
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to get local data from AsyncStorage:", error.message);
+      }
       return null;
     }
   }
@@ -351,6 +355,10 @@ class ManyllaMinimalSyncService {
       }
       return false;
     } catch (error) {
+      // Log error in development for debugging sync status issues
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to check sync status:", error.message);
+      }
       return false;
     }
   }
@@ -383,6 +391,10 @@ class ManyllaMinimalSyncService {
       const decrypted = await manyllaEncryptionService.decrypt(encrypted);
       return decrypted;
     } catch (error) {
+      // Log error in development for debugging storage loading issues
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to load from storage:", error.message);
+      }
       return null;
     }
   }

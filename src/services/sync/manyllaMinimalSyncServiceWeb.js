@@ -318,7 +318,11 @@ class ManyllaMinimalSyncService {
     try {
       const stored = localStorage.getItem("manylla_profile");
       return stored ? JSON.parse(stored) : null;
-    } catch {
+    } catch (error) {
+      // Log error in development for debugging
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to get local data from localStorage:", error.message);
+      }
       return null;
     }
   }

@@ -23,6 +23,10 @@ export class StorageService {
 
       return parsed;
     } catch (error) {
+      // Log error in development for debugging profile retrieval issues
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to get profile from localStorage:", error.message);
+      }
       return null;
     }
   }
@@ -51,6 +55,10 @@ export class StorageService {
       );
       return true;
     } catch (error) {
+      // Log error in development for debugging profile saving issues
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to save profile to localStorage:", error.message);
+      }
       return false;
     }
   }
@@ -62,6 +70,10 @@ export class StorageService {
       localStorage.removeItem(this.VERSION_KEY);
       return true;
     } catch (error) {
+      // Log error in development for debugging profile clearing issues
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to clear profile from localStorage:", error.message);
+      }
       return false;
     }
   }
@@ -71,7 +83,11 @@ export class StorageService {
     try {
       const time = localStorage.getItem(this.SYNC_TIME_KEY);
       return time ? parseInt(time, 10) : null;
-    } catch {
+    } catch (error) {
+      // Log error in development for debugging sync time retrieval issues
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to get last sync time from localStorage:", error.message);
+      }
       return null;
     }
   }
@@ -84,7 +100,11 @@ export class StorageService {
     try {
       const version = localStorage.getItem(this.VERSION_KEY);
       return version ? parseInt(version, 10) : 0;
-    } catch {
+    } catch (error) {
+      // Log error in development for debugging version retrieval issues
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to get version from localStorage:", error.message);
+      }
       return 0;
     }
   }
@@ -120,6 +140,10 @@ export class StorageService {
 
       return this.saveProfile(profile);
     } catch (error) {
+      // Log error in development for debugging profile import issues
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to import profile:", error.message);
+      }
       return false;
     }
   }
