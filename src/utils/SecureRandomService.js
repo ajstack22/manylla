@@ -11,12 +11,12 @@
 import platform from './platform';
 
 // Import the polyfill for React Native
+// On web, webpack will alias this to our web polyfill
 if (platform.isMobile) {
   try {
-    // Import react-native-get-random-values for secure random on mobile
     require('react-native-get-random-values');
   } catch (error) {
-    console.warn('react-native-get-random-values not available, fallback may be insecure');
+    // Silently ignore if module not available
   }
 }
 
