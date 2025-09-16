@@ -218,7 +218,7 @@ export const SmartTextInput = ({
       </View>
 
       {/* Helper Text */}
-      {helperText && <Text style={styles.helperText}>{helperText}</Text>}
+      {Boolean(helperText) && <Text style={styles.helperText}>{helperText}</Text>}
 
       {/* Tips */}
       {value.length < 1 && !isFocused && (

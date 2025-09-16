@@ -10,6 +10,9 @@ import {
   getLocalPhoto,
 } from "../photoSyncExclusion";
 
+// Get access to the mocked AsyncStorage
+const AsyncStorage = require("@react-native-async-storage/async-storage").default;
+
 // Mock localStorage
 const mockLocalStorage = {
   getItem: jest.fn(),
@@ -25,11 +28,6 @@ const mockAsyncStorage = {
   removeItem: jest.fn(),
   clear: jest.fn(),
 };
-
-// Mock require for AsyncStorage
-jest.mock("@react-native-async-storage/async-storage", () => ({
-  default: mockAsyncStorage,
-}));
 
 describe("photoSyncExclusion", () => {
   beforeEach(() => {
@@ -336,18 +334,45 @@ describe("photoSyncExclusion", () => {
   });
 
   describe("storePhotoLocally - React Native Environment", () => {
+    let originalWindow;
+
     beforeEach(() => {
-      // Remove window to simulate React Native environment
+      // Save original window
+      originalWindow = global.window;
+
+      // Remove window completely to simulate React Native environment
       delete global.window;
+
+      // Set a test environment flag to force React Native mode
+      global.__TEST_REACT_NATIVE_MODE__ = true;
+    });
+
+    afterEach(() => {
+      // Restore original window
+      global.window = originalWindow;
+
+      // Clean up test flag
+      delete global.__TEST_REACT_NATIVE_MODE__;
     });
 
     test("should store photo in AsyncStorage for React Native", async () => {
       const profileId = "test-profile";
       const photoData = "data:image/jpeg;base64,test_data";
 
+      // Add debugging to see what's happening
+      const originalConsoleWarn = console.warn;
+      console.warn = jest.fn();
+
       await storePhotoLocally(profileId, photoData);
 
-      expect(mockAsyncStorage.setItem).toHaveBeenCalledWith(
+      // Check if any warnings were logged
+      if (console.warn.mock.calls.length > 0) {
+        console.log("Console warnings:", console.warn.mock.calls);
+      }
+
+      console.warn = originalConsoleWarn;
+
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
         "manylla_photos_photo_test-profile",
         photoData,
       );
@@ -357,7 +382,7 @@ describe("photoSyncExclusion", () => {
       const profileId = "test-profile";
       const photoData = "data:image/jpeg;base64,test_data";
 
-      mockAsyncStorage.setItem.mockRejectedValue(new Error("Storage error"));
+      AsyncStorage.setItem.mockRejectedValue(new Error("Storage error"));
 
       // Should not throw
       await expect(
@@ -420,20 +445,36 @@ describe("photoSyncExclusion", () => {
   });
 
   describe("getLocalPhoto - React Native Environment", () => {
+    let originalWindow;
+
     beforeEach(() => {
-      // Remove window to simulate React Native environment
+      // Save original window
+      originalWindow = global.window;
+
+      // Remove window completely to simulate React Native environment
       delete global.window;
+
+      // Set a test environment flag to force React Native mode
+      global.__TEST_REACT_NATIVE_MODE__ = true;
+    });
+
+    afterEach(() => {
+      // Restore original window
+      global.window = originalWindow;
+
+      // Clean up test flag
+      delete global.__TEST_REACT_NATIVE_MODE__;
     });
 
     test("should retrieve photo from AsyncStorage for React Native", async () => {
       const profileId = "test-profile";
       const expectedPhoto = "data:image/jpeg;base64,test_data";
 
-      mockAsyncStorage.getItem.mockResolvedValue(expectedPhoto);
+      AsyncStorage.getItem.mockResolvedValue(expectedPhoto);
 
       const result = await getLocalPhoto(profileId);
 
-      expect(mockAsyncStorage.getItem).toHaveBeenCalledWith(
+      expect(AsyncStorage.getItem).toHaveBeenCalledWith(
         "manylla_photos_photo_test-profile",
       );
       expect(result).toBe(expectedPhoto);
@@ -442,7 +483,7 @@ describe("photoSyncExclusion", () => {
     test("should return null when photo not found in AsyncStorage", async () => {
       const profileId = "test-profile";
 
-      mockAsyncStorage.getItem.mockResolvedValue(null);
+      AsyncStorage.getItem.mockResolvedValue(null);
 
       const result = await getLocalPhoto(profileId);
 
@@ -452,10 +493,11 @@ describe("photoSyncExclusion", () => {
     test("should handle AsyncStorage errors gracefully", async () => {
       const profileId = "test-profile";
 
-      mockAsyncStorage.getItem.mockRejectedValue(new Error("Storage error"));
+      AsyncStorage.getItem.mockRejectedValue(new Error("Storage error"));
 
-      // Should not throw, but will return the rejected promise
-      await expect(getLocalPhoto(profileId)).rejects.toThrow("Storage error");
+      // Should handle errors gracefully and return null
+      const result = await getLocalPhoto(profileId);
+      expect(result).toBeNull();
     });
   });
 

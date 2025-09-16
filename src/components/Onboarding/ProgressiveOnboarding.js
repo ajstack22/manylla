@@ -15,7 +15,7 @@ const { width } = Dimensions.get("window");
 
 export const ProgressiveOnboarding = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState("welcome");
-  const [mode, setMode] = useState(null);
+  const [mode, setMode] = useState("fresh");
   const [childName, setChildName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState(null);
   const [photo] = useState("");
@@ -104,7 +104,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
       childName: mode === "demo" ? "Ellie" : childName,
       dateOfBirth: mode === "demo" ? undefined : dateOfBirth || undefined,
       photo: mode === "demo" ? "" : photo,
-      mode: mode || "fresh",
+      mode: mode,
       accessCode: mode === "join" ? accessCode : undefined,
     });
   };

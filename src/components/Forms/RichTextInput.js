@@ -175,7 +175,7 @@ export const RichTextInput = ({
         />
       </View>
 
-      {helperText && <Text style={styles.helperText}>{helperText}</Text>}
+      {Boolean(helperText) && <Text style={styles.helperText}>{helperText}</Text>}
     </View>
   );
 };
