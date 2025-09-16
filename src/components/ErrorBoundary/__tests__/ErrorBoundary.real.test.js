@@ -243,10 +243,10 @@ describe("ErrorBoundary Real Integration", () => {
       const CustomFallback = ({ error, errorInfo }) => {
         return (
           <div data-testid="custom-fallback">
-            <div>Error: {error && error.message}</div>
+            <div>Error: {Boolean(error) && error.message}</div>
             <div>
               Component stack available:{" "}
-              {!!(errorInfo && errorInfo.componentStack)}
+              {Boolean(errorInfo && errorInfo.componentStack)}
             </div>
           </div>
         );

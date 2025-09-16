@@ -1,4 +1,4 @@
-import { isWeb } from "../../utils/platform";
+// Platform utilities (removed unused import)
 
 // HTML escaping for security
 export const escapeHtml = (unsafe) => {

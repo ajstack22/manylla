@@ -196,7 +196,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
         await setStorageItem("manylla_sync_id", syncIdValue);
       } catch (storageError) {
         // Log storage error but don't fail the sync operation
-        if (__DEV__) {
+        if (process.env.NODE_ENV === 'development') {
           console.warn("Storage failed during sync enable:", storageError);
         }
       }
@@ -218,7 +218,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
 
       return { recoveryPhrase: phrase, syncId: syncIdValue };
     } catch (error) {
-      if (__DEV__) {
+      if (process.env.NODE_ENV === 'development') {
         console.error("Failed to enable sync:", error);
       }
       setSyncStatus("error");

@@ -122,7 +122,7 @@ export const SharedProfileView = ({ isAuthenticated = false }) => {
               />
             </View>
 
-            {!!error && <Text style={styles.errorText}>{error}</Text>}
+            {Boolean(error) && <Text style={styles.errorText}>{error}</Text>}
 
             <TouchableOpacity
               style={[
@@ -172,7 +172,7 @@ export const SharedProfileView = ({ isAuthenticated = false }) => {
         </View>
 
         {/* Note from Parent */}
-        {sharedData.note && (
+        {Boolean(sharedData.note) && (
           <View style={styles.noteCard}>
             <Text style={styles.noteTitle}>Note from Parent:</Text>
             <Text style={styles.noteText}>{sharedData.note}</Text>
@@ -194,7 +194,7 @@ export const SharedProfileView = ({ isAuthenticated = false }) => {
           </View>
 
           {/* Quick Info */}
-          {sharedData.quickInfo && (
+          {Boolean(sharedData.quickInfo) && (
             <View style={styles.quickInfoSection}>
               <View style={styles.sectionDivider} />
               <Text style={styles.sectionTitle}>Quick Information</Text>

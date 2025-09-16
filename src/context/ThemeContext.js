@@ -162,7 +162,7 @@ export const ThemeProvider = ({
     } catch (error) {
       // Silent failure for theme preference storage - theme will still work
       // User preference just won't persist across app restarts
-      if (__DEV__) {
+      if (process.env.NODE_ENV === 'development') {
         console.warn('Failed to save theme preference:', error.message);
       }
     }
@@ -181,7 +181,7 @@ export const ThemeProvider = ({
     } catch (error) {
       // Silent failure for theme preference storage - theme will still work
       // User preference just won't persist across app restarts
-      if (__DEV__) {
+      if (process.env.NODE_ENV === 'development') {
         console.warn('Failed to save theme preference:', error.message);
       }
     }

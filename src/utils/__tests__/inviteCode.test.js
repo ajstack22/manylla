@@ -11,13 +11,12 @@ import {
   generateInviteUrl,
   parseInviteUrl,
 } from '../inviteCode';
+import secureRandomService from '../SecureRandomService';
 
 // Mock SecureRandomService
 jest.mock('../SecureRandomService', () => ({
   getRandomInt: jest.fn()
 }));
-
-import secureRandomService from '../SecureRandomService';
 
 describe('inviteCode with SecureRandomService', () => {
   beforeEach(() => {

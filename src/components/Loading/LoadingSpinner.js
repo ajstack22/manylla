@@ -24,7 +24,7 @@ export const LoadingSpinner = ({
         color={colors.primary}
         style={styles.spinner}
       />
-      {!!message && <Text style={styles.message}>{message}</Text>}
+      {Boolean(message) && <Text style={styles.message}>{message}</Text>}
     </>
   );
 
