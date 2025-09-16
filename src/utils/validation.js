@@ -239,16 +239,18 @@ export class ProfileValidator {
    * Basic HTML sanitization (removes script tags and dangerous attributes)
    */
   static sanitizeHtml(html) {
-    // Remove script tags
-    let cleaned = html.replace(
-      /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
-      "",
-    );
+    // Limit input length to prevent DoS
+    if (html.length > 100000) {
+      html = html.substring(0, 100000);
+    }
 
-    // Remove on* event handlers (fixed to prevent ReDoS)
-    cleaned = cleaned.replace(/\bon\w+\s*=\s*["'][^"']*["']/gi, "");
+    // Remove script tags with simpler regex to prevent ReDoS
+    let cleaned = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "");
 
-    // Remove javascriptrotocol
+    // Remove on* event handlers with bounded regex
+    cleaned = cleaned.replace(/\bon\w{1,20}\s*=\s*["'][^"']{0,1000}["']/gi, "");
+
+    // Remove javascript protocol
     cleaned = cleaned.replace(/javascript:/gi, "");
 
     return cleaned;

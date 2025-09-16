@@ -441,7 +441,9 @@ export const commonValidators = {
   email:
     (message = "Invalid email address") =>
     (value) => {
-      if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      // Simplified email regex to prevent ReDoS
+      // Limits each section to reasonable lengths
+      if (value && !/^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{1,63}$/.test(value)) {
         return message;
       }
       return null;
@@ -450,7 +452,9 @@ export const commonValidators = {
   phone:
     (message = "Invalid phone number") =>
     (value) => {
-      if (value && !/^[\d\s\-+()]+$/.test(value)) {
+      // Limited phone regex to prevent ReDoS
+      // Max 20 chars for international numbers
+      if (value && (value.length > 20 || !/^[\d\s\-+()]+$/.test(value))) {
         return message;
       }
       return null;
