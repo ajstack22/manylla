@@ -45,7 +45,8 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
     if (currentIndex < stepOrder.length - 1) {
       // Skip child-info if demo mode or join mode
       if (
-        mode && (mode === "demo" || mode === "join") &&
+        mode &&
+        (mode === "demo" || mode === "join") &&
         stepOrder[currentIndex + 1] === "child-info"
       ) {
         setCurrentStep(stepOrder[currentIndex + 2]);
@@ -67,7 +68,8 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
     if (currentIndex > 0) {
       // Skip child-info if demo mode or join mode when going back
       if (
-        mode && (mode === "demo" || mode === "join") &&
+        mode &&
+        (mode === "demo" || mode === "join") &&
         stepOrder[currentIndex - 1] === "child-info"
       ) {
         setCurrentStep(stepOrder[currentIndex - 2]);
@@ -138,7 +140,8 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
     }
   };
 
-  const getTotalSteps = () => (mode && (mode === "demo" || mode === "join") ? 4 : 5);
+  const getTotalSteps = () =>
+    mode && (mode === "demo" || mode === "join") ? 4 : 5;
 
   const styles = StyleSheet.create({
     container: {
@@ -548,7 +551,8 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
 
               <View style={styles.infoAlert}>
                 <Text style={styles.infoText}>
-                  This information is stored securely on your device and never shared without your permission.
+                  This information is stored securely on your device and never
+                  shared without your permission.
                 </Text>
               </View>
 
@@ -589,7 +593,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
               <TouchableOpacity
                 style={[
                   styles.button,
-                  childName.trim().length === 0 && { opacity: 0.5 }
+                  childName.trim().length === 0 && { opacity: 0.5 },
                 ]}
                 onPress={handleNext}
                 disabled={childName.trim().length === 0}

@@ -83,7 +83,9 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
         statusText: "Unauthorized",
       });
 
-      await expect(syncService.push(createTestProfileData())).rejects.toThrow("Invalid sync credentials");
+      await expect(syncService.push(createTestProfileData())).rejects.toThrow(
+        "Invalid sync credentials",
+      );
     });
 
     test("should handle 500 server error in push (line 138-139)", async () => {
@@ -93,7 +95,9 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
         statusText: "Internal Server Error",
       });
 
-      await expect(syncService.push(createTestProfileData())).rejects.toThrow("Server error: Internal Server Error");
+      await expect(syncService.push(createTestProfileData())).rejects.toThrow(
+        "Server error: Internal Server Error",
+      );
     });
 
     test("should handle 400 bad request in push (line 141)", async () => {
@@ -103,7 +107,9 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
         statusText: "Bad Request",
       });
 
-      await expect(syncService.push(createTestProfileData())).rejects.toThrow("Push failed: Bad Request");
+      await expect(syncService.push(createTestProfileData())).rejects.toThrow(
+        "Push failed: Bad Request",
+      );
     });
 
     test("should handle 401 unauthorized in pull (line 202-203)", async () => {
@@ -113,7 +119,9 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
         statusText: "Unauthorized",
       });
 
-      await expect(syncService.pull()).rejects.toThrow("Invalid sync credentials");
+      await expect(syncService.pull()).rejects.toThrow(
+        "Invalid sync credentials",
+      );
     });
 
     test("should handle 500 server error in pull (line 205-206)", async () => {
@@ -123,7 +131,9 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
         statusText: "Internal Server Error",
       });
 
-      await expect(syncService.pull()).rejects.toThrow("Server error: Internal Server Error");
+      await expect(syncService.pull()).rejects.toThrow(
+        "Server error: Internal Server Error",
+      );
     });
 
     test("should handle 400 bad request in pull (line 208)", async () => {
@@ -133,7 +143,9 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
         statusText: "Bad Request",
       });
 
-      await expect(syncService.pull()).rejects.toThrow("Pull failed: Bad Request");
+      await expect(syncService.pull()).rejects.toThrow(
+        "Pull failed: Bad Request",
+      );
     });
 
     test("should handle no data found in pull (line 218)", async () => {
@@ -156,7 +168,9 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
         statusText: "Unauthorized",
       });
 
-      await expect(syncService.share(createTestProfileData())).rejects.toThrow("Invalid sync credentials");
+      await expect(syncService.share(createTestProfileData())).rejects.toThrow(
+        "Invalid sync credentials",
+      );
     });
 
     test("should handle 500 server error in share (line 237-238)", async () => {
@@ -166,7 +180,9 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
         statusText: "Internal Server Error",
       });
 
-      await expect(syncService.share(createTestProfileData())).rejects.toThrow("Server error: Internal Server Error");
+      await expect(syncService.share(createTestProfileData())).rejects.toThrow(
+        "Server error: Internal Server Error",
+      );
     });
 
     test("should handle 400 bad request in share (line 240)", async () => {
@@ -176,7 +192,9 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
         statusText: "Bad Request",
       });
 
-      await expect(syncService.share(createTestProfileData())).rejects.toThrow("Share failed: Bad Request");
+      await expect(syncService.share(createTestProfileData())).rejects.toThrow(
+        "Share failed: Bad Request",
+      );
     });
 
     test("should handle unsuccessful share response (line 246)", async () => {
@@ -188,7 +206,9 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
         }),
       });
 
-      await expect(syncService.share(createTestProfileData())).rejects.toThrow("Share creation failed");
+      await expect(syncService.share(createTestProfileData())).rejects.toThrow(
+        "Share creation failed",
+      );
     });
   });
 
@@ -196,7 +216,9 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
     test("should handle network errors in accessShare (lines 305-308)", async () => {
       global.fetch.mockRejectedValue(new Error("Network error"));
 
-      await expect(syncService.accessShare("share123", "key123")).rejects.toThrow("Network error");
+      await expect(
+        syncService.accessShare("share123", "key123"),
+      ).rejects.toThrow("Network error");
     });
 
     test("should handle 404 not found in accessShare", async () => {
@@ -206,7 +228,9 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
         statusText: "Not Found",
       });
 
-      await expect(syncService.accessShare("share123", "key123")).rejects.toThrow("Access failed: Not Found");
+      await expect(
+        syncService.accessShare("share123", "key123"),
+      ).rejects.toThrow("Access failed: Not Found");
     });
 
     test("should handle unsuccessful access response", async () => {
@@ -218,7 +242,9 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
         }),
       });
 
-      await expect(syncService.accessShare("share123", "key123")).rejects.toThrow("Share not found");
+      await expect(
+        syncService.accessShare("share123", "key123"),
+      ).rejects.toThrow("Share not found");
     });
   });
 
@@ -241,7 +267,9 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
 
     test("should clear stored profiles", async () => {
       await syncService.clearStoredProfiles();
-      expect(mockLocalStorage.removeItem).toHaveBeenCalledWith("manylla_stored_profiles");
+      expect(mockLocalStorage.removeItem).toHaveBeenCalledWith(
+        "manylla_stored_profiles",
+      );
     });
   });
 
@@ -254,15 +282,21 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
     });
 
     test("should handle null invite code", async () => {
-      await expect(syncService.joinFromInvite(null)).rejects.toThrow("Invalid invite code");
+      await expect(syncService.joinFromInvite(null)).rejects.toThrow(
+        "Invalid invite code",
+      );
     });
 
     test("should handle non-string invite code", async () => {
-      await expect(syncService.joinFromInvite(123)).rejects.toThrow("Invalid invite code");
+      await expect(syncService.joinFromInvite(123)).rejects.toThrow(
+        "Invalid invite code",
+      );
     });
 
     test("should handle invalid invite code format", async () => {
-      await expect(syncService.joinFromInvite("invalid")).rejects.toThrow("Invalid invite code");
+      await expect(syncService.joinFromInvite("invalid")).rejects.toThrow(
+        "Invalid invite code",
+      );
     });
 
     test("should handle invite code with special characters", async () => {
@@ -270,7 +304,9 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
 
       await syncService.joinFromInvite(inviteCode);
 
-      expect(syncService.encryptionService.init).toHaveBeenCalledWith("ABCDEF0123456789ABCDEF0123456789");
+      expect(syncService.encryptionService.init).toHaveBeenCalledWith(
+        "ABCDEF0123456789ABCDEF0123456789",
+      );
     });
 
     test("should handle failed data pull after join", async () => {
@@ -280,7 +316,9 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
       const originalPull = syncService.pull;
       syncService.pull = jest.fn().mockRejectedValue(new Error("Pull failed"));
 
-      await expect(syncService.joinFromInvite(inviteCode)).rejects.toThrow("Pull failed");
+      await expect(syncService.joinFromInvite(inviteCode)).rejects.toThrow(
+        "Pull failed",
+      );
 
       // Restore original
       syncService.pull = originalPull;
@@ -291,20 +329,26 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
     test("should handle sync service not enabled", async () => {
       syncService.encryptionService.isEnabled.mockResolvedValue(false);
 
-      await expect(syncService.push(createTestProfileData())).rejects.toThrow("Sync service unavailable");
+      await expect(syncService.push(createTestProfileData())).rejects.toThrow(
+        "Sync service unavailable",
+      );
     });
 
     test("should handle missing sync ID", async () => {
       syncService.encryptionService.getSyncId.mockResolvedValue(null);
 
-      await expect(syncService.push(createTestProfileData())).rejects.toThrow("Sync service unavailable");
+      await expect(syncService.push(createTestProfileData())).rejects.toThrow(
+        "Sync service unavailable",
+      );
     });
 
     test("should handle clear operation", async () => {
       await syncService.clear();
 
       expect(syncService.encryptionService.clear).toHaveBeenCalled();
-      expect(mockLocalStorage.removeItem).toHaveBeenCalledWith("manylla_stored_profiles");
+      expect(mockLocalStorage.removeItem).toHaveBeenCalledWith(
+        "manylla_stored_profiles",
+      );
     });
   });
 
@@ -354,7 +398,9 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
     test("should handle fetch failures", async () => {
       global.fetch.mockRejectedValue(new Error("Fetch failed"));
 
-      await expect(syncService.push(createTestProfileData())).rejects.toThrow("Fetch failed");
+      await expect(syncService.push(createTestProfileData())).rejects.toThrow(
+        "Fetch failed",
+      );
     });
 
     test("should handle sync failure with error details", async () => {
@@ -366,7 +412,9 @@ describe("ManyllaMinimalSyncServiceWeb Edge Cases", () => {
         }),
       });
 
-      await expect(syncService.push(createTestProfileData())).rejects.toThrow("Detailed sync error message");
+      await expect(syncService.push(createTestProfileData())).rejects.toThrow(
+        "Detailed sync error message",
+      );
     });
 
     test("should handle pull with malformed response", async () => {

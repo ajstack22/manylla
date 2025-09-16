@@ -69,10 +69,7 @@ export const ShareDialogRecipient = ({ selectedPreset, onPresetChange }) => {
                 color={colors.text?.primary || "#333"}
               />
             ) : (
-              <SettingsIcon
-                size={24}
-                color={colors.text?.primary || "#333"}
-              />
+              <SettingsIcon size={24} color={colors.text?.primary || "#333"} />
             )}
             <Text
               style={[

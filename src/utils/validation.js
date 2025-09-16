@@ -252,10 +252,16 @@ export class ProfileValidator {
 
     // Remove javascript and vbscript protocols (including obfuscated versions)
     // Handles: javascript:, java script:, &#106;avascript:, vbscript:, etc.
-    cleaned = cleaned.replace(/(?:javascript|java\s*script|vbscript|vb\s*script|&#x?(?:6A|106|74|4A);?\s*(?:&#x?(?:61|97|41);?)?\s*(?:&#x?(?:76|118|56);?)?\s*(?:&#x?(?:61|97|41);?)?\s*(?:&#x?(?:73|115|53);?)?\s*(?:&#x?(?:63|99|43);?)?\s*(?:&#x?(?:72|114|52);?)?\s*(?:&#x?(?:69|105|49);?)?\s*(?:&#x?(?:70|112|50);?)?\s*(?:&#x?(?:74|116|54);?)?)\s*:/gi, "");
+    cleaned = cleaned.replace(
+      /(?:javascript|java\s*script|vbscript|vb\s*script|&#x?(?:6A|106|74|4A);?\s*(?:&#x?(?:61|97|41);?)?\s*(?:&#x?(?:76|118|56);?)?\s*(?:&#x?(?:61|97|41);?)?\s*(?:&#x?(?:73|115|53);?)?\s*(?:&#x?(?:63|99|43);?)?\s*(?:&#x?(?:72|114|52);?)?\s*(?:&#x?(?:69|105|49);?)?\s*(?:&#x?(?:70|112|50);?)?\s*(?:&#x?(?:74|116|54);?)?)\s*:/gi,
+      "",
+    );
 
     // Remove data: URIs that could contain scripts
-    cleaned = cleaned.replace(/data:(?!image\/(?:png|jpg|jpeg|gif|svg\+xml))[^,;]+/gi, "");
+    cleaned = cleaned.replace(
+      /data:(?!image\/(?:png|jpg|jpeg|gif|svg\+xml))[^,;]+/gi,
+      "",
+    );
 
     return cleaned;
   }
@@ -296,7 +302,9 @@ export class ProfileValidator {
     if (!email || typeof email !== "string") return false;
     // Simplified regex to prevent ReDoS
     const emailRegex = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/;
-    return emailRegex.test(email) && !email.includes("..") && email.length < 320;
+    return (
+      emailRegex.test(email) && !email.includes("..") && email.length < 320
+    );
   }
 
   /**
@@ -384,7 +392,10 @@ export class ProfileValidator {
 
     // Check for javascript: and vbscript: protocols (including obfuscated)
     // eslint-disable-next-line no-script-url
-    if (/(?:javascript|vbscript)\s*:/i.test(markdown) || /(?:java|vb)\s*script\s*:/i.test(markdown)) {
+    if (
+      /(?:javascript|vbscript)\s*:/i.test(markdown) ||
+      /(?:java|vb)\s*script\s*:/i.test(markdown)
+    ) {
       return false;
     }
 

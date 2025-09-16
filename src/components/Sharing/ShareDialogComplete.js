@@ -9,12 +9,7 @@ import {
 import { getTextStyle } from "../../utils/platformStyles";
 import platform from "../../utils/platform";
 import { useTheme } from "../../context/ThemeContext";
-import {
-  ContentCopyIcon,
-  DoneIcon,
-  LockIcon,
-  UploadIcon,
-} from "../Common";
+import { ContentCopyIcon, DoneIcon, LockIcon, UploadIcon } from "../Common";
 import { useShareStyles } from "./useShareStyles";
 
 export const ShareDialogComplete = ({

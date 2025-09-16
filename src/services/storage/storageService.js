@@ -77,8 +77,8 @@ export class StorageService {
       // Silent failure for clearProfile - this is a cleanup operation that shouldn't interrupt user flow
       // If storage clearing fails, the data will still be overwritten on next save
       // Security: Only logging error.message (not full error object) to prevent potential info leaks
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('Failed to clear profile storage:', error.message);
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Failed to clear profile storage:", error.message);
       }
     }
   }

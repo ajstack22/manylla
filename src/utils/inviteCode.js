@@ -5,7 +5,7 @@
  * FormatXXX-XXXX (avoiding confusing characters)
  */
 
-import secureRandomService from './SecureRandomService';
+import secureRandomService from "./SecureRandomService";
 
 // Character set excluding confusing characters (0/O, 1/I/L)
 const INVITE_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";

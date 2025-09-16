@@ -18,12 +18,7 @@ import platform from "../../utils/platform";
  */
 export const SyncDialogRestore = ({ onModeChange, onClose }) => {
   const { styles, colors } = useSyncStyles();
-  const {
-    loading,
-    error,
-    handleJoinSync,
-    clearError,
-  } = useSyncActions();
+  const { loading, error, handleJoinSync, clearError } = useSyncActions();
 
   const [joinPhrase, setJoinPhrase] = useState("");
 

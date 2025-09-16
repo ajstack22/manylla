@@ -49,22 +49,31 @@ export const SyncDialogCreate = ({ onModeChange, onClose }) => {
 
   if (currentStep === "phrase") {
     return (
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.successAlert}>
           <CheckCircleIcon size={24} color="#67B26F" />
           <Text style={styles.successText}>Sync enabled successfully!</Text>
         </View>
 
         <Text style={styles.instructions}>
-          Save this recovery phrase in a secure location. You'll need it to access
-          your data from other devices.
+          Save this recovery phrase in a secure location. You'll need it to
+          access your data from other devices.
         </Text>
 
         <View style={styles.phraseContainer}>
           <Text style={styles.phraseText}>{generatedPhrase}</Text>
-          <TouchableOpacity style={styles.copyButton} onPress={handleCopyPhrasePress}>
+          <TouchableOpacity
+            style={styles.copyButton}
+            onPress={handleCopyPhrasePress}
+          >
             {copied ? (
-              <DoneIcon size={20} color={colors.background?.paper || "#FFFFFF"} />
+              <DoneIcon
+                size={20}
+                color={colors.background?.paper || "#FFFFFF"}
+              />
             ) : (
               <ContentCopyIcon
                 size={20}
@@ -89,7 +98,9 @@ export const SyncDialogCreate = ({ onModeChange, onClose }) => {
           style={[styles.button, styles.primaryButton, styles.fullWidthButton]}
           onPress={onClose}
         >
-          <Text style={styles.primaryButtonText}>I've Saved My Backup Code</Text>
+          <Text style={styles.primaryButtonText}>
+            I've Saved My Backup Code
+          </Text>
         </TouchableOpacity>
       </ScrollView>
     );

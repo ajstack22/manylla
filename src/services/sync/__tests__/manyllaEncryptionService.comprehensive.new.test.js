@@ -157,14 +157,18 @@ describe("manyllaEncryptionService - Comprehensive Coverage", () => {
       const phrase = "a1b2c3d4e5f6789012345678901234567890abcd";
 
       // This should still work despite storage errors
-      await expect(manyllaEncryptionService.initialize(phrase)).resolves.toBeDefined();
+      await expect(
+        manyllaEncryptionService.initialize(phrase),
+      ).resolves.toBeDefined();
     });
 
     test("SecureStorage should use secure_ prefix", async () => {
       // We can't directly test SecureStorage, but we can verify calls through service methods
       await manyllaEncryptionService.getSyncId();
 
-      expect(AsyncStorage.getItem).toHaveBeenCalledWith("secure_manylla_sync_id");
+      expect(AsyncStorage.getItem).toHaveBeenCalledWith(
+        "secure_manylla_sync_id",
+      );
     });
   });
 
@@ -197,8 +201,10 @@ describe("manyllaEncryptionService - Comprehensive Coverage", () => {
     test("deriveKeyFromPhrase should use fixed salt for sync ID", async () => {
       const phrase = "a1b2c3d4e5f6789012345678901234567890abcd";
 
-      const result1 = await manyllaEncryptionService.deriveKeyFromPhrase(phrase);
-      const result2 = await manyllaEncryptionService.deriveKeyFromPhrase(phrase);
+      const result1 =
+        await manyllaEncryptionService.deriveKeyFromPhrase(phrase);
+      const result2 =
+        await manyllaEncryptionService.deriveKeyFromPhrase(phrase);
 
       // Same phrase should produce same sync ID
       expect(result1.syncId).toBe(result2.syncId);
@@ -210,7 +216,10 @@ describe("manyllaEncryptionService - Comprehensive Coverage", () => {
       const phrase = "a1b2c3d4e5f6789012345678901234567890abcd";
       const saltString = "dGVzdC1zYWx0"; // base64 encoded salt
 
-      const result = await manyllaEncryptionService.deriveKeyFromPhrase(phrase, saltString);
+      const result = await manyllaEncryptionService.deriveKeyFromPhrase(
+        phrase,
+        saltString,
+      );
 
       expect(result.salt).toBe(saltString);
     });
@@ -243,9 +252,18 @@ describe("manyllaEncryptionService - Comprehensive Coverage", () => {
 
       const result = await manyllaEncryptionService.initialize(phrase);
 
-      expect(AsyncStorage.setItem).toHaveBeenCalledWith("secure_manylla_salt", expect.any(String));
-      expect(AsyncStorage.setItem).toHaveBeenCalledWith("secure_manylla_sync_id", expect.any(String));
-      expect(AsyncStorage.setItem).toHaveBeenCalledWith("secure_manylla_recovery", expect.any(String));
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        "secure_manylla_salt",
+        expect.any(String),
+      );
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        "secure_manylla_sync_id",
+        expect.any(String),
+      );
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        "secure_manylla_recovery",
+        expect.any(String),
+      );
       expect(result.syncId).toBeDefined();
       expect(result.salt).toBeDefined();
     });
@@ -254,7 +272,10 @@ describe("manyllaEncryptionService - Comprehensive Coverage", () => {
       const phrase = "a1b2c3d4e5f6789012345678901234567890abcd";
       const existingSalt = "dGVzdC1zYWx0";
 
-      const result = await manyllaEncryptionService.initialize(phrase, existingSalt);
+      const result = await manyllaEncryptionService.initialize(
+        phrase,
+        existingSalt,
+      );
 
       expect(result).toBeDefined();
       expect(result.syncId).toBeDefined();
@@ -312,7 +333,7 @@ describe("manyllaEncryptionService - Comprehensive Coverage", () => {
       // Create data larger than COMPRESSION_THRESHOLD (1024 bytes)
       const largeData = {
         content: "x".repeat(2000),
-        array: Array(100).fill({ field: "data" })
+        array: Array(100).fill({ field: "data" }),
       };
 
       const encrypted = manyllaEncryptionService.encryptData(largeData);
@@ -410,7 +431,10 @@ describe("manyllaEncryptionService - Comprehensive Coverage", () => {
       expect(deviceKey).toBeDefined();
       expect(deviceKey instanceof Uint8Array).toBe(true);
       expect(deviceKey.length).toBe(32); // KEY_LENGTH
-      expect(AsyncStorage.setItem).toHaveBeenCalledWith("secure_manylla_device_key", expect.any(String));
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        "secure_manylla_device_key",
+        expect.any(String),
+      );
     });
 
     test("getDeviceKey should return existing key", async () => {
@@ -429,7 +453,10 @@ describe("manyllaEncryptionService - Comprehensive Coverage", () => {
       const data = "test data";
       const key = new Uint8Array(32).fill(1); // Simple test key
 
-      const encrypted = await manyllaEncryptionService.encryptWithKey(data, key);
+      const encrypted = await manyllaEncryptionService.encryptWithKey(
+        data,
+        key,
+      );
 
       expect(encrypted).toBeDefined();
       expect(typeof encrypted).toBe("string");
@@ -439,7 +466,10 @@ describe("manyllaEncryptionService - Comprehensive Coverage", () => {
       const data = "Hello 世界";
       const key = new Uint8Array(32).fill(1);
 
-      const encrypted = await manyllaEncryptionService.encryptWithKey(data, key);
+      const encrypted = await manyllaEncryptionService.encryptWithKey(
+        data,
+        key,
+      );
 
       expect(encrypted).toBeDefined();
       expect(typeof encrypted).toBe("string");
@@ -453,7 +483,9 @@ describe("manyllaEncryptionService - Comprehensive Coverage", () => {
       const isEnabled = await manyllaEncryptionService.isEnabled();
 
       expect(isEnabled).toBe(false);
-      expect(AsyncStorage.getItem).toHaveBeenCalledWith("secure_manylla_sync_id");
+      expect(AsyncStorage.getItem).toHaveBeenCalledWith(
+        "secure_manylla_sync_id",
+      );
     });
 
     test("isEnabled should return true when sync ID exists", async () => {
@@ -471,7 +503,9 @@ describe("manyllaEncryptionService - Comprehensive Coverage", () => {
       const syncId = await manyllaEncryptionService.getSyncId();
 
       expect(syncId).toBe(testSyncId);
-      expect(AsyncStorage.getItem).toHaveBeenCalledWith("secure_manylla_sync_id");
+      expect(AsyncStorage.getItem).toHaveBeenCalledWith(
+        "secure_manylla_sync_id",
+      );
     });
   });
 
@@ -485,9 +519,15 @@ describe("manyllaEncryptionService - Comprehensive Coverage", () => {
       await manyllaEncryptionService.clear();
 
       expect(manyllaEncryptionService.isInitialized()).toBe(false);
-      expect(AsyncStorage.removeItem).toHaveBeenCalledWith("secure_manylla_salt");
-      expect(AsyncStorage.removeItem).toHaveBeenCalledWith("secure_manylla_sync_id");
-      expect(AsyncStorage.removeItem).toHaveBeenCalledWith("secure_manylla_recovery");
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
+        "secure_manylla_salt",
+      );
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
+        "secure_manylla_sync_id",
+      );
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
+        "secure_manylla_recovery",
+      );
     });
 
     test("restore should work with valid stored data", async () => {
@@ -511,7 +551,7 @@ describe("manyllaEncryptionService - Comprehensive Coverage", () => {
       // but the method should handle it gracefully
       const result = await manyllaEncryptionService.restore();
 
-      expect(typeof result).toBe('boolean'); // Should return a boolean
+      expect(typeof result).toBe("boolean"); // Should return a boolean
       // Note: This will likely be false due to mock data, but the important thing
       // is that the method doesn't throw an error
     });

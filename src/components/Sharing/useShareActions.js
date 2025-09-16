@@ -124,8 +124,11 @@ Note: This link contains encrypted data. Please use the complete link exactly as
       // Silent failure for Share.share() - this is expected on some platforms/devices
       // User can still copy the link manually if sharing doesn't work
       // Security: Only logging error.message to avoid exposing sensitive share data
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('Native share failed, user can copy link manually:', error.message);
+      if (process.env.NODE_ENV === "development") {
+        console.warn(
+          "Native share failed, user can copy link manually:",
+          error.message,
+        );
       }
     }
   };

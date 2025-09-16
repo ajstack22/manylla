@@ -5,7 +5,11 @@ import platform from "./platform";
 export const getFontFamily = (weight) => {
   if (platform.isAndroid) {
     // Android can't use fontWeight, needs font variants
-    if (weight === "bold" || String(weight) === "700" || String(weight) === "600") {
+    if (
+      weight === "bold" ||
+      String(weight) === "700" ||
+      String(weight) === "600"
+    ) {
       return "System"; // Will use system bold variant
     }
     return "System"; // Will use system regular

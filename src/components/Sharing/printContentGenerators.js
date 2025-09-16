@@ -18,7 +18,7 @@ export const generateTextContent = ({
   selectedCategories,
   actualEntries,
   categoryGroups,
-  categoryTitles
+  categoryTitles,
 }) => {
   let content = `${childName} - Information Summary
 `;
@@ -113,7 +113,7 @@ export const generateHtmlContent = ({
   note,
   selectedCategories,
   actualEntries,
-  categoryTitles
+  categoryTitles,
 }) => {
   const currentDate = new Date().toLocaleDateString();
   const currentDateTime = new Date().toLocaleString();

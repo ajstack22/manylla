@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  ScrollView,
-  Alert,
-  Share,
-} from "react-native";
+import { View, ScrollView, Alert, Share } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
 import { ThemedModal } from "../Common";
 import { isWeb } from "../../utils/platform";
@@ -16,7 +11,10 @@ import { PrintPreviewEntries } from "./PrintPreviewEntries";
 import { PrintPreviewFooter } from "./PrintPreviewFooter";
 import { PrintPreviewActions } from "./PrintPreviewActions";
 import { usePrintStyles } from "./usePrintStyles";
-import { generateTextContent, generateHtmlContent } from "./printContentGenerators";
+import {
+  generateTextContent,
+  generateHtmlContent,
+} from "./printContentGenerators";
 
 export const PrintPreview = ({
   visible,
@@ -148,7 +146,6 @@ export const PrintPreview = ({
     });
   };
 
-
   const handlePrint = async () => {
     try {
       if (isWeb) {
@@ -159,7 +156,7 @@ export const PrintPreview = ({
           note: localNote,
           selectedCategories: localSelectedCategories,
           actualEntries,
-          categoryTitles
+          categoryTitles,
         });
         const printWindow = window.open("", "PRINT", "height=600,width=800");
 
@@ -189,7 +186,7 @@ export const PrintPreview = ({
           selectedCategories: localSelectedCategories,
           actualEntries,
           categoryGroups,
-          categoryTitles
+          categoryTitles,
         });
         await Share.share({
           message: textContent,
@@ -215,7 +212,7 @@ export const PrintPreview = ({
         selectedCategories: localSelectedCategories,
         actualEntries,
         categoryGroups,
-        categoryTitles
+        categoryTitles,
       });
 
       if (isWeb) {
@@ -247,8 +244,6 @@ export const PrintPreview = ({
     // For now, use the text share functionality
     await handleShareAsText();
   };
-
-
 
   return (
     <ThemedModal
@@ -313,4 +308,3 @@ export const PrintPreview = ({
     </ThemedModal>
   );
 };
-

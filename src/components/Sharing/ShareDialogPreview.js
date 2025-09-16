@@ -16,10 +16,7 @@ export const ShareDialogPreview = ({
   return (
     <>
       {/* Preview Toggle */}
-      <TouchableOpacity
-        style={styles.previewButton}
-        onPress={onTogglePreview}
-      >
+      <TouchableOpacity style={styles.previewButton} onPress={onTogglePreview}>
         <Text style={styles.previewButtonText}>
           {showPreview ? "Hide" : "Show"} preview ({getSelectedEntriesCount()}{" "}
           entries)

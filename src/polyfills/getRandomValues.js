@@ -7,7 +7,7 @@ if (platform.isWeb && typeof global.crypto === "undefined") {
 
   try {
     // Try to use Node.js crypto in web environments that support it
-    nodeRandomBytes = require('crypto').randomBytes;
+    nodeRandomBytes = require("crypto").randomBytes;
   } catch (e) {
     // Not available, will use Math.random as last resort
   }
@@ -22,8 +22,10 @@ if (platform.isWeb && typeof global.crypto === "undefined") {
         }
       } else {
         // Fallback to Math.random with warning
-        if (process.env.NODE_ENV === 'development') {
-          console.warn('Using Math.random() as crypto fallback - not cryptographically secure!');
+        if (process.env.NODE_ENV === "development") {
+          console.warn(
+            "Using Math.random() as crypto fallback - not cryptographically secure!",
+          );
         }
         for (let i = 0; i < array.length; i++) {
           array[i] = Math.floor(Math.random() * 256);

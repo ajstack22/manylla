@@ -7,7 +7,7 @@ import {
   prepareProfileForSync,
   restorePhotoToProfile,
   storePhotoLocally,
-  getLocalPhoto
+  getLocalPhoto,
 } from "../photoSyncExclusion";
 
 // Mock localStorage
@@ -27,7 +27,7 @@ const mockAsyncStorage = {
 };
 
 // Mock require for AsyncStorage
-jest.mock('@react-native-async-storage/async-storage', () => ({
+jest.mock("@react-native-async-storage/async-storage", () => ({
   default: mockAsyncStorage,
 }));
 
@@ -36,20 +36,20 @@ describe("photoSyncExclusion", () => {
     jest.clearAllMocks();
 
     // Setup global localStorage mock
-    Object.defineProperty(global, 'localStorage', {
+    Object.defineProperty(global, "localStorage", {
       value: mockLocalStorage,
       writable: true,
-      configurable: true
+      configurable: true,
     });
 
     // Setup window for web environment tests
     if (!global.window) {
-      Object.defineProperty(global, 'window', {
+      Object.defineProperty(global, "window", {
         value: {
-          localStorage: mockLocalStorage
+          localStorage: mockLocalStorage,
         },
         writable: true,
-        configurable: true
+        configurable: true,
       });
     } else {
       global.window.localStorage = mockLocalStorage;
@@ -76,7 +76,7 @@ describe("photoSyncExclusion", () => {
       const profile = {
         id: "test-id",
         name: "Test Profile",
-        categories: []
+        categories: [],
       };
 
       const result = prepareProfileForSync(profile);
@@ -92,7 +92,7 @@ describe("photoSyncExclusion", () => {
         name: "Test Profile",
         photo: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQ...",
         updatedAt: "2023-01-01T00:00:00Z",
-        categories: []
+        categories: [],
       };
 
       const result = prepareProfileForSync(profile);
@@ -101,7 +101,7 @@ describe("photoSyncExclusion", () => {
       expect(result.photoRef).toEqual({
         id: "photo_test-id",
         hasPhoto: true,
-        updatedAt: "2023-01-01T00:00:00Z"
+        updatedAt: "2023-01-01T00:00:00Z",
       });
       expect(result.id).toBe("test-id");
       expect(result.name).toBe("Test Profile");
@@ -112,7 +112,7 @@ describe("photoSyncExclusion", () => {
       const profile = {
         name: "Test Profile",
         photo: "data:image/jpeg;base64,test",
-        updatedAt: "2023-01-01T00:00:00Z"
+        updatedAt: "2023-01-01T00:00:00Z",
       };
 
       const result = prepareProfileForSync(profile);
@@ -120,7 +120,7 @@ describe("photoSyncExclusion", () => {
       expect(result.photoRef).toEqual({
         id: "photo_default",
         hasPhoto: true,
-        updatedAt: "2023-01-01T00:00:00Z"
+        updatedAt: "2023-01-01T00:00:00Z",
       });
     });
 
@@ -129,7 +129,7 @@ describe("photoSyncExclusion", () => {
         id: "test-id",
         name: "Test Profile",
         photo: "data:image/jpeg;base64,test",
-        updatedAt: "2023-01-01T00:00:00Z"
+        updatedAt: "2023-01-01T00:00:00Z",
       };
 
       const originalPhoto = profile.photo;
@@ -148,7 +148,7 @@ describe("photoSyncExclusion", () => {
         id: "test-id",
         name: "Test Profile",
         photo: "",
-        updatedAt: "2023-01-01T00:00:00Z"
+        updatedAt: "2023-01-01T00:00:00Z",
       };
 
       const result = prepareProfileForSync(profile);
@@ -157,7 +157,7 @@ describe("photoSyncExclusion", () => {
       expect(result.photoRef).toEqual({
         id: "photo_test-id",
         hasPhoto: true,
-        updatedAt: "2023-01-01T00:00:00Z"
+        updatedAt: "2023-01-01T00:00:00Z",
       });
     });
   });
@@ -172,7 +172,7 @@ describe("photoSyncExclusion", () => {
       const syncProfile = {
         id: "test-id",
         name: "Test Profile",
-        categories: []
+        categories: [],
       };
 
       const result = restorePhotoToProfile(syncProfile, {});
@@ -187,13 +187,13 @@ describe("photoSyncExclusion", () => {
         photoRef: {
           id: "photo_test-id",
           hasPhoto: true,
-          updatedAt: "2023-01-01T00:00:00Z"
+          updatedAt: "2023-01-01T00:00:00Z",
         },
-        categories: []
+        categories: [],
       };
 
       const localPhotos = {
-        "photo_test-id": "data:image/jpeg;base64,restored_photo"
+        "photo_test-id": "data:image/jpeg;base64,restored_photo",
       };
 
       const result = restorePhotoToProfile(syncProfile, localPhotos);
@@ -211,9 +211,9 @@ describe("photoSyncExclusion", () => {
         photoRef: {
           id: "photo_test-id",
           hasPhoto: true,
-          updatedAt: "2023-01-01T00:00:00Z"
+          updatedAt: "2023-01-01T00:00:00Z",
         },
-        categories: []
+        categories: [],
       };
 
       const localPhotos = {}; // Empty local photos
@@ -232,9 +232,9 @@ describe("photoSyncExclusion", () => {
         photoRef: {
           id: "photo_test-id",
           hasPhoto: true,
-          updatedAt: "2023-01-01T00:00:00Z"
+          updatedAt: "2023-01-01T00:00:00Z",
         },
-        categories: []
+        categories: [],
       };
 
       const result = restorePhotoToProfile(syncProfile, null);
@@ -249,14 +249,14 @@ describe("photoSyncExclusion", () => {
         name: "Test Profile",
         photoRef: {
           id: "photo_test-id",
-          updatedAt: "2023-01-01T00:00:00Z"
+          updatedAt: "2023-01-01T00:00:00Z",
           // hasPhoto is missing
         },
-        categories: []
+        categories: [],
       };
 
       const localPhotos = {
-        "photo_test-id": "data:image/jpeg;base64,photo"
+        "photo_test-id": "data:image/jpeg;base64,photo",
       };
 
       const result = restorePhotoToProfile(syncProfile, localPhotos);
@@ -273,13 +273,13 @@ describe("photoSyncExclusion", () => {
         photoRef: {
           id: "photo_test-id",
           hasPhoto: true,
-          updatedAt: "2023-01-01T00:00:00Z"
+          updatedAt: "2023-01-01T00:00:00Z",
         },
-        categories: []
+        categories: [],
       };
 
       const localPhotos = {
-        "photo_test-id": "data:image/jpeg;base64,photo"
+        "photo_test-id": "data:image/jpeg;base64,photo",
       };
 
       const originalPhotoRef = syncProfile.photoRef;
@@ -308,7 +308,7 @@ describe("photoSyncExclusion", () => {
 
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
         "manylla_photos_photo_test-profile",
-        photoData
+        photoData,
       );
     });
 
@@ -319,7 +319,7 @@ describe("photoSyncExclusion", () => {
 
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
         "manylla_photos_photo_default",
-        photoData
+        photoData,
       );
     });
 
@@ -330,7 +330,7 @@ describe("photoSyncExclusion", () => {
 
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
         "manylla_photos_photo_default",
-        photoData
+        photoData,
       );
     });
   });
@@ -349,7 +349,7 @@ describe("photoSyncExclusion", () => {
 
       expect(mockAsyncStorage.setItem).toHaveBeenCalledWith(
         "manylla_photos_photo_test-profile",
-        photoData
+        photoData,
       );
     });
 
@@ -360,7 +360,9 @@ describe("photoSyncExclusion", () => {
       mockAsyncStorage.setItem.mockRejectedValue(new Error("Storage error"));
 
       // Should not throw
-      await expect(storePhotoLocally(profileId, photoData)).resolves.toBeUndefined();
+      await expect(
+        storePhotoLocally(profileId, photoData),
+      ).resolves.toBeUndefined();
     });
   });
 
@@ -379,7 +381,7 @@ describe("photoSyncExclusion", () => {
       const result = await getLocalPhoto(profileId);
 
       expect(mockLocalStorage.getItem).toHaveBeenCalledWith(
-        "manylla_photos_photo_test-profile"
+        "manylla_photos_photo_test-profile",
       );
       expect(result).toBe(expectedPhoto);
     });
@@ -400,7 +402,7 @@ describe("photoSyncExclusion", () => {
       const result = await getLocalPhoto(undefined);
 
       expect(mockLocalStorage.getItem).toHaveBeenCalledWith(
-        "manylla_photos_photo_default"
+        "manylla_photos_photo_default",
       );
       expect(result).toBe("test_photo");
     });
@@ -411,7 +413,7 @@ describe("photoSyncExclusion", () => {
       const result = await getLocalPhoto(null);
 
       expect(mockLocalStorage.getItem).toHaveBeenCalledWith(
-        "manylla_photos_photo_default"
+        "manylla_photos_photo_default",
       );
       expect(result).toBe("test_photo");
     });
@@ -432,7 +434,7 @@ describe("photoSyncExclusion", () => {
       const result = await getLocalPhoto(profileId);
 
       expect(mockAsyncStorage.getItem).toHaveBeenCalledWith(
-        "manylla_photos_photo_test-profile"
+        "manylla_photos_photo_test-profile",
       );
       expect(result).toBe(expectedPhoto);
     });
@@ -464,7 +466,7 @@ describe("photoSyncExclusion", () => {
         name: "Test Profile",
         photo: "data:image/jpeg;base64,original_photo",
         updatedAt: "2023-01-01T00:00:00Z",
-        categories: ["category1"]
+        categories: ["category1"],
       };
 
       // Prepare for sync
@@ -472,7 +474,7 @@ describe("photoSyncExclusion", () => {
 
       // Simulate local photo storage
       const localPhotos = {
-        "photo_test-id": originalProfile.photo
+        "photo_test-id": originalProfile.photo,
       };
 
       // Restore after sync
@@ -501,10 +503,10 @@ describe("photoSyncExclusion", () => {
       expect(retrievedPhoto).toBe(photoData);
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
         "manylla_photos_photo_test-profile",
-        photoData
+        photoData,
       );
       expect(mockLocalStorage.getItem).toHaveBeenCalledWith(
-        "manylla_photos_photo_test-profile"
+        "manylla_photos_photo_test-profile",
       );
     });
   });
@@ -515,7 +517,7 @@ describe("photoSyncExclusion", () => {
         id: "",
         name: "Test Profile",
         photo: "data:image/jpeg;base64,test",
-        updatedAt: "2023-01-01T00:00:00Z"
+        updatedAt: "2023-01-01T00:00:00Z",
       };
 
       const result = prepareProfileForSync(profile);
@@ -529,8 +531,8 @@ describe("photoSyncExclusion", () => {
         name: "Test Profile",
         photoRef: {
           id: "photo_test-id",
-          hasPhoto: true
-        }
+          hasPhoto: true,
+        },
       };
 
       const result = prepareProfileForSync(profile);
@@ -550,7 +552,7 @@ describe("photoSyncExclusion", () => {
 
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
         "manylla_photos_photo_test-profile-with-special-chars-@#$%",
-        photoData
+        photoData,
       );
     });
   });

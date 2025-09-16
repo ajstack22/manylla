@@ -5,10 +5,7 @@
  */
 
 import React from "react";
-import {
-  render,
-  screen,
-} from "../../../test/utils/test-utils";
+import { render, screen } from "../../../test/utils/test-utils";
 import { UnifiedAddDialog } from "../UnifiedAddDialog";
 
 // Mock platform utilities
@@ -27,7 +24,7 @@ describe("UnifiedAddDialog Real Integration", () => {
           onClose={jest.fn()}
           onAdd={jest.fn()}
           existingItems={[]}
-        />
+        />,
       );
 
       expect(screen.getAllByText(/add category/i).length).toBeGreaterThan(0);
@@ -43,7 +40,7 @@ describe("UnifiedAddDialog Real Integration", () => {
           onClose={jest.fn()}
           onAdd={jest.fn()}
           existingItems={[]}
-        />
+        />,
       );
 
       // Modal may still render content in DOM when closed in React Native Web
@@ -61,7 +58,7 @@ describe("UnifiedAddDialog Real Integration", () => {
           onClose={jest.fn()}
           onAdd={jest.fn()}
           existingItems={[]}
-        />
+        />,
       );
 
       expect(screen.getAllByText(/add quick info/i).length).toBeGreaterThan(0);
@@ -80,7 +77,7 @@ describe("UnifiedAddDialog Real Integration", () => {
           onClose={jest.fn()}
           onAdd={jest.fn()}
           existingItems={[]}
-        />
+        />,
       );
 
       expect(screen.getByPlaceholderText(/enter category name/i)).toBeTruthy();
@@ -95,7 +92,7 @@ describe("UnifiedAddDialog Real Integration", () => {
           onClose={jest.fn()}
           onAdd={jest.fn()}
           existingItems={[]}
-        />
+        />,
       );
 
       expect(screen.getByPlaceholderText(/enter or select type/i)).toBeTruthy();
@@ -113,7 +110,7 @@ describe("UnifiedAddDialog Real Integration", () => {
           onClose={jest.fn()}
           onAdd={jest.fn()}
           existingItems={[]}
-        />
+        />,
       );
 
       expect(screen.getAllByText(/add category/i).length).toBeGreaterThan(0);

@@ -7,11 +7,7 @@ import { jest } from "@jest/globals";
 import manyllaEncryptionService from "../manyllaEncryptionService";
 import conflictResolver from "../conflictResolver";
 import { ManyllaMinimalSyncService } from "../manyllaMinimalSyncServiceWeb";
-import {
-  SyncError,
-  NetworkError,
-  ErrorHandler,
-} from "../../../utils/errors";
+import { SyncError, NetworkError, ErrorHandler } from "../../../utils/errors";
 
 // Mock dependencies
 jest.mock("../manyllaEncryptionService");
@@ -23,13 +19,13 @@ global.fetch = jest.fn();
 const fetch = global.fetch;
 
 // Mock localStorage properly using Object.defineProperty
-Object.defineProperty(global, 'localStorage', {
+Object.defineProperty(global, "localStorage", {
   value: {
     getItem: jest.fn(),
     setItem: jest.fn(),
     removeItem: jest.fn(),
   },
-  writable: true
+  writable: true,
 });
 
 describe("ManyllaMinimalSyncServiceWeb - Coverage Tests", () => {
@@ -50,7 +46,9 @@ describe("ManyllaMinimalSyncServiceWeb - Coverage Tests", () => {
     manyllaEncryptionService.decrypt.mockReturnValue({ data: "decrypted" });
 
     // Mock conflict resolver
-    conflictResolver.mergeProfiles.mockImplementation((local, remote) => remote);
+    conflictResolver.mergeProfiles.mockImplementation(
+      (local, remote) => remote,
+    );
 
     // Mock error handler
     ErrorHandler.log.mockImplementation(() => {});
@@ -132,7 +130,8 @@ describe("ManyllaMinimalSyncServiceWeb - Coverage Tests", () => {
     test("should handle pull with generic error message", async () => {
       fetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ success: false, error: "Generic pull error" }),
+        json: () =>
+          Promise.resolve({ success: false, error: "Generic pull error" }),
       });
 
       await expect(service.pull()).rejects.toThrow(SyncError);
@@ -141,17 +140,27 @@ describe("ManyllaMinimalSyncServiceWeb - Coverage Tests", () => {
 
   describe("Invite Code Edge Cases", () => {
     test("should handle invalid invite code format in joinFromInvite", async () => {
-      await expect(service.joinFromInvite("")).rejects.toThrow("Invalid invite code");
-      await expect(service.joinFromInvite("short")).rejects.toThrow("Invalid invite code");
-      await expect(service.joinFromInvite("TOOLONGTOBEVALIDHEXSTRING123456789")).rejects.toThrow("Invalid invite code");
+      await expect(service.joinFromInvite("")).rejects.toThrow(
+        "Invalid invite code",
+      );
+      await expect(service.joinFromInvite("short")).rejects.toThrow(
+        "Invalid invite code",
+      );
+      await expect(
+        service.joinFromInvite("TOOLONGTOBEVALIDHEXSTRING123456789"),
+      ).rejects.toThrow("Invalid invite code");
     });
 
     test("should handle null invite code", async () => {
-      await expect(service.joinFromInvite(null)).rejects.toThrow("Invalid invite code");
+      await expect(service.joinFromInvite(null)).rejects.toThrow(
+        "Invalid invite code",
+      );
     });
 
     test("should handle non-hex characters in invite code", async () => {
-      await expect(service.joinFromInvite("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG")).rejects.toThrow("Invalid invite code");
+      await expect(
+        service.joinFromInvite("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"),
+      ).rejects.toThrow("Invalid invite code");
     });
   });
 
@@ -195,7 +204,9 @@ describe("ManyllaMinimalSyncServiceWeb - Coverage Tests", () => {
       expect(service.isPolling).toBe(false);
       expect(service.syncId).toBe(null);
       expect(service.lastPullTime).toBe(null);
-      expect(global.localStorage.removeItem).toHaveBeenCalledWith("manylla_recovery_phrase");
+      expect(global.localStorage.removeItem).toHaveBeenCalledWith(
+        "manylla_recovery_phrase",
+      );
     });
   });
 
@@ -341,12 +352,16 @@ describe("ManyllaMinimalSyncServiceWeb - Coverage Tests", () => {
 
   describe("Recovery Phrase Generation", () => {
     test("should generate recovery phrase using encryption service", () => {
-      manyllaEncryptionService.generateRecoveryPhrase.mockReturnValue("generated-phrase");
+      manyllaEncryptionService.generateRecoveryPhrase.mockReturnValue(
+        "generated-phrase",
+      );
 
       const phrase = service.generateRecoveryPhrase();
 
       expect(phrase).toBe("generated-phrase");
-      expect(manyllaEncryptionService.generateRecoveryPhrase).toHaveBeenCalled();
+      expect(
+        manyllaEncryptionService.generateRecoveryPhrase,
+      ).toHaveBeenCalled();
     });
   });
 

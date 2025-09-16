@@ -8,13 +8,13 @@
  * Replaces all insecure Math.random() usage with cryptographically secure alternatives.
  */
 
-import platform from './platform';
+import platform from "./platform";
 
 // Import the polyfill for React Native
 // On web, webpack will alias this to our web polyfill
 if (platform.isMobile) {
   try {
-    require('react-native-get-random-values');
+    require("react-native-get-random-values");
   } catch (error) {
     // Silently ignore if module not available
   }
@@ -30,14 +30,18 @@ class SecureRandomService {
    */
   checkAvailability() {
     if (platform.isWeb) {
-      return typeof crypto !== 'undefined' &&
-             typeof crypto.getRandomValues === 'function';
+      return (
+        typeof crypto !== "undefined" &&
+        typeof crypto.getRandomValues === "function"
+      );
     }
 
     if (platform.isMobile) {
       // Check if react-native-get-random-values polyfill loaded crypto
-      return typeof global.crypto !== 'undefined' &&
-             typeof global.crypto.getRandomValues === 'function';
+      return (
+        typeof global.crypto !== "undefined" &&
+        typeof global.crypto.getRandomValues === "function"
+      );
     }
 
     return false;
@@ -50,7 +54,9 @@ class SecureRandomService {
    */
   getRandomBytes(length) {
     if (!this.isAvailable) {
-      throw new Error('Secure random generation not available on this platform');
+      throw new Error(
+        "Secure random generation not available on this platform",
+      );
     }
 
     const array = new Uint8Array(length);
@@ -60,7 +66,7 @@ class SecureRandomService {
     } else if (platform.isMobile) {
       global.crypto.getRandomValues(array);
     } else {
-      throw new Error('Unsupported platform for secure random generation');
+      throw new Error("Unsupported platform for secure random generation");
     }
 
     return array;
@@ -73,7 +79,7 @@ class SecureRandomService {
    */
   getRandomInt(max) {
     if (max <= 0 || !Number.isInteger(max)) {
-      throw new Error('Max must be a positive integer');
+      throw new Error("Max must be a positive integer");
     }
 
     // Use rejection sampling to avoid modulo bias
@@ -109,7 +115,7 @@ class SecureRandomService {
 
     // Convert to float between 0 and 1
     // Use >>> 0 to ensure unsigned interpretation
-    return (randomInt >>> 0) / (2 ** 32);
+    return (randomInt >>> 0) / 2 ** 32;
   }
 
   /**
@@ -119,13 +125,13 @@ class SecureRandomService {
    */
   getRandomHex(length) {
     if (length % 2 !== 0) {
-      throw new Error('Hex string length must be even');
+      throw new Error("Hex string length must be even");
     }
 
     const bytes = this.getRandomBytes(length / 2);
     return Array.from(bytes)
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('');
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
   }
 
   /**
@@ -136,14 +142,14 @@ class SecureRandomService {
    */
   getRandomString(charset, length) {
     if (!charset || charset.length === 0) {
-      throw new Error('Charset cannot be empty');
+      throw new Error("Charset cannot be empty");
     }
 
     if (length <= 0) {
-      throw new Error('Length must be positive');
+      throw new Error("Length must be positive");
     }
 
-    let result = '';
+    let result = "";
     for (let i = 0; i < length; i++) {
       const randomIndex = this.getRandomInt(charset.length);
       result += charset[randomIndex];
@@ -167,25 +173,25 @@ class SecureRandomService {
       uppercase: true,
       lowercase: true,
       numbers: true,
-      exclude: ''
+      exclude: "",
     };
 
     const opts = { ...defaults, ...options };
 
-    let charset = '';
-    if (opts.uppercase) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    if (opts.lowercase) charset += 'abcdefghijklmnopqrstuvwxyz';
-    if (opts.numbers) charset += '0123456789';
+    let charset = "";
+    if (opts.uppercase) charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    if (opts.lowercase) charset += "abcdefghijklmnopqrstuvwxyz";
+    if (opts.numbers) charset += "0123456789";
 
     // Remove excluded characters
     if (opts.exclude) {
       for (const char of opts.exclude) {
-        charset = charset.replace(new RegExp(char, 'g'), '');
+        charset = charset.replace(new RegExp(char, "g"), "");
       }
     }
 
     if (charset.length === 0) {
-      throw new Error('Charset is empty after applying options');
+      throw new Error("Charset is empty after applying options");
     }
 
     return this.getRandomString(charset, length);
@@ -208,7 +214,7 @@ class SecureRandomService {
     const randomPart = this.getRandomAlphanumeric(9, {
       lowercase: true,
       numbers: true,
-      uppercase: false
+      uppercase: false,
     });
     return timestamp + randomPart;
   }
@@ -224,14 +230,18 @@ class SecureRandomService {
       const int = this.getRandomInt(100);
       const float = this.getRandomFloat();
       const hex = this.getRandomHex(8);
-      const string = this.getRandomString('ABC', 5);
+      const string = this.getRandomString("ABC", 5);
 
       // Basic validation
-      return bytes.length === 16 &&
-             int >= 0 && int < 100 &&
-             float >= 0 && float < 1 &&
-             hex.length === 8 &&
-             string.length === 5;
+      return (
+        bytes.length === 16 &&
+        int >= 0 &&
+        int < 100 &&
+        float >= 0 &&
+        float < 1 &&
+        hex.length === 8 &&
+        string.length === 5
+      );
     } catch (error) {
       return false;
     }

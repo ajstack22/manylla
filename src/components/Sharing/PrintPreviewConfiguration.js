@@ -7,7 +7,7 @@ export const PrintPreviewConfiguration = ({
   availableCategories,
   selectedCategories,
   categoryTitles,
-  onToggleCategory
+  onToggleCategory,
 }) => {
   const styles = usePrintStyles(colors);
 

@@ -87,7 +87,7 @@ describe("Platform Abstraction", () => {
 
       // Mock document methods
       mockStyleElement = {
-        innerHTML: ''
+        innerHTML: "",
       };
       mockAppendChild = jest.fn();
       mockRemoveChild = jest.fn();
@@ -98,22 +98,22 @@ describe("Platform Abstraction", () => {
         createElement: jest.fn(() => mockStyleElement),
         head: {
           appendChild: mockAppendChild,
-          removeChild: mockRemoveChild
-        }
+          removeChild: mockRemoveChild,
+        },
       };
 
       global.window = {
-        print: mockPrint
+        print: mockPrint,
       };
 
       // Mock console.warn
       global.console = {
         ...console,
-        warn: mockConsoleWarn
+        warn: mockConsoleWarn,
       };
 
       // Set NODE_ENV to development for testing console output
-      process.env.NODE_ENV = 'development';
+      process.env.NODE_ENV = "development";
     });
 
     afterEach(() => {
@@ -141,8 +141,8 @@ describe("Platform Abstraction", () => {
       expect(mockPrint).toHaveBeenCalled();
       expect(mockAppendChild).not.toHaveBeenCalled();
       expect(mockConsoleWarn).toHaveBeenCalledWith(
-        'Invalid elementId provided to print function:',
-        maliciousId
+        "Invalid elementId provided to print function:",
+        maliciousId,
       );
     });
 
@@ -189,10 +189,10 @@ describe("Platform Abstraction", () => {
         "my-element",
         "_private-element",
         "UPPERCASE-ID",
-        "mixed-Case_123"
+        "mixed-Case_123",
       ];
 
-      validIds.forEach(id => {
+      validIds.forEach((id) => {
         jest.clearAllMocks();
         platform.print(id);
         expect(mockAppendChild).toHaveBeenCalled();
@@ -211,23 +211,23 @@ describe("Platform Abstraction", () => {
         "element[square]",
         "element(paren)",
         "element#hash",
-        "element%percent"
+        "element%percent",
       ];
 
-      invalidIds.forEach(id => {
+      invalidIds.forEach((id) => {
         jest.clearAllMocks();
         platform.print(id);
         expect(mockPrint).toHaveBeenCalled();
         expect(mockAppendChild).not.toHaveBeenCalled();
         expect(mockConsoleWarn).toHaveBeenCalledWith(
-          'Invalid elementId provided to print function:',
-          id
+          "Invalid elementId provided to print function:",
+          id,
         );
       });
     });
 
     it("should not log warnings in production", () => {
-      process.env.NODE_ENV = 'production';
+      process.env.NODE_ENV = "production";
 
       platform.print("invalid.element");
 

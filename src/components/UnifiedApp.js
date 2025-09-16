@@ -274,7 +274,7 @@ export const ProfileEditForm = ({
       setName(profile.name || "");
       setPreferredName(profile.preferredName || "");
       setDateOfBirth(
-        profile.dateOfBirth ? new Date(profile.dateOfBirth) : new Date()
+        profile.dateOfBirth ? new Date(profile.dateOfBirth) : new Date(),
       );
       setPhoto(profile.photo || "");
     }

@@ -25,7 +25,7 @@ jest.mock("tweetnacl", () => {
       randomBytes: jest.fn(),
       hash: jest.fn(),
       secretbox: mockSecretbox,
-    }
+    },
   };
 });
 
@@ -76,10 +76,10 @@ describe("ManyllaEncryptionService", () => {
     // Setup util mocks
     util = require("tweetnacl-util");
     util.encodeBase64.mockImplementation((bytes) => {
-      return Buffer.from(bytes).toString('base64');
+      return Buffer.from(bytes).toString("base64");
     });
     util.decodeBase64.mockImplementation((str) => {
-      return new Uint8Array(Buffer.from(str, 'base64'));
+      return new Uint8Array(Buffer.from(str, "base64"));
     });
 
     // Setup pako mocks
@@ -125,7 +125,9 @@ describe("ManyllaEncryptionService", () => {
 
   describe("generateRecoveryPhrase", () => {
     test("should generate 32-character hex recovery phrase", () => {
-      mockRandomBytes.mockReturnValue(new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]));
+      mockRandomBytes.mockReturnValue(
+        new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]),
+      );
 
       const phrase = manyllaEncryptionService.generateRecoveryPhrase();
 
@@ -136,8 +138,16 @@ describe("ManyllaEncryptionService", () => {
 
     test("should generate different phrases on multiple calls", () => {
       mockRandomBytes
-        .mockReturnValueOnce(new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]))
-        .mockReturnValueOnce(new Uint8Array([15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]));
+        .mockReturnValueOnce(
+          new Uint8Array([
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+          ]),
+        )
+        .mockReturnValueOnce(
+          new Uint8Array([
+            15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0,
+          ]),
+        );
 
       const phrase1 = manyllaEncryptionService.generateRecoveryPhrase();
       const phrase2 = manyllaEncryptionService.generateRecoveryPhrase();
@@ -155,7 +165,8 @@ describe("ManyllaEncryptionService", () => {
 
       mockRandomBytes.mockReturnValue(mockSalt);
 
-      const result = await manyllaEncryptionService.deriveKeyFromPhrase(recoveryPhrase);
+      const result =
+        await manyllaEncryptionService.deriveKeyFromPhrase(recoveryPhrase);
 
       expect(result).toHaveProperty("key");
       expect(result).toHaveProperty("salt");
@@ -169,9 +180,14 @@ describe("ManyllaEncryptionService", () => {
       const recoveryPhrase = "test-recovery-phrase";
       const existingSalt = "dGVzdHNhbHQ="; // base64 encoded "testsalt"
 
-      util.decodeBase64.mockReturnValue(new Uint8Array([116, 101, 115, 116, 115, 97, 108, 116]));
+      util.decodeBase64.mockReturnValue(
+        new Uint8Array([116, 101, 115, 116, 115, 97, 108, 116]),
+      );
 
-      const result = await manyllaEncryptionService.deriveKeyFromPhrase(recoveryPhrase, existingSalt);
+      const result = await manyllaEncryptionService.deriveKeyFromPhrase(
+        recoveryPhrase,
+        existingSalt,
+      );
 
       expect(result.salt).toBe(existingSalt);
       expect(mockRandomBytes).not.toHaveBeenCalled();
@@ -198,9 +214,18 @@ describe("ManyllaEncryptionService", () => {
       expect(result).toHaveProperty("salt");
       expect(manyllaEncryptionService.masterKey).toBeDefined();
       expect(manyllaEncryptionService.syncId).toBeDefined();
-      expect(mockAsyncStorage.setItem).toHaveBeenCalledWith("secure_manylla_salt", expect.any(String));
-      expect(mockAsyncStorage.setItem).toHaveBeenCalledWith("secure_manylla_sync_id", expect.any(String));
-      expect(mockAsyncStorage.setItem).toHaveBeenCalledWith("secure_manylla_recovery", expect.any(String));
+      expect(mockAsyncStorage.setItem).toHaveBeenCalledWith(
+        "secure_manylla_salt",
+        expect.any(String),
+      );
+      expect(mockAsyncStorage.setItem).toHaveBeenCalledWith(
+        "secure_manylla_sync_id",
+        expect.any(String),
+      );
+      expect(mockAsyncStorage.setItem).toHaveBeenCalledWith(
+        "secure_manylla_recovery",
+        expect.any(String),
+      );
     });
 
     test("should work with init alias", async () => {
@@ -219,10 +244,15 @@ describe("ManyllaEncryptionService", () => {
       mockAsyncStorage.setItem.mockResolvedValue(true);
 
       // Mock the base64 decode/encode cycle
-      util.decodeBase64.mockReturnValue(new Uint8Array([116, 101, 115, 116, 45, 115, 97, 108, 116])); // "test-salt" as bytes
+      util.decodeBase64.mockReturnValue(
+        new Uint8Array([116, 101, 115, 116, 45, 115, 97, 108, 116]),
+      ); // "test-salt" as bytes
       util.encodeBase64.mockReturnValue(existingSalt);
 
-      const result = await manyllaEncryptionService.initialize(recoveryPhrase, existingSalt);
+      const result = await manyllaEncryptionService.initialize(
+        recoveryPhrase,
+        existingSalt,
+      );
 
       expect(result.salt).toBe(existingSalt);
     });
@@ -325,7 +355,12 @@ describe("ManyllaEncryptionService", () => {
       const encryptedData = "mock-encrypted-data";
 
       // Mock successful decryption
-      const mockCombined = new Uint8Array([2, 0, ...Array(24).fill(1), ...Array(50).fill(2)]);
+      const mockCombined = new Uint8Array([
+        2,
+        0,
+        ...Array(24).fill(1),
+        ...Array(50).fill(2),
+      ]);
       util.decodeBase64.mockReturnValue(mockCombined);
 
       const jsonString = JSON.stringify(testData);
@@ -340,7 +375,12 @@ describe("ManyllaEncryptionService", () => {
     test("should work with decrypt alias", () => {
       const encryptedData = "mock-encrypted-data";
 
-      const mockCombined = new Uint8Array([2, 0, ...Array(24).fill(1), ...Array(50).fill(2)]);
+      const mockCombined = new Uint8Array([
+        2,
+        0,
+        ...Array(24).fill(1),
+        ...Array(50).fill(2),
+      ]);
       util.decodeBase64.mockReturnValue(mockCombined);
 
       const jsonString = JSON.stringify({ test: "data" });
@@ -355,7 +395,12 @@ describe("ManyllaEncryptionService", () => {
     test("should handle object format input", () => {
       const encryptedData = { data: "mock-encrypted-data" };
 
-      const mockCombined = new Uint8Array([2, 0, ...Array(24).fill(1), ...Array(50).fill(2)]);
+      const mockCombined = new Uint8Array([
+        2,
+        0,
+        ...Array(24).fill(1),
+        ...Array(50).fill(2),
+      ]);
       util.decodeBase64.mockReturnValue(mockCombined);
 
       const jsonString = JSON.stringify({ test: "data" });
@@ -372,7 +417,12 @@ describe("ManyllaEncryptionService", () => {
       const encryptedData = "mock-encrypted-data";
 
       // Mock compressed data (metadata[1] = 1)
-      const mockCombined = new Uint8Array([2, 1, ...Array(24).fill(1), ...Array(50).fill(2)]);
+      const mockCombined = new Uint8Array([
+        2,
+        1,
+        ...Array(24).fill(1),
+        ...Array(50).fill(2),
+      ]);
       util.decodeBase64.mockReturnValue(mockCombined);
 
       const compressedBytes = new Uint8Array(10);
@@ -391,7 +441,12 @@ describe("ManyllaEncryptionService", () => {
     test("should handle undefined data correctly", () => {
       const encryptedData = "mock-encrypted-data";
 
-      const mockCombined = new Uint8Array([2, 0, ...Array(24).fill(1), ...Array(50).fill(2)]);
+      const mockCombined = new Uint8Array([
+        2,
+        0,
+        ...Array(24).fill(1),
+        ...Array(50).fill(2),
+      ]);
       util.decodeBase64.mockReturnValue(mockCombined);
 
       const jsonString = JSON.stringify({ __manylla_undefined: true });
@@ -424,7 +479,12 @@ describe("ManyllaEncryptionService", () => {
     test("should throw error when decryption fails", () => {
       const encryptedData = "mock-encrypted-data";
 
-      const mockCombined = new Uint8Array([2, 0, ...Array(24).fill(1), ...Array(50).fill(2)]);
+      const mockCombined = new Uint8Array([
+        2,
+        0,
+        ...Array(24).fill(1),
+        ...Array(50).fill(2),
+      ]);
       util.decodeBase64.mockReturnValue(mockCombined);
       nacl.secretbox.open.mockReturnValue(null); // Decryption failure
 
@@ -436,7 +496,12 @@ describe("ManyllaEncryptionService", () => {
     test("should throw error when decompression fails", () => {
       const encryptedData = "mock-encrypted-data";
 
-      const mockCombined = new Uint8Array([2, 1, ...Array(24).fill(1), ...Array(50).fill(2)]);
+      const mockCombined = new Uint8Array([
+        2,
+        1,
+        ...Array(24).fill(1),
+        ...Array(50).fill(2),
+      ]);
       util.decodeBase64.mockReturnValue(mockCombined);
 
       const compressedBytes = new Uint8Array(10);
@@ -460,7 +525,9 @@ describe("ManyllaEncryptionService", () => {
 
       const deviceKey = await manyllaEncryptionService.getDeviceKey();
 
-      expect(mockAsyncStorage.getItem).toHaveBeenCalledWith("secure_manylla_device_key");
+      expect(mockAsyncStorage.getItem).toHaveBeenCalledWith(
+        "secure_manylla_device_key",
+      );
       expect(deviceKey).toBeInstanceOf(Uint8Array);
     });
 
@@ -471,7 +538,10 @@ describe("ManyllaEncryptionService", () => {
       const deviceKey = await manyllaEncryptionService.getDeviceKey();
 
       expect(mockRandomBytes).toHaveBeenCalledWith(32);
-      expect(mockAsyncStorage.setItem).toHaveBeenCalledWith("secure_manylla_device_key", expect.any(String));
+      expect(mockAsyncStorage.setItem).toHaveBeenCalledWith(
+        "secure_manylla_device_key",
+        expect.any(String),
+      );
       expect(deviceKey).toBeInstanceOf(Uint8Array);
     });
   });
@@ -481,14 +551,17 @@ describe("ManyllaEncryptionService", () => {
       const data = "test data";
       const key = new Uint8Array(32);
 
-      const encrypted = await manyllaEncryptionService.encryptWithKey(data, key);
+      const encrypted = await manyllaEncryptionService.encryptWithKey(
+        data,
+        key,
+      );
 
       expect(encrypted).toBeDefined();
       expect(typeof encrypted).toBe("string");
       expect(mockSecretbox).toHaveBeenCalledWith(
         expect.any(Uint8Array),
         expect.any(Uint8Array),
-        key
+        key,
       );
     });
   });
@@ -500,7 +573,9 @@ describe("ManyllaEncryptionService", () => {
       const enabled = await manyllaEncryptionService.isEnabled();
 
       expect(enabled).toBe(true);
-      expect(mockAsyncStorage.getItem).toHaveBeenCalledWith("secure_manylla_sync_id");
+      expect(mockAsyncStorage.getItem).toHaveBeenCalledWith(
+        "secure_manylla_sync_id",
+      );
     });
 
     test("should return false when sync ID doesn't exist", async () => {
@@ -520,7 +595,9 @@ describe("ManyllaEncryptionService", () => {
       const result = await manyllaEncryptionService.getSyncId();
 
       expect(result).toBe(syncId);
-      expect(mockAsyncStorage.getItem).toHaveBeenCalledWith("secure_manylla_sync_id");
+      expect(mockAsyncStorage.getItem).toHaveBeenCalledWith(
+        "secure_manylla_sync_id",
+      );
     });
   });
 
@@ -534,9 +611,15 @@ describe("ManyllaEncryptionService", () => {
 
       expect(manyllaEncryptionService.masterKey).toBeNull();
       expect(manyllaEncryptionService.syncId).toBeNull();
-      expect(mockAsyncStorage.removeItem).toHaveBeenCalledWith("secure_manylla_salt");
-      expect(mockAsyncStorage.removeItem).toHaveBeenCalledWith("secure_manylla_sync_id");
-      expect(mockAsyncStorage.removeItem).toHaveBeenCalledWith("secure_manylla_recovery");
+      expect(mockAsyncStorage.removeItem).toHaveBeenCalledWith(
+        "secure_manylla_salt",
+      );
+      expect(mockAsyncStorage.removeItem).toHaveBeenCalledWith(
+        "secure_manylla_sync_id",
+      );
+      expect(mockAsyncStorage.removeItem).toHaveBeenCalledWith(
+        "secure_manylla_recovery",
+      );
     });
   });
 
@@ -550,7 +633,10 @@ describe("ManyllaEncryptionService", () => {
         .mockResolvedValueOnce(salt)
         .mockResolvedValueOnce("device-key");
 
-      const mockCombined = new Uint8Array([...Array(24).fill(1), ...Array(20).fill(2)]);
+      const mockCombined = new Uint8Array([
+        ...Array(24).fill(1),
+        ...Array(20).fill(2),
+      ]);
       util.decodeBase64
         .mockReturnValueOnce(mockCombined)
         .mockReturnValueOnce(new Uint8Array(32));

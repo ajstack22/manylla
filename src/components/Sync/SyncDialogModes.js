@@ -22,13 +22,8 @@ import { useSyncStyles } from "./hooks/useSyncStyles";
  */
 export const SyncDialogModes = ({ onModeChange }) => {
   const { styles, colors } = useSyncStyles();
-  const {
-    syncEnabled,
-    syncStatus,
-    loading,
-    handleSyncNow,
-    disableSync,
-  } = useSyncActions();
+  const { syncEnabled, syncStatus, loading, handleSyncNow, disableSync } =
+    useSyncActions();
 
   const handleSyncNowPress = async () => {
     await handleSyncNow();
@@ -59,13 +54,15 @@ export const SyncDialogModes = ({ onModeChange }) => {
                 <View
                   style={[
                     statusRowStyles.statusBadge,
-                    syncStatus === "success" && statusRowStyles.statusBadgeSuccess,
+                    syncStatus === "success" &&
+                      statusRowStyles.statusBadgeSuccess,
                   ]}
                 >
                   <Text
                     style={[
                       statusRowStyles.statusBadgeText,
-                      syncStatus === "success" && statusRowStyles.statusBadgeTextSuccess,
+                      syncStatus === "success" &&
+                        statusRowStyles.statusBadgeTextSuccess,
                     ]}
                   >
                     {syncStatus}
@@ -100,20 +97,26 @@ export const SyncDialogModes = ({ onModeChange }) => {
             <View style={styles.cardContent}>
               <Text style={styles.cardTitle}>Security & Sharing</Text>
               <Text style={styles.cardDescription}>
-                Your child's information is encrypted and backed up across
-                your devices.
+                Your child's information is encrypted and backed up across your
+                devices.
               </Text>
               <View style={buttonRowStyles.buttonRow}>
                 <TouchableOpacity
-                  style={[styles.button, styles.outlineButton, buttonRowStyles.actionButton]}
+                  style={[
+                    styles.button,
+                    styles.outlineButton,
+                    buttonRowStyles.actionButton,
+                  ]}
                   onPress={() => onModeChange("existing")}
                 >
-                  <Text style={styles.outlineButtonText}>
-                    View Backup Code
-                  </Text>
+                  <Text style={styles.outlineButtonText}>View Backup Code</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[styles.button, styles.primaryButton, buttonRowStyles.actionButton]}
+                  style={[
+                    styles.button,
+                    styles.primaryButton,
+                    buttonRowStyles.actionButton,
+                  ]}
                   onPress={() => onModeChange("invite")}
                 >
                   <Text style={styles.primaryButtonText}>
@@ -130,7 +133,9 @@ export const SyncDialogModes = ({ onModeChange }) => {
           style={disableButtonStyles.disableButton}
           onPress={() => disableSync()}
         >
-          <Text style={disableButtonStyles.disableButtonText}>Disable Sync</Text>
+          <Text style={disableButtonStyles.disableButtonText}>
+            Disable Sync
+          </Text>
         </TouchableOpacity>
       </ScrollView>
     );
@@ -138,17 +143,16 @@ export const SyncDialogModes = ({ onModeChange }) => {
 
   // Not synced menu
   return (
-    <ScrollView
-      style={styles.scrollView}
-      showsVerticalScrollIndicator={false}
-    >
+    <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
       <TouchableOpacity
         style={menuOptionStyles.menuOption}
         onPress={() => onModeChange("enable")}
       >
         <CloudUploadIcon size={32} color={colors.primary || "#A08670"} />
         <View style={menuOptionStyles.menuOptionContent}>
-          <Text style={menuOptionStyles.menuOptionTitle}>Enable Cloud Backup</Text>
+          <Text style={menuOptionStyles.menuOptionTitle}>
+            Enable Cloud Backup
+          </Text>
           <Text style={menuOptionStyles.menuOptionDescription}>
             Create a new backup for your devices
           </Text>
@@ -161,7 +165,9 @@ export const SyncDialogModes = ({ onModeChange }) => {
       >
         <CloudDownloadIcon size={32} color={colors.primary || "#A08670"} />
         <View style={menuOptionStyles.menuOptionContent}>
-          <Text style={menuOptionStyles.menuOptionTitle}>Restore from Cloud</Text>
+          <Text style={menuOptionStyles.menuOptionTitle}>
+            Restore from Cloud
+          </Text>
           <Text style={menuOptionStyles.menuOptionDescription}>
             Connect to your existing backup with a backup code
           </Text>

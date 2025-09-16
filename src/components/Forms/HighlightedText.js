@@ -64,7 +64,7 @@ export const HighlightedText = ({
   highlightTerms = DEFAULT_HIGHLIGHT_TERMS,
 }) => {
   // Ensure content is a string
-  const textContent = content != null ? String(content) : '';
+  const textContent = content != null ? String(content) : "";
   // Create regex pattern for highlighting
   const createHighlightRegex = () => {
     const terms = highlightTerms.map(

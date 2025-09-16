@@ -1,6 +1,6 @@
 // Smart placeholder text for different categories and contexts
 
-import secureRandomService from './SecureRandomService';
+import secureRandomService from "./SecureRandomService";
 
 export const categoryPlaceholders = {
   goals: {
@@ -165,8 +165,8 @@ export const quickInfoPlaceholders = {
 // Helper function to get placeholder for a category
 export const getPlaceholder = (category, field) => {
   // Handle non-string inputs gracefully
-  const categoryStr = category != null ? String(category) : '';
-  const fieldStr = field != null ? String(field) : 'title';
+  const categoryStr = category != null ? String(category) : "";
+  const fieldStr = field != null ? String(field) : "title";
 
   const config =
     categoryPlaceholders[categoryStr] || quickInfoPlaceholders[categoryStr];
@@ -175,13 +175,16 @@ export const getPlaceholder = (category, field) => {
     return fieldStr === "title" ? "Enter title..." : "Enter description...";
   }
 
-  return config[fieldStr] || (fieldStr === "title" ? "Enter title..." : "Enter description...");
+  return (
+    config[fieldStr] ||
+    (fieldStr === "title" ? "Enter title..." : "Enter description...")
+  );
 };
 
 // Helper function to get random example
 export const getRandomExample = (category) => {
   // Handle non-string inputs gracefully
-  const categoryStr = category != null ? String(category) : '';
+  const categoryStr = category != null ? String(category) : "";
 
   const config =
     categoryPlaceholders[categoryStr] || quickInfoPlaceholders[categoryStr];
@@ -197,7 +200,7 @@ export const getRandomExample = (category) => {
 // Helper function to get first example (deterministic for placeholders)
 export const getFirstExample = (category) => {
   // Handle non-string inputs gracefully
-  const categoryStr = category != null ? String(category) : '';
+  const categoryStr = category != null ? String(category) : "";
 
   const config =
     categoryPlaceholders[categoryStr] || quickInfoPlaceholders[categoryStr];
@@ -215,7 +218,7 @@ export const getPlaceholderWithExample = (category, field) => {
   const example = getFirstExample(category); // Use first example for consistency
 
   // Handle non-string inputs gracefully
-  const fieldStr = field != null ? String(field) : 'title';
+  const fieldStr = field != null ? String(field) : "title";
 
   if (fieldStr === "title" && example) {
     return `${placeholder} (e.g., "${example}")`;

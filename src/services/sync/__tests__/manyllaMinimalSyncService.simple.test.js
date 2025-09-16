@@ -35,7 +35,7 @@ describe("ManyllaMinimalSyncService (Simple)", () => {
 
   test("should handle platform detection", () => {
     // Test both platform scenarios
-    [true, false].forEach(isWeb => {
+    [true, false].forEach((isWeb) => {
       platform.isWeb = isWeb;
 
       // Clear module cache for each test

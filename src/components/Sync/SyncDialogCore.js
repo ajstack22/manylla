@@ -45,12 +45,7 @@ export const SyncDialogCore = ({ open, onClose }) => {
 
       case "existing":
       case "invite":
-        return (
-          <SyncDialogManage
-            mode={mode}
-            onModeChange={handleModeChange}
-          />
-        );
+        return <SyncDialogManage mode={mode} onModeChange={handleModeChange} />;
 
       default:
         return <SyncDialogModes onModeChange={handleModeChange} />;

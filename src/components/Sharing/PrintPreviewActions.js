@@ -8,7 +8,7 @@ export const PrintPreviewActions = ({
   colors,
   onClose,
   onDownloadPDF,
-  onPrint
+  onPrint,
 }) => {
   const styles = usePrintStyles(colors);
 
@@ -42,9 +42,7 @@ export const PrintPreviewActions = ({
           color={colors.background.paper}
           style={{ marginRight: 5 }}
         />
-        <Text style={styles.printButtonText}>
-          {isWeb ? "Print" : "Share"}
-        </Text>
+        <Text style={styles.printButtonText}>{isWeb ? "Print" : "Share"}</Text>
       </TouchableOpacity>
     </View>
   );

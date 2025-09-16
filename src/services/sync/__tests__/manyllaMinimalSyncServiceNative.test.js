@@ -33,35 +33,40 @@ jest.mock("../../../utils/SecureRandomService", () => {
     getRandomInt: jest.fn((max) => Math.floor(Math.random() * max)),
     getRandomFloat: jest.fn(() => Math.random()),
     getRandomHex: jest.fn((length) => {
-      const chars = '0123456789abcdef';
-      let result = '';
+      const chars = "0123456789abcdef";
+      let result = "";
       for (let i = 0; i < length; i++) {
         result += chars[Math.floor(Math.random() * chars.length)];
       }
       return result;
     }),
     getRandomString: jest.fn((charset, length) => {
-      let result = '';
+      let result = "";
       for (let i = 0; i < length; i++) {
         result += charset[Math.floor(Math.random() * charset.length)];
       }
       return result;
     }),
     getRandomAlphanumeric: jest.fn((length) => {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let result = '';
+      const chars =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      let result = "";
       for (let i = 0; i < length; i++) {
         result += chars[Math.floor(Math.random() * chars.length)];
       }
       return result;
     }),
-    generateDeviceId: jest.fn(() => 'test1234567890ab'),
-    generateTimestampId: jest.fn(() => 'test' + Date.now().toString(36) + 'randomid'),
+    generateDeviceId: jest.fn(() => "test1234567890ab"),
+    generateTimestampId: jest.fn(
+      () => "test" + Date.now().toString(36) + "randomid",
+    ),
     selfTest: jest.fn(() => true),
   };
 
   return {
-    SecureRandomService: jest.fn().mockImplementation(() => mockSecureRandomService),
+    SecureRandomService: jest
+      .fn()
+      .mockImplementation(() => mockSecureRandomService),
     default: mockSecureRandomService,
   };
 });
@@ -86,7 +91,7 @@ global.AbortController = class {
   }
 };
 global.setTimeout = jest.fn((fn, delay) => {
-  if (typeof fn === 'function') {
+  if (typeof fn === "function") {
     setImmediate(fn); // Execute async but immediately for tests
   }
   return Math.random();
@@ -180,7 +185,9 @@ describe("ManyllaMinimalSyncServiceNative", () => {
     platform.apiBaseUrl.mockReturnValue("https://test-api.com");
 
     // Mock nacl
-    nacl.randomBytes.mockReturnValue(new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]));
+    nacl.randomBytes.mockReturnValue(
+      new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]),
+    );
     nacl.hash.mockReturnValue(new Uint8Array(64).fill(42));
 
     // Mock util
@@ -238,7 +245,10 @@ describe("ManyllaMinimalSyncServiceNative", () => {
 
       expect(deviceId).toBeTruthy();
       expect(AsyncStorage.getItem).toHaveBeenCalledWith("manylla_device_id");
-      expect(AsyncStorage.setItem).toHaveBeenCalledWith("manylla_device_id", expect.any(String));
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        "manylla_device_id",
+        expect.any(String),
+      );
     });
 
     test("should return existing device ID", async () => {
@@ -254,7 +264,9 @@ describe("ManyllaMinimalSyncServiceNative", () => {
     test("should generate fallback device ID on AsyncStorage error", async () => {
       AsyncStorage.getItem.mockRejectedValue(new Error("Storage error"));
       service.getOrCreateDeviceId = jest.fn().mockImplementation(() => {
-        return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+        return (
+          Date.now().toString(36) + Math.random().toString(36).substr(2, 9)
+        );
       });
 
       const deviceId = await service.getOrCreateDeviceId();
@@ -303,16 +315,18 @@ describe("ManyllaMinimalSyncServiceNative", () => {
 
   describe("Offline Queue Management", () => {
     test("should queue operations when offline", () => {
-      service.queueForLater = jest.fn().mockImplementation((operation, data) => {
-        service.offlineQueue.push({
-          operation,
-          data,
-          timestamp: Date.now(),
+      service.queueForLater = jest
+        .fn()
+        .mockImplementation((operation, data) => {
+          service.offlineQueue.push({
+            operation,
+            data,
+            timestamp: Date.now(),
+          });
+          if (service.offlineQueue.length > 10) {
+            service.offlineQueue.shift();
+          }
         });
-        if (service.offlineQueue.length > 10) {
-          service.offlineQueue.shift();
-        }
-      });
 
       service.queueForLater("push", { test: "data" });
 
@@ -321,16 +335,18 @@ describe("ManyllaMinimalSyncServiceNative", () => {
     });
 
     test("should limit queue size", () => {
-      service.queueForLater = jest.fn().mockImplementation((operation, data) => {
-        service.offlineQueue.push({
-          operation,
-          data,
-          timestamp: Date.now(),
+      service.queueForLater = jest
+        .fn()
+        .mockImplementation((operation, data) => {
+          service.offlineQueue.push({
+            operation,
+            data,
+            timestamp: Date.now(),
+          });
+          if (service.offlineQueue.length > 10) {
+            service.offlineQueue.shift();
+          }
         });
-        if (service.offlineQueue.length > 10) {
-          service.offlineQueue.shift();
-        }
-      });
 
       // Fill queue beyond limit
       for (let i = 0; i < 15; i++) {
@@ -347,7 +363,10 @@ describe("ManyllaMinimalSyncServiceNative", () => {
       ];
       service.push = jest.fn().mockResolvedValue(true);
       service.processOfflineQueue = jest.fn().mockImplementation(async () => {
-        if (service.isProcessingOfflineQueue || service.offlineQueue.length < 1) {
+        if (
+          service.isProcessingOfflineQueue ||
+          service.offlineQueue.length < 1
+        ) {
           return;
         }
         service.isProcessingOfflineQueue = true;
@@ -377,13 +396,16 @@ describe("ManyllaMinimalSyncServiceNative", () => {
         json: jest.fn().mockResolvedValue({ status: "healthy" }),
       });
       service.checkHealth = jest.fn().mockImplementation(async () => {
-        const response = await fetch(`${platform.apiBaseUrl()}/sync_health.php`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
+        const response = await fetch(
+          `${platform.apiBaseUrl()}/sync_health.php`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            timeout: 5000,
           },
-          timeout: 5000,
-        });
+        );
         const data = await response.json();
         return data.status === "healthy";
       });
@@ -393,7 +415,7 @@ describe("ManyllaMinimalSyncServiceNative", () => {
       expect(isHealthy).toBe(true);
       expect(global.fetch).toHaveBeenCalledWith(
         "https://test-api.com/sync_health.php",
-        expect.any(Object)
+        expect.any(Object),
       );
     });
 
@@ -542,7 +564,9 @@ describe("ManyllaMinimalSyncServiceNative", () => {
       const result = await service.init(recoveryPhrase);
 
       expect(result).toBe(true);
-      expect(manyllaEncryptionService.init).toHaveBeenCalledWith(recoveryPhrase);
+      expect(manyllaEncryptionService.init).toHaveBeenCalledWith(
+        recoveryPhrase,
+      );
     });
 
     test("should reject invalid recovery phrase", async () => {
@@ -552,29 +576,36 @@ describe("ManyllaMinimalSyncServiceNative", () => {
         }
       });
 
-      await expect(service.init("invalid")).rejects.toThrow("Invalid recovery phrase format");
+      await expect(service.init("invalid")).rejects.toThrow(
+        "Invalid recovery phrase format",
+      );
     });
   });
 
   describe("Sync Enable/Disable", () => {
     test("should enable sync with recovery phrase", async () => {
       const recoveryPhrase = "1234567890abcdef1234567890abcdef";
-      service.enableSync = jest.fn().mockImplementation(async (phrase, isNewSync = false) => {
-        if (!phrase || !phrase.match(/^[a-f0-9]{32}$/)) {
-          throw new AuthError("Invalid recovery phrase format");
-        }
-        await service.init(phrase);
-        await AsyncStorage.setItem("manylla_sync_enabled", "true");
-        await AsyncStorage.setItem("manylla_recovery_phrase", phrase);
-        service.isEnabled = true;
-        service.startPolling();
-        return { success: true, syncId: service.syncId };
-      });
+      service.enableSync = jest
+        .fn()
+        .mockImplementation(async (phrase, isNewSync = false) => {
+          if (!phrase || !phrase.match(/^[a-f0-9]{32}$/)) {
+            throw new AuthError("Invalid recovery phrase format");
+          }
+          await service.init(phrase);
+          await AsyncStorage.setItem("manylla_sync_enabled", "true");
+          await AsyncStorage.setItem("manylla_recovery_phrase", phrase);
+          service.isEnabled = true;
+          service.startPolling();
+          return { success: true, syncId: service.syncId };
+        });
 
       const result = await service.enableSync(recoveryPhrase);
 
       expect(result.success).toBe(true);
-      expect(AsyncStorage.setItem).toHaveBeenCalledWith("manylla_sync_enabled", "true");
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        "manylla_sync_enabled",
+        "true",
+      );
     });
 
     test("should disable sync", async () => {
@@ -589,7 +620,9 @@ describe("ManyllaMinimalSyncServiceNative", () => {
       await service.disableSync();
 
       expect(service.stopPolling).toHaveBeenCalled();
-      expect(AsyncStorage.removeItem).toHaveBeenCalledWith("manylla_sync_enabled");
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
+        "manylla_sync_enabled",
+      );
     });
   });
 
@@ -638,7 +671,9 @@ describe("ManyllaMinimalSyncServiceNative", () => {
         }
       });
 
-      await expect(service.push({ test: "data" })).rejects.toThrow("Device offline");
+      await expect(service.push({ test: "data" })).rejects.toThrow(
+        "Device offline",
+      );
       expect(service.queueForLater).toHaveBeenCalled();
     });
 
@@ -655,7 +690,9 @@ describe("ManyllaMinimalSyncServiceNative", () => {
         }
       });
 
-      await expect(service.push({ test: "data" })).rejects.toThrow("Invalid sync credentials");
+      await expect(service.push({ test: "data" })).rejects.toThrow(
+        "Invalid sync credentials",
+      );
     });
   });
 
@@ -670,10 +707,14 @@ describe("ManyllaMinimalSyncServiceNative", () => {
       const testData = { name: "Test Profile" };
       global.fetch.mockResolvedValue({
         ok: true,
-        json: jest.fn().mockResolvedValue({ success: true, data: "encrypted-data" }),
+        json: jest
+          .fn()
+          .mockResolvedValue({ success: true, data: "encrypted-data" }),
       });
       service.pull = jest.fn().mockImplementation(async () => {
-        const response = await fetch(`${platform.apiBaseUrl()}/sync_pull.php?sync_id=${service.syncId}`);
+        const response = await fetch(
+          `${platform.apiBaseUrl()}/sync_pull.php?sync_id=${service.syncId}`,
+        );
         const result = await response.json();
         if (result.success && result.data) {
           const decrypted = manyllaEncryptionService.decrypt(result.data);
@@ -686,16 +727,22 @@ describe("ManyllaMinimalSyncServiceNative", () => {
       const result = await service.pull();
 
       expect(result).toEqual({ test: "data" });
-      expect(manyllaEncryptionService.decrypt).toHaveBeenCalledWith("encrypted-data");
+      expect(manyllaEncryptionService.decrypt).toHaveBeenCalledWith(
+        "encrypted-data",
+      );
     });
 
     test("should handle no data found", async () => {
       global.fetch.mockResolvedValue({
         ok: true,
-        json: jest.fn().mockResolvedValue({ success: false, error: "No data found" }),
+        json: jest
+          .fn()
+          .mockResolvedValue({ success: false, error: "No data found" }),
       });
       service.pull = jest.fn().mockImplementation(async () => {
-        const response = await fetch(`${platform.apiBaseUrl()}/sync_pull.php?sync_id=${service.syncId}`);
+        const response = await fetch(
+          `${platform.apiBaseUrl()}/sync_pull.php?sync_id=${service.syncId}`,
+        );
         const result = await response.json();
         if (result.error === "No data found") {
           return null;
@@ -711,7 +758,9 @@ describe("ManyllaMinimalSyncServiceNative", () => {
       const localData = { name: "Local Profile" };
       const remoteData = { name: "Remote Profile" };
       service.getLocalData = jest.fn().mockResolvedValue(localData);
-      conflictResolver.mergeProfiles.mockReturnValue({ name: "Merged Profile" });
+      conflictResolver.mergeProfiles.mockReturnValue({
+        name: "Merged Profile",
+      });
       service.pull = jest.fn().mockImplementation(async () => {
         const local = await service.getLocalData();
         if (local) {
@@ -723,7 +772,10 @@ describe("ManyllaMinimalSyncServiceNative", () => {
 
       const result = await service.pull();
 
-      expect(conflictResolver.mergeProfiles).toHaveBeenCalledWith(localData, remoteData);
+      expect(conflictResolver.mergeProfiles).toHaveBeenCalledWith(
+        localData,
+        remoteData,
+      );
       expect(result).toEqual({ name: "Merged Profile" });
     });
   });
@@ -813,9 +865,11 @@ describe("ManyllaMinimalSyncServiceNative", () => {
 
     test("should check if sync is enabled", () => {
       service.syncId = "test-sync-id";
-      service.isSyncEnabled = jest.fn().mockReturnValue(
-        !!service.syncId && manyllaEncryptionService.isInitialized()
-      );
+      service.isSyncEnabled = jest
+        .fn()
+        .mockReturnValue(
+          !!service.syncId && manyllaEncryptionService.isInitialized(),
+        );
 
       const isEnabled = service.isSyncEnabled();
 
@@ -861,7 +915,9 @@ describe("ManyllaMinimalSyncServiceNative", () => {
 
       const result = await service.joinFromInvite(inviteCode);
 
-      expect(service.init).toHaveBeenCalledWith("1234567890ABCDEF1234567890ABCDEF");
+      expect(service.init).toHaveBeenCalledWith(
+        "1234567890ABCDEF1234567890ABCDEF",
+      );
       expect(service.startPolling).toHaveBeenCalled();
     });
   });
@@ -879,7 +935,9 @@ describe("ManyllaMinimalSyncServiceNative", () => {
       await service.reset();
 
       expect(service.stopPolling).toHaveBeenCalled();
-      expect(AsyncStorage.removeItem).toHaveBeenCalledWith("manylla_recovery_phrase");
+      expect(AsyncStorage.removeItem).toHaveBeenCalledWith(
+        "manylla_recovery_phrase",
+      );
     });
 
     test("should destroy service cleanly", () => {
@@ -921,7 +979,9 @@ describe("ManyllaMinimalSyncServiceNative", () => {
       // Simulate error handling
       ErrorHandler.log(testError, { context: "test" });
 
-      expect(ErrorHandler.log).toHaveBeenCalledWith(testError, { context: "test" });
+      expect(ErrorHandler.log).toHaveBeenCalledWith(testError, {
+        context: "test",
+      });
     });
   });
 });

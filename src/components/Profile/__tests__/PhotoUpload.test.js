@@ -4,15 +4,15 @@
  * Target: 70% coverage
  */
 
-import React from 'react';
-import { render, screen, waitFor, act } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import '@testing-library/jest-dom';
-import { PhotoUpload } from '../PhotoUpload';
-import { ThemeProvider } from '../../../context/ThemeContext';
+import React from "react";
+import { render, screen, waitFor, act } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import "@testing-library/jest-dom";
+import { PhotoUpload } from "../PhotoUpload";
+import { ThemeProvider } from "../../../context/ThemeContext";
 
 // Mock dependencies
-jest.mock('../../Common/IconProvider', () => {
+jest.mock("../../Common/IconProvider", () => {
   return {
     __esModule: true,
     default: ({ name, size, color, style, ...props }) => (
@@ -28,7 +28,7 @@ jest.mock('../../Common/IconProvider', () => {
 });
 
 // Mock platform utilities
-jest.mock('../../../utils/platform', () => ({
+jest.mock("../../../utils/platform", () => ({
   isWeb: true,
   isMobile: false,
   isIOS: false,
@@ -42,7 +42,7 @@ const mockImagePicker = {
   getErrorMessage: jest.fn(),
 };
 
-jest.mock('../../Common/ImagePicker', () => ({
+jest.mock("../../Common/ImagePicker", () => ({
   __esModule: true,
   default: mockImagePicker,
 }));
@@ -54,20 +54,20 @@ const mockPhotoService = {
   isPhotoEncrypted: jest.fn(),
 };
 
-jest.mock('../../../services/photoService', () => ({
+jest.mock("../../../services/photoService", () => ({
   __esModule: true,
   default: mockPhotoService,
 }));
 
 // Mock Alert for mobile testing
-jest.mock('react-native', () => {
-  const actualRN = jest.requireActual('react-native');
+jest.mock("react-native", () => {
+  const actualRN = jest.requireActual("react-native");
   return {
     ...actualRN,
     Alert: {
       alert: jest.fn((title, message, buttons) => {
         // Simulate user clicking the first non-cancel button
-        const actionButton = buttons?.find(btn => btn.style !== 'cancel');
+        const actionButton = buttons?.find((btn) => btn.style !== "cancel");
         if (actionButton?.onPress) {
           actionButton.onPress();
         }
@@ -78,27 +78,26 @@ jest.mock('react-native', () => {
 
 // Mock window.confirm for web testing
 const mockWindowConfirm = jest.fn();
-Object.defineProperty(window, 'confirm', {
+Object.defineProperty(window, "confirm", {
   writable: true,
   value: mockWindowConfirm,
 });
 
 // Test wrapper with theme context
-const TestWrapper = ({ children, themeMode = 'light' }) => (
-  <ThemeProvider initialThemeMode={themeMode}>
-    {children}
-  </ThemeProvider>
+const TestWrapper = ({ children, themeMode = "light" }) => (
+  <ThemeProvider initialThemeMode={themeMode}>{children}</ThemeProvider>
 );
 
 // Mock data
-const mockEncryptedPhoto = 'encrypted_photo_data_123';
-const mockDecryptedPhoto = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAAAAAAAD...';
+const mockEncryptedPhoto = "encrypted_photo_data_123";
+const mockDecryptedPhoto =
+  "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAAAAAAAD...";
 const mockPhotoMetadata = {
   originalSize: 1024000,
   processedSize: 512000,
   compressionRatio: 0.5,
-  timestamp: '2023-01-01T00:00:00Z',
-  version: '1.0',
+  timestamp: "2023-01-01T00:00:00Z",
+  version: "1.0",
   isEncrypted: true,
 };
 
@@ -110,7 +109,7 @@ const defaultProps = {
   size: 100,
 };
 
-describe('PhotoUpload', () => {
+describe("PhotoUpload", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.clearAllTimers();
@@ -120,13 +119,13 @@ describe('PhotoUpload', () => {
     mockImagePicker.showImagePicker.mockResolvedValue({
       cancelled: false,
       dataUrl: mockDecryptedPhoto,
-      type: 'image/jpeg',
+      type: "image/jpeg",
       size: 512000,
-      name: 'test.jpg',
+      name: "test.jpg",
     });
 
     mockImagePicker.validateResult.mockReturnValue({ isValid: true });
-    mockImagePicker.getErrorMessage.mockReturnValue('Upload failed');
+    mockImagePicker.getErrorMessage.mockReturnValue("Upload failed");
 
     mockPhotoService.processAndEncryptPhoto.mockResolvedValue({
       success: true,
@@ -145,22 +144,22 @@ describe('PhotoUpload', () => {
     jest.useRealTimers();
   });
 
-  describe('Rendering', () => {
-    it('renders with default props', () => {
+  describe("Rendering", () => {
+    it("renders with default props", () => {
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      expect(screen.getByText('Profile Photo')).toBeInTheDocument();
-      expect(screen.getByText('Upload Photo')).toBeInTheDocument();
-      expect(screen.getByTestId('icon-CameraAlt')).toBeInTheDocument();
+      expect(screen.getByText("Profile Photo")).toBeInTheDocument();
+      expect(screen.getByText("Upload Photo")).toBeInTheDocument();
+      expect(screen.getByTestId("icon-CameraAlt")).toBeInTheDocument();
     });
 
-    it('shows mobile-specific text on mobile platforms', () => {
+    it("shows mobile-specific text on mobile platforms", () => {
       // Mock mobile platform
-      jest.doMock('../../../utils/platform', () => ({
+      jest.doMock("../../../utils/platform", () => ({
         isWeb: false,
         isMobile: true,
         isIOS: true,
@@ -170,53 +169,55 @@ describe('PhotoUpload', () => {
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      expect(screen.getByText('Add Photo')).toBeInTheDocument();
+      expect(screen.getByText("Add Photo")).toBeInTheDocument();
     });
 
-    it('applies custom size prop', () => {
+    it("applies custom size prop", () => {
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} size={150} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      const cameraIcon = screen.getByTestId('icon-CameraAlt');
-      expect(cameraIcon).toHaveStyle({ fontSize: '50px' }); // 150 / 3 = 50
+      const cameraIcon = screen.getByTestId("icon-CameraAlt");
+      expect(cameraIcon).toHaveStyle({ fontSize: "50px" }); // 150 / 3 = 50
     });
 
-    it('shows disabled state correctly', () => {
+    it("shows disabled state correctly", () => {
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} disabled={true} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      const placeholder = screen.getByText('Upload Photo').parentElement;
+      const placeholder = screen.getByText("Upload Photo").parentElement;
       expect(placeholder).toHaveStyle({
-        backgroundColor: '#F0F0F0',
+        backgroundColor: "#F0F0F0",
       });
     });
 
-    it('renders help text', () => {
+    it("renders help text", () => {
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      expect(screen.getByText(/Supports JPG and PNG images/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Supports JPG and PNG images/),
+      ).toBeInTheDocument();
     });
   });
 
-  describe('Photo Loading and Decryption', () => {
-    it('loads and displays encrypted photo', async () => {
+  describe("Photo Loading and Decryption", () => {
+    it("loads and displays encrypted photo", async () => {
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} currentPhoto={mockEncryptedPhoto} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Wait for the loading delay
@@ -225,18 +226,22 @@ describe('PhotoUpload', () => {
       });
 
       await waitFor(() => {
-        expect(mockPhotoService.isPhotoEncrypted).toHaveBeenCalledWith(mockEncryptedPhoto);
-        expect(mockPhotoService.decryptPhoto).toHaveBeenCalledWith(mockEncryptedPhoto);
+        expect(mockPhotoService.isPhotoEncrypted).toHaveBeenCalledWith(
+          mockEncryptedPhoto,
+        );
+        expect(mockPhotoService.decryptPhoto).toHaveBeenCalledWith(
+          mockEncryptedPhoto,
+        );
       });
     });
 
-    it('displays legacy unencrypted photo', async () => {
+    it("displays legacy unencrypted photo", async () => {
       mockPhotoService.isPhotoEncrypted.mockReturnValue(false);
 
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} currentPhoto={mockDecryptedPhoto} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       act(() => {
@@ -244,19 +249,25 @@ describe('PhotoUpload', () => {
       });
 
       await waitFor(() => {
-        expect(mockPhotoService.isPhotoEncrypted).toHaveBeenCalledWith(mockDecryptedPhoto);
+        expect(mockPhotoService.isPhotoEncrypted).toHaveBeenCalledWith(
+          mockDecryptedPhoto,
+        );
         expect(mockPhotoService.decryptPhoto).not.toHaveBeenCalled();
       });
     });
 
-    it('handles photo decryption errors gracefully', async () => {
-      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-      mockPhotoService.decryptPhoto.mockRejectedValue(new Error('Decryption failed'));
+    it("handles photo decryption errors gracefully", async () => {
+      const consoleWarnSpy = jest
+        .spyOn(console, "warn")
+        .mockImplementation(() => {});
+      mockPhotoService.decryptPhoto.mockRejectedValue(
+        new Error("Decryption failed"),
+      );
 
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} currentPhoto={mockEncryptedPhoto} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       act(() => {
@@ -264,28 +275,28 @@ describe('PhotoUpload', () => {
       });
 
       await waitFor(() => {
-        expect(screen.getByText('Failed to load photo')).toBeInTheDocument();
+        expect(screen.getByText("Failed to load photo")).toBeInTheDocument();
       });
 
       consoleWarnSpy.mockRestore();
     });
 
-    it('shows loading state during photo processing', async () => {
+    it("shows loading state during photo processing", async () => {
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} currentPhoto={mockEncryptedPhoto} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      expect(screen.getByText('Loading...')).toBeInTheDocument();
-      expect(screen.getByTestId('activity-indicator')).toBeInTheDocument();
+      expect(screen.getByText("Loading...")).toBeInTheDocument();
+      expect(screen.getByTestId("activity-indicator")).toBeInTheDocument();
     });
 
-    it('clears photo when currentPhoto becomes null', async () => {
+    it("clears photo when currentPhoto becomes null", async () => {
       const { rerender } = render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} currentPhoto={mockEncryptedPhoto} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       act(() => {
@@ -299,28 +310,28 @@ describe('PhotoUpload', () => {
       rerender(
         <TestWrapper>
           <PhotoUpload {...defaultProps} currentPhoto={null} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       act(() => {
         jest.advanceTimersByTime(100);
       });
 
-      expect(screen.getByText('Upload Photo')).toBeInTheDocument();
+      expect(screen.getByText("Upload Photo")).toBeInTheDocument();
     });
   });
 
-  describe('Photo Selection and Upload', () => {
-    it('handles successful photo selection', async () => {
+  describe("Photo Selection and Upload", () => {
+    it("handles successful photo selection", async () => {
       const mockOnPhotoChange = jest.fn();
 
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} onPhotoChange={mockOnPhotoChange} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      const uploadButton = screen.getByText('Upload Photo').parentElement;
+      const uploadButton = screen.getByText("Upload Photo").parentElement;
       await userEvent.click(uploadButton);
 
       await waitFor(() => {
@@ -332,21 +343,26 @@ describe('PhotoUpload', () => {
       });
 
       await waitFor(() => {
-        expect(mockPhotoService.processAndEncryptPhoto).toHaveBeenCalledWith(mockDecryptedPhoto);
-        expect(mockOnPhotoChange).toHaveBeenCalledWith(mockEncryptedPhoto, mockPhotoMetadata);
+        expect(mockPhotoService.processAndEncryptPhoto).toHaveBeenCalledWith(
+          mockDecryptedPhoto,
+        );
+        expect(mockOnPhotoChange).toHaveBeenCalledWith(
+          mockEncryptedPhoto,
+          mockPhotoMetadata,
+        );
       });
     });
 
-    it('handles cancelled photo selection', async () => {
+    it("handles cancelled photo selection", async () => {
       mockImagePicker.showImagePicker.mockResolvedValue({ cancelled: true });
 
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      const uploadButton = screen.getByText('Upload Photo').parentElement;
+      const uploadButton = screen.getByText("Upload Photo").parentElement;
       await userEvent.click(uploadButton);
 
       await waitFor(() => {
@@ -357,19 +373,19 @@ describe('PhotoUpload', () => {
       expect(mockPhotoService.processAndEncryptPhoto).not.toHaveBeenCalled();
     });
 
-    it('handles invalid photo selection', async () => {
+    it("handles invalid photo selection", async () => {
       mockImagePicker.validateResult.mockReturnValue({
         isValid: false,
-        error: 'File too large',
+        error: "File too large",
       });
 
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      const uploadButton = screen.getByText('Upload Photo').parentElement;
+      const uploadButton = screen.getByText("Upload Photo").parentElement;
       await userEvent.click(uploadButton);
 
       await waitFor(() => {
@@ -377,38 +393,38 @@ describe('PhotoUpload', () => {
       });
 
       await waitFor(() => {
-        expect(screen.getByText('Upload failed')).toBeInTheDocument();
+        expect(screen.getByText("Upload failed")).toBeInTheDocument();
       });
     });
 
-    it('handles photo processing errors', async () => {
+    it("handles photo processing errors", async () => {
       mockPhotoService.processAndEncryptPhoto.mockResolvedValue({
         success: false,
-        error: 'Processing failed',
+        error: "Processing failed",
       });
 
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      const uploadButton = screen.getByText('Upload Photo').parentElement;
+      const uploadButton = screen.getByText("Upload Photo").parentElement;
       await userEvent.click(uploadButton);
 
       await waitFor(() => {
-        expect(screen.getByText('Upload failed')).toBeInTheDocument();
+        expect(screen.getByText("Upload failed")).toBeInTheDocument();
       });
     });
 
-    it('shows processing progress during upload', async () => {
+    it("shows processing progress during upload", async () => {
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      const uploadButton = screen.getByText('Upload Photo').parentElement;
+      const uploadButton = screen.getByText("Upload Photo").parentElement;
       await userEvent.click(uploadButton);
 
       // Advance timers to trigger progress updates
@@ -417,30 +433,30 @@ describe('PhotoUpload', () => {
       });
 
       await waitFor(() => {
-        expect(screen.getByText('Processing...')).toBeInTheDocument();
+        expect(screen.getByText("Processing...")).toBeInTheDocument();
       });
     });
 
-    it('does not upload when disabled', async () => {
+    it("does not upload when disabled", async () => {
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} disabled={true} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      const uploadButton = screen.getByText('Upload Photo').parentElement;
+      const uploadButton = screen.getByText("Upload Photo").parentElement;
       await userEvent.click(uploadButton);
 
       expect(mockImagePicker.showImagePicker).not.toHaveBeenCalled();
     });
   });
 
-  describe('Photo Management Actions', () => {
-    it('shows edit and delete buttons for existing photos', async () => {
+  describe("Photo Management Actions", () => {
+    it("shows edit and delete buttons for existing photos", async () => {
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} currentPhoto={mockEncryptedPhoto} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       act(() => {
@@ -448,18 +464,22 @@ describe('PhotoUpload', () => {
       });
 
       await waitFor(() => {
-        expect(screen.getByTestId('icon-Edit')).toBeInTheDocument();
-        expect(screen.getByTestId('icon-Delete')).toBeInTheDocument();
+        expect(screen.getByTestId("icon-Edit")).toBeInTheDocument();
+        expect(screen.getByTestId("icon-Delete")).toBeInTheDocument();
       });
     });
 
-    it('handles edit button click', async () => {
+    it("handles edit button click", async () => {
       const mockOnPhotoChange = jest.fn();
 
       render(
         <TestWrapper>
-          <PhotoUpload {...defaultProps} currentPhoto={mockEncryptedPhoto} onPhotoChange={mockOnPhotoChange} />
-        </TestWrapper>
+          <PhotoUpload
+            {...defaultProps}
+            currentPhoto={mockEncryptedPhoto}
+            onPhotoChange={mockOnPhotoChange}
+          />
+        </TestWrapper>,
       );
 
       act(() => {
@@ -467,7 +487,7 @@ describe('PhotoUpload', () => {
       });
 
       const editButton = await waitFor(() => {
-        return screen.getByTestId('icon-Edit').parentElement;
+        return screen.getByTestId("icon-Edit").parentElement;
       });
 
       await userEvent.click(editButton);
@@ -477,14 +497,18 @@ describe('PhotoUpload', () => {
       });
     });
 
-    it('handles delete button click on web', async () => {
+    it("handles delete button click on web", async () => {
       const mockOnPhotoRemove = jest.fn();
       mockWindowConfirm.mockReturnValue(true);
 
       render(
         <TestWrapper>
-          <PhotoUpload {...defaultProps} currentPhoto={mockEncryptedPhoto} onPhotoRemove={mockOnPhotoRemove} />
-        </TestWrapper>
+          <PhotoUpload
+            {...defaultProps}
+            currentPhoto={mockEncryptedPhoto}
+            onPhotoRemove={mockOnPhotoRemove}
+          />
+        </TestWrapper>,
       );
 
       act(() => {
@@ -492,23 +516,29 @@ describe('PhotoUpload', () => {
       });
 
       const deleteButton = await waitFor(() => {
-        return screen.getByTestId('icon-Delete').parentElement;
+        return screen.getByTestId("icon-Delete").parentElement;
       });
 
       await userEvent.click(deleteButton);
 
-      expect(mockWindowConfirm).toHaveBeenCalledWith('Are you sure you want to remove this photo?');
+      expect(mockWindowConfirm).toHaveBeenCalledWith(
+        "Are you sure you want to remove this photo?",
+      );
       expect(mockOnPhotoRemove).toHaveBeenCalled();
     });
 
-    it('cancels delete when user declines confirmation', async () => {
+    it("cancels delete when user declines confirmation", async () => {
       const mockOnPhotoRemove = jest.fn();
       mockWindowConfirm.mockReturnValue(false);
 
       render(
         <TestWrapper>
-          <PhotoUpload {...defaultProps} currentPhoto={mockEncryptedPhoto} onPhotoRemove={mockOnPhotoRemove} />
-        </TestWrapper>
+          <PhotoUpload
+            {...defaultProps}
+            currentPhoto={mockEncryptedPhoto}
+            onPhotoRemove={mockOnPhotoRemove}
+          />
+        </TestWrapper>,
       );
 
       act(() => {
@@ -516,7 +546,7 @@ describe('PhotoUpload', () => {
       });
 
       const deleteButton = await waitFor(() => {
-        return screen.getByTestId('icon-Delete').parentElement;
+        return screen.getByTestId("icon-Delete").parentElement;
       });
 
       await userEvent.click(deleteButton);
@@ -524,11 +554,15 @@ describe('PhotoUpload', () => {
       expect(mockOnPhotoRemove).not.toHaveBeenCalled();
     });
 
-    it('does not show action buttons when disabled', async () => {
+    it("does not show action buttons when disabled", async () => {
       render(
         <TestWrapper>
-          <PhotoUpload {...defaultProps} currentPhoto={mockEncryptedPhoto} disabled={true} />
-        </TestWrapper>
+          <PhotoUpload
+            {...defaultProps}
+            currentPhoto={mockEncryptedPhoto}
+            disabled={true}
+          />
+        </TestWrapper>,
       );
 
       act(() => {
@@ -536,18 +570,23 @@ describe('PhotoUpload', () => {
       });
 
       await waitFor(() => {
-        expect(screen.queryByTestId('icon-Edit')).not.toBeInTheDocument();
-        expect(screen.queryByTestId('icon-Delete')).not.toBeInTheDocument();
+        expect(screen.queryByTestId("icon-Edit")).not.toBeInTheDocument();
+        expect(screen.queryByTestId("icon-Delete")).not.toBeInTheDocument();
       });
     });
 
-    it('does not execute actions when disabled', async () => {
+    it("does not execute actions when disabled", async () => {
       const mockOnPhotoRemove = jest.fn();
 
       render(
         <TestWrapper>
-          <PhotoUpload {...defaultProps} currentPhoto={mockEncryptedPhoto} disabled={true} onPhotoRemove={mockOnPhotoRemove} />
-        </TestWrapper>
+          <PhotoUpload
+            {...defaultProps}
+            currentPhoto={mockEncryptedPhoto}
+            disabled={true}
+            onPhotoRemove={mockOnPhotoRemove}
+          />
+        </TestWrapper>,
       );
 
       act(() => {
@@ -556,72 +595,74 @@ describe('PhotoUpload', () => {
 
       // Should not show buttons, but if somehow triggered, should not execute
       // This tests the disabled check in the handler functions
-      const component = screen.getByText('Profile Photo').parentElement;
+      const component = screen.getByText("Profile Photo").parentElement;
       expect(component).toBeInTheDocument();
     });
   });
 
-  describe('Error Handling', () => {
-    it('displays error messages with icon', async () => {
+  describe("Error Handling", () => {
+    it("displays error messages with icon", async () => {
       mockPhotoService.processAndEncryptPhoto.mockResolvedValue({
         success: false,
-        error: 'Network error',
+        error: "Network error",
       });
 
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      const uploadButton = screen.getByText('Upload Photo').parentElement;
+      const uploadButton = screen.getByText("Upload Photo").parentElement;
       await userEvent.click(uploadButton);
 
       await waitFor(() => {
-        expect(screen.getByText('Upload failed')).toBeInTheDocument();
-        expect(screen.getByTestId('icon-Warning')).toBeInTheDocument();
+        expect(screen.getByText("Upload failed")).toBeInTheDocument();
+        expect(screen.getByTestId("icon-Warning")).toBeInTheDocument();
       });
     });
 
-    it('hides help text when error is shown', async () => {
+    it("hides help text when error is shown", async () => {
       mockPhotoService.processAndEncryptPhoto.mockResolvedValue({
         success: false,
-        error: 'Processing failed',
+        error: "Processing failed",
       });
 
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      const uploadButton = screen.getByText('Upload Photo').parentElement;
+      const uploadButton = screen.getByText("Upload Photo").parentElement;
       await userEvent.click(uploadButton);
 
       await waitFor(() => {
-        expect(screen.getByText('Upload failed')).toBeInTheDocument();
-        expect(screen.queryByText(/Supports JPG and PNG images/)).not.toBeInTheDocument();
+        expect(screen.getByText("Upload failed")).toBeInTheDocument();
+        expect(
+          screen.queryByText(/Supports JPG and PNG images/),
+        ).not.toBeInTheDocument();
       });
     });
 
-    it('clears error on successful operation', async () => {
+    it("clears error on successful operation", async () => {
       const { rerender } = render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // First, trigger an error
       mockPhotoService.processAndEncryptPhoto.mockResolvedValueOnce({
         success: false,
-        error: 'First error',
+        error: "First error",
       });
 
-      const uploadButton = screen.getByText('Upload Photo').parentElement;
+      const uploadButton = screen.getByText("Upload Photo").parentElement;
       await userEvent.click(uploadButton);
 
       await waitFor(() => {
-        expect(screen.getByText('Upload failed')).toBeInTheDocument();
+        expect(screen.getByText("Upload failed")).toBeInTheDocument();
       });
 
       // Then, make a successful upload
@@ -634,43 +675,47 @@ describe('PhotoUpload', () => {
       await userEvent.click(uploadButton);
 
       await waitFor(() => {
-        expect(screen.queryByText('Upload failed')).not.toBeInTheDocument();
+        expect(screen.queryByText("Upload failed")).not.toBeInTheDocument();
       });
     });
   });
 
-  describe('Theme Integration', () => {
-    it('applies theme colors correctly', () => {
+  describe("Theme Integration", () => {
+    it("applies theme colors correctly", () => {
       render(
         <TestWrapper themeMode="dark">
           <PhotoUpload {...defaultProps} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      expect(screen.getByText('Profile Photo')).toBeInTheDocument();
+      expect(screen.getByText("Profile Photo")).toBeInTheDocument();
       // Theme colors are applied through StyleSheet.create, which is mocked
     });
 
-    it('handles missing theme colors gracefully', () => {
+    it("handles missing theme colors gracefully", () => {
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      expect(screen.getByText('Profile Photo')).toBeInTheDocument();
+      expect(screen.getByText("Profile Photo")).toBeInTheDocument();
     });
   });
 
-  describe('Edge Cases and Integration', () => {
-    it('handles missing callback functions gracefully', async () => {
+  describe("Edge Cases and Integration", () => {
+    it("handles missing callback functions gracefully", async () => {
       render(
         <TestWrapper>
-          <PhotoUpload {...defaultProps} onPhotoChange={undefined} onPhotoRemove={undefined} />
-        </TestWrapper>
+          <PhotoUpload
+            {...defaultProps}
+            onPhotoChange={undefined}
+            onPhotoRemove={undefined}
+          />
+        </TestWrapper>,
       );
 
-      const uploadButton = screen.getByText('Upload Photo').parentElement;
+      const uploadButton = screen.getByText("Upload Photo").parentElement;
       await userEvent.click(uploadButton);
 
       await waitFor(() => {
@@ -680,11 +725,11 @@ describe('PhotoUpload', () => {
       // Should not throw error even without callbacks
     });
 
-    it('handles component cleanup properly', () => {
+    it("handles component cleanup properly", () => {
       const { unmount } = render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} currentPhoto={mockEncryptedPhoto} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       act(() => {
@@ -696,14 +741,14 @@ describe('PhotoUpload', () => {
       // Should not cause memory leaks or errors
     });
 
-    it('handles rapid successive uploads', async () => {
+    it("handles rapid successive uploads", async () => {
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      const uploadButton = screen.getByText('Upload Photo').parentElement;
+      const uploadButton = screen.getByText("Upload Photo").parentElement;
 
       // Trigger multiple rapid uploads
       await userEvent.click(uploadButton);
@@ -716,22 +761,23 @@ describe('PhotoUpload', () => {
       });
     });
 
-    it('handles different photo formats', async () => {
+    it("handles different photo formats", async () => {
       mockImagePicker.showImagePicker.mockResolvedValue({
         cancelled: false,
-        dataUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==',
-        type: 'image/png',
+        dataUrl:
+          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==",
+        type: "image/png",
         size: 1024,
-        name: 'test.png',
+        name: "test.png",
       });
 
       render(
         <TestWrapper>
           <PhotoUpload {...defaultProps} />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
-      const uploadButton = screen.getByText('Upload Photo').parentElement;
+      const uploadButton = screen.getByText("Upload Photo").parentElement;
       await userEvent.click(uploadButton);
 
       await waitFor(() => {

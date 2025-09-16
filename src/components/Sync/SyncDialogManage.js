@@ -1,15 +1,6 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
-import {
-  CheckCircleIcon,
-  ContentCopyIcon,
-  DoneIcon,
-} from "../Common";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { CheckCircleIcon, ContentCopyIcon, DoneIcon } from "../Common";
 import { formatInviteCodeForDisplay } from "../../utils/inviteCode";
 import { useSyncActions } from "./hooks/useSyncActions";
 import { useSyncStyles } from "./hooks/useSyncStyles";
@@ -48,7 +39,10 @@ export const SyncDialogManage = ({ mode, onModeChange }) => {
 
   if (mode === "invite") {
     return (
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.successAlert}>
           <CheckCircleIcon size={24} color="#67B26F" />
           <Text style={styles.successText}>
@@ -69,7 +63,10 @@ export const SyncDialogManage = ({ mode, onModeChange }) => {
             onPress={() => handleCopyInvite(currentInviteCode)}
           >
             {copied ? (
-              <DoneIcon size={20} color={colors.background?.paper || "#FFFFFF"} />
+              <DoneIcon
+                size={20}
+                color={colors.background?.paper || "#FFFFFF"}
+              />
             ) : (
               <ContentCopyIcon
                 size={20}

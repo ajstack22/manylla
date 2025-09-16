@@ -22,7 +22,7 @@ describe("Sync Services Index", () => {
       "ManyllaMinimalSyncService",
     ];
 
-    expectedExports.forEach(exportName => {
+    expectedExports.forEach((exportName) => {
       expect(syncServices).toHaveProperty(exportName);
     });
   });
@@ -31,7 +31,7 @@ describe("Sync Services Index", () => {
     const exportKeys = Object.keys(syncServices);
     const expectedKeys = [
       "ManyllaEncryptionService",
-      "ManyllaMinimalSyncService"
+      "ManyllaMinimalSyncService",
     ];
 
     expect(exportKeys).toEqual(expect.arrayContaining(expectedKeys));

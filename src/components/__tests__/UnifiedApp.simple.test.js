@@ -74,14 +74,12 @@ describe("UnifiedApp Components", () => {
     test("saves with valid data", () => {
       render(<EntryForm {...defaultProps} category="medical" />);
 
-      fireEvent.change(
-        screen.getByPlaceholderText(/enter a title/i),
-        { target: { value: "Test Title" } }
-      );
-      fireEvent.change(
-        screen.getByPlaceholderText(/add details/i),
-        { target: { value: "Test Desc" } }
-      );
+      fireEvent.change(screen.getByPlaceholderText(/enter a title/i), {
+        target: { value: "Test Title" },
+      });
+      fireEvent.change(screen.getByPlaceholderText(/add details/i), {
+        target: { value: "Test Desc" },
+      });
       fireEvent.click(screen.getByText(/save/i));
 
       expect(defaultProps.onSave).toHaveBeenCalledWith({
@@ -151,10 +149,9 @@ describe("UnifiedApp Components", () => {
     test("saves with valid name", () => {
       render(<ProfileEditForm {...defaultProps} />);
 
-      fireEvent.change(
-        screen.getByPlaceholderText(/full name/i),
-        { target: { value: "Test Name" } }
-      );
+      fireEvent.change(screen.getByPlaceholderText(/full name/i), {
+        target: { value: "Test Name" },
+      });
       fireEvent.click(screen.getByText(/save/i));
 
       expect(defaultProps.onSave).toHaveBeenCalledWith({

@@ -4,8 +4,8 @@
  * Tests cryptographically secure random generation across platforms
  */
 
-import { SecureRandomService } from '../SecureRandomService';
-import secureRandomService from '../SecureRandomService';
+import { SecureRandomService } from "../SecureRandomService";
+import secureRandomService from "../SecureRandomService";
 
 // Mock crypto for testing
 const mockCrypto = {
@@ -15,10 +15,10 @@ const mockCrypto = {
       array[i] = (i * 17 + 42) % 256; // Predictable pattern for testing
     }
     return array;
-  })
+  }),
 };
 
-describe('SecureRandomService', () => {
+describe("SecureRandomService", () => {
   beforeEach(() => {
     // Reset mocks
     jest.clearAllMocks();
@@ -27,9 +27,9 @@ describe('SecureRandomService', () => {
     global.crypto = mockCrypto;
 
     // Mock platform detection
-    jest.doMock('../platform', () => ({
+    jest.doMock("../platform", () => ({
       isWeb: true,
-      isMobile: false
+      isMobile: false,
     }));
   });
 
@@ -37,22 +37,22 @@ describe('SecureRandomService', () => {
     jest.clearAllMocks();
   });
 
-  describe('Constructor and Availability', () => {
-    it('should create a new instance', () => {
+  describe("Constructor and Availability", () => {
+    it("should create a new instance", () => {
       const service = new SecureRandomService();
       expect(service).toBeInstanceOf(SecureRandomService);
     });
 
-    it('should export a singleton instance', () => {
+    it("should export a singleton instance", () => {
       expect(secureRandomService).toBeInstanceOf(SecureRandomService);
     });
 
-    it('should detect crypto availability correctly', () => {
+    it("should detect crypto availability correctly", () => {
       const service = new SecureRandomService();
       expect(service.isAvailable).toBe(true);
     });
 
-    it('should handle missing crypto gracefully', () => {
+    it("should handle missing crypto gracefully", () => {
       const originalCrypto = global.crypto;
       delete global.crypto;
 
@@ -63,24 +63,28 @@ describe('SecureRandomService', () => {
     });
   });
 
-  describe('getRandomBytes', () => {
-    it('should generate bytes of correct length', () => {
+  describe("getRandomBytes", () => {
+    it("should generate bytes of correct length", () => {
       const service = new SecureRandomService();
       const bytes = service.getRandomBytes(16);
 
       expect(bytes).toBeInstanceOf(Uint8Array);
       expect(bytes.length).toBe(16);
-      expect(mockCrypto.getRandomValues).toHaveBeenCalledWith(expect.any(Uint8Array));
+      expect(mockCrypto.getRandomValues).toHaveBeenCalledWith(
+        expect.any(Uint8Array),
+      );
     });
 
-    it('should throw error when crypto not available', () => {
+    it("should throw error when crypto not available", () => {
       const service = new SecureRandomService();
       service.isAvailable = false;
 
-      expect(() => service.getRandomBytes(16)).toThrow('Secure random generation not available');
+      expect(() => service.getRandomBytes(16)).toThrow(
+        "Secure random generation not available",
+      );
     });
 
-    it('should generate different values for different calls', () => {
+    it("should generate different values for different calls", () => {
       const service = new SecureRandomService();
 
       // Mock to return different values each time
@@ -100,8 +104,8 @@ describe('SecureRandomService', () => {
     });
   });
 
-  describe('getRandomInt', () => {
-    it('should generate integers within range', () => {
+  describe("getRandomInt", () => {
+    it("should generate integers within range", () => {
       const service = new SecureRandomService();
 
       for (let i = 0; i < 100; i++) {
@@ -112,22 +116,28 @@ describe('SecureRandomService', () => {
       }
     });
 
-    it('should handle edge cases', () => {
+    it("should handle edge cases", () => {
       const service = new SecureRandomService();
 
       const result = service.getRandomInt(1);
       expect(result).toBe(0);
     });
 
-    it('should throw error for invalid max values', () => {
+    it("should throw error for invalid max values", () => {
       const service = new SecureRandomService();
 
-      expect(() => service.getRandomInt(0)).toThrow('Max must be a positive integer');
-      expect(() => service.getRandomInt(-1)).toThrow('Max must be a positive integer');
-      expect(() => service.getRandomInt(1.5)).toThrow('Max must be a positive integer');
+      expect(() => service.getRandomInt(0)).toThrow(
+        "Max must be a positive integer",
+      );
+      expect(() => service.getRandomInt(-1)).toThrow(
+        "Max must be a positive integer",
+      );
+      expect(() => service.getRandomInt(1.5)).toThrow(
+        "Max must be a positive integer",
+      );
     });
 
-    it('should have good distribution', () => {
+    it("should have good distribution", () => {
       const service = new SecureRandomService();
       const max = 5;
       const counts = new Array(max).fill(0);
@@ -149,25 +159,25 @@ describe('SecureRandomService', () => {
       }
 
       // Each bucket should have some values (not testing perfect distribution due to rejection sampling)
-      counts.forEach(count => {
+      counts.forEach((count) => {
         expect(count).toBeGreaterThan(0);
       });
     });
   });
 
-  describe('getRandomFloat', () => {
-    it('should generate floats between 0 and 1', () => {
+  describe("getRandomFloat", () => {
+    it("should generate floats between 0 and 1", () => {
       const service = new SecureRandomService();
 
       for (let i = 0; i < 100; i++) {
         const randomFloat = service.getRandomFloat();
         expect(randomFloat).toBeGreaterThanOrEqual(0);
         expect(randomFloat).toBeLessThan(1);
-        expect(typeof randomFloat).toBe('number');
+        expect(typeof randomFloat).toBe("number");
       }
     });
 
-    it('should generate different values', () => {
+    it("should generate different values", () => {
       const service = new SecureRandomService();
 
       // Mock to return different bytes each time
@@ -187,8 +197,8 @@ describe('SecureRandomService', () => {
     });
   });
 
-  describe('getRandomHex', () => {
-    it('should generate hex strings of correct length', () => {
+  describe("getRandomHex", () => {
+    it("should generate hex strings of correct length", () => {
       const service = new SecureRandomService();
 
       const hex8 = service.getRandomHex(8);
@@ -200,14 +210,18 @@ describe('SecureRandomService', () => {
       expect(/^[0-9a-f]+$/.test(hex32)).toBe(true);
     });
 
-    it('should throw error for odd lengths', () => {
+    it("should throw error for odd lengths", () => {
       const service = new SecureRandomService();
 
-      expect(() => service.getRandomHex(7)).toThrow('Hex string length must be even');
-      expect(() => service.getRandomHex(15)).toThrow('Hex string length must be even');
+      expect(() => service.getRandomHex(7)).toThrow(
+        "Hex string length must be even",
+      );
+      expect(() => service.getRandomHex(15)).toThrow(
+        "Hex string length must be even",
+      );
     });
 
-    it('should generate different hex strings', () => {
+    it("should generate different hex strings", () => {
       const service = new SecureRandomService();
 
       const hex1 = service.getRandomHex(16);
@@ -217,10 +231,10 @@ describe('SecureRandomService', () => {
     });
   });
 
-  describe('getRandomString', () => {
-    it('should generate strings from charset', () => {
+  describe("getRandomString", () => {
+    it("should generate strings from charset", () => {
       const service = new SecureRandomService();
-      const charset = 'ABC';
+      const charset = "ABC";
 
       const randomString = service.getRandomString(charset, 10);
 
@@ -230,23 +244,31 @@ describe('SecureRandomService', () => {
       }
     });
 
-    it('should throw error for empty charset', () => {
+    it("should throw error for empty charset", () => {
       const service = new SecureRandomService();
 
-      expect(() => service.getRandomString('', 5)).toThrow('Charset cannot be empty');
-      expect(() => service.getRandomString(null, 5)).toThrow('Charset cannot be empty');
+      expect(() => service.getRandomString("", 5)).toThrow(
+        "Charset cannot be empty",
+      );
+      expect(() => service.getRandomString(null, 5)).toThrow(
+        "Charset cannot be empty",
+      );
     });
 
-    it('should throw error for invalid length', () => {
+    it("should throw error for invalid length", () => {
       const service = new SecureRandomService();
 
-      expect(() => service.getRandomString('ABC', 0)).toThrow('Length must be positive');
-      expect(() => service.getRandomString('ABC', -1)).toThrow('Length must be positive');
+      expect(() => service.getRandomString("ABC", 0)).toThrow(
+        "Length must be positive",
+      );
+      expect(() => service.getRandomString("ABC", -1)).toThrow(
+        "Length must be positive",
+      );
     });
   });
 
-  describe('getRandomAlphanumeric', () => {
-    it('should generate alphanumeric strings with default options', () => {
+  describe("getRandomAlphanumeric", () => {
+    it("should generate alphanumeric strings with default options", () => {
       const service = new SecureRandomService();
 
       const result = service.getRandomAlphanumeric(10);
@@ -255,48 +277,50 @@ describe('SecureRandomService', () => {
       expect(/^[A-Za-z0-9]+$/.test(result)).toBe(true);
     });
 
-    it('should respect charset options', () => {
+    it("should respect charset options", () => {
       const service = new SecureRandomService();
 
       const uppercaseOnly = service.getRandomAlphanumeric(10, {
         uppercase: true,
         lowercase: false,
-        numbers: false
+        numbers: false,
       });
       expect(/^[A-Z]+$/.test(uppercaseOnly)).toBe(true);
 
       const numbersOnly = service.getRandomAlphanumeric(10, {
         uppercase: false,
         lowercase: false,
-        numbers: true
+        numbers: true,
       });
       expect(/^[0-9]+$/.test(numbersOnly)).toBe(true);
     });
 
-    it('should exclude specified characters', () => {
+    it("should exclude specified characters", () => {
       const service = new SecureRandomService();
 
       const result = service.getRandomAlphanumeric(10, {
-        exclude: 'A1'
+        exclude: "A1",
       });
 
-      expect(result).not.toContain('A');
-      expect(result).not.toContain('1');
+      expect(result).not.toContain("A");
+      expect(result).not.toContain("1");
     });
 
-    it('should throw error when charset becomes empty', () => {
+    it("should throw error when charset becomes empty", () => {
       const service = new SecureRandomService();
 
-      expect(() => service.getRandomAlphanumeric(5, {
-        uppercase: false,
-        lowercase: false,
-        numbers: false
-      })).toThrow('Charset is empty after applying options');
+      expect(() =>
+        service.getRandomAlphanumeric(5, {
+          uppercase: false,
+          lowercase: false,
+          numbers: false,
+        }),
+      ).toThrow("Charset is empty after applying options");
     });
   });
 
-  describe('Device ID Generation', () => {
-    it('should generate device IDs of correct format', () => {
+  describe("Device ID Generation", () => {
+    it("should generate device IDs of correct format", () => {
       const service = new SecureRandomService();
 
       const deviceId = service.generateDeviceId();
@@ -305,7 +329,7 @@ describe('SecureRandomService', () => {
       expect(/^[0-9a-f]+$/.test(deviceId)).toBe(true);
     });
 
-    it('should generate unique device IDs', () => {
+    it("should generate unique device IDs", () => {
       const service = new SecureRandomService();
 
       const id1 = service.generateDeviceId();
@@ -314,18 +338,18 @@ describe('SecureRandomService', () => {
       expect(id1).not.toEqual(id2);
     });
 
-    it('should generate timestamp-based IDs', () => {
+    it("should generate timestamp-based IDs", () => {
       const service = new SecureRandomService();
 
       const id = service.generateTimestampId();
 
-      expect(typeof id).toBe('string');
+      expect(typeof id).toBe("string");
       expect(id.length).toBeGreaterThan(10); // Should include timestamp + random part
     });
   });
 
-  describe('Self Test', () => {
-    it('should pass self test when working correctly', () => {
+  describe("Self Test", () => {
+    it("should pass self test when working correctly", () => {
       const service = new SecureRandomService();
 
       const result = service.selfTest();
@@ -333,7 +357,7 @@ describe('SecureRandomService', () => {
       expect(result).toBe(true);
     });
 
-    it('should fail self test when crypto not available', () => {
+    it("should fail self test when crypto not available", () => {
       const service = new SecureRandomService();
       service.isAvailable = false;
 
@@ -343,8 +367,8 @@ describe('SecureRandomService', () => {
     });
   });
 
-  describe('Integration with Invite Code Generation', () => {
-    it('should work with invite code character set', () => {
+  describe("Integration with Invite Code Generation", () => {
+    it("should work with invite code character set", () => {
       const service = new SecureRandomService();
       const INVITE_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
 
@@ -358,25 +382,27 @@ describe('SecureRandomService', () => {
         code += INVITE_CHARS[randomIndex];
       }
 
-      expect(code).toMatch(/^[ABCDEFGHJKMNPQRSTUVWXYZ23456789]{4}-[ABCDEFGHJKMNPQRSTUVWXYZ23456789]{4}$/);
+      expect(code).toMatch(
+        /^[ABCDEFGHJKMNPQRSTUVWXYZ23456789]{4}-[ABCDEFGHJKMNPQRSTUVWXYZ23456789]{4}$/,
+      );
     });
   });
 
-  describe('Cross-platform Compatibility', () => {
-    it('should work on web platform', () => {
-      jest.doMock('../platform', () => ({
+  describe("Cross-platform Compatibility", () => {
+    it("should work on web platform", () => {
+      jest.doMock("../platform", () => ({
         isWeb: true,
-        isMobile: false
+        isMobile: false,
       }));
 
       const service = new SecureRandomService();
       expect(service.checkAvailability()).toBe(true);
     });
 
-    it('should work on mobile platform', () => {
-      jest.doMock('../platform', () => ({
+    it("should work on mobile platform", () => {
+      jest.doMock("../platform", () => ({
         isWeb: false,
-        isMobile: true
+        isMobile: true,
       }));
 
       // Mock global.crypto for mobile
@@ -387,30 +413,30 @@ describe('SecureRandomService', () => {
     });
   });
 
-  describe('Error Handling', () => {
-    it('should handle crypto.getRandomValues errors gracefully', () => {
+  describe("Error Handling", () => {
+    it("should handle crypto.getRandomValues errors gracefully", () => {
       const service = new SecureRandomService();
 
       mockCrypto.getRandomValues.mockImplementation(() => {
-        throw new Error('Crypto failure');
+        throw new Error("Crypto failure");
       });
 
-      expect(() => service.getRandomBytes(16)).toThrow('Crypto failure');
+      expect(() => service.getRandomBytes(16)).toThrow("Crypto failure");
     });
 
-    it('should validate input parameters', () => {
+    it("should validate input parameters", () => {
       const service = new SecureRandomService();
 
       // Test parameter validation across methods
       expect(() => service.getRandomBytes(-1)).toThrow();
       expect(() => service.getRandomInt(0)).toThrow();
       expect(() => service.getRandomHex(3)).toThrow();
-      expect(() => service.getRandomString('', 5)).toThrow();
+      expect(() => service.getRandomString("", 5)).toThrow();
     });
   });
 
-  describe('Security Properties', () => {
-    it('should use crypto.getRandomValues for entropy', () => {
+  describe("Security Properties", () => {
+    it("should use crypto.getRandomValues for entropy", () => {
       // Reset mock implementation before this test
       mockCrypto.getRandomValues.mockReset();
       mockCrypto.getRandomValues.mockImplementation((array) => {
@@ -426,7 +452,7 @@ describe('SecureRandomService', () => {
       expect(mockCrypto.getRandomValues).toHaveBeenCalled();
     });
 
-    it('should use rejection sampling for uniform distribution', () => {
+    it("should use rejection sampling for uniform distribution", () => {
       const service = new SecureRandomService();
 
       // Mock to force rejection sampling

@@ -56,8 +56,8 @@ Scan the QR code or use this link to access shared information.`,
       // Silent failure for Share.share() - this is expected on some platforms/devices
       // User can still manually save/copy the QR code URL
       // Security: Only logging error.message to avoid exposing sensitive QR code data
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('Native share failed for QR code URL:', error.message);
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Native share failed for QR code URL:", error.message);
       }
     }
   };

@@ -7,7 +7,7 @@ export const PrintPreviewEntries = ({
   selectedCategories,
   actualEntries,
   categoryGroups,
-  categoryTitles
+  categoryTitles,
 }) => {
   const styles = usePrintStyles(colors);
 
@@ -26,9 +26,7 @@ export const PrintPreviewEntries = ({
           let hasContent = false;
           group.categories.forEach((cat) => {
             const categoryEntries =
-              actualEntries && actualEntries[cat]
-                ? actualEntries[cat]
-                : [];
+              actualEntries && actualEntries[cat] ? actualEntries[cat] : [];
             if (categoryEntries.length > 0) {
               hasContent = true;
             }
@@ -56,9 +54,7 @@ export const PrintPreviewEntries = ({
                       </Text>
                       {categoryEntries.map((entry, index) => (
                         <View key={index} style={styles.entry}>
-                          <Text style={styles.entryTitle}>
-                            • {entry.title}
-                          </Text>
+                          <Text style={styles.entryTitle}>• {entry.title}</Text>
                           <Text style={styles.entryDescription}>
                             {entry.description}
                           </Text>

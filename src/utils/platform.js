@@ -139,7 +139,11 @@ export const font = (weight = "400", size = 14) => {
     };
     style.fontFamily = androidFonts[weight] || "sans-serif";
     // Always set fontWeight for consistency
-    if (String(weight) === "700" || String(weight) === "800" || weight === "bold") {
+    if (
+      String(weight) === "700" ||
+      String(weight) === "800" ||
+      weight === "bold"
+    ) {
       style.fontWeight = "bold";
     } else {
       style.fontWeight = "normal";
@@ -444,7 +448,7 @@ export const readFromClipboard = async () => {
  * @returns {boolean} - True if valid, false otherwise
  */
 export const isValidElementId = (elementId) => {
-  if (!elementId || typeof elementId !== 'string') {
+  if (!elementId || typeof elementId !== "string") {
     return false;
   }
 
@@ -467,7 +471,10 @@ export const print = (elementId = null) => {
     // Security: Validate elementId to prevent CSS injection attacks
     if (!isValidElementId(elementId)) {
       if (process.env.NODE_ENV === "development") {
-        console.warn('Invalid elementId provided to print function:', elementId);
+        console.warn(
+          "Invalid elementId provided to print function:",
+          elementId,
+        );
       }
       // Fall back to printing entire page if elementId is invalid
       window.print();

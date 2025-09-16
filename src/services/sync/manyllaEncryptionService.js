@@ -341,7 +341,11 @@ class ManyllaEncryptionService {
     const parsed = JSON.parse(dataString);
 
     // Handle undefined unwrapping
-    if (parsed && typeof parsed === 'object' && parsed.__manylla_undefined === true) {
+    if (
+      parsed &&
+      typeof parsed === "object" &&
+      parsed.__manylla_undefined === true
+    ) {
       return undefined;
     }
     return parsed;

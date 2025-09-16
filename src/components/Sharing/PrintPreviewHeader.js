@@ -2,11 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import { usePrintStyles } from "./usePrintStyles";
 
-export const PrintPreviewHeader = ({
-  colors,
-  childName,
-  recipientName
-}) => {
+export const PrintPreviewHeader = ({ colors, childName, recipientName }) => {
   const styles = usePrintStyles(colors);
 
   return (

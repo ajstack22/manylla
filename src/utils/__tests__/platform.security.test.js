@@ -9,7 +9,7 @@ describe("Platform Security - ElementId Validation", () => {
       "UPPERCASE-ID",
       "mixed-Case_123",
       "a", // Single character
-      "a".repeat(100) // Max length
+      "a".repeat(100), // Max length
     ];
 
     test.each(validIds)("should accept valid elementId: %s", (elementId) => {
@@ -21,57 +21,60 @@ describe("Platform Security - ElementId Validation", () => {
     const maliciousPatterns = [
       {
         id: "valid; } body { background: red !important; }",
-        description: "CSS injection attempt"
+        description: "CSS injection attempt",
       },
       {
         id: "test'><script>alert('xss')</script>",
-        description: "XSS attempt via script tag"
+        description: "XSS attempt via script tag",
       },
       {
         id: "element.with.dots",
-        description: "CSS class selector injection"
+        description: "CSS class selector injection",
       },
       {
         id: "element with spaces",
-        description: "Invalid spaces"
+        description: "Invalid spaces",
       },
       {
         id: "element@symbol",
-        description: "Invalid @ symbol"
+        description: "Invalid @ symbol",
       },
       {
         id: "element+plus",
-        description: "Invalid + symbol"
+        description: "Invalid + symbol",
       },
       {
         id: "element{bracket}",
-        description: "Invalid curly brackets"
+        description: "Invalid curly brackets",
       },
       {
         id: "element[square]",
-        description: "Invalid square brackets"
+        description: "Invalid square brackets",
       },
       {
         id: "element(paren)",
-        description: "Invalid parentheses"
+        description: "Invalid parentheses",
       },
       {
         id: "element#hash",
-        description: "Invalid hash symbol"
+        description: "Invalid hash symbol",
       },
       {
         id: "element%percent",
-        description: "Invalid percent symbol"
+        description: "Invalid percent symbol",
       },
       {
         id: "a".repeat(101),
-        description: "Too long (over 100 chars)"
-      }
+        description: "Too long (over 100 chars)",
+      },
     ];
 
-    test.each(maliciousPatterns)("should reject $description: $id", ({ id }) => {
-      expect(isValidElementId(id)).toBe(false);
-    });
+    test.each(maliciousPatterns)(
+      "should reject $description: $id",
+      ({ id }) => {
+        expect(isValidElementId(id)).toBe(false);
+      },
+    );
   });
 
   describe("Invalid types", () => {
@@ -82,7 +85,7 @@ describe("Platform Security - ElementId Validation", () => {
       { value: {}, description: "object" },
       { value: [], description: "array" },
       { value: true, description: "boolean" },
-      { value: "", description: "empty string" }
+      { value: "", description: "empty string" },
     ];
 
     test.each(invalidTypes)("should reject $description", ({ value }) => {
@@ -97,7 +100,8 @@ describe("Platform Security - ElementId Validation", () => {
     });
 
     it("should prevent media query injection", () => {
-      const mediaInjection = "test; } @media screen { body { display: none; } } .fake {";
+      const mediaInjection =
+        "test; } @media screen { body { display: none; } } .fake {";
       expect(isValidElementId(mediaInjection)).toBe(false);
     });
 

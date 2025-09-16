@@ -59,12 +59,12 @@ describe("ConflictResolver", () => {
       const local = {
         timestamp: baseTime,
         name: "Local Profile",
-        categories: [{ id: 1, name: "Local Cat" }]
+        categories: [{ id: 1, name: "Local Cat" }],
       };
       const remote = {
         timestamp: baseTime + 1000, // 1 second later, within 3-second window
         name: "Remote Profile",
-        categories: [{ id: 2, name: "Remote Cat" }]
+        categories: [{ id: 2, name: "Remote Cat" }],
       };
 
       const result = conflictResolver.mergeProfiles(local, remote);
@@ -78,11 +78,11 @@ describe("ConflictResolver", () => {
       const baseTime = Date.now();
       const local = {
         timestamp: baseTime,
-        name: "Local Profile"
+        name: "Local Profile",
       };
       const remote = {
         timestamp: baseTime + 5000, // 5 seconds later, outside 3-second window
-        name: "Remote Profile"
+        name: "Remote Profile",
       };
 
       const result = conflictResolver.mergeProfiles(local, remote);
@@ -94,11 +94,11 @@ describe("ConflictResolver", () => {
       const baseTime = Date.now();
       const local = {
         timestamp: baseTime + 5000,
-        name: "Local Profile"
+        name: "Local Profile",
       };
       const remote = {
         timestamp: baseTime,
-        name: "Remote Profile"
+        name: "Remote Profile",
       };
 
       const result = conflictResolver.mergeProfiles(local, remote);
@@ -114,13 +114,13 @@ describe("ConflictResolver", () => {
         timestamp: baseTime,
         name: "Local Name",
         dateOfBirth: "1990-01-01",
-        profileImage: null
+        profileImage: null,
       };
       const remote = {
         timestamp: baseTime + 1000,
         name: null,
         dateOfBirth: "1990-01-02",
-        profileImage: "remote-image.jpg"
+        profileImage: "remote-image.jpg",
       };
 
       const result = conflictResolver.fieldLevelMerge(local, remote);
@@ -137,23 +137,25 @@ describe("ConflictResolver", () => {
         timestamp: Date.now(),
         categories: [
           { id: 1, name: "Category 1", lastModified: "2023-01-01" },
-          { id: 2, name: "Category 2", lastModified: "2023-01-01" }
-        ]
+          { id: 2, name: "Category 2", lastModified: "2023-01-01" },
+        ],
       };
       const remote = {
         timestamp: Date.now(),
         categories: [
           { id: 2, name: "Updated Category 2", lastModified: "2023-01-02" },
-          { id: 3, name: "Category 3", lastModified: "2023-01-01" }
-        ]
+          { id: 3, name: "Category 3", lastModified: "2023-01-01" },
+        ],
       };
 
       const result = conflictResolver.fieldLevelMerge(local, remote);
 
       expect(result.categories).toHaveLength(3);
-      expect(result.categories.find(c => c.id === 1)).toBeDefined();
-      expect(result.categories.find(c => c.id === 2).name).toBe("Updated Category 2");
-      expect(result.categories.find(c => c.id === 3)).toBeDefined();
+      expect(result.categories.find((c) => c.id === 1)).toBeDefined();
+      expect(result.categories.find((c) => c.id === 2).name).toBe(
+        "Updated Category 2",
+      );
+      expect(result.categories.find((c) => c.id === 3)).toBeDefined();
     });
 
     test("should merge quick info items", () => {
@@ -161,23 +163,25 @@ describe("ConflictResolver", () => {
         timestamp: Date.now(),
         quickInfo: [
           { id: "q1", text: "Local Info 1", timestamp: 1000 },
-          { id: "q2", text: "Local Info 2", timestamp: 1000 }
-        ]
+          { id: "q2", text: "Local Info 2", timestamp: 1000 },
+        ],
       };
       const remote = {
         timestamp: Date.now(),
         quickInfo: [
           { id: "q2", text: "Updated Info 2", timestamp: 2000 },
-          { id: "q3", text: "Remote Info 3", timestamp: 1500 }
-        ]
+          { id: "q3", text: "Remote Info 3", timestamp: 1500 },
+        ],
       };
 
       const result = conflictResolver.fieldLevelMerge(local, remote);
 
       expect(result.quickInfo).toHaveLength(3);
-      expect(result.quickInfo.find(q => q.id === "q1")).toBeDefined();
-      expect(result.quickInfo.find(q => q.id === "q2").text).toBe("Updated Info 2");
-      expect(result.quickInfo.find(q => q.id === "q3")).toBeDefined();
+      expect(result.quickInfo.find((q) => q.id === "q1")).toBeDefined();
+      expect(result.quickInfo.find((q) => q.id === "q2").text).toBe(
+        "Updated Info 2",
+      );
+      expect(result.quickInfo.find((q) => q.id === "q3")).toBeDefined();
     });
 
     test("should merge medical info", () => {
@@ -187,8 +191,8 @@ describe("ConflictResolver", () => {
           diagnoses: ["Local Diagnosis"],
           allergies: ["Local Allergy"],
           bloodType: "O+",
-          notes: "Local notes"
-        }
+          notes: "Local notes",
+        },
       };
       const remote = {
         timestamp: Date.now(),
@@ -196,8 +200,8 @@ describe("ConflictResolver", () => {
           diagnoses: ["Remote Diagnosis"],
           allergies: ["Remote Allergy"],
           bloodType: null,
-          notes: "Remote notes that are longer"
-        }
+          notes: "Remote notes that are longer",
+        },
       };
 
       const result = conflictResolver.fieldLevelMerge(local, remote);
@@ -212,23 +216,34 @@ describe("ConflictResolver", () => {
       const local = {
         timestamp: Date.now(),
         emergencyContacts: [
-          { name: "John Doe", phone: "123-456-7890", email: "john@example.com" },
-          { name: "Jane Smith", phone: "098-765-4321" }
-        ]
+          {
+            name: "John Doe",
+            phone: "123-456-7890",
+            email: "john@example.com",
+          },
+          { name: "Jane Smith", phone: "098-765-4321" },
+        ],
       };
       const remote = {
         timestamp: Date.now(),
         emergencyContacts: [
-          { name: "John Doe Updated", phone: "123-456-7890", email: "john.new@example.com", relationship: "Father" },
-          { name: "Bob Wilson", phone: "555-555-5555" }
-        ]
+          {
+            name: "John Doe Updated",
+            phone: "123-456-7890",
+            email: "john.new@example.com",
+            relationship: "Father",
+          },
+          { name: "Bob Wilson", phone: "555-555-5555" },
+        ],
       };
 
       const result = conflictResolver.fieldLevelMerge(local, remote);
 
       expect(result.emergencyContacts).toHaveLength(3);
       // John Doe should be updated (same phone key) with more complete contact
-      const johnContact = result.emergencyContacts.find(c => c.phone === "123-456-7890");
+      const johnContact = result.emergencyContacts.find(
+        (c) => c.phone === "123-456-7890",
+      );
       expect(johnContact.relationship).toBe("Father"); // Remote has additional field
     });
 
@@ -237,32 +252,32 @@ describe("ConflictResolver", () => {
         timestamp: Date.now(),
         medications: [
           { name: "Aspirin", dosage: "100mg", lastModified: "2023-01-01" },
-          { name: "Ibuprofen", dosage: "200mg", lastModified: "2023-01-01" }
-        ]
+          { name: "Ibuprofen", dosage: "200mg", lastModified: "2023-01-01" },
+        ],
       };
       const remote = {
         timestamp: Date.now(),
         medications: [
           { name: "Aspirin", dosage: "100mg", lastModified: "2023-01-02" },
-          { name: "Tylenol", dosage: "500mg", lastModified: "2023-01-01" }
-        ]
+          { name: "Tylenol", dosage: "500mg", lastModified: "2023-01-01" },
+        ],
       };
 
       const result = conflictResolver.fieldLevelMerge(local, remote);
 
       expect(result.medications).toHaveLength(3);
-      const aspirinMed = result.medications.find(m => m.name === "Aspirin");
+      const aspirinMed = result.medications.find((m) => m.name === "Aspirin");
       expect(aspirinMed.lastModified).toBe("2023-01-02"); // More recent
     });
 
     test("should prefer local settings", () => {
       const local = {
         timestamp: Date.now(),
-        settings: { theme: "dark", notifications: true }
+        settings: { theme: "dark", notifications: true },
       };
       const remote = {
         timestamp: Date.now(),
-        settings: { theme: "light", notifications: false }
+        settings: { theme: "light", notifications: false },
       };
 
       const result = conflictResolver.fieldLevelMerge(local, remote);
@@ -273,11 +288,11 @@ describe("ConflictResolver", () => {
     test("should use remote settings if local is empty", () => {
       const local = {
         timestamp: Date.now(),
-        settings: null
+        settings: null,
       };
       const remote = {
         timestamp: Date.now(),
-        settings: { theme: "light", notifications: false }
+        settings: { theme: "light", notifications: false },
       };
 
       const result = conflictResolver.fieldLevelMerge(local, remote);
@@ -294,7 +309,12 @@ describe("ConflictResolver", () => {
       const result2 = conflictResolver.mergeField("", "remote", 1000, 2000);
       expect(result2).toBe("remote");
 
-      const result3 = conflictResolver.mergeField(undefined, "remote", 1000, 2000);
+      const result3 = conflictResolver.mergeField(
+        undefined,
+        "remote",
+        1000,
+        2000,
+      );
       expect(result3).toBe("remote");
     });
 
@@ -310,7 +330,12 @@ describe("ConflictResolver", () => {
       const result = conflictResolver.mergeField("local", "remote", 2000, 1000);
       expect(result).toBe("local"); // Local is more recent
 
-      const result2 = conflictResolver.mergeField("local", "remote", 1000, 2000);
+      const result2 = conflictResolver.mergeField(
+        "local",
+        "remote",
+        1000,
+        2000,
+      );
       expect(result2).toBe("remote"); // Remote is more recent
     });
 
@@ -324,26 +349,32 @@ describe("ConflictResolver", () => {
     test("should merge categories with deduplication", () => {
       const local = [
         { id: 1, name: "Category 1", lastModified: "2023-01-01" },
-        { id: 2, name: "Category 2", lastModified: "2023-01-01" }
+        { id: 2, name: "Category 2", lastModified: "2023-01-01" },
       ];
       const remote = [
         { id: 2, name: "Updated Category 2", lastModified: "2023-01-02" },
-        { id: 3, name: "Category 3", lastModified: "2023-01-01" }
+        { id: 3, name: "Category 3", lastModified: "2023-01-01" },
       ];
 
       const result = conflictResolver.mergeCategories(local, remote);
 
       expect(result).toHaveLength(3);
-      expect(result.find(c => c.id === 1).name).toBe("Category 1");
-      expect(result.find(c => c.id === 2).name).toBe("Updated Category 2");
-      expect(result.find(c => c.id === 3).name).toBe("Category 3");
+      expect(result.find((c) => c.id === 1).name).toBe("Category 1");
+      expect(result.find((c) => c.id === 2).name).toBe("Updated Category 2");
+      expect(result.find((c) => c.id === 3).name).toBe("Category 3");
     });
 
     test("should handle empty arrays", () => {
-      const result1 = conflictResolver.mergeCategories([], [{ id: 1, name: "Cat 1" }]);
+      const result1 = conflictResolver.mergeCategories(
+        [],
+        [{ id: 1, name: "Cat 1" }],
+      );
       expect(result1).toHaveLength(1);
 
-      const result2 = conflictResolver.mergeCategories([{ id: 1, name: "Cat 1" }], []);
+      const result2 = conflictResolver.mergeCategories(
+        [{ id: 1, name: "Cat 1" }],
+        [],
+      );
       expect(result2).toHaveLength(1);
 
       const result3 = conflictResolver.mergeCategories([], []);
@@ -355,19 +386,19 @@ describe("ConflictResolver", () => {
     test("should merge quick info items by ID", () => {
       const local = [
         { id: "q1", text: "Local Info 1", timestamp: 1000 },
-        { id: "q2", text: "Local Info 2", timestamp: 1000 }
+        { id: "q2", text: "Local Info 2", timestamp: 1000 },
       ];
       const remote = [
         { id: "q2", text: "Updated Info 2", timestamp: 2000 },
-        { id: "q3", text: "Remote Info 3", timestamp: 1500 }
+        { id: "q3", text: "Remote Info 3", timestamp: 1500 },
       ];
 
       const result = conflictResolver.mergeQuickInfo(local, remote);
 
       expect(result).toHaveLength(3);
-      expect(result.find(q => q.id === "q1").text).toBe("Local Info 1");
-      expect(result.find(q => q.id === "q2").text).toBe("Updated Info 2");
-      expect(result.find(q => q.id === "q3").text).toBe("Remote Info 3");
+      expect(result.find((q) => q.id === "q1").text).toBe("Local Info 1");
+      expect(result.find((q) => q.id === "q2").text).toBe("Updated Info 2");
+      expect(result.find((q) => q.id === "q3").text).toBe("Remote Info 3");
     });
 
     test("should handle items without timestamps", () => {
@@ -396,13 +427,13 @@ describe("ConflictResolver", () => {
       const local = {
         diagnoses: ["Diagnosis 1"],
         allergies: ["Allergy 1"],
-        bloodType: "A+"
+        bloodType: "A+",
       };
       const remote = {
         diagnoses: ["Diagnosis 1", "Diagnosis 2"],
         allergies: ["Allergy 1", "Allergy 2"],
         bloodType: "A+",
-        notes: "Additional notes"
+        notes: "Additional notes",
       };
 
       const result = conflictResolver.mergeMedicalInfo(local, remote);
@@ -415,13 +446,13 @@ describe("ConflictResolver", () => {
         diagnoses: ["Local Diagnosis"],
         allergies: ["Local Allergy"],
         bloodType: "A+",
-        notes: "Short"
+        notes: "Short",
       };
       const remote = {
         diagnoses: ["Remote Diagnosis"],
         allergies: ["Remote Allergy"],
         notes: "Much longer notes with more detail",
-        extraField: "value" // This makes remote more complete, so remote wins
+        extraField: "value", // This makes remote more complete, so remote wins
       };
 
       const result = conflictResolver.mergeMedicalInfo(local, remote);
@@ -437,13 +468,13 @@ describe("ConflictResolver", () => {
         diagnoses: ["Local Diagnosis"],
         allergies: ["Local Allergy"],
         bloodType: "A+",
-        notes: "Short"
+        notes: "Short",
       };
       const remote = {
         diagnoses: ["Remote Diagnosis"],
         allergies: ["Remote Allergy"],
         notes: "Much longer notes with more detail",
-        doctor: "Dr. Smith" // 4 fields each, equal completeness
+        doctor: "Dr. Smith", // 4 fields each, equal completeness
       };
 
       const result = conflictResolver.mergeMedicalInfo(local, remote);
@@ -469,10 +500,15 @@ describe("ConflictResolver", () => {
   describe("mergeEmergencyContacts", () => {
     test("should deduplicate by phone number", () => {
       const local = [
-        { name: "John Doe", phone: "123-456-7890", email: "john@example.com" }
+        { name: "John Doe", phone: "123-456-7890", email: "john@example.com" },
       ];
       const remote = [
-        { name: "John Updated", phone: "123-456-7890", email: "john.new@example.com", relationship: "Father" }
+        {
+          name: "John Updated",
+          phone: "123-456-7890",
+          email: "john.new@example.com",
+          relationship: "Father",
+        },
       ];
 
       const result = conflictResolver.mergeEmergencyContacts(local, remote);
@@ -483,11 +519,9 @@ describe("ConflictResolver", () => {
     });
 
     test("should deduplicate by email when no phone", () => {
-      const local = [
-        { name: "Jane Doe", email: "jane@example.com" }
-      ];
+      const local = [{ name: "Jane Doe", email: "jane@example.com" }];
       const remote = [
-        { name: "Jane Updated", email: "jane@example.com", phone: "555-1234" }
+        { name: "Jane Updated", email: "jane@example.com", phone: "555-1234" },
       ];
 
       const result = conflictResolver.mergeEmergencyContacts(local, remote);
@@ -498,11 +532,9 @@ describe("ConflictResolver", () => {
     });
 
     test("should deduplicate by name when no phone or email", () => {
-      const local = [
-        { name: "Bob Smith" }
-      ];
+      const local = [{ name: "Bob Smith" }];
       const remote = [
-        { name: "Bob Smith", phone: "555-1234", email: "bob@example.com" }
+        { name: "Bob Smith", phone: "555-1234", email: "bob@example.com" },
       ];
 
       const result = conflictResolver.mergeEmergencyContacts(local, remote);
@@ -514,11 +546,9 @@ describe("ConflictResolver", () => {
     test("should keep separate contacts with different identifiers", () => {
       const local = [
         { name: "John Doe", phone: "123-456-7890" },
-        { name: "Jane Smith", phone: "098-765-4321" }
+        { name: "Jane Smith", phone: "098-765-4321" },
       ];
-      const remote = [
-        { name: "Bob Wilson", phone: "555-555-5555" }
-      ];
+      const remote = [{ name: "Bob Wilson", phone: "555-555-5555" }];
 
       const result = conflictResolver.mergeEmergencyContacts(local, remote);
 
@@ -530,27 +560,32 @@ describe("ConflictResolver", () => {
     test("should merge medications by name and dosage", () => {
       const local = [
         { name: "Aspirin", dosage: "100mg", lastModified: "2023-01-01" },
-        { name: "Ibuprofen", dosage: "200mg", lastModified: "2023-01-01" }
+        { name: "Ibuprofen", dosage: "200mg", lastModified: "2023-01-01" },
       ];
       const remote = [
-        { name: "Aspirin", dosage: "100mg", lastModified: "2023-01-02", frequency: "Daily" },
-        { name: "Tylenol", dosage: "500mg", lastModified: "2023-01-01" }
+        {
+          name: "Aspirin",
+          dosage: "100mg",
+          lastModified: "2023-01-02",
+          frequency: "Daily",
+        },
+        { name: "Tylenol", dosage: "500mg", lastModified: "2023-01-01" },
       ];
 
       const result = conflictResolver.mergeMedications(local, remote);
 
       expect(result).toHaveLength(3);
-      const aspirin = result.find(m => m.name === "Aspirin");
+      const aspirin = result.find((m) => m.name === "Aspirin");
       expect(aspirin.lastModified).toBe("2023-01-02");
       expect(aspirin.frequency).toBe("Daily"); // Additional field from remote
     });
 
     test("should handle case-insensitive medication keys", () => {
       const local = [
-        { name: "ASPIRIN", dosage: "100MG", lastModified: "2023-01-01" }
+        { name: "ASPIRIN", dosage: "100MG", lastModified: "2023-01-01" },
       ];
       const remote = [
-        { name: "aspirin", dosage: "100mg", lastModified: "2023-01-02" }
+        { name: "aspirin", dosage: "100mg", lastModified: "2023-01-02" },
       ];
 
       const result = conflictResolver.mergeMedications(local, remote);
@@ -561,11 +596,9 @@ describe("ConflictResolver", () => {
 
     test("should preserve local when no lastModified on remote", () => {
       const local = [
-        { name: "Aspirin", dosage: "100mg", lastModified: "2023-01-01" }
+        { name: "Aspirin", dosage: "100mg", lastModified: "2023-01-01" },
       ];
-      const remote = [
-        { name: "Aspirin", dosage: "100mg" }
-      ];
+      const remote = [{ name: "Aspirin", dosage: "100mg" }];
 
       const result = conflictResolver.mergeMedications(local, remote);
 
@@ -594,14 +627,22 @@ describe("ConflictResolver", () => {
     });
 
     test("should handle empty arrays", () => {
-      expect(conflictResolver.mergeArrayField([], ["item1"])).toEqual(["item1"]);
-      expect(conflictResolver.mergeArrayField(["item1"], [])).toEqual(["item1"]);
+      expect(conflictResolver.mergeArrayField([], ["item1"])).toEqual([
+        "item1",
+      ]);
+      expect(conflictResolver.mergeArrayField(["item1"], [])).toEqual([
+        "item1",
+      ]);
       expect(conflictResolver.mergeArrayField([], [])).toEqual([]);
     });
 
     test("should handle undefined arrays", () => {
-      expect(conflictResolver.mergeArrayField(undefined, ["item1"])).toEqual(["item1"]);
-      expect(conflictResolver.mergeArrayField(["item1"], undefined)).toEqual(["item1"]);
+      expect(conflictResolver.mergeArrayField(undefined, ["item1"])).toEqual([
+        "item1",
+      ]);
+      expect(conflictResolver.mergeArrayField(["item1"], undefined)).toEqual([
+        "item1",
+      ]);
     });
   });
 
@@ -635,14 +676,14 @@ describe("ConflictResolver", () => {
         name: "John",
         age: 30,
         hobbies: ["reading", "swimming"],
-        bio: "Software developer"
+        bio: "Software developer",
       };
 
       const obj2 = {
         name: "Jane",
         age: null,
         hobbies: [],
-        bio: ""
+        bio: "",
       };
 
       const score1 = conflictResolver.calculateCompleteness(obj1);
@@ -662,7 +703,7 @@ describe("ConflictResolver", () => {
     test("should count array length in score", () => {
       const obj = {
         tags: ["tag1", "tag2", "tag3"],
-        categories: []
+        categories: [],
       };
 
       const score = conflictResolver.calculateCompleteness(obj);
@@ -676,12 +717,12 @@ describe("ConflictResolver", () => {
         name: "John",
         email: "john@example.com",
         phone: "123-456-7890",
-        address: "123 Main St"
+        address: "123 Main St",
       };
 
       const incomplete = {
         name: "John",
-        email: null
+        email: null,
       };
 
       expect(conflictResolver.isMoreComplete(complete, incomplete)).toBe(true);
@@ -702,7 +743,7 @@ describe("ConflictResolver", () => {
       const validData = {
         timestamp: Date.now(),
         name: "Profile",
-        categories: []
+        categories: [],
       };
 
       expect(conflictResolver.validateMergedData(validData)).toBe(true);
@@ -718,7 +759,7 @@ describe("ConflictResolver", () => {
     test("should require timestamp field", () => {
       const invalidData = {
         name: "Profile",
-        categories: []
+        categories: [],
       };
 
       expect(conflictResolver.validateMergedData(invalidData)).toBe(false);
@@ -726,7 +767,7 @@ describe("ConflictResolver", () => {
 
     test("should accept data with all required fields", () => {
       const validData = {
-        timestamp: 1642723200000
+        timestamp: 1642723200000,
       };
 
       expect(conflictResolver.validateMergedData(validData)).toBe(true);
@@ -740,43 +781,62 @@ describe("ConflictResolver", () => {
         timestamp: baseTime,
         name: "Complex Profile",
         categories: [
-          { id: 1, name: "Medical", items: ["Item 1", "Item 2"], lastModified: "2023-01-01" }
+          {
+            id: 1,
+            name: "Medical",
+            items: ["Item 1", "Item 2"],
+            lastModified: "2023-01-01",
+          },
         ],
         medicalInfo: {
           diagnoses: ["Hypertension"],
           allergies: ["Peanuts"],
-          notes: "Patient notes"
+          notes: "Patient notes",
         },
         emergencyContacts: [
-          { name: "Emergency 1", phone: "911", relationship: "Emergency" }
-        ]
+          { name: "Emergency 1", phone: "911", relationship: "Emergency" },
+        ],
       };
 
       const remote = {
         timestamp: baseTime + 1000,
         name: "Updated Complex Profile",
         categories: [
-          { id: 1, name: "Medical Updated", items: ["Item 1", "Item 3"], lastModified: "2023-01-02" }
+          {
+            id: 1,
+            name: "Medical Updated",
+            items: ["Item 1", "Item 3"],
+            lastModified: "2023-01-02",
+          },
         ],
         medicalInfo: {
           diagnoses: ["Hypertension", "Diabetes"],
           allergies: ["Peanuts", "Shellfish"],
           bloodType: "O+",
-          notes: "Updated patient notes with more details"
+          notes: "Updated patient notes with more details",
         },
         emergencyContacts: [
-          { name: "Emergency 1", phone: "911", relationship: "Primary Emergency", email: "emergency@example.com" }
-        ]
+          {
+            name: "Emergency 1",
+            phone: "911",
+            relationship: "Primary Emergency",
+            email: "emergency@example.com",
+          },
+        ],
       };
 
       const result = conflictResolver.mergeProfiles(local, remote);
 
       expect(result.name).toBe("Updated Complex Profile");
-      expect(result.categories.find(c => c.id === 1).name).toBe("Medical Updated");
+      expect(result.categories.find((c) => c.id === 1).name).toBe(
+        "Medical Updated",
+      );
       expect(result.medicalInfo.diagnoses).toContain("Hypertension");
       expect(result.medicalInfo.diagnoses).toContain("Diabetes");
       expect(result.medicalInfo.bloodType).toBe("O+");
-      expect(result.medicalInfo.notes).toBe("Updated patient notes with more details");
+      expect(result.medicalInfo.notes).toBe(
+        "Updated patient notes with more details",
+      );
       expect(result.emergencyContacts[0].email).toBe("emergency@example.com");
     });
 
@@ -784,16 +844,20 @@ describe("ConflictResolver", () => {
       const generateLargeProfile = (prefix, count) => ({
         timestamp: Date.now(),
         name: `${prefix} Profile`,
-        categories: Array(count).fill(0).map((_, i) => ({
-          id: i,
-          name: `${prefix} Category ${i}`,
-          lastModified: `2023-01-0${(i % 9) + 1}`
-        })),
-        quickInfo: Array(count).fill(0).map((_, i) => ({
-          id: `${prefix}-${i}`,
-          text: `${prefix} Info ${i}`,
-          timestamp: Date.now() + i
-        }))
+        categories: Array(count)
+          .fill(0)
+          .map((_, i) => ({
+            id: i,
+            name: `${prefix} Category ${i}`,
+            lastModified: `2023-01-0${(i % 9) + 1}`,
+          })),
+        quickInfo: Array(count)
+          .fill(0)
+          .map((_, i) => ({
+            id: `${prefix}-${i}`,
+            text: `${prefix} Info ${i}`,
+            timestamp: Date.now() + i,
+          })),
       });
 
       const local = generateLargeProfile("Local", 100);
@@ -813,14 +877,14 @@ describe("ConflictResolver", () => {
         timestamp: Date.now(),
         categories: [], // Empty instead of corrupted
         medicalInfo: null,
-        emergencyContacts: undefined
+        emergencyContacts: undefined,
       };
 
       const remote = {
         timestamp: Date.now() + 1000,
         categories: [{ id: 1, name: "Valid Category" }],
         medicalInfo: { diagnoses: ["Test"] },
-        emergencyContacts: [{ name: "Test Contact" }]
+        emergencyContacts: [{ name: "Test Contact" }],
       };
 
       const result = conflictResolver.mergeProfiles(local, remote);
@@ -835,18 +899,26 @@ describe("ConflictResolver", () => {
       let profile = {
         timestamp: Date.now(),
         name: "Original",
-        categories: [{ id: 1, name: "Cat 1", lastModified: "2023-01-01" }]
+        categories: [{ id: 1, name: "Cat 1", lastModified: "2023-01-01" }],
       };
 
       // Simulate multiple sync operations
       for (let i = 0; i < 5; i++) {
         const update = {
-          timestamp: Date.now() + (i * 1000),
+          timestamp: Date.now() + i * 1000,
           name: `Update ${i}`,
           categories: [
-            { id: 1, name: `Updated Cat 1 - ${i}`, lastModified: `2023-01-0${i + 2}` },
-            { id: i + 2, name: `New Cat ${i + 2}`, lastModified: `2023-01-0${i + 2}` }
-          ]
+            {
+              id: 1,
+              name: `Updated Cat 1 - ${i}`,
+              lastModified: `2023-01-0${i + 2}`,
+            },
+            {
+              id: i + 2,
+              name: `New Cat ${i + 2}`,
+              lastModified: `2023-01-0${i + 2}`,
+            },
+          ],
         };
 
         profile = conflictResolver.mergeProfiles(profile, update);
@@ -854,7 +926,9 @@ describe("ConflictResolver", () => {
 
       expect(profile.name).toBe("Update 4");
       expect(profile.categories).toHaveLength(6); // 1 original + 5 new
-      expect(profile.categories.find(c => c.id === 1).name).toBe("Updated Cat 1 - 4");
+      expect(profile.categories.find((c) => c.id === 1).name).toBe(
+        "Updated Cat 1 - 4",
+      );
     });
   });
 });

@@ -32,49 +32,54 @@ describe("ManyllaMinimalSyncService (Unified)", () => {
     // Reset fetch mock
     global.fetch.mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ success: true })
+      json: () => Promise.resolve({ success: true }),
     });
   });
 
   describe("Platform Detection and Interface", () => {
     test("should export a service object with required methods", () => {
       platform.isWeb = true;
-      manyllaMinimalSyncService = require("../manyllaMinimalSyncService").default;
+      manyllaMinimalSyncService =
+        require("../manyllaMinimalSyncService").default;
 
       expect(manyllaMinimalSyncService).toBeDefined();
-      expect(typeof manyllaMinimalSyncService.init).toBe('function');
-      expect(typeof manyllaMinimalSyncService.enableSync).toBe('function');
-      expect(typeof manyllaMinimalSyncService.push).toBe('function');
-      expect(typeof manyllaMinimalSyncService.pull).toBe('function');
-      expect(typeof manyllaMinimalSyncService.isInitialized).toBe('function');
+      expect(typeof manyllaMinimalSyncService.init).toBe("function");
+      expect(typeof manyllaMinimalSyncService.enableSync).toBe("function");
+      expect(typeof manyllaMinimalSyncService.push).toBe("function");
+      expect(typeof manyllaMinimalSyncService.pull).toBe("function");
+      expect(typeof manyllaMinimalSyncService.isInitialized).toBe("function");
     });
 
     test("should work with web platform", () => {
       platform.isWeb = true;
-      manyllaMinimalSyncService = require("../manyllaMinimalSyncService").default;
+      manyllaMinimalSyncService =
+        require("../manyllaMinimalSyncService").default;
 
       expect(manyllaMinimalSyncService).toBeDefined();
-      expect(typeof manyllaMinimalSyncService.init).toBe('function');
+      expect(typeof manyllaMinimalSyncService.init).toBe("function");
     });
 
     test("should work with native platform", () => {
       platform.isWeb = false;
-      manyllaMinimalSyncService = require("../manyllaMinimalSyncService").default;
+      manyllaMinimalSyncService =
+        require("../manyllaMinimalSyncService").default;
 
       expect(manyllaMinimalSyncService).toBeDefined();
-      expect(typeof manyllaMinimalSyncService.init).toBe('function');
+      expect(typeof manyllaMinimalSyncService.init).toBe("function");
     });
 
     test("should handle undefined platform.isWeb (defaults to native)", () => {
       platform.isWeb = undefined;
-      manyllaMinimalSyncService = require("../manyllaMinimalSyncService").default;
+      manyllaMinimalSyncService =
+        require("../manyllaMinimalSyncService").default;
 
       expect(manyllaMinimalSyncService).toBeDefined();
     });
 
     test("should handle null platform.isWeb (defaults to native)", () => {
       platform.isWeb = null;
-      manyllaMinimalSyncService = require("../manyllaMinimalSyncService").default;
+      manyllaMinimalSyncService =
+        require("../manyllaMinimalSyncService").default;
 
       expect(manyllaMinimalSyncService).toBeDefined();
     });
@@ -86,7 +91,8 @@ describe("ManyllaMinimalSyncService (Unified)", () => {
         jest.resetModules();
         platform.isWeb = falsyValue;
 
-        manyllaMinimalSyncService = require("../manyllaMinimalSyncService").default;
+        manyllaMinimalSyncService =
+          require("../manyllaMinimalSyncService").default;
         expect(manyllaMinimalSyncService).toBeDefined();
       }
     });
@@ -98,7 +104,8 @@ describe("ManyllaMinimalSyncService (Unified)", () => {
         jest.resetModules();
         platform.isWeb = truthyValue;
 
-        manyllaMinimalSyncService = require("../manyllaMinimalSyncService").default;
+        manyllaMinimalSyncService =
+          require("../manyllaMinimalSyncService").default;
         expect(manyllaMinimalSyncService).toBeDefined();
       }
     });
@@ -117,11 +124,17 @@ describe("ManyllaMinimalSyncService (Unified)", () => {
       const nativeService = require("../manyllaMinimalSyncService").default;
 
       // Both should have the same basic interface
-      const commonMethods = ['init', 'enableSync', 'push', 'pull', 'isInitialized'];
+      const commonMethods = [
+        "init",
+        "enableSync",
+        "push",
+        "pull",
+        "isInitialized",
+      ];
 
-      commonMethods.forEach(method => {
-        expect(typeof webService[method]).toBe('function');
-        expect(typeof nativeService[method]).toBe('function');
+      commonMethods.forEach((method) => {
+        expect(typeof webService[method]).toBe("function");
+        expect(typeof nativeService[method]).toBe("function");
       });
     });
   });
@@ -129,34 +142,36 @@ describe("ManyllaMinimalSyncService (Unified)", () => {
   describe("Method Availability", () => {
     beforeEach(() => {
       platform.isWeb = true;
-      manyllaMinimalSyncService = require("../manyllaMinimalSyncService").default;
+      manyllaMinimalSyncService =
+        require("../manyllaMinimalSyncService").default;
     });
 
     test("should have init method", () => {
-      expect(typeof manyllaMinimalSyncService.init).toBe('function');
+      expect(typeof manyllaMinimalSyncService.init).toBe("function");
     });
 
     test("should have enableSync method", () => {
-      expect(typeof manyllaMinimalSyncService.enableSync).toBe('function');
+      expect(typeof manyllaMinimalSyncService.enableSync).toBe("function");
     });
 
     test("should have push method", () => {
-      expect(typeof manyllaMinimalSyncService.push).toBe('function');
+      expect(typeof manyllaMinimalSyncService.push).toBe("function");
     });
 
     test("should have pull method", () => {
-      expect(typeof manyllaMinimalSyncService.pull).toBe('function');
+      expect(typeof manyllaMinimalSyncService.pull).toBe("function");
     });
 
     test("should have isInitialized method", () => {
-      expect(typeof manyllaMinimalSyncService.isInitialized).toBe('function');
+      expect(typeof manyllaMinimalSyncService.isInitialized).toBe("function");
     });
   });
 
   describe("Basic Functionality", () => {
     beforeEach(() => {
       platform.isWeb = true;
-      manyllaMinimalSyncService = require("../manyllaMinimalSyncService").default;
+      manyllaMinimalSyncService =
+        require("../manyllaMinimalSyncService").default;
     });
 
     test("should handle isInitialized call", () => {
@@ -171,10 +186,10 @@ describe("ManyllaMinimalSyncService (Unified)", () => {
       }).not.toThrow();
 
       // These methods might throw if not initialized, which is expected behavior
-      expect(typeof manyllaMinimalSyncService.init).toBe('function');
-      expect(typeof manyllaMinimalSyncService.enableSync).toBe('function');
-      expect(typeof manyllaMinimalSyncService.push).toBe('function');
-      expect(typeof manyllaMinimalSyncService.pull).toBe('function');
+      expect(typeof manyllaMinimalSyncService.init).toBe("function");
+      expect(typeof manyllaMinimalSyncService.enableSync).toBe("function");
+      expect(typeof manyllaMinimalSyncService.push).toBe("function");
+      expect(typeof manyllaMinimalSyncService.pull).toBe("function");
     });
   });
 
@@ -192,8 +207,8 @@ describe("ManyllaMinimalSyncService (Unified)", () => {
       expect(nativeService).toBeDefined();
 
       // Both should have the same interface
-      expect(typeof webService.init).toBe('function');
-      expect(typeof nativeService.init).toBe('function');
+      expect(typeof webService.init).toBe("function");
+      expect(typeof nativeService.init).toBe("function");
     });
 
     test("should maintain module caching behavior", () => {
@@ -224,9 +239,20 @@ describe("ManyllaMinimalSyncService (Unified)", () => {
   describe("Error Handling", () => {
     test("should handle platform edge cases", () => {
       // Test various platform values that might cause issues
-      const testValues = [undefined, null, 0, "", false, true, "web", 1, {}, []];
+      const testValues = [
+        undefined,
+        null,
+        0,
+        "",
+        false,
+        true,
+        "web",
+        1,
+        {},
+        [],
+      ];
 
-      testValues.forEach(value => {
+      testValues.forEach((value) => {
         jest.resetModules();
         platform.isWeb = value;
 
@@ -239,12 +265,19 @@ describe("ManyllaMinimalSyncService (Unified)", () => {
 
     test("should provide consistent interface", () => {
       platform.isWeb = true;
-      manyllaMinimalSyncService = require("../manyllaMinimalSyncService").default;
+      manyllaMinimalSyncService =
+        require("../manyllaMinimalSyncService").default;
 
-      const expectedMethods = ['init', 'enableSync', 'push', 'pull', 'isInitialized'];
-      expectedMethods.forEach(method => {
+      const expectedMethods = [
+        "init",
+        "enableSync",
+        "push",
+        "pull",
+        "isInitialized",
+      ];
+      expectedMethods.forEach((method) => {
         expect(manyllaMinimalSyncService).toHaveProperty(method);
-        expect(typeof manyllaMinimalSyncService[method]).toBe('function');
+        expect(typeof manyllaMinimalSyncService[method]).toBe("function");
       });
     });
   });
@@ -255,7 +288,8 @@ describe("ManyllaMinimalSyncService (Unified)", () => {
       jest.resetModules();
 
       expect(() => {
-        manyllaMinimalSyncService = require("../manyllaMinimalSyncService").default;
+        manyllaMinimalSyncService =
+          require("../manyllaMinimalSyncService").default;
       }).not.toThrow();
 
       expect(manyllaMinimalSyncService).toBeDefined();
@@ -266,7 +300,8 @@ describe("ManyllaMinimalSyncService (Unified)", () => {
       jest.resetModules();
 
       expect(() => {
-        manyllaMinimalSyncService = require("../manyllaMinimalSyncService").default;
+        manyllaMinimalSyncService =
+          require("../manyllaMinimalSyncService").default;
       }).not.toThrow();
 
       expect(manyllaMinimalSyncService).toBeDefined();
