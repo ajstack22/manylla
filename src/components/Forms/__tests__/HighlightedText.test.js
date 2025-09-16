@@ -364,4 +364,185 @@ describe("HighlightedText", () => {
       expect(screen.getByText("Call")).toBeInTheDocument();
     });
   });
+
+  describe("Advanced regex and performance", () => {
+    test("should handle regex escape characters properly", () => {
+      const content = "Price: $20.50 (on sale) - 50% off";
+      render(<HighlightedText content={content} />);
+
+      expect(screen.getByText(/Price:/)).toBeInTheDocument();
+    });
+
+    test("should handle empty highlight terms without errors", () => {
+      const content = "No highlights here";
+      render(<HighlightedText content={content} highlightTerms={[]} />);
+
+      expect(screen.getByText(content)).toBeInTheDocument();
+    });
+
+    test("should handle duplicate highlight terms", () => {
+      const content = "medication medication medication";
+      const duplicateTerms = ["medication", "medication", "med"];
+      render(<HighlightedText content={content} highlightTerms={duplicateTerms} />);
+
+      expect(screen.getAllByText("medication")).toHaveLength(3);
+    });
+
+    test("should handle overlapping terms gracefully", () => {
+      const content = "medication allergic";
+      const overlappingTerms = ["med", "medication", "allergy", "allergic"];
+      render(<HighlightedText content={content} highlightTerms={overlappingTerms} />);
+
+      expect(screen.getByText("medication")).toBeInTheDocument();
+      expect(screen.getByText("allergic")).toBeInTheDocument();
+    });
+  });
+
+  describe("Performance and edge cases", () => {
+    test("should handle very long content efficiently", () => {
+      const longContent = "medication ".repeat(100) + "allergy " + "emergency ".repeat(50);
+      render(<HighlightedText content={longContent} />);
+
+      expect(screen.getAllByText("medication")).toHaveLength(100);
+      expect(screen.getByText("allergy")).toBeInTheDocument();
+      expect(screen.getAllByText("emergency")).toHaveLength(50);
+    });
+
+    test("should handle many custom highlight terms", () => {
+      const content = "term1 term2 term3 term4 term5";
+      const manyTerms = Array.from({ length: 100 }, (_, i) => `term${i}`);
+      render(<HighlightedText content={content} highlightTerms={manyTerms} />);
+
+      expect(screen.getByText("term1")).toBeInTheDocument();
+      expect(screen.getByText("term2")).toBeInTheDocument();
+      expect(screen.getByText("term3")).toBeInTheDocument();
+    });
+
+    test("should handle content with repeated whitespace", () => {
+      const content = "medication    allergy     emergency";
+      render(<HighlightedText content={content} />);
+
+      expect(screen.getByText("medication")).toBeInTheDocument();
+      expect(screen.getByText("allergy")).toBeInTheDocument();
+      expect(screen.getByText("emergency")).toBeInTheDocument();
+    });
+  });
+
+  describe("Medical term coverage validation", () => {
+    test("should highlight all emergency medical equipment", () => {
+      const content = "Keep epipen and inhaler nearby during seizure";
+      render(<HighlightedText content={content} />);
+
+      expect(screen.getByText("epipen")).toBeInTheDocument();
+      expect(screen.getByText("inhaler")).toBeInTheDocument();
+      expect(screen.getByText("seizure")).toBeInTheDocument();
+    });
+
+    test("should highlight medical diagnostic terms", () => {
+      const content = "Recent diagnosis shows allergy to medication";
+      render(<HighlightedText content={content} />);
+
+      expect(screen.getByText("diagnosis")).toBeInTheDocument();
+      expect(screen.getByText("allergy")).toBeInTheDocument();
+      expect(screen.getByText("medication")).toBeInTheDocument();
+    });
+
+    test("should highlight dosage and measurement terms", () => {
+      const content = "Prescribed dosage is 5 mg taken twice daily";
+      render(<HighlightedText content={content} />);
+
+      expect(screen.getByText("Prescribed")).toBeInTheDocument();
+      expect(screen.getByText("dosage")).toBeInTheDocument();
+      expect(screen.getByText("mg")).toBeInTheDocument();
+      expect(screen.getByText("twice")).toBeInTheDocument();
+      expect(screen.getByText("daily")).toBeInTheDocument();
+    });
+
+    test("should highlight critical safety terms", () => {
+      const content = "Warning: never ignore critical symptoms, always seek help";
+      render(<HighlightedText content={content} />);
+
+      expect(screen.getByText(/warning/i)).toBeInTheDocument();
+      expect(screen.getByText("never")).toBeInTheDocument();
+      expect(screen.getByText("critical")).toBeInTheDocument();
+      expect(screen.getByText("always")).toBeInTheDocument();
+    });
+
+    test("should highlight contact and communication terms", () => {
+      const content = "Call phone number or email contact immediately";
+      render(<HighlightedText content={content} />);
+
+      expect(screen.getByText("Call")).toBeInTheDocument();
+      expect(screen.getByText("phone")).toBeInTheDocument();
+      expect(screen.getByText("email")).toBeInTheDocument();
+      expect(screen.getByText("contact")).toBeInTheDocument();
+      expect(screen.getByText("immediately")).toBeInTheDocument();
+    });
+  });
+
+  describe("Boundary and word matching validation", () => {
+    test("should only highlight complete words not substrings", () => {
+      const content = "Allergic to medications not allergy within allergies";
+      render(<HighlightedText content={content} />);
+
+      // Should find "allergic", "medications", "allergy", and "allergies" as complete words
+      expect(screen.getByText("Allergic")).toBeInTheDocument();
+      expect(screen.getByText("medications")).toBeInTheDocument();
+      expect(screen.getByText("allergy")).toBeInTheDocument();
+      expect(screen.getByText("allergies")).toBeInTheDocument();
+    });
+
+    test("should handle punctuation boundaries correctly", () => {
+      const content = "Emergency! Call immediately, avoid danger.";
+      render(<HighlightedText content={content} />);
+
+      expect(screen.getByText("Emergency")).toBeInTheDocument();
+      expect(screen.getByText("Call")).toBeInTheDocument();
+      expect(screen.getByText("immediately")).toBeInTheDocument();
+      expect(screen.getByText("avoid")).toBeInTheDocument();
+      expect(screen.getByText("danger")).toBeInTheDocument();
+    });
+
+    test("should handle terms at string boundaries", () => {
+      const content = "Emergency medication needed";
+      render(<HighlightedText content={content} />);
+
+      expect(screen.getByText("Emergency")).toBeInTheDocument();
+      expect(screen.getByText("medication")).toBeInTheDocument();
+    });
+  });
+
+  describe("Component integration scenarios", () => {
+    test("should handle medical emergency instruction scenario", () => {
+      const emergencyContent = "CRITICAL: Patient has severe allergy to medication. Call emergency contact immediately! Always check dose before giving medicine.";
+      render(<HighlightedText content={emergencyContent} />);
+
+      // Should highlight multiple medical and emergency terms
+      expect(screen.getByText("critical")).toBeInTheDocument();
+      expect(screen.getByText("allergy")).toBeInTheDocument();
+      expect(screen.getByText("medication")).toBeInTheDocument();
+      expect(screen.getByText("Call")).toBeInTheDocument();
+      expect(screen.getByText("emergency")).toBeInTheDocument();
+      expect(screen.getByText("contact")).toBeInTheDocument();
+      expect(screen.getByText("immediately")).toBeInTheDocument();
+      expect(screen.getByText("always")).toBeInTheDocument();
+      expect(screen.getByText("dose")).toBeInTheDocument();
+      expect(screen.getByText("medicine")).toBeInTheDocument();
+    });
+
+    test("should handle medication instruction scenario", () => {
+      const medicationContent = "Take prescribed medicine 2.5 mg dose twice daily with caution. Avoid if allergic reaction occurs.";
+      render(<HighlightedText content={medicationContent} />);
+
+      expect(screen.getByText("prescribed")).toBeInTheDocument();
+      expect(screen.getByText("medicine")).toBeInTheDocument();
+      expect(screen.getByText("mg")).toBeInTheDocument();
+      expect(screen.getByText("dose")).toBeInTheDocument();
+      expect(screen.getByText("twice")).toBeInTheDocument();
+      expect(screen.getByText("daily")).toBeInTheDocument();
+      expect(screen.getByText("caution")).toBeInTheDocument();
+      expect(screen.getByText("avoid")).toBeInTheDocument();
+      expect(screen.getByText("allergic")).toBeInTheDocument();
+    });
+  });
 });
