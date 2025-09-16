@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Photo Encryption Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .section { margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 5px; }
+        pre { background: white; padding: 10px; overflow: auto; }
+        .size { color: #0066cc; font-weight: bold; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Photo Encryption Test</h1>
+    
+    <div class="section">
+        <h2>Current Profile Data</h2>
+        <pre id="profileData"></pre>
+    </div>
+    
+    <div class="section">
+        <h2>Photo Analysis</h2>
+        <div id="photoAnalysis"></div>
+    </div>
+    
+    <script>
+        function formatBytes(bytes) {
+            if (bytes < 1024) return bytes + ' bytes';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+        
+        function analyzeData() {
+            const profileStr = localStorage.getItem('manylla_profile');
+            
+            if (!profileStr) {
+                document.getElementById('profileData').textContent = 'No profile found';
+                return;
+            }
+            
+            const profile = JSON.parse(profileStr);
+            
+            // Show profile structure without photo data
+            const profileCopy = JSON.parse(JSON.stringify(profile));
+            if (profileCopy.photo) {
+                const photoSize = profileCopy.photo.length;
+                const isDataUrl = profileCopy.photo.startsWith('data:');
+                const isEncrypted = !isDataUrl;
+                
+                profileCopy.photo = isDataUrl 
+                    ? `[DATA URL - ${formatBytes(photoSize)}]`
+                    : `[ENCRYPTED - ${formatBytes(photoSize)}]`;
+                    
+                // Analyze photo
+                let analysis = '<h3>Photo Details:</h3>';
+                analysis += '<ul>';
+                analysis += `<li>Size in storage: <span class="size">${formatBytes(photoSize)}</span></li>`;
+                analysis += `<li>Format: <span class="${isEncrypted ? 'success' : 'error'}">${isEncrypted ? 'ENCRYPTED' : 'UNENCRYPTED DATA URL'}</span></li>`;
+                
+                if (isDataUrl) {
+                    const base64Part = profile.photo.split(',')[1];
+                    if (base64Part) {
+                        const binarySize = (base64Part.length * 3) / 4;
+                        analysis += `<li>Binary size: <span class="size">${formatBytes(binarySize)}</span></li>`;
+                    }
+                }
+                
+                analysis += `<li>First 100 chars: <code>${profile.photo.substring(0, 100)}...</code></li>`;
+                analysis += '</ul>';
+                
+                // Check total localStorage size
+                const totalSize = new Blob([profileStr]).size;
+                analysis += `<h3>Storage Impact:</h3>`;
+                analysis += `<ul>`;
+                analysis += `<li>Total profile size: <span class="size">${formatBytes(totalSize)}</span></li>`;
+                analysis += `<li>Photo percentage: <span class="size">${((photoSize / totalSize) * 100).toFixed(1)}%</span></li>`;
+                analysis += `</ul>`;
+                
+                // Check if it would fit in headers
+                const headerLimit = 8192; // Typical header limit
+                if (totalSize > headerLimit) {
+                    analysis += `<p class="error">⚠️ Profile size (${formatBytes(totalSize)}) exceeds typical HTTP header limit (${formatBytes(headerLimit)})</p>`;
+                } else {
+                    analysis += `<p class="success">✓ Profile size fits within HTTP header limits</p>`;
+                }
+                
+                document.getElementById('photoAnalysis').innerHTML = analysis;
+            } else {
+                document.getElementById('photoAnalysis').innerHTML = '<p>No photo in profile</p>';
+            }
+            
+            document.getElementById('profileData').textContent = JSON.stringify(profileCopy, null, 2);
+        }
+        
+        analyzeData();
+    </script>
+</body>
+</html>

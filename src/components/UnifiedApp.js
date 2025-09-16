@@ -20,18 +20,10 @@ import { getTextStyle } from "../utils/platformStyles";
 import { ThemedModal } from "./Common";
 import PhotoUpload from "./Profile/PhotoUpload";
 // DatePicker handled through platform-specific implementations
+// On web, DateTimePicker remains null and component uses HTML date input instead
+// On React Native, it would be imported at the top level in a separate RN-specific file
+// This avoids webpack trying to resolve React Native modules
 let DateTimePicker = null;
-if (platform.isMobile) {
-  try {
-    // Use eval to prevent webpack from analyzing this require
-    // eslint-disable-next-line no-eval
-    DateTimePicker = eval("require")(
-      "@react-native-community/datetimepicker",
-    ).default;
-  } catch (e) {
-    // Fallback - DatePicker not available
-  }
-}
 
 // Color constants (manila envelope theme)
 export const colors = {
@@ -275,6 +267,18 @@ export const ProfileEditForm = ({
   );
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [photo, setPhoto] = useState(profile?.photo || "");
+
+  // Update form state when profile prop changes or modal opens
+  useEffect(() => {
+    if (visible && profile) {
+      setName(profile.name || "");
+      setPreferredName(profile.preferredName || "");
+      setDateOfBirth(
+        profile.dateOfBirth ? new Date(profile.dateOfBirth) : new Date()
+      );
+      setPhoto(profile.photo || "");
+    }
+  }, [visible, profile]);
 
   // Create dynamic styles based on active colors
   const dynamicStyles = createDynamicStyles(activeColors);

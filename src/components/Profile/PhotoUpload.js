@@ -281,7 +281,7 @@ export const PhotoUpload = ({
       {/* Help text */}
       {!error && (
         <Text style={styles.helpText}>
-          Supports JPG and PNG images up to 2MB. Photos are encrypted for
+          Supports JPG and PNG images. Photos are compressed and encrypted for
           privacy.
         </Text>
       )}

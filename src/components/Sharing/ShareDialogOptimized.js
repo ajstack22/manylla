@@ -226,7 +226,14 @@ Notehis link contains encrypted data. Please use the complete link exactly as pr
         message,
         title: subject,
       });
-    } catch (error) {}
+    } catch (error) {
+      // Silent failure for Share.share() - this is expected on some platforms/devices
+      // User can still copy the link manually if sharing doesn't work
+      // Security: Only logging error.message to avoid exposing sensitive share data
+      if (__DEV__) {
+        console.warn('Native share failed, user can copy link manually:', error.message);
+      }
+    }
   };
 
   const getSelectedEntriesCount = () => {

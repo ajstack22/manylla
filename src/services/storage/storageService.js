@@ -73,6 +73,13 @@ export class StorageService {
         await AsyncStorage.removeItem(this.PROFILE_KEY);
         await AsyncStorage.removeItem("manylla_onboarding_completed");
       }
-    } catch (error) {}
+    } catch (error) {
+      // Silent failure for clearProfile - this is a cleanup operation that shouldn't interrupt user flow
+      // If storage clearing fails, the data will still be overwritten on next save
+      // Security: Only logging error.message (not full error object) to prevent potential info leaks
+      if (__DEV__) {
+        console.warn('Failed to clear profile storage:', error.message);
+      }
+    }
   }
 }

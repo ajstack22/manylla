@@ -71,4 +71,177 @@ describe("Platform Abstraction", () => {
       expect(config.delayPressIn).toBe(0);
     });
   });
+
+  describe("Security - Print Function", () => {
+    // Mock DOM methods for testing
+    let mockAppendChild, mockRemoveChild, mockPrint, mockConsoleWarn;
+    let mockStyleElement;
+    let originalDocument, originalWindow, originalConsole, originalNodeEnv;
+
+    beforeEach(() => {
+      // Save original values
+      originalDocument = global.document;
+      originalWindow = global.window;
+      originalConsole = global.console;
+      originalNodeEnv = process.env.NODE_ENV;
+
+      // Mock document methods
+      mockStyleElement = {
+        innerHTML: ''
+      };
+      mockAppendChild = jest.fn();
+      mockRemoveChild = jest.fn();
+      mockConsoleWarn = jest.fn();
+      mockPrint = jest.fn();
+
+      global.document = {
+        createElement: jest.fn(() => mockStyleElement),
+        head: {
+          appendChild: mockAppendChild,
+          removeChild: mockRemoveChild
+        }
+      };
+
+      global.window = {
+        print: mockPrint
+      };
+
+      // Mock console.warn
+      global.console = {
+        ...console,
+        warn: mockConsoleWarn
+      };
+
+      // Set NODE_ENV to development for testing console output
+      process.env.NODE_ENV = 'development';
+    });
+
+    afterEach(() => {
+      // Restore original values
+      global.document = originalDocument;
+      global.window = originalWindow;
+      global.console = originalConsole;
+      process.env.NODE_ENV = originalNodeEnv;
+      jest.clearAllMocks();
+    });
+
+    it("should validate elementId and prevent CSS injection", () => {
+      // Test valid elementId
+      platform.print("valid-element-id");
+      expect(mockAppendChild).toHaveBeenCalled();
+      expect(mockStyleElement.innerHTML).toContain("#valid-element-id");
+      expect(mockConsoleWarn).not.toHaveBeenCalled();
+    });
+
+    it("should reject malicious elementId with CSS injection attempt", () => {
+      const maliciousId = "valid; } body { background: red !important; }";
+      platform.print(maliciousId);
+
+      // Should fall back to full page print and warn about invalid ID
+      expect(mockPrint).toHaveBeenCalled();
+      expect(mockAppendChild).not.toHaveBeenCalled();
+      expect(mockConsoleWarn).toHaveBeenCalledWith(
+        'Invalid elementId provided to print function:',
+        maliciousId
+      );
+    });
+
+    it("should reject elementId with XSS attempt", () => {
+      const xssId = "test'><script>alert('xss')</script>";
+      platform.print(xssId);
+
+      expect(mockPrint).toHaveBeenCalled();
+      expect(mockAppendChild).not.toHaveBeenCalled();
+      expect(mockConsoleWarn).toHaveBeenCalled();
+    });
+
+    it("should reject null/undefined elementId", () => {
+      platform.print(null);
+      expect(mockPrint).toHaveBeenCalled();
+      expect(mockAppendChild).not.toHaveBeenCalled();
+
+      jest.clearAllMocks();
+
+      platform.print(undefined);
+      expect(mockPrint).toHaveBeenCalled();
+      expect(mockAppendChild).not.toHaveBeenCalled();
+    });
+
+    it("should reject non-string elementId", () => {
+      platform.print(123);
+      expect(mockPrint).toHaveBeenCalled();
+      expect(mockAppendChild).not.toHaveBeenCalled();
+      expect(mockConsoleWarn).toHaveBeenCalled();
+    });
+
+    it("should reject elementId that's too long", () => {
+      const longId = "a".repeat(101); // Over 100 character limit
+      platform.print(longId);
+
+      expect(mockPrint).toHaveBeenCalled();
+      expect(mockAppendChild).not.toHaveBeenCalled();
+      expect(mockConsoleWarn).toHaveBeenCalled();
+    });
+
+    it("should accept valid elementId patterns", () => {
+      const validIds = [
+        "element1",
+        "my-element",
+        "_private-element",
+        "UPPERCASE-ID",
+        "mixed-Case_123"
+      ];
+
+      validIds.forEach(id => {
+        jest.clearAllMocks();
+        platform.print(id);
+        expect(mockAppendChild).toHaveBeenCalled();
+        expect(mockStyleElement.innerHTML).toContain(`#${id}`);
+        expect(mockConsoleWarn).not.toHaveBeenCalled();
+      });
+    });
+
+    it("should reject invalid characters in elementId", () => {
+      const invalidIds = [
+        "element.with.dots",
+        "element with spaces",
+        "element@symbol",
+        "element+plus",
+        "element{bracket}",
+        "element[square]",
+        "element(paren)",
+        "element#hash",
+        "element%percent"
+      ];
+
+      invalidIds.forEach(id => {
+        jest.clearAllMocks();
+        platform.print(id);
+        expect(mockPrint).toHaveBeenCalled();
+        expect(mockAppendChild).not.toHaveBeenCalled();
+        expect(mockConsoleWarn).toHaveBeenCalledWith(
+          'Invalid elementId provided to print function:',
+          id
+        );
+      });
+    });
+
+    it("should not log warnings in production", () => {
+      process.env.NODE_ENV = 'production';
+
+      platform.print("invalid.element");
+
+      expect(mockPrint).toHaveBeenCalled();
+      expect(mockAppendChild).not.toHaveBeenCalled();
+      expect(mockConsoleWarn).not.toHaveBeenCalled();
+    });
+
+    it("should print entire page when no elementId provided", () => {
+      platform.print();
+
+      expect(mockPrint).toHaveBeenCalled();
+      expect(mockAppendChild).not.toHaveBeenCalled();
+      expect(mockConsoleWarn).not.toHaveBeenCalled();
+    });
+  });
 });

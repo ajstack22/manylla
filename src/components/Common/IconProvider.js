@@ -13,7 +13,10 @@ let MaterialIcons = null;
 if (platform.isMobile) {
   try {
     MaterialIcons = require("react-native-vector-icons/MaterialIcons").default;
-  } catch (e) {}
+  } catch (e) {
+    // Expected failure on platforms where react-native-vector-icons is not available
+    // App will gracefully fall back to text-based icons
+  }
 }
 
 // Web icons from Material-UI

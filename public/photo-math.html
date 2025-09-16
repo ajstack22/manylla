@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Photo Encryption Math</title>
+    <style>
+        body { font-family: monospace; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .calculation { margin: 20px 0; padding: 15px; background: #f0f0f0; border-radius: 5px; }
+        .stage { margin: 10px 0; padding: 10px; background: white; border-left: 3px solid #0066cc; }
+        .size { color: #0066cc; font-weight: bold; }
+        .problem { color: red; font-weight: bold; }
+        .good { color: green; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        td, th { padding: 8px; border: 1px solid #ddd; text-align: left; }
+        th { background: #e0e0e0; }
+    </style>
+</head>
+<body>
+    <h1>Photo Encryption Math - What's Really Happening?</h1>
+    
+    <div class="calculation">
+        <h2>Let's trace a typical photo:</h2>
+        
+        <div class="stage">
+            <h3>1. Original Photo File</h3>
+            <p>Typical phone photo after resize to 800x800px, JPEG 85% quality:</p>
+            <p class="size">~100-200 KB</p>
+        </div>
+        
+        <div class="stage">
+            <h3>2. Convert to Base64 Data URL</h3>
+            <p>FileReader.readAsDataURL() adds:</p>
+            <ul>
+                <li>Prefix: "data:image/jpeg;base64," (23 bytes)</li>
+                <li>Base64 encoding: Original × 1.33</li>
+            </ul>
+            <p class="size">Result: ~133-266 KB</p>
+        </div>
+        
+        <div class="stage">
+            <h3>3. Wrap in JSON Object (photoService.js)</h3>
+            <pre>{
+  "dataUrl": "data:image/jpeg;base64,/9j/4AAQ...", // The huge string
+  "timestamp": "2024-01-01T00:00:00.000Z",
+  "type": "photo"
+}</pre>
+            <p>Adds ~50 bytes overhead</p>
+            <p class="size">Result: ~133-266 KB</p>
+        </div>
+        
+        <div class="stage">
+            <h3>4. JSON.stringify + UTF-8 encode</h3>
+            <p>Minimal change for already-ASCII base64</p>
+            <p class="size">Result: ~133-266 KB</p>
+        </div>
+        
+        <div class="stage">
+            <h3>5. Pako Compression (if > 1KB)</h3>
+            <p>JPEG is already compressed! Pako can't compress it much.</p>
+            <p>Might even INCREASE size by 1-2%</p>
+            <p class="problem">Result: ~134-271 KB (possibly larger!)</p>
+        </div>
+        
+        <div class="stage">
+            <h3>6. Encrypt with NaCl</h3>
+            <p>Adds: 2 bytes metadata + 24 bytes nonce</p>
+            <p>Ciphertext: same size as input</p>
+            <p class="size">Result: ~134-271 KB + 26 bytes</p>
+        </div>
+        
+        <div class="stage">
+            <h3>7. Base64 Encode AGAIN</h3>
+            <p>Another ×1.33 increase!</p>
+            <p class="problem">Final: ~178-360 KB</p>
+        </div>
+    </div>
+    
+    <div class="calculation">
+        <h2>The Real Problem: Double Base64 Encoding!</h2>
+        
+        <table>
+            <tr>
+                <th>Stage</th>
+                <th>100KB Photo</th>
+                <th>200KB Photo</th>
+            </tr>
+            <tr>
+                <td>Original JPEG</td>
+                <td>100 KB</td>
+                <td>200 KB</td>
+            </tr>
+            <tr>
+                <td>First Base64 (data URL)</td>
+                <td>133 KB</td>
+                <td>266 KB</td>
+            </tr>
+            <tr>
+                <td>After encryption</td>
+                <td>~134 KB</td>
+                <td>~267 KB</td>
+            </tr>
+            <tr>
+                <td>Second Base64 (for transport)</td>
+                <td class="problem">178 KB</td>
+                <td class="problem">356 KB</td>
+            </tr>
+        </table>
+        
+        <p class="problem">HTTP Header Limit: 8-16 KB</p>
+        <p>We're sending 178-356 KB in headers! That's 10-40× too large!</p>
+    </div>
+    
+    <div class="calculation">
+        <h2>Why This Happens:</h2>
+        <ol>
+            <li><strong>Double Base64:</strong> Photo is base64 encoded TWICE (once for data URL, once after encryption)</li>
+            <li><strong>No compression benefit:</strong> JPEG doesn't compress with zlib/pako</li>
+            <li><strong>Wrong transport:</strong> Using headers instead of POST body</li>
+        </ol>
+    </div>
+    
+    <div class="calculation">
+        <h2>Solutions:</h2>
+        
+        <div class="stage good">
+            <h3>Option 1: Use POST Body Instead of Headers</h3>
+            <p>POST bodies can handle megabytes easily</p>
+        </div>
+        
+        <div class="stage good">
+            <h3>Option 2: Don't Double-Encode</h3>
+            <p>Store raw binary instead of data URL, encrypt binary directly</p>
+        </div>
+        
+        <div class="stage good">
+            <h3>Option 3: Much Smaller Photos</h3>
+            <p>Need ~6KB JPEG (tiny!) to fit in 8KB header after double encoding</p>
+        </div>
+        
+        <div class="stage good">
+            <h3>Option 4: Separate Photo Storage</h3>
+            <p>Don't sync photos, or sync them separately</p>
+        </div>
+    </div>
+</body>
+</html>

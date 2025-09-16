@@ -52,7 +52,14 @@ Scan the QR code or use this link to access shared information.`,
         title: "Shared Information Link",
         message: "Access shared information via this secure link",
       });
-    } catch (error) {}
+    } catch (error) {
+      // Silent failure for Share.share() - this is expected on some platforms/devices
+      // User can still manually save/copy the QR code URL
+      // Security: Only logging error.message to avoid exposing sensitive QR code data
+      if (__DEV__) {
+        console.warn('Native share failed for QR code URL:', error.message);
+      }
+    }
   };
 
   return (

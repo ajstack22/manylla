@@ -20,6 +20,21 @@ Sync services are critical security components handling encryption and data sync
 
 ## Implementation Steps
 
+### 0. Cleanup Existing Test Debt
+```bash
+# Fix or remove broken existing tests
+# Files with issues:
+# - Remove tests that reference non-existent methods
+# - Fix import paths
+# - Update mock configurations
+# - Establish clean baseline
+
+# Run existing tests to identify failures
+npm test -- src/services/sync --no-coverage
+
+# Document and fix each failure before adding new tests
+```
+
 ### 1. Current State Analysis
 ```bash
 # Check current coverage
@@ -28,9 +43,13 @@ npm test -- --coverage src/services/sync
 # Files to cover:
 # - src/services/sync/manyllaEncryptionService.js
 # - src/services/sync/manyllaMinimalSyncService.js
-# - src/services/sync/conflictResolver.js
 # - src/services/sync/manyllaMinimalSyncServiceWeb.js
 # - src/services/sync/manyllaMinimalSyncServiceNative.js
+# - src/services/sync/photoSyncExclusion.js
+# - src/services/sync/index.js
+
+# Current baseline: ~33% overall, sync services coverage TBD
+# Target: 80%+ for sync services, 50%+ overall
 ```
 
 ### 2. Test Categories Required

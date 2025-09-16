@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Request Size</title>
+    <style>
+        body { font-family: monospace; padding: 20px; }
+        .section { margin: 20px 0; padding: 15px; background: #f0f0f0; }
+        button { padding: 10px 20px; margin: 10px; font-size: 16px; }
+        pre { background: white; padding: 10px; overflow: auto; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Debug Request Size Issue</h1>
+    
+    <div class="section">
+        <h2>Check What's Being Stored</h2>
+        <button onclick="checkStorage()">Check All Storage</button>
+        <pre id="storageInfo"></pre>
+    </div>
+    
+    <div class="section">
+        <h2>Check Cookies</h2>
+        <button onclick="checkCookies()">Check Cookies</button>
+        <pre id="cookieInfo"></pre>
+    </div>
+    
+    <script>
+        function formatBytes(bytes) {
+            if (bytes < 1024) return bytes + ' bytes';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+        
+        function checkStorage() {
+            let info = {};
+            
+            // Check localStorage
+            for (let key in localStorage) {
+                if (localStorage.hasOwnProperty(key)) {
+                    const value = localStorage.getItem(key);
+                    const size = new Blob([value]).size;
+                    info[`localStorage.${key}`] = {
+                        size: formatBytes(size),
+                        preview: value.substring(0, 100) + (value.length > 100 ? '...' : '')
+                    };
+                }
+            }
+            
+            // Check sessionStorage
+            for (let key in sessionStorage) {
+                if (sessionStorage.hasOwnProperty(key)) {
+                    const value = sessionStorage.getItem(key);
+                    const size = new Blob([value]).size;
+                    info[`sessionStorage.${key}`] = {
+                        size: formatBytes(size),
+                        preview: value.substring(0, 100) + (value.length > 100 ? '...' : '')
+                    };
+                }
+            }
+            
+            document.getElementById('storageInfo').textContent = JSON.stringify(info, null, 2);
+        }
+        
+        function checkCookies() {
+            const cookies = document.cookie;
+            const cookieSize = new Blob([cookies]).size;
+            
+            let info = {
+                totalSize: formatBytes(cookieSize),
+                cookies: {}
+            };
+            
+            if (cookies) {
+                cookies.split(';').forEach(cookie => {
+                    const [name, value] = cookie.trim().split('=');
+                    if (name && value) {
+                        info.cookies[name] = {
+                            size: formatBytes(new Blob([value]).size),
+                            preview: value.substring(0, 100) + (value.length > 100 ? '...' : '')
+                        };
+                    }
+                });
+            }
+            
+            document.getElementById('cookieInfo').textContent = JSON.stringify(info, null, 2);
+        }
+        
+        // Auto-check on load
+        window.addEventListener('load', () => {
+            checkStorage();
+            checkCookies();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sync Data Structure Analysis</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .section { margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 5px; }
+        .blob { 
+            border: 2px solid #333; 
+            padding: 15px; 
+            margin: 10px 0; 
+            border-radius: 8px;
+            background: white;
+        }
+        .encrypted { background: #ffe0e0; }
+        .solution { background: #e0ffe0; }
+        .field { 
+            margin: 5px 0; 
+            padding: 5px 10px; 
+            background: #f0f0f0; 
+            border-left: 3px solid #666;
+        }
+        .photo-field { 
+            background: #ffcccc; 
+            border-left: 3px solid red;
+            font-weight: bold;
+        }
+        .size { color: #0066cc; font-weight: bold; }
+        pre { background: white; padding: 10px; overflow: auto; }
+        .arrow { font-size: 24px; text-align: center; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Sync Data Structure Analysis</h1>
+    
+    <div class="section">
+        <h2>Current Structure (Everything in One Blob)</h2>
+        
+        <div class="blob">
+            <h3>localStorage["manylla_profile"]</h3>
+            <div class="field">name: "Child Name"</div>
+            <div class="field">dateOfBirth: "2020-01-01"</div>
+            <div class="field">entries: [...]</div>
+            <div class="field">categories: [...]</div>
+            <div class="field photo-field">photo: "data:image/jpeg;base64,/9j/4AAQ..." (HUGE!)</div>
+            <div class="field">updatedAt: "2024-01-01"</div>
+        </div>
+        
+        <div class="arrow">⬇️ When Sync Enabled ⬇️</div>
+        
+        <div class="blob encrypted">
+            <h3>Encrypted Sync Blob (Sent in HTTP Headers)</h3>
+            <ul>
+                <li>Entire profile JSON stringified</li>
+                <li>Compressed with pako (if > 1KB)</li>
+                <li>Encrypted with nacl</li>
+                <li>Base64 encoded</li>
+                <li class="size">Result: Often > 8KB with photo!</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="section solution">
+        <h2>Proposed Solution: Separate Photo Storage</h2>
+        
+        <div class="blob">
+            <h3>localStorage["manylla_profile"]</h3>
+            <div class="field">name: "Child Name"</div>
+            <div class="field">dateOfBirth: "2020-01-01"</div>
+            <div class="field">entries: [...]</div>
+            <div class="field">categories: [...]</div>
+            <div class="field" style="background: #ccffcc;">photoId: "photo_12345" (reference only)</div>
+            <div class="field">updatedAt: "2024-01-01"</div>
+        </div>
+        
+        <div class="blob">
+            <h3>localStorage["manylla_photos"]</h3>
+            <div class="field photo-field">photo_12345: "data:image/jpeg;base64,/9j/4AAQ..."</div>
+        </div>
+        
+        <div class="arrow">⬇️ When Sync Enabled ⬇️</div>
+        
+        <div class="blob encrypted" style="background: #ccffcc;">
+            <h3>Sync Blob (Without Photo)</h3>
+            <ul>
+                <li>Profile data only (no photo)</li>
+                <li>Just has photoId reference</li>
+                <li class="size">Result: Usually < 2KB!</li>
+            </ul>
+        </div>
+        
+        <p><strong>Benefits:</strong></p>
+        <ul>
+            <li>✅ Sync works without header size issues</li>
+            <li>✅ Photos stay local (privacy benefit)</li>
+            <li>✅ Faster sync (smaller payloads)</li>
+            <li>✅ Optional: Could sync photos separately via POST body later</li>
+        </ul>
+    </div>
+    
+    <div class="section">
+        <h2>Check Your Current Data</h2>
+        <button onclick="analyzeCurrentData()">Analyze Current Profile</button>
+        <pre id="analysis"></pre>
+    </div>
+    
+    <script>
+        function formatBytes(bytes) {
+            if (bytes < 1024) return bytes + ' bytes';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+        
+        function analyzeCurrentData() {
+            const profileStr = localStorage.getItem('manylla_profile');
+            
+            if (!profileStr) {
+                document.getElementById('analysis').textContent = 'No profile found';
+                return;
+            }
+            
+            const profile = JSON.parse(profileStr);
+            
+            // Calculate sizes
+            const totalSize = profileStr.length;
+            const photoSize = profile.photo ? profile.photo.length : 0;
+            const withoutPhotoSize = totalSize - photoSize;
+            
+            const analysis = {
+                totalProfileSize: formatBytes(totalSize),
+                photoSize: formatBytes(photoSize),
+                profileWithoutPhoto: formatBytes(withoutPhotoSize),
+                photoPercentage: photoSize ? ((photoSize / totalSize) * 100).toFixed(1) + '%' : '0%',
+                wouldFitInHeaders: withoutPhotoSize < 8192 ? 'YES ✅' : 'NO ❌',
+                currentlyFitsInHeaders: totalSize < 8192 ? 'YES ✅' : 'NO ❌'
+            };
+            
+            document.getElementById('analysis').textContent = JSON.stringify(analysis, null, 2);
+        }
+    </script>
+</body>
+</html>

@@ -22,7 +22,14 @@ export const ProfileProvider = ({ children }) => {
           setCurrentProfile(parsedProfiles[0]);
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      // Silent failure for loadProfiles - prevents app crash on storage issues
+      // App will function normally with empty profiles array
+      // Security: Only logging error.message (not full error object) to prevent potential info leaks
+      if (__DEV__) {
+        console.warn('Failed to load profiles from storage:', error.message);
+      }
+    }
   }, [currentProfile]);
 
   useEffect(() => {

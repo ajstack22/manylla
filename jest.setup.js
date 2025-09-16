@@ -202,3 +202,9 @@ global.Image = jest.fn(() => ({
   naturalWidth: 100,
   naturalHeight: 100,
 }));
+
+// Mock setImmediate for tests that use it
+global.setImmediate = jest.fn((fn, ...args) => {
+  // Use the real setTimeout to avoid circular calls
+  return global.setTimeout.call(null, fn, 0, ...args);
+});

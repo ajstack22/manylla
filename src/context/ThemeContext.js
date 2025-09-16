@@ -159,7 +159,13 @@ export const ThemeProvider = ({
 
     try {
       await setStorageItem("theme_preference", newTheme);
-    } catch (error) {}
+    } catch (error) {
+      // Silent failure for theme preference storage - theme will still work
+      // User preference just won't persist across app restarts
+      if (__DEV__) {
+        console.warn('Failed to save theme preference:', error.message);
+      }
+    }
 
     if (onThemeChange) {
       onThemeChange(newTheme);
@@ -172,7 +178,13 @@ export const ThemeProvider = ({
 
     try {
       await setStorageItem("theme_preference", mode);
-    } catch (error) {}
+    } catch (error) {
+      // Silent failure for theme preference storage - theme will still work
+      // User preference just won't persist across app restarts
+      if (__DEV__) {
+        console.warn('Failed to save theme preference:', error.message);
+      }
+    }
 
     if (onThemeChange) {
       onThemeChange(mode);

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Photo Size Analysis</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .section { margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 5px; }
+        table { width: 100%; border-collapse: collapse; }
+        td, th { padding: 8px; border: 1px solid #ddd; text-align: left; }
+        th { background: #e0e0e0; }
+        .size { color: #0066cc; font-weight: bold; }
+        .error { color: red; background: #ffe0e0; padding: 10px; border-radius: 5px; }
+        .success { color: green; background: #e0ffe0; padding: 10px; border-radius: 5px; }
+        .warning { color: orange; background: #fff0e0; padding: 10px; border-radius: 5px; }
+        button { padding: 10px 20px; margin: 5px; font-size: 16px; cursor: pointer; }
+        pre { background: white; padding: 10px; overflow: auto; max-height: 300px; }
+    </style>
+</head>
+<body>
+    <h1>Photo Size Analysis</h1>
+    
+    <div class="section">
+        <h2>Test Image Upload</h2>
+        <input type="file" id="fileInput" accept="image/*">
+        <button onclick="analyzeImage()">Analyze Image</button>
+    </div>
+    
+    <div id="results"></div>
+    
+    <script>
+        function formatBytes(bytes) {
+            if (bytes < 1024) return bytes + ' bytes';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+        
+        async function simulateEncryption(dataUrl) {
+            // Simulate what happens in the app
+            const photoData = {
+                dataUrl: dataUrl,
+                timestamp: new Date().toISOString(),
+                type: "photo"
+            };
+            
+            const jsonString = JSON.stringify(photoData);
+            const jsonSize = new Blob([jsonString]).size;
+            
+            // Simulate base64 encoding of encrypted data
+            // Encrypted data would be roughly the same size as input
+            // Plus overhead for nonce (24 bytes) and metadata (2 bytes)
+            // Then base64 encoded (4/3 size increase)
+            const encryptedSize = Math.ceil((jsonSize + 26) * 4/3);
+            
+            return {
+                originalDataUrlSize: dataUrl.length,
+                jsonWrappedSize: jsonSize,
+                finalEncryptedSize: encryptedSize
+            };
+        }
+        
+        async function analyzeImage() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select an image file');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const dataUrl = e.target.result;
+                const base64Part = dataUrl.split(',')[1];
+                
+                // Simulate the encryption process
+                const sizes = await simulateEncryption(dataUrl);
+                
+                let html = '<div class="section">';
+                html += '<h2>Size Analysis</h2>';
+                html += '<table>';
+                html += '<tr><th>Stage</th><th>Size</th><th>Notes</th></tr>';
+                html += `<tr><td>Original File</td><td class="size">${formatBytes(file.size)}</td><td>Raw image file</td></tr>`;
+                html += `<tr><td>Base64 Data URL</td><td class="size">${formatBytes(dataUrl.length)}</td><td>After FileReader conversion</td></tr>`;
+                html += `<tr><td>JSON Wrapped</td><td class="size">${formatBytes(sizes.jsonWrappedSize)}</td><td>With metadata (timestamp, type)</td></tr>`;
+                html += `<tr><td>After Encryption</td><td class="size">${formatBytes(sizes.finalEncryptedSize)}</td><td>Encrypted + Base64 encoded</td></tr>`;
+                html += '</table>';
+                html += '</div>';
+                
+                // Check against limits
+                html += '<div class="section">';
+                html += '<h2>Limit Checks</h2>';
+                
+                const headerLimit = 8192; // 8KB typical header limit
+                const largeHeaderLimit = 16384; // 16KB some servers
+                const cookieLimit = 4096; // 4KB cookie limit
+                
+                if (sizes.finalEncryptedSize < cookieLimit) {
+                    html += `<div class="success">✓ Fits in cookie (< ${formatBytes(cookieLimit)})</div>`;
+                } else if (sizes.finalEncryptedSize < headerLimit) {
+                    html += `<div class="success">✓ Fits in standard HTTP header (< ${formatBytes(headerLimit)})</div>`;
+                } else if (sizes.finalEncryptedSize < largeHeaderLimit) {
+                    html += `<div class="warning">⚠️ Fits in large HTTP header (< ${formatBytes(largeHeaderLimit)}) but may fail on some servers</div>`;
+                } else {
+                    html += `<div class="error">✗ Too large for HTTP headers (> ${formatBytes(largeHeaderLimit)})</div>`;
+                    
+                    // Calculate required compression
+                    const reductionNeeded = ((sizes.finalEncryptedSize - headerLimit) / sizes.finalEncryptedSize * 100).toFixed(1);
+                    html += `<p>Need to reduce size by ${reductionNeeded}% to fit in headers</p>`;
+                }
+                
+                html += '</div>';
+                
+                // Recommendations
+                html += '<div class="section">';
+                html += '<h2>Recommendations</h2>';
+                html += '<ul>';
+                
+                if (file.size > 500 * 1024) {
+                    html += '<li>Reduce image size before upload (current: ' + formatBytes(file.size) + ', recommended: < 500KB)</li>';
+                }
+                
+                const imageType = file.type;
+                if (imageType === 'image/png' && file.size > 100 * 1024) {
+                    html += '<li>Consider using JPEG format for photos (PNG is better for graphics)</li>';
+                }
+                
+                if (sizes.finalEncryptedSize > headerLimit) {
+                    html += '<li><strong>Image is too large for sync via headers. Options:</strong>';
+                    html += '<ul>';
+                    html += '<li>Resize image to smaller dimensions (current implementation: max 800px)</li>';
+                    html += '<li>Reduce JPEG quality (current: 85%)</li>';
+                    html += '<li>Store photos separately from main sync data</li>';
+                    html += '<li>Use POST body instead of headers for sync</li>';
+                    html += '</ul></li>';
+                }
+                
+                html += '</ul>';
+                html += '</div>';
+                
+                document.getElementById('results').innerHTML = html;
+            };
+            
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>

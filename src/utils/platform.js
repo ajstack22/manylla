@@ -437,15 +437,45 @@ export const readFromClipboard = async () => {
 // ============================================
 // PRINT FUNCTIONALITY
 // ============================================
+
+/**
+ * Validates CSS ID selector to prevent injection attacks
+ * @param {string} elementId - The element ID to validate
+ * @returns {boolean} - True if valid, false otherwise
+ */
+export const isValidElementId = (elementId) => {
+  if (!elementId || typeof elementId !== 'string') {
+    return false;
+  }
+
+  // CSS identifier must start with letter, underscore, or hyphen
+  // and can only contain letters, digits, hyphens, and underscores
+  // This prevents CSS injection via special characters
+  const validIdPattern = /^[a-zA-Z_-][a-zA-Z0-9_-]*$/;
+  return validIdPattern.test(elementId) && elementId.length <= 100; // Reasonable length limit
+};
+
 export const print = (elementId = null) => {
   if (!isWeb) {
     if (process.env.NODE_ENV === "development") {
+      // Keeping development logging for debugging - safe as it's not in production
     }
     return;
   }
 
   if (elementId) {
+    // Security: Validate elementId to prevent CSS injection attacks
+    if (!isValidElementId(elementId)) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn('Invalid elementId provided to print function:', elementId);
+      }
+      // Fall back to printing entire page if elementId is invalid
+      window.print();
+      return;
+    }
+
     const style = document.createElement("style");
+    // Security: elementId is now validated, safe to use in template
     style.innerHTML = `
       @media print {
         body * { visibility: hidden; }

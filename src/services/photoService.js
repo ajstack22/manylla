@@ -91,9 +91,22 @@ class PhotoService {
       throw new Error("Encryption service not initialized");
     }
 
-    // Create photo data object
+    // Extract the base64 data and mime type from the data URL to avoid double encoding
+    let mimeType = "image/jpeg";
+    let base64Data = photoDataUrl;
+
+    if (photoDataUrl.startsWith("data:")) {
+      const matches = photoDataUrl.match(/^data:([^;]+);base64,(.+)$/);
+      if (matches) {
+        mimeType = matches[1];
+        base64Data = matches[2]; // Just the base64 part, not the full data URL
+      }
+    }
+
+    // Create photo data object with separated components
     const photoData = {
-      dataUrl: photoDataUrl,
+      base64: base64Data, // Store just the base64 data, not the full data URL
+      mimeType: mimeType,
       timestamp: new Date().toISOString(),
       type: "photo",
     };
@@ -135,19 +148,23 @@ class PhotoService {
       // Decrypt photo data
       const photoData = manyllaEncryptionService.decryptData(encryptedPhoto);
 
-      if (!photoData || !photoData.dataUrl) {
+      if (!photoData || !photoData.base64) {
         throw new Error("Invalid photo data after decryption");
       }
+
+      // Reconstruct the data URL from the optimized format
+      const mimeType = photoData.mimeType || "image/jpeg";
+      const dataUrl = `data:${mimeType};base64,${photoData.base64}`;
 
       // Cache the decrypted data URL
       if (useCache) {
         this.decryptionCache.set(cacheKey, {
-          dataUrl: photoData.dataUrl,
+          dataUrl: dataUrl,
           timestamp: Date.now(),
         });
       }
 
-      return photoData.dataUrl;
+      return dataUrl;
     } catch (error) {
       return null;
     }

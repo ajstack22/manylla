@@ -264,7 +264,10 @@ class ManyllaEncryptionService {
           dataBytes = compressed;
           isCompressed = true;
         }
-      } catch (error) {}
+      } catch (error) {
+        // Silent failure for compression - if compression fails, we'll continue with uncompressed data
+        // This is an optimization step, not critical for functionality
+      }
     }
 
     // Generate nonce

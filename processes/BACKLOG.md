@@ -8,6 +8,7 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🔴 P0 - Critical (Do Now)
 ### Stories
+- [S054](backlog/S054-fix-critical-sonarqube-reliability-issues.md) - Fix Critical SonarQube Reliability Issues ✅ **READY**
 - [S050](backlog/S050-fix-regex-dos-vulnerabilities.md) - Fix Regex DoS Vulnerabilities ✅ **READY** (Security Hotspot)
 - [S051](backlog/S051-fix-weak-cryptography-issues.md) - Fix Weak Cryptography Issues ✅ **READY** (Security Hotspot)
 - [S052](backlog/S052-fix-javascript-uri-security-issue.md) - Fix JavaScript URI Security Issue ✅ **READY** (Security Hotspot)
@@ -23,6 +24,7 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟠 P1 - High (Do Next)
 ### Stories
+- [S054](backlog/S054-security-hotspot-review-and-resolution.md) - Security Hotspot Review and Resolution ✅ **READY**
 - [S042](backlog/S042-test-coverage-sync-services.md) - Test Coverage for Sync Services ✅ **READY** (80%+ Coverage Target)
 - [S043](backlog/S043-test-coverage-profile-components.md) - Test Coverage for Profile Components ✅ **READY** (60%+ Coverage Target)
 - [S044](backlog/S044-test-coverage-context-providers.md) - Test Coverage for Context Providers ✅ **READY** (90%+ Coverage Target)

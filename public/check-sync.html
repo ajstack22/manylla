@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Check Sync Status</title>
+</head>
+<body>
+    <h1>Manylla Sync Status</h1>
+    <pre id="output"></pre>
+    <script>
+        const output = document.getElementById('output');
+        const syncEnabled = localStorage.getItem('manylla_sync_enabled');
+        const recoveryPhrase = localStorage.getItem('manylla_recovery_phrase');
+        const syncId = localStorage.getItem('manylla_sync_id');
+        
+        output.textContent = JSON.stringify({
+            syncEnabled: syncEnabled,
+            hasRecoveryPhrase: !!recoveryPhrase,
+            hasSyncId: !!syncId,
+            recoveryPhraseLength: recoveryPhrase ? recoveryPhrase.length : 0
+        }, null, 2);
+    </script>
+</body>
+</html>

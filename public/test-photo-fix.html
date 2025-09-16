@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Photo Fix</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
+        .info { color: blue; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        pre {
+            background: white;
+            padding: 10px;
+            overflow: auto;
+            max-height: 300px;
+            border: 1px solid #ddd;
+        }
+        #photo-preview {
+            max-width: 200px;
+            max-height: 200px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Photo Encoding Fix</h1>
+
+    <div class="test-section">
+        <h2>1. Upload Test Photo</h2>
+        <input type="file" id="photo-input" accept="image/*">
+        <button onclick="testPhotoEncoding()">Test Encoding</button>
+        <img id="photo-preview" style="display:none;">
+    </div>
+
+    <div class="test-section">
+        <h2>2. Size Analysis</h2>
+        <pre id="size-analysis"></pre>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Encryption Test</h2>
+        <pre id="encryption-test"></pre>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Full Flow Test</h2>
+        <button onclick="testFullFlow()">Test Full Flow</button>
+        <pre id="full-flow-result"></pre>
+    </div>
+
+    <script>
+        function formatBytes(bytes) {
+            if (bytes < 1024) return bytes + ' bytes';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+
+        async function testPhotoEncoding() {
+            const input = document.getElementById('photo-input');
+            const file = input.files[0];
+
+            if (!file) {
+                alert('Please select a photo first');
+                return;
+            }
+
+            const preview = document.getElementById('photo-preview');
+            const sizeAnalysis = document.getElementById('size-analysis');
+
+            // Read file as data URL
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const dataUrl = e.target.result;
+                preview.src = dataUrl;
+                preview.style.display = 'block';
+
+                // Analyze sizes
+                const originalSize = file.size;
+                const dataUrlSize = new Blob([dataUrl]).size;
+
+                // Extract base64 part (NEW METHOD)
+                let base64Only = dataUrl;
+                let mimeType = 'image/jpeg';
+                if (dataUrl.startsWith('data:')) {
+                    const matches = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
+                    if (matches) {
+                        mimeType = matches[1];
+                        base64Only = matches[2];
+                    }
+                }
+
+                const base64OnlySize = new Blob([base64Only]).size;
+
+                // Create photo data object (NEW FORMAT)
+                const photoData = {
+                    base64: base64Only,
+                    mimeType: mimeType,
+                    timestamp: new Date().toISOString(),
+                    type: 'photo'
+                };
+
+                const jsonSize = new Blob([JSON.stringify(photoData)]).size;
+
+                // Simulate encryption (base64 encode the JSON)
+                const encrypted = btoa(JSON.stringify(photoData));
+                const encryptedSize = new Blob([encrypted]).size;
+
+                // OLD METHOD (for comparison)
+                const oldPhotoData = {
+                    dataUrl: dataUrl,
+                    timestamp: new Date().toISOString(),
+                    type: 'photo'
+                };
+                const oldJsonSize = new Blob([JSON.stringify(oldPhotoData)]).size;
+                const oldEncrypted = btoa(JSON.stringify(oldPhotoData));
+                const oldEncryptedSize = new Blob([oldEncrypted]).size;
+
+                const analysis = {
+                    'Original File': formatBytes(originalSize),
+                    '--- NEW METHOD ---': '',
+                    'Data URL Size': formatBytes(dataUrlSize),
+                    'Base64 Only': formatBytes(base64OnlySize),
+                    'JSON with base64 only': formatBytes(jsonSize),
+                    'After encryption (base64)': formatBytes(encryptedSize),
+                    'NEW Total Increase': ((encryptedSize / originalSize) * 100).toFixed(0) + '%',
+                    '--- OLD METHOD ---': '',
+                    'JSON with full data URL': formatBytes(oldJsonSize),
+                    'After encryption (base64)': formatBytes(oldEncryptedSize),
+                    'OLD Total Increase': ((oldEncryptedSize / originalSize) * 100).toFixed(0) + '%',
+                    '--- SAVINGS ---': '',
+                    'Size Reduction': formatBytes(oldEncryptedSize - encryptedSize),
+                    'Percentage Saved': (((oldEncryptedSize - encryptedSize) / oldEncryptedSize) * 100).toFixed(1) + '%'
+                };
+
+                sizeAnalysis.textContent = JSON.stringify(analysis, null, 2);
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        async function testFullFlow() {
+            const result = document.getElementById('full-flow-result');
+
+            try {
+                // Check if app is running
+                const response = await fetch('/');
+                if (!response.ok) {
+                    throw new Error('App not running on port 3000');
+                }
+
+                result.textContent = 'App is running!\n\n';
+
+                // Check localStorage for profiles
+                const profiles = localStorage.getItem('manylla_profile');
+                if (profiles) {
+                    const parsed = JSON.parse(profiles);
+                    result.textContent += 'Found profiles in localStorage:\n';
+                    result.textContent += JSON.stringify(parsed, null, 2).substring(0, 500) + '...\n\n';
+
+                    // Check if any profile has a photo
+                    const profilesArray = parsed.profiles || [];
+                    const photosFound = profilesArray.filter(p => p.photo).length;
+                    result.textContent += `Profiles with photos: ${photosFound}/${profilesArray.length}\n`;
+
+                    // Analyze photo sizes if present
+                    if (photosFound > 0) {
+                        result.textContent += '\nPhoto size analysis:\n';
+                        profilesArray.forEach((profile, index) => {
+                            if (profile.photo) {
+                                const photoSize = new Blob([profile.photo]).size;
+                                const isDataUrl = profile.photo.startsWith('data:');
+                                const isEncrypted = !isDataUrl && profile.photo.length > 50;
+
+                                result.textContent += `Profile ${index}: ${formatBytes(photoSize)} (${isDataUrl ? 'Data URL' : isEncrypted ? 'Encrypted' : 'Unknown'})\n`;
+                            }
+                        });
+                    }
+                } else {
+                    result.textContent += 'No profiles found in localStorage\n';
+                }
+
+                // Check if sync is enabled
+                const recoveryPhrase = localStorage.getItem('manylla_recovery_phrase');
+                if (recoveryPhrase) {
+                    result.textContent += '\nSync is enabled (recovery phrase found)\n';
+                } else {
+                    result.textContent += '\nSync is NOT enabled\n';
+                }
+
+            } catch (error) {
+                result.textContent = 'Error: ' + error.message;
+            }
+        }
+
+        // Auto-run full flow test on load
+        window.addEventListener('load', () => {
+            testFullFlow();
+        });
+    </script>
+</body>
+</html>
