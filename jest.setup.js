@@ -18,6 +18,9 @@ jest.mock('react-native', () => {
     const Component = React.forwardRef((props, ref) => {
       const {
         accessibilityLabel,
+        accessibilityRole,
+        numberOfLines,
+        testID,
         onPress,
         onLayout,
         activeOpacity,
@@ -45,7 +48,7 @@ jest.mock('react-native', () => {
         // For Modal, we need to handle it specially to avoid DOM issues
         // Create a portal-like div that properly handles React Native Modal props
         const modalProps = {
-          'data-testid': 'modal',
+          'data-testid': testID || 'modal',
           style: {
             position: 'fixed',
             top: 0,
@@ -68,6 +71,11 @@ jest.mock('react-native', () => {
         ref,
       };
 
+      // Handle testID prop
+      if (testID) {
+        webProps['data-testid'] = testID;
+      }
+
       // Handle disabled state
       if (disabled !== undefined) {
         webProps.disabled = disabled;
@@ -76,6 +84,20 @@ jest.mock('react-native', () => {
       // Handle accessibility
       if (accessibilityLabel) {
         webProps['aria-label'] = accessibilityLabel;
+      }
+      if (accessibilityRole) {
+        webProps['role'] = accessibilityRole;
+      }
+
+      // Handle numberOfLines for Text components
+      if (numberOfLines && displayName === 'Text') {
+        webProps.style = {
+          ...webProps.style,
+          display: '-webkit-box',
+          WebkitLineClamp: numberOfLines,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+        };
       }
 
       // Handle onPress for touchable components

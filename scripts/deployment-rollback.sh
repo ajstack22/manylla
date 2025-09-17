@@ -6,7 +6,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-BACKUP_DIR="/tmp/manylla-backup-20250915-173640"
+BACKUP_DIR="/tmp/manylla-backup-20250917-055534"
 
 echo "🔄 Rolling back Manylla deployment..."
 
@@ -24,7 +24,31 @@ if [ -f "$BACKUP_DIR/previous-version.txt" ]; then
     fi
 fi
 
-echo "✅ Rollback completed successfully"
+# Restore web/build if backup exists
+if [ -d "$BACKUP_DIR/web-build-backup" ]; then
+    echo "Restoring web/build directory..."
+    rm -rf web/build
+    cp -r "$BACKUP_DIR/web-build-backup" web/build
+fi
+
+# Find and restore remote backup
+echo "Restoring remote files..."
+LATEST_BACKUP=$(ssh stackmap-cpanel "ls -t ~/manylla-qual-backup-*.tar.gz 2>/dev/null | head -1" || echo "")
+
+if [ -n "$LATEST_BACKUP" ]; then
+    ssh stackmap-cpanel "
+        cd ~/public_html/manylla/qual &&
+        rm -rf * .htaccess 2>/dev/null || true &&
+        tar -xzf $LATEST_BACKUP &&
+        echo 'Remote files restored'
+    "
+    echo "✅ Rollback completed successfully"
+else
+    echo "❌ No remote backup found for restoration"
+    exit 1
+fi
+
 echo "🔍 Running health check..."
-echo "Health check: HTTP 200 (simulated)"
+curl -s -o /dev/null -w "Health check: HTTP %{http_code}\n" https://manylla.com/qual/
+
 echo "✅ Rollback process completed"

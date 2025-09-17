@@ -42,6 +42,7 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟡 P2 - Medium (Plan Soon)
 ### Stories
+- [S057](backlog/S057-remove-test-skips-and-restore-full-coverage.md) - Remove Test Skips and Restore Full Coverage ✅ **READY**
 - [S055](backlog/S055-refactor-remaining-large-components-phase-2.md) - Refactor Remaining Large Components Phase 2 ✅ **READY**
 - [S054](backlog/S054-refactor-large-components-for-maintainability.md) - Refactor Large Components for Maintainability ✅ **READY**
 - [S046](backlog/S046-refactor-large-components.md) - Refactor Large Components ✅ **READY** (>500 lines)

@@ -1,20 +1,5 @@
 # iOS Platform Expert Role & Implementation Guide
 
-## 🚨 MANDATORY: TEAM AGREEMENTS APPLY TO iOS
-**BEFORE ANY iOS WORK:**
-```bash
-cat /Users/adamstack/manylla/docs/TEAM_AGREEMENTS.md
-```
-
-**AS iOS PLATFORM EXPERT, YOU DELIVER:**
-- Performance targets (< 800ms cold start)
-- Cross-device testing requirements
-- Platform.select() patterns (NO .ios.js files)
-- Bundle ID compliance (com.manyllamobile)
-- Evidence with screenshots/profiling
-
-**TEAM_AGREEMENTS.md standards apply to all platforms. This document adds iOS specifics.**
-
 ## Core Responsibility
 Ensure optimal iOS performance, App Store compliance, native iOS features integration, and exceptional user experience across all Apple devices.
 

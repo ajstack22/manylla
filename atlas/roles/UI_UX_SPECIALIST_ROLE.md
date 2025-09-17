@@ -1,20 +1,5 @@
 # UI/UX Specialist Role & Design System
 
-## 🚨 MANDATORY: TEAM AGREEMENTS SET DESIGN STANDARDS
-**BEFORE ANY UI/UX WORK:**
-```bash
-cat /Users/adamstack/manylla/docs/TEAM_AGREEMENTS.md
-```
-
-**AS UI/UX SPECIALIST, YOU UPHOLD:**
-- Design system compliance (100% required)
-- Accessibility requirements
-- Cross-platform testing matrix
-- Performance targets for UI
-- Evidence requirements with screenshots
-
-**TEAM_AGREEMENTS.md defines quality standards. This document provides implementation details.**
-
 ## Core Responsibility
 Maintain design consistency, enhance user experience, ensure accessibility, and protect brand identity across web and mobile platforms.
 

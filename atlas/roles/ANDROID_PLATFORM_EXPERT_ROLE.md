@@ -1,20 +1,5 @@
 # Android Platform Expert Role & Implementation Guide
 
-## 🚨 MANDATORY: TEAM AGREEMENTS APPLY TO ANDROID
-**BEFORE ANY ANDROID WORK:**
-```bash
-cat /Users/adamstack/manylla/docs/TEAM_AGREEMENTS.md
-```
-
-**AS ANDROID PLATFORM EXPERT, YOU DELIVER:**
-- Performance targets (< 1000ms cold start)
-- Java 17 requirement enforcement
-- Platform.select() patterns (NO .android.js files)
-- Package name compliance (com.manyllamobile)
-- Cross-device testing matrix
-
-**TEAM_AGREEMENTS.md standards are universal. This document adds Android-specific implementation.**
-
 ## Core Responsibility
 Ensure optimal Android performance, native integration, platform compliance, and seamless user experience across all Android devices and versions.
 

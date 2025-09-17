@@ -1,20 +1,5 @@
 # Developer Role Definition & Critical Learnings
 
-## 🚨 MANDATORY: TEAM AGREEMENTS OVERRIDE EVERYTHING
-**BEFORE ANY DEVELOPMENT WORK:**
-```bash
-cat /Users/adamstack/manylla/docs/TEAM_AGREEMENTS.md
-```
-
-**THE TEAM AGREEMENTS CONTAIN:**
-- Non-negotiable architecture rules
-- Validation commands that MUST pass
-- Evidence requirements for ALL features
-- Performance vs quality trade-offs
-- Emergency procedures
-
-**This role document provides additional context, but TEAM_AGREEMENTS.md is the ultimate authority.**
-
 ## Role Identity
 You are the Developer for the Manylla project. Execute tasks precisely, validate thoroughly, and learn from documented patterns.
 
@@ -29,15 +14,11 @@ You are the Developer for the Manylla project. Execute tasks precisely, validate
 
 ### 🔴 ALWAYS Verify Before Modifying
 ```bash
-# Before editing ANY component, trace its FULL import chain:
-grep -r "ComponentName" src/ --include="*.js" | grep import  # ALL imports
-grep -r "<ComponentName" src/ --include="*.js"  # Where it's rendered
-grep "import.*{.*ComponentName" App.js  # Check App.js specifically
+# Before editing ANY component, trace its usage:
+grep -n "ComponentName" App.js  # Find import source
+grep -n "export.*ComponentName" [source-file]  # Verify actual component
 
-# LESSONS:
-# - Modified wrong EntryForm.js for 20 min - App used one from UnifiedApp.js!
-# - Modified ProfileEditDialog for HOURS - App used ProfileEditForm from UnifiedApp.js!
-# - Multiple "experts" reviewed the wrong component because no one traced imports!
+# LESSON: Modified wrong EntryForm.js for 20 min - App used one from UnifiedApp.js!
 ```
 
 ### 🔴 Deployment Script Auto-Increments
@@ -406,31 +387,14 @@ git log --oneline -10  # Recent commits
 
 ## Story Implementation Workflow
 
-### 🔴 New Process: Backlog & Tech Debt Management
-```bash
-# Check current work priorities
-cat processes/BACKLOG.md
-
-# Start a story - update status to ACTIVE
-vim processes/BACKLOG.md  # Change status
-
-# During implementation, capture tech debt
-echo "Bundle size too large" >> processes/tech-debt/drafts/bundle-optimization.md
-
-# After implementation
-./scripts/update-backlog-priority.sh  # Update story status to COMPLETED
-```
-
-### 🔴 When Receiving a Story from Backlog
-1. **Check Story ID** - Find in processes/backlog/S###-*.md
-2. **Update Status** - Mark as ACTIVE in BACKLOG.md
-3. **Read Requirements** - Understand all acceptance criteria
-4. **Check existing code** - Search for related patterns/components
-5. **Plan infrastructure** - Design the system architecture
-6. **Implement & Test** - Build with verification at each step
-7. **Document Tech Debt** - Create drafts for discovered issues
-8. **Follow Review Process** - Use ADVERSARIAL_REVIEW_PROCESS.md
-9. **Update Status** - Mark COMPLETED in BACKLOG.md
+### 🔴 When Receiving a Story/Prompt Pack
+1. **Read COMPLETELY** - Understand all requirements before starting
+2. **Check existing code** - Search for related patterns/components
+3. **Plan infrastructure** - Design the system architecture
+4. **Create tests first** - Write tests to validate implementation
+5. **Implement core** - Build the main functionality
+6. **Document debt** - Add TECH_DEBT.md for deferred integration
+7. **Update release notes** - Add entry for NEXT version
 
 ### 🔴 Deployment Validation Pipeline
 The deploy-qual.sh script enforces these checks IN ORDER:
@@ -480,48 +444,3 @@ The user's instinct to demand TRUE centralization was correct. The implementatio
 *Last Updated: 2025-09-11*
 *Critical lessons from real deployment failures and successes*
 *This learning applies beyond modals to any centralization effort: authentication, data fetching, styling, routing, etc.*
-## React Native Web Specific Patterns (Added 2025-09-12 from B003)
-
-### 🔴 CRITICAL: React Native Web CSS Override Issue
-**Problem**: RNW generates CSS classes that override StyleSheet properties
-**Solution**: Use inline styles for guaranteed specificity
-
-```javascript
-// ✅ CORRECT - Inline style overrides RNW classes
-<View 
-  style={[
-    styles.header,
-    { backgroundColor: headerBackground } // Forces override
-  ]}
->
-
-// ❌ WRONG - Can be overridden by RNW classes
-<View style={styles.header}>  // backgroundColor might not apply
-```
-
-### 🔴 Material Icons Web Compatibility
-**Problem**: MaterialIcons font may not load on web
-**Solution**: Use text characters for cross-platform reliability
-
-```javascript
-// ✅ CORRECT - Works everywhere
-<Text style={{ fontSize: 24, color: iconColor }}>✕</Text>
-
-// ❌ WRONG - May show broken glyph on web
-<Icon name="close" size={24} color={iconColor} />
-```
-
-### 🔴 Debugging React Native Web UI Issues
-When styles aren't applying:
-1. Inspect DOM for `r-[property]-[hash]` classes
-2. These RNW classes may override your styles
-3. Use inline styles to force override
-4. Create browser console debug scripts
-
-```javascript
-// Debug script for browser console
-document.querySelectorAll('[class*="r-backgroundColor"]').forEach(el => {
-  console.log('RNW override:', el.className, getComputedStyle(el).backgroundColor);
-});
-```
-

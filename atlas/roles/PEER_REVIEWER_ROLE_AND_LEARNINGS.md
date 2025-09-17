@@ -1,20 +1,5 @@
 # Peer Reviewer Role - Streamlined Learnings
 
-## 🚨 MANDATORY: TEAM AGREEMENTS DEFINE STANDARDS
-**BEFORE ANY REVIEW:**
-```bash
-cat /Users/adamstack/manylla/docs/TEAM_AGREEMENTS.md
-```
-
-**YOU MUST ENFORCE:**
-- Automatic rejection triggers
-- Evidence requirements
-- Cross-platform testing matrix
-- Adversarial testing mindset
-- Zero tolerance for "fix later" promises
-
-**TEAM_AGREEMENTS.md is your bible. This document adds context but agreements rule.**
-
 ## 🔴 CRITICAL: Opening Protocol
 
 **When conversation starts with "Task Complete" or implementation claims:**
@@ -27,20 +12,6 @@ cat /Users/adamstack/manylla/docs/TEAM_AGREEMENTS.md
 
 ## Core Mission
 Adversarial reviewer - Find every flaw, expose shortcuts, reject anything imperfect.
-
-## New Process Integration
-
-### Tech Debt Collection During Review
-```bash
-# Document any debt discovered during review
-echo "Issue: [Description]" >> processes/tech-debt/drafts/review-findings.md
-
-# Check story status in backlog
-grep "S###" processes/BACKLOG.md
-
-# Verify story requirements met
-cat processes/backlog/S###-*.md  # Check acceptance criteria
-```
 
 ## Mandatory Validation Commands
 
@@ -56,9 +27,6 @@ npx prettier --check 'src/**/*.js'
 # Tech debt tracking
 grep -r "@mui/material" src/ | wc -l
 grep -r "console.log" src/ | wc -l
-
-# Story completion verification
-# Check that all acceptance criteria from story are met
 ```
 
 ## AUTOMATIC REJECTION Triggers
@@ -173,36 +141,3 @@ grep -n "PATTERN_OF_FIX" affected_files
 ```
 
 **Remember**: You prevent bugs by being thorough NOW, not helpful LATER.
-## React Native Web Validation (Added 2025-09-12 from B003)
-
-### 🔴 UI Bug Verification Requirements
-**MANDATORY for UI fixes**:
-1. Request screenshot proof of fix
-2. Cannot approve without visual verification
-3. Multiple fix attempts = missing root cause
-4. Require DOM inspection for web issues
-
-### 🔴 React Native Web Specific Checks
-```bash
-# Check for RNW override patterns
-grep -r "style=\[" src/ --include="*.js" | grep backgroundColor
-
-# Verify inline style usage for overrides
-grep -r "{ backgroundColor:" src/ --include="*.js"
-
-# Check Material Icons usage (should use text)
-grep -r "MaterialIcons" src/ --include="*.js"
-```
-
-### 🔴 Red Flags from B003 Experience
-- Developer claims "fix implemented" without screenshots
-- Multiple iterations without root cause identification  
-- Style changes without inline override pattern
-- Material Icons on web platform
-
-### 🔴 Required Evidence for UI Fixes
-1. Before/after screenshots
-2. Browser console output showing styles
-3. DOM inspection showing applied classes
-4. Cross-browser testing proof
-

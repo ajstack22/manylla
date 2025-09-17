@@ -3,6 +3,19 @@
 *Auto-generated: 2025-09-12*
 *Based on actual bugs and fixes in production*
 
+## 🚨 TEAM AGREEMENTS ARE THE SOURCE OF TRUTH
+**This document supplements but does NOT override:**
+```bash
+cat /Users/adamstack/manylla/docs/TEAM_AGREEMENTS.md
+```
+
+**TEAM_AGREEMENTS.md contains the complete framework for:**
+- Architecture decisions
+- Quality standards
+- Testing requirements
+- Performance thresholds
+- Emergency procedures
+
 ## React Native Web Gotchas
 
 ### 1. CSS Class Override Issue (B003)

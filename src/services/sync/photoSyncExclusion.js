@@ -89,7 +89,7 @@ export async function storePhotoLocally(profileId, photoData) {
     }
   } catch (error) {
     // Silently fail if storage is not available
-    console.warn("Failed to store photo locally:", error);
+    // Silently handle error - photo storage is optional
   }
 }
 
@@ -120,7 +120,7 @@ export async function getLocalPhoto(profileId) {
       return await AsyncStorage.getItem(`manylla_photos_${photoId}`);
     }
   } catch (error) {
-    console.warn("Failed to get photo locally:", error);
+    // Silently handle error - photo may not exist
     return null;
   }
 }

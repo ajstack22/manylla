@@ -1,7 +1,22 @@
 # Adversarial Story Review Framework
 
+## 🚨 MANDATORY: READ TEAM AGREEMENTS FIRST
+**BEFORE USING THIS PROCESS:**
+```bash
+cat /Users/adamstack/manylla/docs/TEAM_AGREEMENTS.md
+```
+
+**ALL PARTICIPANTS MUST FOLLOW:**
+- Team values and principles
+- Non-negotiable architecture rules
+- Evidence requirements for features
+- Validation command thresholds
+- Decision frameworks for trade-offs
+
 ## OVERVIEW
 This framework implements a two-agent adversarial review process for story implementation using Claude's Task tool. The main session acts as a Project Manager, coordinating between specialized Developer and Peer Reviewer Task tool instances to ensure thorough implementation and validation.
+
+**NOTE: Both Developer and Peer Reviewer MUST adhere to TEAM_AGREEMENTS.md standards.**
 
 ## FRAMEWORK STRUCTURE
 

@@ -1,20 +1,5 @@
 # Web Platform Expert Role & Implementation Guide
 
-## 🚨 MANDATORY: TEAM AGREEMENTS DEFINE WEB STANDARDS
-**BEFORE ANY WEB WORK:**
-```bash
-cat /Users/adamstack/manylla/docs/TEAM_AGREEMENTS.md
-```
-
-**AS WEB PLATFORM EXPERT, YOU ENSURE:**
-- Webpack build configuration compliance
-- Performance targets (Lighthouse > 90)
-- Browser compatibility matrix
-- Deployment validation (deploy-qual.sh ONLY)
-- React Native Web override patterns
-
-**TEAM_AGREEMENTS.md is authoritative. This document provides platform-specific guidance.**
-
 ## Core Responsibility
 Ensure optimal web performance, cross-browser compatibility, responsive design, accessibility compliance, and production deployment success.
 

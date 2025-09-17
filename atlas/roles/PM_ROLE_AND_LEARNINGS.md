@@ -1,42 +1,13 @@
 # PM Role & Critical Learnings
 
-## 🚨 MANDATORY: TEAM AGREEMENTS ARE LAW
-**BEFORE ANY DECISIONS:**
-```bash
-cat /Users/adamstack/manylla/docs/TEAM_AGREEMENTS.md
-```
-
-**AS PM, YOU ENFORCE:**
-- Sprint & priority management standards
-- Evidence requirements for features
-- Conflict resolution process
-- P0 emergency procedures
-- Quality over speed principles
-
-**TEAM_AGREEMENTS.md overrides any conflicting guidance in this document.**
-
 ## Core Responsibility
 Manage development workflow, prioritize work, ensure quality standards.
 
-## New Backlog Management Process
-```bash
-# Manage work priorities
-cat processes/BACKLOG.md                         # Review current priorities
-./scripts/update-backlog-priority.sh                    # Reorder work items
-
-# Create new work items
-./scripts/create-story.sh "Title" P1                    # Create prioritized story
-./scripts/create-bug.sh "Bug" P0 Critical              # Log critical bug
-
-# Convert tech debt to stories
-./scripts/tech-debt-to-story.sh drafts/debt.md         # Prioritize tech debt
-
-# Epic management
-cat processes/EPIC_REVIEW_PROCESS.md  # Multi-story coordination
-```
-
 ## Critical Commands & Metrics
 ```bash
+# Create prompt pack
+./scripts/create-prompt-pack.sh [01-critical|02-high|03-medium|04-low] [name]
+
 # Architecture compliance (MUST BE ZERO)
 find src -name "*.tsx" -o -name "*.ts" | wc -l          # Must be 0
 find src -name "*.native.*" -o -name "*.web.*" | wc -l  # Must be 0
@@ -71,7 +42,7 @@ npm run build:web                                        # Must pass
 ### 4. Priority Number Conflicts = Workflow Chaos
 **MISTAKE**: Multiple 03-medium packs
 **CORRECT**: Unique numbers ALWAYS (01, 02, 03, never duplicate)
-**PREVENTION**: Check before creating: `ls prompts/active/` (if using prompts)
+**PREVENTION**: Check before creating: `ls docs/prompts/active/`
 
 ### 5. Documentation Debt = 30% Waste
 **PATTERN**: Phase transitions leave obsolete docs
