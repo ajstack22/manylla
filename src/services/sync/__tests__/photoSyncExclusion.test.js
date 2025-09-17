@@ -367,7 +367,6 @@ describe("photoSyncExclusion", () => {
 
       // Check if any warnings were logged
       if (console.warn.mock.calls.length > 0) {
-        console.log("Console warnings:", console.warn.mock.calls);
       }
 
       console.warn = originalConsoleWarn;

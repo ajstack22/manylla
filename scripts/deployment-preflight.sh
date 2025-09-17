@@ -126,10 +126,25 @@ check_ssh_access() {
             "Run ./scripts/setup-ssh.sh to configure SSH access"
     fi
 
-    # Test SSH connection with timeout
-    if ! timeout 10 ssh -o ConnectTimeout=5 -o BatchMode=yes stackmap-cpanel "echo 'SSH connection successful'" >/dev/null 2>&1; then
-        fail_check "SSH connection failed" \
-            "Check SSH keys and network connectivity. Try: ssh stackmap-cpanel"
+    # Test SSH connection with timeout (handle macOS without timeout command)
+    if command -v timeout >/dev/null 2>&1; then
+        # Linux or macOS with GNU coreutils
+        if ! timeout 10 ssh -o ConnectTimeout=5 -o BatchMode=yes stackmap-cpanel "echo 'SSH connection successful'" >/dev/null 2>&1; then
+            fail_check "SSH connection failed" \
+                "Check SSH keys and network connectivity. Try: ssh stackmap-cpanel"
+        fi
+    elif command -v gtimeout >/dev/null 2>&1; then
+        # macOS with GNU coreutils installed via homebrew
+        if ! gtimeout 10 ssh -o ConnectTimeout=5 -o BatchMode=yes stackmap-cpanel "echo 'SSH connection successful'" >/dev/null 2>&1; then
+            fail_check "SSH connection failed" \
+                "Check SSH keys and network connectivity. Try: ssh stackmap-cpanel"
+        fi
+    else
+        # macOS without timeout - use ConnectTimeout only
+        if ! ssh -o ConnectTimeout=10 -o BatchMode=yes stackmap-cpanel "echo 'SSH connection successful'" >/dev/null 2>&1; then
+            fail_check "SSH connection failed" \
+                "Check SSH keys and network connectivity. Try: ssh stackmap-cpanel"
+        fi
     fi
 
     # Test target directory access
@@ -138,10 +153,25 @@ check_ssh_access() {
             "Check directory permissions: ~/public_html/manylla/qual/"
     fi
 
-    # Test rsync functionality with dry-run
-    if ! timeout 10 rsync -avz --dry-run --delete web/ stackmap-cpanel:~/public_html/manylla/qual/ >/dev/null 2>&1; then
-        fail_check "Rsync test failed" \
-            "Check rsync connectivity and permissions"
+    # Test rsync functionality with dry-run (handle macOS without timeout command)
+    if command -v timeout >/dev/null 2>&1; then
+        # Linux or macOS with GNU coreutils
+        if ! timeout 10 rsync -avz --dry-run --delete web/build/ stackmap-cpanel:~/public_html/manylla/qual/ >/dev/null 2>&1; then
+            fail_check "Rsync test failed" \
+                "Check rsync connectivity and permissions"
+        fi
+    elif command -v gtimeout >/dev/null 2>&1; then
+        # macOS with GNU coreutils installed via homebrew
+        if ! gtimeout 10 rsync -avz --dry-run --delete web/build/ stackmap-cpanel:~/public_html/manylla/qual/ >/dev/null 2>&1; then
+            fail_check "Rsync test failed" \
+                "Check rsync connectivity and permissions"
+        fi
+    else
+        # macOS without timeout - use rsync's own timeout
+        if ! rsync -avz --dry-run --delete --timeout=10 web/build/ stackmap-cpanel:~/public_html/manylla/qual/ >/dev/null 2>&1; then
+            fail_check "Rsync test failed" \
+                "Check rsync connectivity and permissions"
+        fi
     fi
 
     record_check 0 "SSH/Rsync connectivity verified"
@@ -168,6 +198,12 @@ check_database() {
 
     # Test database connection via API health endpoint
     echo "Testing database connectivity via API..."
+
+    # Check if API is already deployed
+    if ! ssh stackmap-cpanel "test -f ~/public_html/manylla/qual/api/config/config.qual.php" 2>/dev/null; then
+        show_warning "API not yet deployed - database check will be performed after deployment"
+        return 0
+    fi
 
     # Create a simple test script to check database via SSH
     ssh stackmap-cpanel "
@@ -202,6 +238,17 @@ echo -e "${BLUE}Check 4: API Endpoint Validation${NC}"
 echo "─────────────────────────────"
 
 check_api_endpoints() {
+    # Check if this is initial deployment (API not deployed yet)
+    local test_url="https://manylla.com/qual/api/sync_health.php"
+    if ! curl -s -f -o /dev/null "$test_url" 2>/dev/null; then
+        # Check if it's a 404 (not deployed) vs other error
+        local http_code=$(curl -s -o /dev/null -w "%{http_code}" "$test_url" 2>/dev/null)
+        if [ "$http_code" = "404" ]; then
+            show_warning "API not yet deployed - endpoint checks will be performed after deployment"
+            return 0
+        fi
+    fi
+
     local endpoints=(
         "/api/sync_health.php"
         "/api/sync_push.php"
