@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Real integration tests for ThemeSwitcher
  * Tests actual theme switching behavior

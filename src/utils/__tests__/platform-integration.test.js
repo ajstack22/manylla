@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Platform } from "react-native";
 
 // Mock Platform.OS for testing

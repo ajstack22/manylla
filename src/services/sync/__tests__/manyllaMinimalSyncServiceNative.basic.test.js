@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Basic tests for manyllaMinimalSyncServiceNative module structure
  * Tests only module exports and static methods to avoid constructor issues

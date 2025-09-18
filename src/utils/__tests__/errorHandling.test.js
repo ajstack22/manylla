@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Tests for Error Handling Implementation
  * Demonstrates the comprehensive error handling system

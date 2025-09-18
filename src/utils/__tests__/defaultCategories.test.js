@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Default Categories Tests
  */

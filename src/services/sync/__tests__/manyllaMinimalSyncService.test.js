@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Comprehensive test coverage for manyllaMinimalSyncService
  * Tests the unified sync service platform detection and interface

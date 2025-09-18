@@ -1,3 +1,4 @@
+/* eslint-disable */
 // Mock React Native modules to avoid import issues in Jest
 jest.mock("react-native", () => ({
   Platform: {

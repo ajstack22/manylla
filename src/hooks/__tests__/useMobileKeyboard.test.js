@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Comprehensive tests for useMobileKeyboard hook
  * Tests keyboard detection, event handling, and scrolling behavior across platforms

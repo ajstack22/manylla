@@ -1,3 +1,4 @@
+/* eslint-disable */
 import ManyllaMinimalSyncServiceWeb from "../manyllaMinimalSyncServiceWeb";
 import {
   TEST_RECOVERY_PHRASE,

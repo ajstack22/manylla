@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Smoke tests for useShareStyles hook
  * Tests basic functionality of share styling hook

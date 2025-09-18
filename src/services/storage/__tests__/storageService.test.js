@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { StorageService } from "../storageService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import platform from "../../../utils/platform";

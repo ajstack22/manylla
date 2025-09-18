@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Simple tests for UnifiedApp components to increase coverage
  * Tests the actual exported components

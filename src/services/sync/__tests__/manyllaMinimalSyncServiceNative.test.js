@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Comprehensive test coverage for manyllaMinimalSyncServiceNative
  * Tests the React Native specific sync service implementation

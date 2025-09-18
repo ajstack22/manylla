@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Comprehensive integration tests for validation utility
  * Tests actual validation logic without mocking

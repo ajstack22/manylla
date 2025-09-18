@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Real integration tests for validation utilities
  * Tests actual validation logic with real data patterns

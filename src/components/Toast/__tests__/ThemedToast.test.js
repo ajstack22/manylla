@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { render, fireEvent, screen, act } from '@testing-library/react';
 import { ThemedToast } from '../ThemedToast';

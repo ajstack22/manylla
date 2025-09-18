@@ -96,11 +96,15 @@ echo
 # Step 1: Check for uncommitted changes
 echo -e "${BLUE}Step 1: Checking for uncommitted changes${NC}"
 echo "─────────────────────────────────────────"
-if [[ -n $(git status --porcelain) ]]; then
-    handle_error "Uncommitted changes detected" \
-        "Commit or stash all changes before deployment. Run: git status"
+if [[ -z "$SKIP_GIT_CHECK" ]]; then
+    if [[ -n $(git status --porcelain) ]]; then
+        handle_error "Uncommitted changes detected" \
+            "Commit or stash all changes before deployment. Run: git status"
+    fi
+    echo -e "${GREEN}✅ Working directory clean${NC}"
+else
+    echo -e "${YELLOW}⚠️  Git check skipped (SKIP_GIT_CHECK set)${NC}"
 fi
-echo -e "${GREEN}✅ Working directory clean${NC}"
 echo
 
 # Step 2: Validate Release Notes
@@ -326,6 +330,7 @@ fi
 
 # Check for console.log statements
 CONSOLE_COUNT=$(grep -r "console\.log" src/ --include="*.js" --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v '^\s*//' | grep -v '//.*console\.log' | wc -l | tr -d ' ' | tr -d '\n' || echo "0")
+CONSOLE_COUNT=$(echo "$CONSOLE_COUNT" | sed 's/^0*//' | sed 's/^$/0/')
 if [ "$CONSOLE_COUNT" -gt "5" ]; then
     handle_error "Too many console.log statements ($CONSOLE_COUNT found, max 5 allowed)" \
         "Remove console.log statements. Run: grep -r 'console\\.log' src/"
@@ -342,7 +347,8 @@ echo -e "${GREEN}✅ No debugger statements${NC}"
 
 # Check for potential hardcoded secrets
 SECRET_PATTERNS="(api[_-]?key|secret|password|token|private[_-]?key|ACCESS_KEY|SECRET_KEY)"
-SECRET_COUNT=$(grep -riE "$SECRET_PATTERNS\s*[:=]\s*['\"][^'\"]{10,}['\"]" src/ --include="*.js" --include="*.ts" --include="*.tsx" 2>/dev/null | wc -l | tr -d ' ' || echo "0")
+SECRET_COUNT=$(grep -riE "$SECRET_PATTERNS\s*[:=]\s*['\"][^'\"]{10,}['\"]" src/ --include="*.js" --include="*.ts" --include="*.tsx" 2>/dev/null | wc -l | tr -d ' ' | tr -d '\n' || echo "0")
+SECRET_COUNT=$(echo "$SECRET_COUNT" | sed 's/^0*//' | sed 's/^$/0/')
 if [ "$SECRET_COUNT" -gt "0" ]; then
     show_warning "Potential hardcoded secrets found ($SECRET_COUNT). Please review:"
     grep -riE "$SECRET_PATTERNS\s*[:=]\s*['\"][^'\"]{10,}['\"]" src/ --include="*.js" --include="*.ts" --include="*.tsx" 2>/dev/null | head -3

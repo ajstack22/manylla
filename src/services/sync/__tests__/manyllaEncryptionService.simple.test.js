@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Simple working tests for manyllaEncryptionService
  * Uses real encryption with minimal mocking

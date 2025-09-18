@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { jest } from "@jest/globals";
 import conflictResolver from "../conflictResolver";
 

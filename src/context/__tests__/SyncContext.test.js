@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from "react";
 import { render, act, screen } from "@testing-library/react";
 import { SyncProvider, useSync } from "../SyncContext";

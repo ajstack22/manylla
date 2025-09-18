@@ -48,7 +48,7 @@ export function normalizeInviteCode(code) {
  * Generate a shareable invite URL
  */
 export function generateInviteUrl(inviteCode, recoveryPhrase, baseUrl) {
-  const origin = baseUrl || window.location.origin;
+  const origin = baseUrl || (typeof window !== "undefined" && window.location ? window.location.origin : "https://manylla.com/qual");
   // URL format: /sync/ABCD-1234#recoveryPhrase
   return `${origin}/sync/${inviteCode}#${recoveryPhrase}`;
 }

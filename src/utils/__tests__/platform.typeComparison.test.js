@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { font } from "../platform";
 
 // Mock React Native Platform

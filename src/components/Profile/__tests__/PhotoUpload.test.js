@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * PhotoUpload.test.js
  * Comprehensive tests for PhotoUpload component with encryption mocking

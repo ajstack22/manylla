@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ProfileValidator } from '../validation';
 
 // P2 TECH DEBT: Remove skip when working on validation

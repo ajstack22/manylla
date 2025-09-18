@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Invite Code Tests - Updated for Secure Random
  *

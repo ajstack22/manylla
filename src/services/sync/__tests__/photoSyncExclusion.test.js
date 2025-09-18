@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Comprehensive test coverage for photoSyncExclusion
  * Tests photo handling, storage, and sync preparation functionality

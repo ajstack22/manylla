@@ -1,0 +1,266 @@
+/**
+ * IconProvider.web.js - Web-specific icon system
+ * Uses MUI icons on web platform
+ */
+
+import React from "react";
+
+// Import MUI icons for web
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import SearchIcon from "@mui/icons-material/Search";
+import SettingsIcon from "@mui/icons-material/Settings";
+import PersonIcon from "@mui/icons-material/Person";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import AddIcon from "@mui/icons-material/Add";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import CategoryIcon from "@mui/icons-material/Category";
+import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
+import PsychologyIcon from "@mui/icons-material/Psychology";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
+import SchoolIcon from "@mui/icons-material/School";
+import WarningIcon from "@mui/icons-material/Warning";
+import HomeIcon from "@mui/icons-material/Home";
+import ShareIcon from "@mui/icons-material/Share";
+import PrintIcon from "@mui/icons-material/Print";
+import QrCode2Icon from "@mui/icons-material/QrCode2";
+import LinkIcon from "@mui/icons-material/Link";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import DownloadIcon from "@mui/icons-material/Download";
+import SyncIcon from "@mui/icons-material/Sync";
+import CloudIcon from "@mui/icons-material/Cloud";
+import CloudSyncIcon from "@mui/icons-material/CloudSync";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
+import CloudDoneIcon from "@mui/icons-material/CloudDone";
+import LabelIcon from "@mui/icons-material/Label";
+import LabelOutlinedIcon from "@mui/icons-material/LabelOutlined";
+import TagIcon from "@mui/icons-material/Tag";
+import LogoutIcon from "@mui/icons-material/Logout";
+import LockIcon from "@mui/icons-material/Lock";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import SecurityIcon from "@mui/icons-material/Security";
+import PrivacyTipIcon from "@mui/icons-material/PrivacyTip";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import PaletteIcon from "@mui/icons-material/Palette";
+import Brightness6Icon from "@mui/icons-material/Brightness6";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ErrorIcon from "@mui/icons-material/Error";
+import InfoIcon from "@mui/icons-material/Info";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import PeopleIcon from "@mui/icons-material/People";
+import FlagIcon from "@mui/icons-material/Flag";
+import StarIcon from "@mui/icons-material/Star";
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
+import LightbulbIcon from "@mui/icons-material/Lightbulb";
+import TodayIcon from "@mui/icons-material/Today";
+import HealingIcon from "@mui/icons-material/Healing";
+import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import ScheduleIcon from "@mui/icons-material/Schedule";
+import EventIcon from "@mui/icons-material/Event";
+import DescriptionIcon from "@mui/icons-material/Description";
+import FolderIcon from "@mui/icons-material/Folder";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import DragHandleIcon from "@mui/icons-material/DragHandle";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import HelpIcon from "@mui/icons-material/Help";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import NotificationsOffIcon from "@mui/icons-material/NotificationsOff";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Cancel";
+import DoneIcon from "@mui/icons-material/Done";
+import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
+
+// Icon mapping for web
+const iconMap = {
+  Menu: MenuIcon,
+  Close: CloseIcon,
+  ArrowBack: ArrowBackIcon,
+  MoreVert: MoreVertIcon,
+  MoreHoriz: MoreHorizIcon,
+  Search: SearchIcon,
+  Settings: SettingsIcon,
+  Person: PersonIcon,
+  PersonAdd: PersonAddIcon,
+  Edit: EditIcon,
+  Delete: DeleteIcon,
+  AccountCircle: AccountCircleIcon,
+  CameraAlt: CameraAltIcon,
+  Add: AddIcon,
+  AddCircle: AddCircleIcon,
+  Category: CategoryIcon,
+  LocalHospital: LocalHospitalIcon,
+  Psychology: PsychologyIcon,
+  Restaurant: RestaurantIcon,
+  School: SchoolIcon,
+  Warning: WarningIcon,
+  Home: HomeIcon,
+  Share: ShareIcon,
+  Print: PrintIcon,
+  QrCode: QrCode2Icon,
+  Link: LinkIcon,
+  ContentCopy: ContentCopyIcon,
+  Download: DownloadIcon,
+  Sync: SyncIcon,
+  Cloud: CloudIcon,
+  CloudSync: CloudSyncIcon,
+  CloudUpload: CloudUploadIcon,
+  CloudDownload: CloudDownloadIcon,
+  CloudDone: CloudDoneIcon,
+  Label: LabelIcon,
+  LabelOutline: LabelOutlinedIcon,
+  Tag: TagIcon,
+  Logout: LogoutIcon,
+  Lock: LockIcon,
+  LockOpen: LockOpenIcon,
+  Security: SecurityIcon,
+  PrivacyTip: PrivacyTipIcon,
+  DarkMode: DarkModeIcon,
+  LightMode: LightModeIcon,
+  Palette: PaletteIcon,
+  Brightness6: Brightness6Icon,
+  CheckCircle: CheckCircleIcon,
+  Error: ErrorIcon,
+  Info: InfoIcon,
+  Favorite: FavoriteIcon,
+  TrendingUp: TrendingUpIcon,
+  People: PeopleIcon,
+  Flag: FlagIcon,
+  Star: StarIcon,
+  FitnessCenter: FitnessCenterIcon,
+  ChatBubble: ChatBubbleIcon,
+  Lightbulb: LightbulbIcon,
+  Today: TodayIcon,
+  Healing: HealingIcon,
+  ContactPhone: ContactPhoneIcon,
+  CheckBox: CheckBoxIcon,
+  CheckBoxOutlineBlank: CheckBoxOutlineBlankIcon,
+  RadioButtonChecked: RadioButtonCheckedIcon,
+  RadioButtonUnchecked: RadioButtonUncheckedIcon,
+  CalendarToday: CalendarTodayIcon,
+  Schedule: ScheduleIcon,
+  Event: EventIcon,
+  Description: DescriptionIcon,
+  Folder: FolderIcon,
+  InsertDriveFile: InsertDriveFileIcon,
+  ExpandMore: ExpandMoreIcon,
+  ExpandLess: ExpandLessIcon,
+  ChevronRight: ChevronRightIcon,
+  ChevronLeft: ChevronLeftIcon,
+  ArrowUpward: ArrowUpwardIcon,
+  ArrowDownward: ArrowDownwardIcon,
+  DragHandle: DragHandleIcon,
+  Visibility: VisibilityIcon,
+  VisibilityOff: VisibilityOffIcon,
+  Help: HelpIcon,
+  HelpOutline: HelpOutlineIcon,
+  Notifications: NotificationsIcon,
+  NotificationsOff: NotificationsOffIcon,
+  Refresh: RefreshIcon,
+  Save: SaveIcon,
+  Cancel: CancelIcon,
+  Done: DoneIcon,
+  PlaylistAddCheck: PlaylistAddCheckIcon,
+};
+
+// Base Icon Component
+const Icon = ({ name, size = 24, color = "#000000", style, ...props }) => {
+  const IconComponent = iconMap[name];
+
+  if (IconComponent) {
+    return (
+      <IconComponent
+        style={{ fontSize: size, color, ...style }}
+        {...props}
+      />
+    );
+  }
+
+  // Fallback for unknown icons
+  return <span style={{ fontSize: size, color, ...style }}>○</span>;
+};
+
+// Category Icons mapping
+export const CategoryIcons = {
+  goals: { name: "Psychology", component: Icon },
+  strengths: { name: "CheckCircle", component: Icon },
+  challenges: { name: "Warning", component: Icon },
+  medical: { name: "LocalHospital", component: Icon },
+  behavior: { name: "Psychology", component: Icon },
+  diet: { name: "Restaurant", component: Icon },
+  education: { name: "School", component: Icon },
+  dailyRoutines: { name: "Schedule", component: Icon },
+  communication: { name: "Psychology", component: Icon },
+  family: { name: "Home", component: Icon },
+  milestones: { name: "CheckCircle", component: Icon },
+  sensory: { name: "Psychology", component: Icon },
+  therapy: { name: "LocalHospital", component: Icon },
+  medications: { name: "LocalHospital", component: Icon },
+  notes: { name: "Description", component: Icon },
+};
+
+// Export named icon components
+export { MenuIcon };
+export { CloseIcon };
+export { PersonIcon };
+export { AddIcon };
+export { EditIcon };
+export { DeleteIcon };
+export { ShareIcon };
+export { PrintIcon };
+export { QrCode2Icon as QrCodeIcon };
+export { SyncIcon };
+export { SettingsIcon };
+export { CloudIcon };
+export { LabelIcon };
+export { LogoutIcon };
+export { PrivacyTipIcon };
+export { DarkModeIcon };
+export { LightModeIcon };
+export { PaletteIcon };
+export { FavoriteIcon as SupportIcon };
+export { ExpandLessIcon as ChevronUpIcon };
+export { ExpandMoreIcon as ChevronDownIcon };
+export { MoreHorizIcon };
+export { DescriptionIcon };
+export { InsertDriveFileIcon };
+export { DownloadIcon };
+export { CheckCircleIcon };
+export { ContentCopyIcon };
+export { DoneIcon };
+export { LockIcon };
+export { SchoolIcon };
+export { LocalHospitalIcon };
+export { HomeIcon };
+export { CloudUploadIcon as UploadIcon };
+export { CloudUploadIcon };
+export { CloudDownloadIcon };
+export { CloudDoneIcon };
+export { CloudSyncIcon };
+export { PlaylistAddCheckIcon };
+
+export default Icon;

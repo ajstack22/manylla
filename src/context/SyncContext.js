@@ -421,7 +421,7 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
         );
 
         // Return the share URL with encryption key in fragment
-        const baseUrl = platform.isWeb
+        const baseUrl = platform.isWeb() && typeof window !== "undefined" && window.location
           ? window.location.origin
           : "https://manylla.com/qual";
 

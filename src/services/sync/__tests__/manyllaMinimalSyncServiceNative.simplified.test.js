@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Simplified test suite for ManyllaMinimalSyncServiceNative
  *

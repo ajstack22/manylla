@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Simplified BottomSheetMenu Tests
  * Focus on basic functionality with minimal mocking

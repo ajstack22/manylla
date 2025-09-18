@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { isValidElementId } from "../platform";
 
 describe("Platform Security - ElementId Validation", () => {

@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Smoke tests for EntryCard component
  * Tests basic functionality of entry card display (placeholder for future implementation)

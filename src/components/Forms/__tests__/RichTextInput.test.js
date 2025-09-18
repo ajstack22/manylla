@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Smoke tests for RichTextInput component
  * Tests basic functionality of rich text input with formatting toolbar

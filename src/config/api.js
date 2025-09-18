@@ -5,6 +5,12 @@
 
 // Determine the API base URL based on environment
 const getApiBaseUrl = () => {
+  // Check if we're running in a browser environment
+  if (typeof window === "undefined" || !window.location) {
+    // For React Native, always use qual API
+    return "https://manylla.com/qual/api";
+  }
+
   // Production/staging detection based on hostname
   const hostname = window.location.hostname;
 

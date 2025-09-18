@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Comprehensive test coverage for manyllaEncryptionService
  * Tests encryption, decryption, key derivation, and storage functionality

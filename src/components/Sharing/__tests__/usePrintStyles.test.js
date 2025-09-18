@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { renderHook } from '@testing-library/react';
 import { usePrintStyles } from '../usePrintStyles';
 

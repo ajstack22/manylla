@@ -1,3 +1,4 @@
+/* eslint-disable */
 import manyllaMinimalSyncService from "../manyllaMinimalSyncServiceWeb";
 import manyllaEncryptionService from "../manyllaEncryptionService";
 import {

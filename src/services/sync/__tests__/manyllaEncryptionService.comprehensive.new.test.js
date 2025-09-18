@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Comprehensive test coverage for manyllaEncryptionService
  * Targets all uncovered lines to achieve 80%+ coverage

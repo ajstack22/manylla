@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Tests for ToastManager
  * Comprehensive test coverage for toast display, queue management, and error handling

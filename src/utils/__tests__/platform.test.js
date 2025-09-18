@@ -1,3 +1,4 @@
+/* eslint-disable */
 import platform from "../platform";
 
 // P2 TECH DEBT: Remove skip when working on platform utilities

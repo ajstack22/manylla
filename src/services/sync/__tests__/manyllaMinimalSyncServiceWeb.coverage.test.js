@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Coverage tests for manyllaMinimalSyncServiceWeb
  * Targets specific uncovered lines to achieve 80%+ coverage

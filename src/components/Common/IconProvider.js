@@ -19,9 +19,10 @@ if (platform.isMobile) {
   }
 }
 
-// Web icons from Material-UI
+// Web icons from Material-UI - only load on web platform
 let MUIIcons = {};
-if (platform.isWeb) {
+// CRITICAL: Only load MUI on web to prevent Android crashes
+if (typeof platform.isWeb !== 'undefined' && platform.isWeb === true) {
   MUIIcons = {
     // Navigation & Actions
     Menu: require("@mui/icons-material/Menu").default,
@@ -237,7 +238,7 @@ const Icon = ({ name, size = 24, color = "#000000", style, ...props }) => {
     );
   }
 
-  if (!platform.isWeb && MaterialIcons && iconNameMap[name]) {
+  if (platform.isMobile && MaterialIcons && iconNameMap[name]) {
     return (
       <MaterialIcons
         name={iconNameMap[name]}

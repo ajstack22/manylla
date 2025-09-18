@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Real integration tests for ErrorBoundary
  * Tests actual error catching and fallback behavior

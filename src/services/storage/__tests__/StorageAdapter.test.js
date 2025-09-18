@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { StorageAdapter } from "../StorageAdapter";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 

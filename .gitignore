@@ -94,6 +94,16 @@ error_log
 logs/
 /logs
 
+# Coverage reports
+coverage-*.txt
+coverage-*.json
+
+# Temporary analysis files
+type-issues.txt
+sonar-bugs.json
+test-failures.log
+build_log.txt
+
 # Editor directories and files
 .idea
 .vscode

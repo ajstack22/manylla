@@ -77,7 +77,7 @@ const SyncDialog = lazy(() =>
 
 // Icon imports - must be after other imports due to conditional requires
 let EditIcon, DeleteIcon;
-if (isWeb) {
+if (isWeb()) {
   // Use Material-UI icons for web
   const MuiIcons = require("@mui/icons-material");
   EditIcon = MuiIcons.Edit;
@@ -97,7 +97,7 @@ if (isWeb) {
 let GestureHandlerRootView = View; // Default to View
 let SafeAreaProvider = ({ children }) => children; // Default passthrough
 
-if (isMobile) {
+if (isMobile()) {
   // Mobile-only imports
   try {
     const GestureHandler = require("react-native-gesture-handler");
@@ -121,7 +121,7 @@ if (typeof ProfileEditForm === "undefined")
   console.error("ProfileEditForm is undefined");
 
 // Web-specific early sync data capture (from StackMap pattern)
-if (isWeb && typeof window !== "undefined") {
+if (isWeb() && typeof window !== "undefined" && window.location) {
   // Check for share URL pattern
   const pathname = window.location.pathname;
   const shareMatch = pathname.match(/\/share\/([a-zA-Z0-9-]+)/);
@@ -185,7 +185,7 @@ const ProfileOverview = ({
 
   // Add scroll listener for web with throttling
   useEffect(() => {
-    if (isWeb && onScrollChange) {
+    if (isWeb() && onScrollChange) {
       let ticking = false;
       let lastKnownScrollY = 0;
 
@@ -296,7 +296,7 @@ const ProfileOverview = ({
 
   // Track scroll position for header profile display
   const handleScroll = (event) => {
-    if (isWeb && onScrollChange) {
+    if (isWeb() && onScrollChange) {
       // For React Native Web, contentOffset might not work properly
       const scrollY =
         event.nativeEvent.contentOffset?.y ||
@@ -408,7 +408,7 @@ const ProfileOverview = ({
                                   accessibilityLabel={`Edit ${entry.title}`}
                                   accessibilityRole="button"
                                 >
-                                  {isWeb ? (
+                                  {isWeb() ? (
                                     <EditIcon
                                       sx={{ fontSize: 20, color: "#666" }}
                                     />
@@ -418,7 +418,7 @@ const ProfileOverview = ({
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                   onPress={() => {
-                                    if (isWeb) {
+                                    if (isWeb()) {
                                       if (
                                         window.confirm(
                                           "Are you sure you want to delete this entry?",
@@ -446,7 +446,7 @@ const ProfileOverview = ({
                                   accessibilityLabel={`Delete ${entry.title}`}
                                   accessibilityRole="button"
                                 >
-                                  {isWeb ? (
+                                  {isWeb() ? (
                                     <DeleteIcon
                                       sx={{
                                         fontSize: 20,
@@ -502,7 +502,7 @@ const ProfileOverview = ({
                   const categoryStyle = [
                     styles.categorySection,
                     windowWidth > 768 &&
-                      isWeb && {
+                      isWeb() && {
                         width: "calc(50% - 12px)",
                         marginHorizontal: 6,
                       },
@@ -571,7 +571,7 @@ const ProfileOverview = ({
                                     accessibilityLabel={`Edit ${entry.title}`}
                                     accessibilityRole="button"
                                   >
-                                    {isWeb ? (
+                                    {isWeb() ? (
                                       <EditIcon
                                         sx={{ fontSize: 20, color: "#666" }}
                                       />
@@ -581,7 +581,7 @@ const ProfileOverview = ({
                                   </TouchableOpacity>
                                   <TouchableOpacity
                                     onPress={() => {
-                                      if (isWeb) {
+                                      if (isWeb()) {
                                         if (
                                           window.confirm(
                                             "Are you sure you want to delete this entry?",
@@ -609,7 +609,7 @@ const ProfileOverview = ({
                                     accessibilityLabel={`Delete ${entry.title}`}
                                     accessibilityRole="button"
                                   >
-                                    {isWeb ? (
+                                    {isWeb() ? (
                                       <DeleteIcon
                                         sx={{
                                           fontSize: 20,
@@ -704,7 +704,7 @@ function AppContent() {
 
   // Configure StatusBar for Android
   useEffect(() => {
-    if (isAndroid) {
+    if (isAndroid()) {
       StatusBar.setBackgroundColor("transparent");
       StatusBar.setTranslucent(true);
       StatusBar.setBarStyle(
@@ -719,7 +719,7 @@ function AppContent() {
       setIsLoading(true);
       try {
         // Check for share URL first (web only)
-        if (isWeb && typeof window !== "undefined") {
+        if (isWeb() && typeof window !== "undefined" && window.location) {
           const pathname = window.location.pathname;
           const hash = window.location.hash;
           const shareMatch = pathname.match(/\/share\/([A-Z0-9]{4}-[A-Z0-9]{4})/i);
@@ -780,7 +780,7 @@ function AppContent() {
 
   // Delayed execution for privacy modal URL parameter (after hydration)
   useEffect(() => {
-    if (!isLoading && isWeb && typeof window !== "undefined") {
+    if (!isLoading && isWeb() && typeof window !== "undefined") {
       // Wait 1 second for full hydration
       const timer = setTimeout(() => {
         if (window.urlOpenPrivacy) {
@@ -800,7 +800,7 @@ function AppContent() {
 
   // Update document title on web
   useEffect(() => {
-    if (isWeb && profile) {
+    if (isWeb() && profile && typeof document !== "undefined") {
       document.title = `manylla - ${profile.preferredName || profile.name}`;
     }
   }, [profile]);
@@ -1498,7 +1498,7 @@ function AppContent() {
 // Create styles function that accepts colors
 const createStyles = (colors, theme) => {
   // Base text style with Atkinson Hyperlegible font
-  const baseTextStyle = isWeb
+  const baseTextStyle = isWeb()
     ? {
         fontFamily:
           '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
@@ -1585,10 +1585,10 @@ const createStyles = (colors, theme) => {
     },
     profileCardDesktop: {
       margin: 0,
-      marginRight: isWeb ? 6 : "1%",
+      marginRight: isWeb() ? 6 : "1%",
       flex: 0,
       // 1/3 width for photo panel, accounting for gap
-      width: isWeb ? "calc(33.333% - 8px)" : "32%",
+      width: isWeb() ? "calc(33.333% - 8px)" : "32%",
       minWidth: 280,
       justifyContent: "center",
       alignSelf: "stretch", // Match height of Quick Info
@@ -1672,7 +1672,7 @@ const createStyles = (colors, theme) => {
     quickInfoDesktop: {
       // Standalone styles for desktop Quick Info (not inheriting from categorySection)
       flex: 1,
-      marginLeft: isWeb ? 6 : "1%",
+      marginLeft: isWeb() ? 6 : "1%",
       display: "flex",
       flexDirection: "column",
       alignSelf: "stretch", // Match height of profile card
@@ -1808,8 +1808,8 @@ const createStyles = (colors, theme) => {
       lineHeight: 20,
     },
     fab: {
-      position: isWeb ? "fixed" : "absolute",
-      bottom: isWeb ? 80 : 88, // Position above bottom toolbar (56px desktop / 64px mobile + spacing)
+      position: isWeb() ? "fixed" : "absolute",
+      bottom: isWeb() ? 80 : 88, // Position above bottom toolbar (56px desktop / 64px mobile + spacing)
       right: 24,
       width: 56,
       height: 56,
@@ -1902,8 +1902,8 @@ const createStyles = (colors, theme) => {
 
 // Main App wrapper
 function App() {
-  const RootView = isWeb ? View : GestureHandlerRootView;
-  const AppWrapper = isWeb ? View : SafeAreaProvider;
+  const RootView = isWeb() ? View : GestureHandlerRootView;
+  const AppWrapper = isWeb() ? View : SafeAreaProvider;
 
   return (
     <AppWrapper>

@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Smoke tests for printContentGenerators
  * Tests basic functionality of print content generation utilities

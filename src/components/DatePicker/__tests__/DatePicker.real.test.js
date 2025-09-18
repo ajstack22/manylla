@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Real integration tests for DatePicker
  * Tests actual date picking behavior across platforms

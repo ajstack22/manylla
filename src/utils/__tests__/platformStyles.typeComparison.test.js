@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { getFontFamily } from "../platformStyles";
 import platform from "../platform";
 

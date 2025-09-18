@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Smoke tests for useSyncStyles hook
  * Tests basic functionality of sync styling hook

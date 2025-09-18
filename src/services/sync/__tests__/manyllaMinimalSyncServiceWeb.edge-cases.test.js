@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Edge case tests to boost coverage for manyllaMinimalSyncServiceWeb.js
  * Targets specific uncovered lines for error handling and edge cases

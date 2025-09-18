@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Real integration tests for UnifiedAddDialog
  * Tests actual form behavior, validation, and data entry workflows

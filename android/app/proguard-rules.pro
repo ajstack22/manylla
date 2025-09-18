@@ -90,3 +90,4 @@
 -dontwarn com.facebook.react.**
 -dontwarn com.swmansion.**
 -dontwarn com.google.android.gms.**
+-keep class com.facebook.react.views.text.** { *; }

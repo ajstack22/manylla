@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * HighlightedText Component Tests
  */

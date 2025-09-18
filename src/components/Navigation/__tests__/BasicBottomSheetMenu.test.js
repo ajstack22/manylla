@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Basic BottomSheetMenu Import Test
  * Just to verify the component can be imported

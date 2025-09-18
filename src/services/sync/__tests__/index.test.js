@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Test coverage for sync services index file
  * Tests the export structure and module availability

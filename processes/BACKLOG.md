@@ -1,13 +1,14 @@
 # Development Backlog
 
 *Last Updated: 2025-09-15*
-*Next ID: S056, B009*
+*Next ID: S028, B009*
 
 ## Quick Start for Claude
 Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything needed to start immediately.
 
 ## 🔴 P0 - Critical (Do Now)
 ### Stories
+- [S029](backlog/S029-refactor-app-initialization-to-fix-android-text-rendering.md) - Refactor App Initialization to Fix Android Text Rendering ✅ **READY**
 - [S054](backlog/S054-fix-critical-sonarqube-reliability-issues.md) - Fix Critical SonarQube Reliability Issues ✅ **READY**
 - [S050](backlog/S050-fix-regex-dos-vulnerabilities.md) - Fix Regex DoS Vulnerabilities ✅ **READY** (Security Hotspot)
 - [S051](backlog/S051-fix-weak-cryptography-issues.md) - Fix Weak Cryptography Issues ✅ **READY** (Security Hotspot)
@@ -57,6 +58,10 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟢 P3 - Low (Nice to Have)
 ### Stories
+- [S027](backlog/S027-fixprettierformattingin90files.md) - Fix Prettier formatting in 90 files ✅ **READY** (Auto-Generated)
+- [S032](backlog/S032-fixprettierformattingin90files.md) - Fix Prettier formatting in 90 files ✅ **READY** (Auto-Generated)
+- [S039](backlog/S039-fixprettierformattingin90files.md) - Fix Prettier formatting in 90 files ✅ **READY** (Auto-Generated)
+- [S046](backlog/S046-fixprettierformattingin90files.md) - Fix Prettier formatting in 90 files ✅ **READY** (Auto-Generated)
 - [S003](backlog/S003-fixprettierformattingin2files.md) - Fix Prettier formatting in 2 files ✅ **READY** (Auto-Generated)
 - [S002](backlog/S002-fixprettierformattingin2files.md) - Fix Prettier formatting in 2 files ✅ **READY** (Auto-Generated)
 - [S001](backlog/S001-fixprettierformattingin2files.md) - Fix Prettier formatting in 2 files ✅ **READY** (Auto-Generated)

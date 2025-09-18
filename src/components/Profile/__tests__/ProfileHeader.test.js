@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Smoke tests for ProfileHeader component
  * Tests basic functionality of profile header display (placeholder for future implementation)

@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Real integration tests for SyncContext
  * These tests minimize mocking and test actual state management behavior

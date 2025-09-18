@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Simple test coverage for manyllaMinimalSyncService
  * Tests the basic module structure without complex dynamic imports

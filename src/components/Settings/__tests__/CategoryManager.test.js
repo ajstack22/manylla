@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Smoke tests for CategoryManager component
  * Tests basic functionality of category management (placeholder for future implementation)

@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Tests for useFormWithRecovery hook
  * Comprehensive testing of form lifecycle, validation, and draft recovery

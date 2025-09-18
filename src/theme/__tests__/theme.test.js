@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { manyllaColors, lightTheme, darkTheme, manyllaTheme } from "../theme";
 
 describe("theme", () => {

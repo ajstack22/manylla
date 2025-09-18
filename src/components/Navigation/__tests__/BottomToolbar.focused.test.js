@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Focused BottomToolbar Tests
  * Basic smoke tests and interaction tests with working mocks

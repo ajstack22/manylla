@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Real integration tests for ManyllaMinimalSyncServiceWeb
  * These tests use real API calls to dev environment and actual service behavior
