@@ -127,6 +127,9 @@ Thumbs.db
 .last-deployment-timestamp
 .last-manylla-deploy
 
+# Auto-generated deployment scripts
+scripts/deployment-rollback.sh
+
 # Documentation (internal only, not for public repo)
 /docs/
 docs/**
