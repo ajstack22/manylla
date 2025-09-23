@@ -125,25 +125,25 @@ export const ThemeProvider = ({
   initialThemeMode,
   onThemeChange,
 }) => {
-  const [theme, setTheme] = useState(initialThemeMode || "light");
-  const [themeMode, setThemeMode] = useState(initialThemeMode || "light");
+  const [theme, setTheme] = useState(initialThemeMode || "manylla");
+  const [themeMode, setThemeMode] = useState(initialThemeMode || "manylla");
 
   useEffect(() => {
     // Load saved theme
     const loadTheme = async () => {
       try {
         const savedTheme = await getStorageItem("theme_preference");
-        if (savedTheme && (savedTheme === "light" || savedTheme === "dark")) {
+        if (savedTheme && (savedTheme === "light" || savedTheme === "dark" || savedTheme === "manylla")) {
           setTheme(savedTheme);
           setThemeMode(savedTheme);
         } else if (initialThemeMode) {
           setTheme(initialThemeMode);
           setThemeMode(initialThemeMode);
         }
-        // If no saved theme and no initial theme, use default (light)
+        // If no saved theme and no initial theme, use default (manylla)
       } catch (error) {
-        // On error, fall back to initial theme or light
-        const fallbackTheme = initialThemeMode || "light";
+        // On error, fall back to initial theme or manylla
+        const fallbackTheme = initialThemeMode || "manylla";
         setTheme(fallbackTheme);
         setThemeMode(fallbackTheme);
       }
@@ -152,8 +152,11 @@ export const ThemeProvider = ({
   }, [initialThemeMode]);
 
   const toggleTheme = async () => {
-    // Simple toggle between light and dark for test compatibility
-    const newTheme = theme === "light" ? "dark" : "light";
+    // Cycle through light -> dark -> manylla -> light
+    const newTheme =
+      theme === "light" ? "dark" :
+      theme === "dark" ? "manylla" :
+      "light";
     setTheme(newTheme);
     setThemeMode(newTheme);
 

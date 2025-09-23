@@ -13,9 +13,15 @@ let MaterialIcons = null;
 if (platform.isMobile) {
   try {
     MaterialIcons = require("react-native-vector-icons/MaterialIcons").default;
+    if (process.env.NODE_ENV === "development") {
+      console.log("IconProvider: MaterialIcons loaded successfully");
+    }
   } catch (e) {
     // Expected failure on platforms where react-native-vector-icons is not available
     // App will gracefully fall back to text-based icons
+    if (process.env.NODE_ENV === "development") {
+      console.warn("IconProvider: Failed to load MaterialIcons, using fallback icons", e.message);
+    }
   }
 }
 
@@ -250,8 +256,42 @@ const Icon = ({ name, size = 24, color = "#000000", style, ...props }) => {
     );
   }
 
-  // Fallback to text when icon library not available
-  return <Text style={{ fontSize: size * 0.8, color, ...style }}>○</Text>;
+  // Improved fallback with better icon characters
+  const fallbackIcons = {
+    Menu: "☰",
+    Close: "✕",
+    ArrowBack: "←",
+    MoreVert: "⋮",
+    Settings: "⚙",
+    Person: "👤",
+    Edit: "✏",
+    Delete: "🗑",
+    CameraAlt: "📷",
+    Add: "+",
+    Share: "↗",
+    Print: "🖨",
+    Cloud: "☁",
+    Visibility: "👁",
+    VisibilityOff: "👁‍🗨",
+    Lock: "🔒",
+    LockOpen: "🔓",
+    Palette: "🎨",
+    BrightnessLow: "🌙",
+    BrightnessHigh: "☀",
+    HelpOutline: "❓",
+    CheckCircle: "✓",
+    Warning: "⚠",
+    Error: "✖",
+    Info: "ℹ",
+  };
+
+  const fallbackChar = fallbackIcons[name] || "○";
+
+  if (process.env.NODE_ENV === "development" && !fallbackIcons[name]) {
+    console.warn(`IconProvider: No fallback icon for "${name}"`);
+  }
+
+  return <Text style={{ fontSize: size * 0.8, color, ...style }}>{fallbackChar}</Text>;
 };
 
 // Category Icons mapping

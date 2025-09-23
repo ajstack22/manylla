@@ -1908,7 +1908,7 @@ function App() {
   return (
     <AppWrapper>
       <RootView style={{ flex: 1 }}>
-        <ThemeProvider>
+        <ThemeProvider initialThemeMode="manylla">
           <SyncProvider>
             <AppContent />
           </SyncProvider>

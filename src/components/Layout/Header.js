@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { getStatusBarHeight } from "../../utils/platformStyles";
 import platform from "../../utils/platform";
+import ManyllaLogo from "../Common/ManyllaLogo";
 
 // Define consistent header height
 const statusBarHeight = getStatusBarHeight();
@@ -40,12 +41,7 @@ const Header = ({ colors, theme, profile, onEditProfile }) => {
         {/* Logo on the left */}
         <View style={styles.left}>
           <View style={styles.logoContainer}>
-            <View
-              style={[styles.logoAvatar, styles.logoAvatarPlaceholder]}
-              className="logo-avatar-animated"
-            >
-              <Text style={styles.logoAvatarText}>m</Text>
-            </View>
+            <ManyllaLogo size={32} />
             <Text style={styles.logo}>manylla</Text>
           </View>
         </View>
@@ -102,7 +98,7 @@ const createStyles = (colors, theme) =>
       justifyContent: "center",
       ...platform.select({
         ios: {
-          paddingTop: 44, // Status bar height on iOS
+          paddingTop: statusBarHeight, // Use dynamic status bar height for iOS too
         },
         android: {
           paddingTop: statusBarHeight, // Use actual status bar height
@@ -116,7 +112,7 @@ const createStyles = (colors, theme) =>
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      paddingHorizontal: 16,
+      paddingHorizontal: 24,
       height: "100%",
     },
     left: {
@@ -131,39 +127,14 @@ const createStyles = (colors, theme) =>
       flexDirection: "row",
       alignItems: "center",
       gap: 8,
-      height: 36, // Match avatar height for perfect alignment
+      height: 32, // Match icon height for perfect alignment
     },
     logo: {
-      fontSize: 24,
+      fontSize: 32,
       fontWeight: "600",
       color: colors.primary || "#A08670",
-      ...platform.select({
-        web: {
-          fontFamily:
-            '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
-        },
-      }),
-    },
-    logoAvatar: {
-      width: 36,
-      height: 36,
-      borderRadius: 18,
-    },
-    logoAvatarPlaceholder: {
-      backgroundColor: colors.primary || "#A08670",
-      justifyContent: "center",
-      alignItems: "center",
-      boxShadow: "0 0 0 3px " + colors.background.paper + ", 0 0 0 5px #CC0000",
-      ...platform.select({
-        web: {
-          position: "relative",
-        },
-      }),
-    },
-    logoAvatarText: {
-      color: theme === "dark" ? "#FFFFFF" : colors.background.paper,
-      fontSize: 20,
-      fontWeight: "600",
+      letterSpacing: 0.3,
+      lineHeight: 32,
       ...platform.select({
         web: {
           fontFamily:

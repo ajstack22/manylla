@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final App Icons</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f5f7;
+            color: #333;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #172B4D;
+        }
+        h2 {
+            border-bottom: 2px solid #dfe1e6;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+        .icon-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+        .icon-display {
+            flex: 0 0 128px;
+            text-align: center;
+        }
+        .app-icon-wrapper {
+            width: 128px;
+            height: 128px;
+            margin: 0 auto;
+        }
+        .app-icon-wrapper svg {
+            width: 100%;
+            height: 100%;
+        }
+        .code-container {
+            flex: 1 1 400px;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #dfe1e6;
+            background-color: #FAFBFC;
+            font-family: monospace;
+            font-size: 13px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Final App Icon Assets</h1>
+
+        <!-- iOS App Icon -->
+        <h2>iOS App Icon (Squircle)</h2>
+        <div class="icon-section">
+            <div class="icon-display">
+                <div class="app-icon-wrapper">
+                    <svg viewBox="0 0 180 180">
+                        <defs><clipPath id="ios-squircle"><rect x="0" y="0" width="180" height="180" rx="40" ry="40"/></clipPath></defs>
+                        <g clip-path="url(#ios-squircle)">
+                            <rect width="180" height="75" fill="#FBC02D"/>
+                            <rect y="75" width="180" height="105" fill="#FFEE58"/>
+                            <path d="M90 50 L115 75 L90 100 L65 75 Z" fill="#E53935"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+            <div class="code-container">
+                <textarea readonly><svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <clipPath id="ios-squircle">
+            <rect x="0" y="0" width="180" height="180" rx="40" ry="40"/>
+        </clipPath>
+    </defs>
+    <g clip-path="url(#ios-squircle)">
+        <rect width="180" height="75" fill="#FBC02D"/>
+        <rect y="75" width="180" height="105" fill="#FFEE58"/>
+        <path d="M90 50 L115 75 L90 100 L65 75 Z" fill="#E53935"/>
+    </g>
+</svg></textarea>
+            </div>
+        </div>
+
+        <!-- Android App Icon -->
+        <h2>Android App Icon (Circle)</h2>
+        <div class="icon-section">
+            <div class="icon-display">
+                <div class="app-icon-wrapper">
+                    <svg viewBox="0 0 180 180">
+                        <defs><clipPath id="android-circle"><circle cx="90" cy="90" r="90"/></clipPath></defs>
+                        <g clip-path="url(#android-circle)">
+                            <rect width="180" height="75" fill="#FBC02D"/>
+                            <rect y="75" width="180" height="105" fill="#FFEE58"/>
+                            <path d="M90 50 L115 75 L90 100 L65 75 Z" fill="#E53935"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+            <div class="code-container">
+                <textarea readonly><svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <clipPath id="android-circle">
+            <circle cx="90" cy="90" r="90"/>
+        </clipPath>
+    </defs>
+    <g clip-path="url(#android-circle)">
+        <rect width="180" height="75" fill="#FBC02D"/>
+        <rect y="75" width="180" height="105" fill="#FFEE58"/>
+        <path d="M90 50 L115 75 L90 100 L65 75 Z" fill="#E53935"/>
+    </g>
+</svg></textarea>
+            </div>
+        </div>
+
+        <!-- Master SVG -->
+        <h2>Master SVG (Unclipped)</h2>
+        <div class="icon-section">
+            <div class="icon-display">
+                <div class="app-icon-wrapper">
+                    <svg viewBox="0 0 180 180">
+                        <rect width="180" height="75" fill="#FBC02D"/>
+                        <rect y="75" width="180" height="105" fill="#FFEE58"/>
+                        <path d="M90 50 L115 75 L90 100 L65 75 Z" fill="#E53935"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="code-container">
+                <textarea readonly><svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+    <rect width="180" height="75" fill="#FBC02D"/>
+    <rect y="75" width="180" height="105" fill="#FFEE58"/>
+    <path d="M90 50 L115 75 L90 100 L65 75 Z" fill="#E53935"/>
+</svg></textarea>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

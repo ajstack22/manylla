@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manylla Icon Variations - Top Panel Open</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200,1,0" />
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+            margin: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 14px;
+        }
+
+        .variations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .variation-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .icon-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 1,
+                'wght' 200,
+                'GRAD' 0,
+                'opsz' 24;
+            font-size: 80px;
+            position: relative;
+        }
+
+        .variation-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .color-info {
+            font-size: 11px;
+            color: #999;
+            margin-top: 5px;
+            font-family: monospace;
+        }
+
+        /* Variation 1: Classic - Red triangle, light manila lines, golden manila bar */
+        .var-1 .material-symbols-outlined {
+            background: linear-gradient(to bottom,
+                #D4A574 0%,    /* Darker golden manila for top bar */
+                #D4A574 25%,
+                #FF0000 25%,   /* Red for triangle */
+                #FF0000 55%,
+                #FFF8E7 55%,   /* Light manila for lines/body */
+                #FFF8E7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Variation 2: Warm - Red triangle, cream lines, bronze manila bar */
+        .var-2 .material-symbols-outlined {
+            background: linear-gradient(to bottom,
+                #C19A6B 0%,    /* Bronze manila for top bar */
+                #C19A6B 25%,
+                #DC143C 25%,   /* Crimson for triangle */
+                #DC143C 55%,
+                #FAF0E6 55%,   /* Soft cream for lines */
+                #FAF0E6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Variation 3: Bright - Red triangle, pale manila lines, amber bar */
+        .var-3 .material-symbols-outlined {
+            background: linear-gradient(to bottom,
+                #B8860B 0%,    /* Dark goldenrod for top bar */
+                #B8860B 25%,
+                #FF0000 25%,   /* Pure red for triangle */
+                #FF0000 55%,
+                #FFFAF0 55%,   /* Very light manila for lines */
+                #FFFAF0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Variation 4: Rich - Dark red triangle, ivory lines, ochre bar */
+        .var-4 .material-symbols-outlined {
+            background: linear-gradient(to bottom,
+                #CC9966 0%,    /* Ochre manila for top bar */
+                #CC9966 25%,
+                #8B0000 25%,   /* Dark red for triangle */
+                #8B0000 55%,
+                #FFFFF0 55%,   /* Ivory for lines */
+                #FFFFF0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Variation 5: Vintage - Ruby triangle, antique white lines, burnt manila bar */
+        .var-5 .material-symbols-outlined {
+            background: linear-gradient(to bottom,
+                #A0826D 0%,    /* Burnt manila for top bar */
+                #A0826D 25%,
+                #CC0000 25%,   /* Ruby red for triangle */
+                #CC0000 55%,
+                #FAEBD7 55%,   /* Antique white for lines */
+                #FAEBD7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Variation 6: Soft - Vermillion triangle, champagne lines, caramel bar */
+        .var-6 .material-symbols-outlined {
+            background: linear-gradient(to bottom,
+                #AF8F5C 0%,    /* Caramel manila for top bar */
+                #AF8F5C 25%,
+                #FF3333 25%,   /* Vermillion for triangle */
+                #FF3333 55%,
+                #F7E7CE 55%,   /* Champagne for lines */
+                #F7E7CE 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Variation 7: Clear - Scarlet triangle, white smoke lines, toffee bar */
+        .var-7 .material-symbols-outlined {
+            background: linear-gradient(to bottom,
+                #D2B48C 0%,    /* Tan/toffee for top bar */
+                #D2B48C 25%,
+                #FF2400 25%,   /* Scarlet for triangle */
+                #FF2400 55%,
+                #F5F5F5 55%,   /* White smoke for lines */
+                #F5F5F5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Variation 8: Modern - Cherry triangle, pearl lines, copper manila bar */
+        .var-8 .material-symbols-outlined {
+            background: linear-gradient(to bottom,
+                #B87333 0%,    /* Copper manila for top bar */
+                #B87333 25%,
+                #D32F2F 25%,   /* Cherry red for triangle */
+                #D32F2F 55%,
+                #FFF8DC 55%,   /* Cornsilk for lines */
+                #FFF8DC 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Variation 9: Bold - Brick red triangle, vanilla lines, sienna bar */
+        .var-9 .material-symbols-outlined {
+            background: linear-gradient(to bottom,
+                #A0522D 0%,    /* Sienna for top bar */
+                #A0522D 25%,
+                #C62828 25%,   /* Brick red for triangle */
+                #C62828 55%,
+                #F3E5AB 55%,   /* Vanilla for lines */
+                #F3E5AB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Variation 10: Classic Manila - Burgundy triangle, parchment lines, saddle brown bar */
+        .var-10 .material-symbols-outlined {
+            background: linear-gradient(to bottom,
+                #8B4513 0%,    /* Saddle brown for top bar */
+                #8B4513 25%,
+                #800020 25%,   /* Burgundy for triangle */
+                #800020 55%,
+                #FCF5E5 55%,   /* Parchment for lines */
+                #FCF5E5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Hover Effects */
+        .variation-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+
+        /* For better visualization, add a light background to icon containers */
+        .icon-container {
+            background: #fafafa;
+            border-radius: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .variations-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 20px;
+            }
+
+            .icon-container {
+                width: 100px;
+                height: 100px;
+            }
+
+            .material-symbols-outlined {
+                font-size: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Manylla Icon Variations</h1>
+    <div class="subtitle">Material Symbol "top_panel_open" (filled) with red triangle, light manila lines, and golden manila top bar</div>
+
+    <div class="variations-grid">
+        <!-- Variation 1 -->
+        <div class="variation-card var-1">
+            <div class="icon-container">
+                <span class="material-symbols-outlined">top_panel_open</span>
+            </div>
+            <div class="variation-label">Classic Golden</div>
+            <div class="color-info">#D4A574 / #FF0000 / #FFF8E7</div>
+        </div>
+
+        <!-- Variation 2 -->
+        <div class="variation-card var-2">
+            <div class="icon-container">
+                <span class="material-symbols-outlined">top_panel_open</span>
+            </div>
+            <div class="variation-label">Bronze Manila</div>
+            <div class="color-info">#C19A6B / #DC143C / #FAF0E6</div>
+        </div>
+
+        <!-- Variation 3 -->
+        <div class="variation-card var-3">
+            <div class="icon-container">
+                <span class="material-symbols-outlined">top_panel_open</span>
+            </div>
+            <div class="variation-label">Bright Amber</div>
+            <div class="color-info">#B8860B / #FF0000 / #FFFAF0</div>
+        </div>
+
+        <!-- Variation 4 -->
+        <div class="variation-card var-4">
+            <div class="icon-container">
+                <span class="material-symbols-outlined">top_panel_open</span>
+            </div>
+            <div class="variation-label">Rich Ochre</div>
+            <div class="color-info">#CC9966 / #8B0000 / #FFFFF0</div>
+        </div>
+
+        <!-- Variation 5 -->
+        <div class="variation-card var-5">
+            <div class="icon-container">
+                <span class="material-symbols-outlined">top_panel_open</span>
+            </div>
+            <div class="variation-label">Vintage Burnt</div>
+            <div class="color-info">#A0826D / #CC0000 / #FAEBD7</div>
+        </div>
+
+        <!-- Variation 6 -->
+        <div class="variation-card var-6">
+            <div class="icon-container">
+                <span class="material-symbols-outlined">top_panel_open</span>
+            </div>
+            <div class="variation-label">Soft Caramel</div>
+            <div class="color-info">#AF8F5C / #FF3333 / #F7E7CE</div>
+        </div>
+
+        <!-- Variation 7 -->
+        <div class="variation-card var-7">
+            <div class="icon-container">
+                <span class="material-symbols-outlined">top_panel_open</span>
+            </div>
+            <div class="variation-label">Clear Toffee</div>
+            <div class="color-info">#D2B48C / #FF2400 / #F5F5F5</div>
+        </div>
+
+        <!-- Variation 8 -->
+        <div class="variation-card var-8">
+            <div class="icon-container">
+                <span class="material-symbols-outlined">top_panel_open</span>
+            </div>
+            <div class="variation-label">Modern Copper</div>
+            <div class="color-info">#B87333 / #D32F2F / #FFF8DC</div>
+        </div>
+
+        <!-- Variation 9 -->
+        <div class="variation-card var-9">
+            <div class="icon-container">
+                <span class="material-symbols-outlined">top_panel_open</span>
+            </div>
+            <div class="variation-label">Bold Sienna</div>
+            <div class="color-info">#A0522D / #C62828 / #F3E5AB</div>
+        </div>
+
+        <!-- Variation 10 -->
+        <div class="variation-card var-10">
+            <div class="icon-container">
+                <span class="material-symbols-outlined">top_panel_open</span>
+            </div>
+            <div class="variation-label">Classic Manila</div>
+            <div class="color-info">#8B4513 / #800020 / #FCF5E5</div>
+        </div>
+    </div>
+
+    <script>
+        // Optional: Add click to copy color codes
+        document.querySelectorAll('.color-info').forEach(el => {
+            el.style.cursor = 'pointer';
+            el.addEventListener('click', function() {
+                const text = this.textContent;
+                navigator.clipboard.writeText(text).then(() => {
+                    const original = this.textContent;
+                    this.textContent = 'Copied!';
+                    setTimeout(() => {
+                        this.textContent = original;
+                    }, 1000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

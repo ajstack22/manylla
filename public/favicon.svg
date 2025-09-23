@@ -1,13 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Brown circle background -->
-  <circle cx="16" cy="16" r="14" fill="#A08670"/>
-  
-  <!-- White gap ring -->
-  <circle cx="16" cy="16" r="14" fill="none" stroke="white" stroke-width="1.5"/>
-  
-  <!-- Red string tie border -->
-  <circle cx="16" cy="16" r="15.5" fill="none" stroke="#CC0000" stroke-width="1"/>
-  
-  <!-- Manila 'm' in serif font -->
-  <text x="16" y="16" font-family="Georgia, serif" font-size="18" font-weight="500" fill="#F4E4C1" text-anchor="middle" dominant-baseline="middle" dy="1">m</text>
+<svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="squircle-clip">
+      <rect x="0" y="0" width="180" height="180" rx="40" ry="40"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#squircle-clip)">
+    <rect width="180" height="75" fill="#C4A66B"/>
+    <rect y="75" width="180" height="105" fill="#D4B896"/>
+    <path d="M90 50 L115 75 L90 100 L65 75 Z" fill="#C73E3E"/>
+  </g>
 </svg>

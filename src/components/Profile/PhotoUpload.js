@@ -222,7 +222,11 @@ export const PhotoUpload = ({
             disabled={disabled}
           >
             <Image
-              source={{ uri: photoPreview }}
+              source={{
+                uri: platform.isIOS && photoPreview && photoPreview.startsWith("/")
+                  ? `https://manylla.com/qual${photoPreview}`
+                  : photoPreview
+              }}
               style={styles.photoImage}
               resizeMode="cover"
             />

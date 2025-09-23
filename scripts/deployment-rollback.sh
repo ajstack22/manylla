@@ -6,7 +6,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-BACKUP_DIR="/tmp/manylla-backup-20250917-063332"
+BACKUP_DIR="/tmp/manylla-backup-20250923-094424"
 
 echo "🔄 Rolling back Manylla deployment..."
 

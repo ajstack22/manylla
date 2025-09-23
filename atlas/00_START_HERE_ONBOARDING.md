@@ -6,15 +6,15 @@ This guide will walk you through the core concepts and show you where to find th
 
 ## The Core Philosophy
 
-Our philosophy is simple: **quality is not an accident**. It is the result of a deliberate and rigorous process. We prioritize long-term stability over short-term speed. Before you dive into the details, you must understand and embrace our **[Core Principles](./01_STANDARDS_AND_AGREEMENTS/00_CORE_PRINCIPLES.md)**.
+Our philosophy is simple: **quality is not an accident**. It is the result of a deliberate and rigorous process. We prioritize long-term stability over short-term speed. Before you dive into the details, you must understand and embrace our **[Core Principles](00_CORE_PRINCIPLES.md)**.
 
 ## Your First Steps
 
-1.  **Read the Core Principles**: Start by reading and internalizing the **[00_CORE_PRINCIPLES.md](./01_STANDARDS_AND_AGREEMENTS/00_CORE_PRINCIPLES.md)**. This is the most important document in the framework.
+1.  **Read the Core Principles**: Start by reading and internalizing the **[00_CORE_PRINCIPLES.md](00_CORE_PRINCIPLES.md)**. This is the most important document in the framework.
 
 2.  **Understand Your Role**: Find your role in the **[`02_ROLES/`](./02_ROLES/)** directory. This document defines your primary responsibilities, your areas of ownership, and how you interact with other members of the team.
 
-3.  **Learn the Workflow**: Read the **[`ADVERSARIAL_WORKFLOW.md`](./03_PROCESSES/ADVERSARIAL_WORKFLOW.md)**. This document explains the step-by-step process that takes every piece of work from an idea to a deployed feature. It is the engine of our development process.
+3.  **Learn the Workflow**: Read the **[`ADVERSARIAL_WORKFLOW.md`](10-AREAS/AI%20Development/Atlas/03_PROCESSES/ADVERSARIAL_WORKFLOW.md)**. This document explains the step-by-step process that takes every piece of work from an idea to a deployed feature. It is the engine of our development process.
 
 4.  **Review the Standards**: Familiarize yourself with the documents in the **[`01_STANDARDS_AND_AGREEMENTS/`](./01_STANDARDS_AND_AGREEMENTS/)** directory. These are the specific, measurable rules that we all follow. Pay special attention to the standards most relevant to your role.
 

@@ -1,0 +1,17 @@
+{
+  "project_id": "P20250917234444",
+  "project_name": "TestProject",
+  "start_date": "2025-09-17T23:44:44.544721",
+  "phase": "initialization",
+  "status": "active",
+  "objectives": [],
+  "insights": [],
+  "active_agents": [],
+  "completed_phases": [],
+  "tasks": [],
+  "memory_hierarchy": {
+    "critical": [],
+    "contextual": [],
+    "reference": []
+  }
+}

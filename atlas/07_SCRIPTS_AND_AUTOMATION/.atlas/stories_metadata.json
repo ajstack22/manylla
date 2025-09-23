@@ -1,0 +1,20 @@
+{
+  "next_story_id": 2,
+  "next_bug_id": 1,
+  "next_epic_id": 1,
+  "stories": [
+    {
+      "id": "S001",
+      "type": "story",
+      "title": "Test story creation",
+      "description": "",
+      "acceptance_criteria": [],
+      "priority": "high",
+      "status": "backlog",
+      "created_at": "2025-09-17T23:44:49.083384",
+      "file_path": "stories/S001.md"
+    }
+  ],
+  "bugs": [],
+  "epics": []
+}

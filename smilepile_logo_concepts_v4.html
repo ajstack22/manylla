@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmilePile - Logo Concepts V4</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #1d2129;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            padding: 15px;
+            text-align: center;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .card h4 {
+            margin: 10px 0 0 0;
+            color: #606770;
+            font-weight: 500;
+        }
+        .icon-display {
+            width: 100px;
+            height: 100px;
+        }
+        /* Base SVG for all icons */
+        .icon-svg {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Overlapping Pile - Color Variations</h1>
+        <div class="grid">
+            <!-- Base SVG Structure -->
+            <svg id="base-svg" style="display: none;">
+                <defs>
+                    <path id="bottom-diamond" d="M12 15 L20 20 L12 25 L4 20 Z"/>
+                    <path id="middle-diamond" d="M12 9 L20 14 L12 19 L4 14 Z"/>
+                    <path id="top-diamond" d="M12 3 L20 8 L12 13 L4 8 Z"/>
+                    <path id="smile-curve" d="M7 8 C 7 8, 12 12, 17 8" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                </defs>
+            </svg>
+
+            <div class="card">
+                <div class="icon-display">
+                    <svg class="icon-svg" viewBox="0 0 28 28">
+                        <use href="#bottom-diamond" fill="#9E9E9E"/>
+                        <use href="#middle-diamond" fill="#4285F4"/>
+                        <use href="#top-diamond" fill="#FDB813"/>
+                        <use href="#smile-curve" stroke="#FFFFFF"/>
+                    </svg>
+                </div>
+                <h4>Variation 45</h4>
+            </div>
+            <div class="card">
+                <div class="icon-display">
+                    <svg class="icon-svg" viewBox="0 0 28 28">
+                        <use href="#bottom-diamond" fill="#F4F1DE"/>
+                        <use href="#middle-diamond" fill="#008080"/>
+                        <use href="#top-diamond" fill="#FF6F61"/>
+                        <use href="#smile-curve" stroke="#F4F1DE"/>
+                    </svg>
+                </div>
+                <h4>Variation 46</h4>
+            </div>
+            <div class="card">
+                <div class="icon-display">
+                    <svg class="icon-svg" viewBox="0 0 28 28">
+                        <use href="#bottom-diamond" fill="#F0F8FF"/>
+                        <use href="#middle-diamond" fill="#8A2BE2"/>
+                        <use href="#top-diamond" fill="#ADFF2F"/>
+                        <use href="#smile-curve" stroke="#8A2BE2"/>
+                    </svg>
+                </div>
+                <h4>Variation 47</h4>
+            </div>
+            <div class="card">
+                <div class="icon-display">
+                    <svg class="icon-svg" viewBox="0 0 28 28">
+                        <use href="#bottom-diamond" fill="#FFFDD0"/>
+                        <use href="#middle-diamond" fill="#228B22"/>
+                        <use href="#top-diamond" fill="#CC5500"/>
+                        <use href="#smile-curve" stroke="#FFFDD0"/>
+                    </svg>
+                </div>
+                <h4>Variation 48</h4>
+            </div>
+            <div class="card">
+                <div class="icon-display">
+                    <svg class="icon-svg" viewBox="0 0 28 28">
+                        <use href="#bottom-diamond" fill="#4a4a4a"/>
+                        <use href="#middle-diamond" fill="#f5f5f5"/>
+                        <use href="#top-diamond" fill="#3273dc"/>
+                        <use href="#smile-curve" stroke="#FFFFFF"/>
+                    </svg>
+                </div>
+                <h4>Variation 49</h4>
+            </div>
+            <div class="card">
+                <div class="icon-display">
+                    <svg class="icon-svg" viewBox="0 0 28 28">
+                        <use href="#bottom-diamond" fill="#FFC0CB"/>
+                        <use href="#middle-diamond" fill="#483D8B"/>
+                        <use href="#top-diamond" fill="#FFA500"/>
+                        <use href="#smile-curve" stroke="#483D8B"/>
+                    </svg>
+                </div>
+                <h4>Variation 50</h4>
+            </div>
+            <div class="card">
+                <div class="icon-display">
+                    <svg class="icon-svg" viewBox="0 0 28 28">
+                        <use href="#bottom-diamond" fill="#00008B"/>
+                        <use href="#middle-diamond" fill="#00FFFF"/>
+                        <use href="#top-diamond" fill="#FFFFFF"/>
+                        <use href="#smile-curve" stroke="#00008B"/>
+                    </svg>
+                </div>
+                <h4>Variation 51</h4>
+            </div>
+            <div class="card">
+                <div class="icon-display">
+                    <svg class="icon-svg" viewBox="0 0 28 28">
+                        <use href="#bottom-diamond" fill="#e0f2f1"/>
+                        <use href="#middle-diamond" fill="#00796b"/>
+                        <use href="#top-diamond" fill="#ffab40"/>
+                        <use href="#smile-curve" stroke="#004d40"/>
+                    </svg>
+                </div>
+                <h4>Variation 52</h4>
+            </div>
+            <div class="card">
+                <div class="icon-display">
+                    <svg class="icon-svg" viewBox="0 0 28 28">
+                        <use href="#bottom-diamond" fill="#fce4ec"/>
+                        <use href="#middle-diamond" fill="#ec407a"/>
+                        <use href="#top-diamond" fill="#8e24aa"/>
+                        <use href="#smile-curve" stroke="#FFFFFF"/>
+                    </svg>
+                </div>
+                <h4>Variation 53</h4>
+            </div>
+            <div class="card">
+                <div class="icon-display">
+                    <svg class="icon-svg" viewBox="0 0 28 28">
+                        <use href="#bottom-diamond" fill="#1a237e"/>
+                        <use href="#middle-diamond" fill="#534bae"/>
+                        <use href="#top-diamond" fill="#8c9eff"/>
+                        <use href="#smile-curve" stroke="#1a237e"/>
+                    </svg>
+                </div>
+                <h4>Variation 54</h4>
+            </div>
+            <div class="card">
+                <div class="icon-display">
+                    <svg class="icon-svg" viewBox="0 0 28 28">
+                        <use href="#bottom-diamond" fill="#bf360c"/>
+                        <use href="#middle-diamond" fill="#ff9e80"/>
+                        <use href="#top-diamond" fill="#fbe9e7"/>
+                        <use href="#smile-curve" stroke="#bf360c"/>
+                    </svg>
+                </div>
+                <h4>Variation 55</h4>
+            </div>
+            <div class="card">
+                <div class="icon-display">
+                    <svg class="icon-svg" viewBox="0 0 28 28">
+                        <use href="#bottom-diamond" fill="#212121"/>
+                        <use href="#middle-diamond" fill="#757575"/>
+                        <use href="#top-diamond" fill="#fafafa"/>
+                        <use href="#smile-curve" stroke="#212121"/>
+                    </svg>
+                </div>
+                <h4>Variation 56</h4>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

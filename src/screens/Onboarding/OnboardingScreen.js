@@ -27,9 +27,9 @@ import {
   AddIcon,
   PersonIcon,
   ShareIcon,
-  MenuIcon,
   CloseIcon,
 } from "../../components/Common";
+import ManyllaLogo from "../../components/Common/ManyllaLogo";
 
 // Services
 import { StorageService } from "../../services/storage/storageService";
@@ -370,8 +370,6 @@ const OnboardingScreen = ({ onComplete, onShowPrivacy }) => {
       paddingTop: platform.isWeb ? 60 : 40,
     },
     logo: {
-      width: 80,
-      height: 80,
       marginBottom: 20,
       justifyContent: "center",
       alignItems: "center",
@@ -761,7 +759,7 @@ const OnboardingScreen = ({ onComplete, onShowPrivacy }) => {
     >
       <View style={styles.scrollContent}>
         <View style={styles.logo}>
-          <MenuIcon size={60} color={colors.primary} />
+          <ManyllaLogo size={60} />
         </View>
 
         <Text style={styles.title}>Welcome to manylla</Text>
@@ -801,7 +799,7 @@ const OnboardingScreen = ({ onComplete, onShowPrivacy }) => {
           onPress={handleDemoMode}
           activeOpacity={0.8}
         >
-          <MenuIcon size={24} color={colors.primary} />
+          <ManyllaLogo size={24} />
           <Text style={[styles.buttonText, styles.buttonTextOutline]}>
             Try Demo Mode
           </Text>

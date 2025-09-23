@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Icon Context & Variations</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f5f7;
+            color: #333;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #172B4D;
+        }
+        h2 {
+            border-bottom: 2px solid #dfe1e6;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            align-items: center;
+            justify-items: center;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .card h3 {
+            margin-top: 0;
+            color: #42526E;
+        }
+        .description {
+            font-size: 0.9em;
+            color: #6B778C;
+        }
+
+        /* Header Examples */
+        .header-example {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border: 1px solid #dfe1e6;
+            border-radius: 6px;
+        }
+        .header-example .icon {
+            width: 36px;
+            height: 36px;
+            margin-right: 12px;
+        }
+        .header-example .text {
+            font-size: 28px;
+            font-weight: 600;
+            color: #172B4D;
+        }
+        .header-example.dark {
+            background-color: #091E42;
+        }
+        .header-example.dark .text {
+            color: #fff;
+        }
+
+        /* App Icon Examples */
+        .app-icon-wrapper {
+            width: 128px;
+            height: 128px;
+        }
+        .app-icon-wrapper svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Final Icon SVG */
+        .final-icon {
+            width: 96px;
+            height: 96px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Icon Context & Variations</h1>
+        <div class="card">
+            <h3>Final Icon (Variation 5)</h3>
+            <svg class="final-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M3 3h18v6H3z" fill="#FBC02D"/>
+                <path d="M3 9h18v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V9z" fill="#FFEE58"/>
+                <path d="M12 6.5 L14.5 9 L12 11.5 L9.5 9 Z" fill="#E53935"/>
+            </svg>
+            <p class="description">This is the chosen icon design that the following examples are based on.</p>
+        </div>
+
+        <h2>Header Mockups</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Light Header</h3>
+                <div class="header-example">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M3 3h18v6H3z" fill="#FBC02D"/><path d="M3 9h18v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V9z" fill="#FFEE58"/><path d="M12 6.5 L14.5 9 L12 11.5 L9.5 9 Z" fill="#E53935"/></svg>
+                    <span class="text">manylla</span>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Dark Header</h3>
+                <div class="header-example dark">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M3 3h18v6H3z" fill="#FBC02D"/><path d="M3 9h18v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V9z" fill="#FFEE58"/><path d="M12 6.5 L14.5 9 L12 11.5 L9.5 9 Z" fill="#E53935"/></svg>
+                    <span class="text">manylla</span>
+                </div>
+            </div>
+        </div>
+
+        <h2>App Icon Mockups</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>iOS App Icon</h3>
+                <div class="app-icon-wrapper">
+                    <svg viewBox="0 0 180 180">
+                        <defs>
+                            <clipPath id="squircle">
+                                <rect x="0" y="0" width="180" height="180" rx="40" ry="40"/>
+                            </clipPath>
+                        </defs>
+                        <g clip-path="url(#squircle)">
+                            <rect width="180" height="180" fill="#fff"/>
+                            <g transform="translate(40, 40) scale(4.16)">
+                                <path d="M3 3h18v6H3z" fill="#FBC02D"/>
+                                <path d="M3 9h18v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V9z" fill="#FFEE58"/>
+                                <path d="M12 6.5 L14.5 9 L12 11.5 L9.5 9 Z" fill="#E53935"/>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+                <p class="description">White background, iOS shape.</p>
+            </div>
+            <div class="card">
+                <h3>Android App Icon (Circle)</h3>
+                <div class="app-icon-wrapper">
+                    <svg viewBox="0 0 180 180">
+                        <circle cx="90" cy="90" r="90" fill="#FBC02D"/>
+                        <g transform="translate(50, 50) scale(3.33)">
+                            <path d="M3 3h18v6H3z" fill="#000000" opacity="0.1"/>
+                            <path d="M3 9h18v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V9z" fill="#FFEE58"/>
+                            <path d="M12 6.5 L14.5 9 L12 11.5 L9.5 9 Z" fill="#E53935"/>
+                        </g>
+                    </svg>
+                </div>
+                <p class="description">Dark gold background, circular shape.</p>
+            </div>
+            <div class="card">
+                <h3>Android App Icon (Square)</h3>
+                <div class="app-icon-wrapper">
+                    <svg viewBox="0 0 180 180">
+                        <rect width="180" height="180" fill="#091E42"/>
+                        <g transform="translate(40, 40) scale(4.16)">
+                            <path d="M3 3h18v6H3z" fill="#FBC02D"/>
+                            <path d="M3 9h18v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V9z" fill="#FFEE58"/>
+                            <path d="M12 6.5 L14.5 9 L12 11.5 L9.5 9 Z" fill="#E53935"/>
+                        </g>
+                    </svg>
+                </div>
+                <p class="description">Dark blue background, square shape.</p>
+            </div>
+        </div>
+
+        <h2>Creative Variations</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Monochrome</h3>
+                <div class="final-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 3h18v6H3z" fill="#B3BAC5"/>
+                        <path d="M3 9h18v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V9z" fill="#DFE1E6"/>
+                        <path d="M12 6.5 L14.5 9 L12 11.5 L9.5 9 Z" fill="#6B778C"/>
+                    </svg>
+                </div>
+                <p class="description">For disabled or inactive states.</p>
+            </div>
+            <div class="card">
+                <h3>Circular Background</h3>
+                <div class="final-icon">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="11" fill="#F4F5F7"/>
+                        <g transform="scale(0.75) translate(4, 4)">
+                            <path d="M3 3h18v6H3z" fill="#FBC02D"/>
+                            <path d="M3 9h18v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V9z" fill="#FFEE58"/>
+                            <path d="M12 6.5 L14.5 9 L12 11.5 L9.5 9 Z" fill="#E53935"/>
+                        </g>
+                    </svg>
+                </div>
+                <p class="description">Icon contained within a circle.</p>
+            </div>
+            <div class="card">
+                <h3>Gradient Version</h3>
+                <div class="final-icon">
+                     <svg viewBox="0 0 24 24">
+                        <defs>
+                            <linearGradient id="darkGoldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#FBC02D;" />
+                                <stop offset="100%" style="stop-color:#B8860B;" />
+                            </linearGradient>
+                            <linearGradient id="lightGoldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#FFEE58;" />
+                                <stop offset="100%" style="stop-color:#FBC02D;" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M3 3h18v6H3z" fill="url(#darkGoldGradient)"/>
+                        <path d="M3 9h18v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V9z" fill="url(#lightGoldGradient)"/>
+                        <path d="M12 6.5 L14.5 9 L12 11.5 L9.5 9 Z" fill="#E53935"/>
+                    </svg>
+                </div>
+                <p class="description">With gradients for a more 3D look.</p>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
