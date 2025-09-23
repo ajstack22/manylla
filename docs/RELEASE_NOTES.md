@@ -1,5 +1,49 @@
 # Manylla Release Notes
 
+## Version 2025.09.23.1 - 2025-09-23
+Atlas Integration and Mobile Improvements
+
+### Summary
+Major update integrating the Atlas framework for project management, updating mobile app branding, and fixing deployment infrastructure issues.
+
+### Added
+- **Atlas Framework Integration**:
+  - Comprehensive project management system with roles and processes
+  - Orchestrator context management and tracking
+  - Story creation and iteration workflows
+  - Parallel execution enforcement and compliance checks
+  - Dashboard and kanban visualization tools
+
+- **Mobile App Enhancements**:
+  - New Manylla app icons for Android (all resolutions)
+  - iOS app icon set with proper configurations
+  - ManyllaLogo component for consistent branding
+  - Icon generation scripts for future updates
+
+### Fixed
+- **Deployment Infrastructure**:
+  - Added deployment-rollback.sh to .gitignore to prevent circular dependency
+  - Fixed pre-flight check workflow issues
+  - Improved rollback script generation process
+
+- **Bug Tracking**:
+  - Added B012: Material icons not rendering on iPhone
+  - Added B013: Profile photo display issues
+  - Added B014: iPhone header positioning problems
+
+### Changed
+- **Project Structure**:
+  - Reorganized Atlas documentation and scripts
+  - Updated process workflows and automation
+  - Enhanced visibility and status tracking
+  - Improved iteration methodology
+
+### Technical
+- 125 files changed with comprehensive Atlas integration
+- Mobile app icons updated for both platforms
+- Deployment script conflicts resolved
+- Test coverage maintained at previous levels
+
 ## Version 2025.09.17.1 - 2025-09-17
 Test Coverage Strategy Implementation and Deployment Infrastructure
 
