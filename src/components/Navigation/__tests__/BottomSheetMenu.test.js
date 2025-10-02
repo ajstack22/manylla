@@ -46,7 +46,7 @@ jest.mock("../../../utils/platform", () => {
 });
 
 // Mock Common icons - try simpler approach
-jest.mock("../Common", () => {
+jest.mock("../../Common", () => {
   const MockIcon = ({ size, color, style, children, ...props }) => (
     <div data-testid={`${children.toLowerCase()}-icon`} style={{ fontSize: size, color, ...style }} {...props}>
       {children}

@@ -10,7 +10,6 @@ import {
 const BuyMeCoffeeButton = ({ onPress, style, disabled = false }) => {
   const styles = createStyles();
 
-  // Both web and mobile use the same button that calls onPress
   return (
     <TouchableOpacity
       onPress={onPress}

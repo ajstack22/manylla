@@ -85,7 +85,7 @@ export const ShareAccessView = ({ accessCode, encryptionKey }) => {
 
   const renderCategory = (categoryName, entries) => {
     if (!entries || entries.length < 1) return null;
-    if (!sharedProfile || !sharedProfile.categories) return null;
+    if (!sharedProfile?.categories) return null;
 
     const category = sharedProfile.categories.find(
       (c) => c.name === categoryName,
