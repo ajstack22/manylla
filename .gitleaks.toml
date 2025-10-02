@@ -1,0 +1,19 @@
+title = "Manylla gitleaks config"
+
+[allowlist]
+description = "Allowlist for false positives"
+paths = [
+    '''node_modules/''',
+    '''\.git/''',
+    '''web/build/''',
+    '''build/''',
+]
+
+# Ignore test fixtures and examples
+regexes = [
+    '''test-token''',
+    '''mock-key''',
+    '''example\.com''',
+    '''localhost''',
+    '''127\.0\.0\.1''',
+]

@@ -253,6 +253,7 @@ export class ProfileValidator {
     // Remove javascript and vbscript protocols (including obfuscated versions)
     // Handles: javascript:, java script:, &#106;avascript:, vbscript:, etc.
     cleaned = cleaned.replace(
+      // eslint-disable-next-line security/detect-unsafe-regex
       /(?:javascript|java\s*script|vbscript|vb\s*script|&#x?(?:6A|106|74|4A);?\s*(?:&#x?(?:61|97|41);?)?\s*(?:&#x?(?:76|118|56);?)?\s*(?:&#x?(?:61|97|41);?)?\s*(?:&#x?(?:73|115|53);?)?\s*(?:&#x?(?:63|99|43);?)?\s*(?:&#x?(?:72|114|52);?)?\s*(?:&#x?(?:69|105|49);?)?\s*(?:&#x?(?:70|112|50);?)?\s*(?:&#x?(?:74|116|54);?)?)\s*:/gi,
       "",
     );

@@ -1,0 +1,151 @@
+
+/Users/adamstack/manylla/src/components/Common/IconProvider.android.js
+  103:24  warning  Generic Object Injection Sink  security/detect-object-injection
+  106:15  warning  Generic Object Injection Sink  security/detect-object-injection
+
+/Users/adamstack/manylla/src/components/Common/IconProvider.js
+  240:25  warning  Generic Object Injection Sink               security/detect-object-injection
+  241:27  warning  Variable Assigned to Object Injection Sink  security/detect-object-injection
+  247:45  warning  Generic Object Injection Sink               security/detect-object-injection
+  250:15  warning  Generic Object Injection Sink               security/detect-object-injection
+  288:24  warning  Generic Object Injection Sink               security/detect-object-injection
+  290:50  warning  Generic Object Injection Sink               security/detect-object-injection
+
+/Users/adamstack/manylla/src/components/Common/ManyllaLogo.js
+  2:10  warning  'View' is defined but never used  no-unused-vars
+
+/Users/adamstack/manylla/src/components/Forms/HighlightedText.js
+  73:12  warning  Found non-literal argument to RegExp Constructor  security/detect-non-literal-regexp
+
+/Users/adamstack/manylla/src/components/Forms/MarkdownField.js
+  114:26  warning  Generic Object Injection Sink  security/detect-object-injection
+  118:23  warning  Generic Object Injection Sink  security/detect-object-injection
+  122:12  warning  Generic Object Injection Sink  security/detect-object-injection
+  123:9   warning  Generic Object Injection Sink  security/detect-object-injection
+  123:37  warning  Generic Object Injection Sink  security/detect-object-injection
+  143:26  warning  Generic Object Injection Sink  security/detect-object-injection
+  147:23  warning  Generic Object Injection Sink  security/detect-object-injection
+  151:12  warning  Generic Object Injection Sink  security/detect-object-injection
+  152:9   warning  Generic Object Injection Sink  security/detect-object-injection
+  152:38  warning  Generic Object Injection Sink  security/detect-object-injection
+
+/Users/adamstack/manylla/src/components/Forms/RichTextInput.js
+  66:19  warning  Generic Object Injection Sink  security/detect-object-injection
+
+/Users/adamstack/manylla/src/components/Sharing/PrintPreviewConfiguration.js
+  36:16  warning  Generic Object Injection Sink  security/detect-object-injection
+
+/Users/adamstack/manylla/src/components/Sharing/PrintPreviewEntries.js
+  22:25  warning  Variable Assigned to Object Injection Sink  security/detect-object-injection
+  29:32  warning  Generic Object Injection Sink               security/detect-object-injection
+  29:53  warning  Generic Object Injection Sink               security/detect-object-injection
+  40:18  warning  Generic Object Injection Sink               security/detect-object-injection
+  45:38  warning  Generic Object Injection Sink               security/detect-object-injection
+  46:25  warning  Generic Object Injection Sink               security/detect-object-injection
+  53:26  warning  Generic Object Injection Sink               security/detect-object-injection
+
+/Users/adamstack/manylla/src/components/Sharing/printContentGenerators.js
+   62:18  warning  Generic Object Injection Sink               security/detect-object-injection
+   64:23  warning  Variable Assigned to Object Injection Sink  security/detect-object-injection
+   70:30  warning  Generic Object Injection Sink               security/detect-object-injection
+   70:51  warning  Generic Object Injection Sink               security/detect-object-injection
+   77:25  warning  Generic Object Injection Sink               security/detect-object-injection
+   87:32  warning  Generic Object Injection Sink               security/detect-object-injection
+   87:53  warning  Generic Object Injection Sink               security/detect-object-injection
+   89:32  warning  Generic Object Injection Sink               security/detect-object-injection
+  285:31  warning  Generic Object Injection Sink               security/detect-object-injection
+  289:26  warning  Function Call Object Injection Sink         security/detect-object-injection
+
+/Users/adamstack/manylla/src/config/test-env.js
+  16:10  warning  Generic Object Injection Sink  security/detect-object-injection
+
+/Users/adamstack/manylla/src/hooks/useFormWithRecovery.js
+  170:12  warning  Generic Object Injection Sink               security/detect-object-injection
+  175:27  warning  Variable Assigned to Object Injection Sink  security/detect-object-injection
+  210:21  warning  Variable Assigned to Object Injection Sink  security/detect-object-injection
+  214:9   warning  Generic Object Injection Sink               security/detect-object-injection
+  237:31  warning  Generic Object Injection Sink               security/detect-object-injection
+  258:23  warning  Variable Assigned to Object Injection Sink  security/detect-object-injection
+  279:11  warning  Generic Object Injection Sink               security/detect-object-injection
+  367:14  warning  Generic Object Injection Sink               security/detect-object-injection
+  368:14  warning  Generic Object Injection Sink               security/detect-object-injection
+  368:30  warning  Generic Object Injection Sink               security/detect-object-injection
+
+/Users/adamstack/manylla/src/polyfills/getRandomValues.js
+  21:11  warning  Generic Object Injection Sink  security/detect-object-injection
+  21:22  warning  Generic Object Injection Sink  security/detect-object-injection
+  31:11  warning  Generic Object Injection Sink  security/detect-object-injection
+
+/Users/adamstack/manylla/src/polyfills/getRandomValues.web.js
+  15:1  warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+/Users/adamstack/manylla/src/screens/Onboarding/OnboardingScreen.js
+  55:10  warning  Generic Object Injection Sink  security/detect-object-injection
+
+/Users/adamstack/manylla/src/services/storage/ProfileStorageService.js
+  59:7   warning  Generic Object Injection Sink  security/detect-object-injection
+  59:30  warning  Generic Object Injection Sink  security/detect-object-injection
+
+/Users/adamstack/manylla/src/services/sync/photoSyncExclusion.js
+  53:24  warning  Generic Object Injection Sink  security/detect-object-injection
+  54:27  warning  Generic Object Injection Sink  security/detect-object-injection
+
+/Users/adamstack/manylla/src/test/utils/component-test-utils.js
+  124:31  warning  Generic Object Injection Sink  security/detect-object-injection
+  126:7   warning  Generic Object Injection Sink  security/detect-object-injection
+  129:14  warning  Generic Object Injection Sink  security/detect-object-injection
+  132:52  warning  Generic Object Injection Sink  security/detect-object-injection
+  137:29  warning  Generic Object Injection Sink  security/detect-object-injection
+
+/Users/adamstack/manylla/src/test/utils/encryption-helpers.js
+  152:12  warning  Generic Object Injection Sink  security/detect-object-injection
+
+/Users/adamstack/manylla/src/test/utils/test-utils.js
+  126:5  warning  Generic Object Injection Sink  security/detect-object-injection
+
+/Users/adamstack/manylla/src/theme/modalTheme.js
+  195:6  warning  Generic Object Injection Sink  security/detect-object-injection
+
+/Users/adamstack/manylla/src/utils/SecureRandomService.js
+   94:44  warning  Generic Object Injection Sink                                   security/detect-object-injection
+  113:38  warning  Generic Object Injection Sink                                   security/detect-object-injection
+  155:17  warning  Generic Object Injection Sink                                   security/detect-object-injection
+  182:36  error    Found a string with entropy 4.7 : "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  no-secrets/no-secrets
+  183:36  error    Found a string with entropy 4.7 : "abcdefghijklmnopqrstuvwxyz"  no-secrets/no-secrets
+  189:35  warning  Found non-literal argument to RegExp Constructor                security/detect-non-literal-regexp
+
+/Users/adamstack/manylla/src/utils/errorMessages.js
+  101:28  warning  Variable Assigned to Object Injection Sink  security/detect-object-injection
+  106:19  warning  Variable Assigned to Object Injection Sink  security/detect-object-injection
+
+/Users/adamstack/manylla/src/utils/errors.js
+  71:7  warning  Generic Object Injection Sink  security/detect-object-injection
+  88:7  warning  Generic Object Injection Sink  security/detect-object-injection
+
+/Users/adamstack/manylla/src/utils/inviteCode.js
+   11:22  error    Found a string with entropy 4.95 : "ABCDEFGHJKMNPQRSTUVWXYZ23456789"  no-secrets/no-secrets
+   23:13  warning  Generic Object Injection Sink                                         security/detect-object-injection
+   76:5   warning  Generic Object Injection Sink                                         security/detect-object-injection
+   98:20  warning  Variable Assigned to Object Injection Sink                            security/detect-object-injection
+  107:14  warning  Generic Object Injection Sink                                         security/detect-object-injection
+  134:11  warning  Generic Object Injection Sink                                         security/detect-object-injection
+  135:16  warning  Generic Object Injection Sink                                         security/detect-object-injection
+
+/Users/adamstack/manylla/src/utils/placeholders.js
+  172:5   warning  Generic Object Injection Sink  security/detect-object-injection
+  172:42  warning  Generic Object Injection Sink  security/detect-object-injection
+  179:5   warning  Generic Object Injection Sink  security/detect-object-injection
+  190:5   warning  Generic Object Injection Sink  security/detect-object-injection
+  190:42  warning  Generic Object Injection Sink  security/detect-object-injection
+  197:10  warning  Generic Object Injection Sink  security/detect-object-injection
+  206:5   warning  Generic Object Injection Sink  security/detect-object-injection
+  206:42  warning  Generic Object Injection Sink  security/detect-object-injection
+
+/Users/adamstack/manylla/src/utils/platform.js
+  140:24  warning  Generic Object Injection Sink  security/detect-object-injection
+
+/Users/adamstack/manylla/src/utils/validation.js
+  256:7  error  Unsafe Regular Expression  security/detect-unsafe-regex
+
+✖ 94 problems (4 errors, 90 warnings)
+
