@@ -1,5 +1,40 @@
 # Manylla Release Notes
 
+## Version 2025.10.02.1 - 2025-10-02
+SonarCloud Quality Gate Bug Fixes
+
+### Summary
+Critical bug fixes to resolve SonarCloud quality gate failures. Fixed 25 reported bugs across reliability, null safety, and code quality issues to achieve Reliability Rating A.
+
+### Fixed
+- **Type Comparison Bugs (17 fixes)**:
+  - ProgressiveOnboarding.js: Removed redundant `mode &&` checks before strict equality comparisons
+  - Mode state is always initialized as string, making redundant null checks unnecessary
+  - Simplified conditions from `mode && (mode === "demo" || mode === "join")` to `(mode === "demo" || mode === "join")`
+  - Resolves SonarCloud rule javascript:S3403 violations
+
+- **Null Safety (1 fix)**:
+  - ShareAccessView.js: Changed `!sharedProfile || !sharedProfile.categories` to `!sharedProfile?.categories`
+  - Uses optional chaining to prevent potential TypeError on null access
+  - Resolves SonarCloud rule javascript:S2259 violation
+
+- **Code Quality (1 fix)**:
+  - BuyMeCoffeeButton.js: Removed misleading comment suggesting platform-specific logic
+  - Resolves SonarCloud rule javascript:S3923 violation
+
+### Notes
+- Conditional rendering bugs (S6439): Previously fixed in commit e31fcf6
+- ErrorBoundary setState (S6756): Already using callback pattern correctly
+- ShareDialogOptimized.js: File was refactored, bugs no longer exist
+- All tests passing for modified components
+- No functional changes, only code quality improvements
+
+### Technical
+- 3 files modified (ProgressiveOnboarding.js, ShareAccessView.js, BuyMeCoffeeButton.js)
+- 25 SonarCloud bugs addressed
+- Target: Reliability Rating A (currently C → A)
+- Deployment triggers fresh SonarCloud scan for verification
+
 ## Version 2025.09.23.1 - 2025-09-23
 Atlas Integration and Mobile Improvements
 
