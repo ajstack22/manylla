@@ -36,29 +36,35 @@ jest.mock("tweetnacl-util", () => ({
   encodeBase64: jest.fn((arr) => Buffer.from(arr).toString('base64')),
 }));
 
-jest.mock("./manyllaEncryptionService", () => ({
+jest.mock("../manyllaEncryptionService", () => ({
   init: jest.fn(),
   isInitialized: jest.fn(() => true),
   encrypt: jest.fn((data) => `encrypted_${JSON.stringify(data)}`),
   decrypt: jest.fn((data) => JSON.parse(data.replace('encrypted_', ''))),
 }));
 
-jest.mock("./conflictResolver", () => ({
+jest.mock("../conflictResolver", () => ({
   mergeProfiles: jest.fn((local, remote) => ({ ...local, ...remote, merged: true })),
 }));
 
-jest.mock("../../utils/platform", () => ({
-  apiBaseUrl: jest.fn(() => "https://test-api.com"),
-  isMobile: true,
-  isWeb: false,
+jest.mock("../../../utils/platform", () => ({
+  default: {
+    get isWeb() { return false; },
+    get isMobile() { return true; },
+    get isAndroid() { return false; },
+    get isIOS() { return true; },
+    apiBaseUrl: jest.fn(() => "https://test-api.com"),
+  },
 }));
 
-jest.mock("../../utils/SecureRandomService", () => ({
-  generateTimestampId: jest.fn(() => "test_timestamp_id"),
-  generateDeviceId: jest.fn(() => "test_device_id_16"),
+jest.mock("../../../utils/SecureRandomService", () => ({
+  default: {
+    generateTimestampId: jest.fn(() => "test_timestamp_id"),
+    generateDeviceId: jest.fn(() => "test_device_id_16"),
+  },
 }));
 
-jest.mock("../../utils/errors", () => ({
+jest.mock("../../../utils/errors", () => ({
   SyncError: class SyncError extends Error {
     constructor(message, recoverable = false) {
       super(message);

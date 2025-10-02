@@ -67,13 +67,13 @@ describe("ThemeContext", () => {
       <ThemeProvider {...props}>{children}</ThemeProvider>
     );
 
-    it("should provide theme context with default light theme", () => {
+    it("should provide theme context with default manylla theme", () => {
       const { result } = renderHook(() => useTheme(), { wrapper });
 
-      expect(result.current.theme).toBe("light");
-      expect(result.current.themeMode).toBe("light");
+      expect(result.current.theme).toBe("manylla");
+      expect(result.current.themeMode).toBe("manylla");
       expect(result.current.isDark).toBe(false);
-      expect(result.current.colors).toEqual(lightTheme);
+      expect(result.current.colors).toEqual(manyllaTheme);
     });
 
     it("should use initial theme mode", () => {
@@ -89,24 +89,27 @@ describe("ThemeContext", () => {
       expect(result.current.colors).toEqual(darkTheme);
     });
 
-    it("should toggle between light and dark themes", async () => {
+    it("should toggle between manylla, light, and dark themes", async () => {
       const { result } = renderHook(() => useTheme(), { wrapper });
 
-      expect(result.current.theme).toBe("light");
+      // Starts with manylla
+      expect(result.current.theme).toBe("manylla");
 
-      await act(async () => {
-        await result.current.toggleTheme();
-      });
-
-      expect(result.current.theme).toBe("dark");
-      expect(result.current.isDark).toBe(true);
-
+      // First toggle: manylla -> light
       await act(async () => {
         await result.current.toggleTheme();
       });
 
       expect(result.current.theme).toBe("light");
       expect(result.current.isDark).toBe(false);
+
+      // Second toggle: light -> dark
+      await act(async () => {
+        await result.current.toggleTheme();
+      });
+
+      expect(result.current.theme).toBe("dark");
+      expect(result.current.isDark).toBe(true);
     });
 
     it("should call onThemeChange callback", async () => {
@@ -121,7 +124,8 @@ describe("ThemeContext", () => {
         await result.current.toggleTheme();
       });
 
-      expect(onThemeChange).toHaveBeenCalledWith("dark");
+      // First toggle is manylla -> light
+      expect(onThemeChange).toHaveBeenCalledWith("light");
     });
 
     it("should set theme mode directly", async () => {
@@ -180,7 +184,7 @@ describe("ThemeContext", () => {
 
       const { result } = renderHook(() => useTheme(), { wrapper });
 
-      expect(result.current.theme).toBe("light"); // Starts as light due to storage error
+      expect(result.current.theme).toBe("manylla"); // Starts as manylla due to storage error
 
       // Should not throw - main goal is to ensure errors don't crash the app
       await act(async () => {
@@ -188,7 +192,7 @@ describe("ThemeContext", () => {
       });
 
       // Theme should change in memory even if storage fails
-      expect(["light", "dark"]).toContain(result.current.theme);
+      expect(["manylla", "light", "dark"]).toContain(result.current.theme);
     });
   });
 
@@ -278,8 +282,8 @@ describe("ThemeContext", () => {
         await new Promise((resolve) => setTimeout(resolve, 0));
       });
 
-      // Should default to light
-      expect(result.current.theme).toBe("light");
+      // Should default to manylla theme
+      expect(result.current.theme).toBe("manylla");
     });
 
     it("should call storage to load theme preference", () => {
