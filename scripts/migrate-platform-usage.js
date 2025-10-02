@@ -81,6 +81,7 @@ const migrations = [
 
   // Font family patterns
   {
+    // eslint-disable-next-line security/detect-unsafe-regex
     pattern: /fontFamily:\s*Platform\.select\s*\(\s*\{\s*android:\s*['"]sans-serif['"],?\s*(?:ios:\s*['"]System['"],?\s*)?default:\s*['"]System['"],?\s*\}\s*\)/g,
     replacement: 'fontFamily: platform.font().fontFamily',
     description: 'Replace font family pattern with platform.font().fontFamily'
