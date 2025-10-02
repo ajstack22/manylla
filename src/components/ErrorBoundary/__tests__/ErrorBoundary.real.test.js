@@ -407,7 +407,11 @@ describe("ErrorBoundary Real Integration", () => {
       const endTime = Date.now();
 
       expect(screen.getByTestId("heavy-component")).toBeInTheDocument();
-      expect(endTime - startTime).toBeLessThan(1000); // Should be fast
+
+      // CI environments are slower than local development
+      // Allow 2 seconds on CI, 1 second locally
+      const maxRenderTime = process.env.CI ? 2000 : 1000;
+      expect(endTime - startTime).toBeLessThan(maxRenderTime);
     });
 
     test("should clean up properly when unmounted", () => {

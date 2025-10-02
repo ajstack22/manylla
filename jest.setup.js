@@ -1,6 +1,21 @@
 // Jest setup file for mocking React Native components
 import '@testing-library/jest-dom';
 
+// ============================================
+// PLATFORM MOCK (Must be first!)
+// ============================================
+// Mock Platform.OS before any modules import it
+global.Platform = {
+  OS: 'web',
+  select: (obj) => {
+    if (obj.web !== undefined) return obj.web;
+    if (obj.default !== undefined) return obj.default;
+    return undefined;
+  },
+  Version: 1,
+  constants: {},
+};
+
 // Define __DEV__ global for React Native modules
 global.__DEV__ = process.env.NODE_ENV === 'development';
 
@@ -8,10 +23,8 @@ global.__DEV__ = process.env.NODE_ENV === 'development';
 jest.mock('react-native', () => {
   const React = require('react');
 
-  const platform = {
-    OS: 'web',
-    select: (obj) => obj.web || obj.default,
-  };
+  // Use the global Platform mock we defined above
+  const platform = global.Platform;
 
   // Create a proper React component that handles React Native props correctly
   const createMockComponent = (displayName) => {

@@ -16,6 +16,7 @@ import {
 
 // Mock dependencies
 jest.mock('react-native', () => ({
+  Platform: global.Platform || { OS: 'web', select: (obj) => obj.web || obj.default },
   Clipboard: {
     setString: jest.fn(),
   },
