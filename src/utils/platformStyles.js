@@ -2,19 +2,12 @@ import { StatusBar, Dimensions } from "react-native";
 import platform from "./platform";
 
 // Typography helpers
+// Returns system font family for all platforms
+// Parameter preserved for API compatibility and future custom font support
 export const getFontFamily = (weight) => {
-  if (platform.isAndroid) {
-    // Android can't use fontWeight, needs font variants
-    if (
-      weight === "bold" ||
-      String(weight) === "700" ||
-      String(weight) === "600"
-    ) {
-      return "System"; // Will use system bold variant
-    }
-    return "System"; // Will use system regular
-  }
-  return "System"; // iOS/Web use fontWeight
+  // All platforms use system fonts currently
+  // Weight parameter preserved for backward compatibility
+  return "System";
 };
 
 export const getTextStyle = (variant, weight) => {
