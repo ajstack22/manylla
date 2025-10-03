@@ -11,13 +11,13 @@
     "web": "echo '🌐 Starting WEB dev server on http://localhost:3000 (webpack)' && webpack serve --mode development",
     "build:web": "NODE_ENV=production webpack --mode production",
     "test": "jest",
-    "test:ci": "jest --ci --coverage --watchAll=false --bail",
+    "test:ci": "jest --ci --coverage --watchAll=false",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:dev": "API_ENV=dev jest --testNamePattern='Integration'",
     "test:dev:all": "API_ENV=dev jest",
     "test:qual": "API_ENV=qual jest --testNamePattern='Integration'",
-    "test:critical": "jest --testPathPattern='(encryption|secureStorage|secureId|minimalSync|conflictResolver|syncDeterministic|syncDataTransformation|recoveryPhrase)' --bail --maxWorkers=1",
+    "test:critical": "jest --testPathPattern='(encryption|secureStorage|secureId|minimalSync|conflictResolver|syncDeterministic|syncDataTransformation|recoveryPhrase)' --maxWorkers=1",
     "test:important": "jest --testPathPattern='(Profile/|photoService|validation|context/|hooks/|error)' --coverage",
     "test:ui": "jest --testPathPattern='(Navigation/|Common/|Forms/|Dialogs/|platform|imageUtils|lazyLoad|placeholders|initSampleData)' --passWithNoTests",
     "test:smoke": "jest --testPathPattern='(encryption|Encryption|auth|SecureRandom)' --testNamePattern='should (encrypt|decrypt|authenticate|generate)' --maxWorkers=1",
@@ -136,7 +136,6 @@
     ],
     "testEnvironment": "jsdom",
     "testTimeout": 10000,
-    "bail": true,
     "moduleNameMapper": {
       "^react-native$": "react-native-web"
     },
