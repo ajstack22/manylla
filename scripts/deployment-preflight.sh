@@ -211,7 +211,8 @@ check_database() {
     php -r \"
     include 'config/config.qual.php';
     try {
-        \\\$pdo = new PDO(\\\$db_dsn, \\\$db_user, \\\$db_pass);
+        \\\$dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET;
+        \\\$pdo = new PDO(\\\$dsn, DB_USER, DB_PASS);
         \\\$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         \\\$stmt = \\\$pdo->query('SELECT 1');
         echo 'Database connection successful';
