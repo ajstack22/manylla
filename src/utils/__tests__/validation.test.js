@@ -1,9 +1,8 @@
 /* eslint-disable */
 import { ProfileValidator } from '../validation';
 
-// P2 TECH DEBT: Remove skip when working on validation
-// Issue: Profile validation logic
-describe.skip('ProfileValidator - Comprehensive Tests', () => {
+// Enabled as part of test coverage improvement initiative
+describe('ProfileValidator - Comprehensive Tests', () => {
   describe('validateProfile', () => {
     const validProfile = {
       id: 'test-profile-1',
@@ -269,7 +268,10 @@ describe.skip('ProfileValidator - Comprehensive Tests', () => {
         const manyEntries = Array(100).fill(null).map((_, i) => ({
           id: `entry-${i}`,
           title: `Entry ${i}`,
-          category: 'test',
+          category: 'medical',
+          description: `Description ${i}`,
+          date: '2024-01-01',
+          visibility: ['private'],
         }));
         const profile = { ...validProfile, entries: manyEntries };
         const result = ProfileValidator.validateProfile(profile);
@@ -383,13 +385,18 @@ describe.skip('ProfileValidator - Comprehensive Tests', () => {
           entries: Array(1000).fill(null).map((_, i) => ({
             id: `entry-${i}`,
             title: `Entry ${i}`,
-            category: 'test',
+            category: 'medical',
             description: 'A'.repeat(1000),
+            date: '2024-01-01',
+            visibility: ['private'],
           })),
           categories: Array(50).fill(null).map((_, i) => ({
             id: `cat-${i}`,
             name: `category-${i}`,
             displayName: `Category ${i}`,
+            color: '#E76F51',
+            order: i,
+            isVisible: true,
           })),
         };
 

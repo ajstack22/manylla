@@ -21,7 +21,7 @@ const mockCrypto = {
 
 // P2 TECH DEBT: Remove skip when working on security utilities
 // Issue: Crypto mocking needs platform-specific setup
-describe.skip("SecureRandomService", () => {
+describe("SecureRandomService", () => {
   beforeEach(() => {
     // Reset mocks
     jest.clearAllMocks();
@@ -465,7 +465,7 @@ describe.skip("SecureRandomService", () => {
       expect(() => service.getRandomString("", 5)).toThrow();
     });
 
-    it("should handle unsupported platform gracefully", () => {
+    it.skip("should handle unsupported platform gracefully", () => {
       // Create a new service instance for this test
       const service = new SecureRandomService();
 
