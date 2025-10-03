@@ -12,7 +12,7 @@ jest.mock('../../../utils/platform', () => ({
 
 // P2 TECH DEBT: Remove skip when working on SmartTextInput
 // Issue: Platform-specific behavior
-describe.skip('SmartTextInput - APR Smoke Tests', () => {
+describe('SmartTextInput - APR Smoke Tests', () => {
   const defaultProps = {
     value: '',
     onChangeText: jest.fn(),

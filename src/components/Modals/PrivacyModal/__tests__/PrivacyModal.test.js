@@ -36,7 +36,7 @@ jest.mock('../styles', () => ({
 
 // P2 TECH DEBT: Remove skip when working on PrivacyModal
 // Issue: Modal animation
-describe.skip('PrivacyModal', () => {
+describe('PrivacyModal', () => {
   const mockTheme = {
     colors: {
       primary: '#A08670',

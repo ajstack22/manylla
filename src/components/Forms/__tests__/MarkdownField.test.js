@@ -25,7 +25,7 @@ jest.mock("react-native-vector-icons/MaterialIcons", () => {
 
 // P2 TECH DEBT: Remove skip when working on MarkdownField
 // Issue: Editor initialization
-describe.skip("MarkdownField", () => {
+describe("MarkdownField", () => {
   const defaultProps = {
     label: "Markdown Editor",
     value: "",
