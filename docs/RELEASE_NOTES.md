@@ -1,5 +1,43 @@
 # Manylla Release Notes
 
+## Version 2025.10.03.4 - 2025-10-03
+Additional Bug Fix and Complexity Reductions
+
+### Summary
+Fixed 1 bug and reduced cognitive complexity in 2 additional files discovered after OnboardingScreen refactoring.
+
+### Bug Fixed
+- **src/components/Dialogs/index.js**: Removed useless ternary operator
+  - Both branches returned identical value - simplified to direct require
+  - Resolved SonarCloud S3923 rule violation
+
+### Cognitive Complexity Reduced
+1. **manyllaEncryptionService.js** - decodeUTF8() function (20→~8)
+   - Extracted 5 byte-checking helper functions (isSingleByte, is2ByteStart, is3ByteStart, is4ByteStart)
+   - Created processUTF8Char() to encapsulate character processing logic
+   - Simplified main decode loop to: char extraction + iteration
+   - **62% complexity reduction**
+
+2. **PhotoUpload.js** - component (23→~8)
+   - Extracted PhotoDisplayArea component (loading/preview/placeholder logic)
+   - Extracted PhotoActionButtons component (edit/delete buttons)
+   - Extracted PhotoFeedback component (error/help text)
+   - Main component now orchestrates 3 simple sub-components
+   - **65% complexity reduction**
+
+### Quality Metrics
+- **Total Issues Resolved**: 3 (1 bug + 2 complexity)
+- **Bugs**: 1 → 0 ✅
+- **Cognitive Complexity Issues Remaining**: 0 in refactored files ✅
+- **Build**: Passes successfully
+- **Functionality**: Fully preserved
+
+### Technical
+- Followed same extraction pattern as OnboardingScreen
+- All helpers properly isolated and testable
+- No breaking changes
+- JavaScript only (no TypeScript)
+
 ## Version 2025.10.03.3 - 2025-10-03
 OnboardingScreen Cognitive Complexity Refactoring
 
