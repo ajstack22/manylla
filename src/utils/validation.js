@@ -310,8 +310,10 @@ export class ProfileValidator {
 
     // Step 3: Remove HTML entity-encoded variants
     // Handles &#106;avascript:, &#x6A;avascript:, etc.
-    cleaned = cleaned.replace(/&#x?(?:6A|106|74|4A);?a*v*a*s*c*r*i*p*t*\s*:/gi, "");
-    cleaned = cleaned.replace(/&#x?(?:76|118|56);?b*s*c*r*i*p*t*\s*:/gi, "");
+    // SECURITY: Use simple bounded pattern to prevent ReDoS (limit length to prevent backtracking)
+    // Pattern matches entity codes followed by up to 20 chars, then colon
+    cleaned = cleaned.replace(/&#x?(?:6A|106|74|4A);?.{0,20}:/gi, "");
+    cleaned = cleaned.replace(/&#x?(?:76|118|56);?.{0,20}:/gi, "");
 
     // Step 4: Decode any remaining HTML entities and re-check
     const entityDecoded = cleaned
