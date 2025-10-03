@@ -1,7 +1,7 @@
 # Development Backlog
 
 *Last Updated: 2025-09-15*
-*Next ID: S004, B015*
+*Next ID: S006, B015*
 
 ## Quick Start for Claude
 Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything needed to start immediately.
@@ -43,6 +43,7 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟡 P2 - Medium (Plan Soon)
 ### Stories
+- [S005](backlog/S005-optimizebundlesizecurrently14mb.md) - Optimize bundle size - currently 14MB ✅ **READY** (Auto-Generated)
 - [S003](backlog/S003-optimizebundlesizecurrently14mb.md) - Optimize bundle size - currently 14MB ✅ **READY** (Auto-Generated)
 - [S057](backlog/S057-remove-test-skips-and-restore-full-coverage.md) - Remove Test Skips and Restore Full Coverage ✅ **READY**
 - [S055](backlog/S055-refactor-remaining-large-components-phase-2.md) - Refactor Remaining Large Components Phase 2 ✅ **READY**
@@ -59,6 +60,7 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟢 P3 - Low (Nice to Have)
 ### Stories
+- [S004](backlog/S004-fixprettierformattingin97files.md) - Fix Prettier formatting in 97 files ✅ **READY** (Auto-Generated)
 - [S002](backlog/S002-fixprettierformattingin97files.md) - Fix Prettier formatting in 97 files ✅ **READY** (Auto-Generated)
 - [S001](backlog/S001-fixprettierformattingin96files.md) - Fix Prettier formatting in 96 files ✅ **READY** (Auto-Generated)
 - [S000](backlog/S000-fixprettierformattingin95files.md) - Fix Prettier formatting in 95 files ✅ **READY** (Auto-Generated)

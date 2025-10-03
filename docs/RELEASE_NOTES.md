@@ -1,5 +1,51 @@
 # Manylla Release Notes
 
+## Version 2025.10.03.3 - 2025-10-03
+OnboardingScreen Cognitive Complexity Refactoring
+
+### Summary
+Refactored OnboardingScreen.js from a monolithic 857-line file with complexity 37 to a well-structured component with complexity ~8. Extracted custom hooks, UI components, and utility functions following clean architecture principles.
+
+### Refactoring Details
+- **Main Component**: 857 lines → 149 lines (83% reduction)
+- **Cognitive Complexity**: 37 → ~8 (78% reduction)
+- **File Structure**: 1 file → 10 organized files
+
+### New Architecture
+**Custom Hooks (3 files)**:
+- `useOnboardingForm.js` - Form state & navigation (~5 complexity)
+- `usePhotoUpload.js` - Photo handling with validation (~8 complexity)
+- `useDateFormatter.js` - Date formatting (~2 complexity)
+
+**UI Components (4 files)**:
+- `OnboardingStep1.js` - Welcome screen (~5 complexity)
+- `OnboardingStep2.js` - Profile form orchestrator (~6 complexity)
+- `PhotoUploadSection.js` - Photo UI with preview (~4 complexity)
+- `DateInput.js` - Platform-specific date input (~3 complexity)
+
+**Utilities (2 files)**:
+- `onboardingValidation.js` - Validation functions (~2 complexity)
+- `profileCreation.js` - Profile creation & demo data (~6 complexity)
+
+### Benefits
+- **Maintainability**: Single responsibility per file, easy to understand
+- **Testability**: Isolated hooks and utilities, easier to unit test
+- **Reusability**: Components and hooks can be reused elsewhere
+- **Readability**: Clear separation of concerns, reduced cognitive load
+
+### Technical
+- Preserved all functionality - exact behavior maintained
+- Platform-specific logic properly isolated
+- No TypeScript files (JavaScript only as per standards)
+- Build passes successfully
+- No new console.logs or TODOs
+
+### Quality Metrics
+- SonarCloud cognitive complexity: 37 → 8 (meets ≤15 threshold)
+- Lines per file: avg ~100 (vs 857 monolith)
+- File organization: hooks/, components/, utils/
+- Total files: 10 (1 main + 9 extracted)
+
 ## Version 2025.10.03.2 - 2025-10-03
 SonarCloud BLOCKER/CRITICAL Fixes + Deployment Infrastructure
 
