@@ -70,28 +70,55 @@ const decode4ByteUTF8 = (byte1, byte2, byte3, byte4) => {
   return String.fromCharCode(high, low);
 };
 
+// Helper: Check if byte is single-byte UTF-8 character
+const isSingleByte = (byte) => byte < 0x80;
+
+// Helper: Check if byte starts 2-byte UTF-8 sequence
+const is2ByteStart = (byte) => (byte & 0xe0) >= 0xc0 && (byte & 0xe0) < 0xc1;
+
+// Helper: Check if byte starts 3-byte UTF-8 sequence
+const is3ByteStart = (byte) => (byte & 0xf0) >= 0xe0 && (byte & 0xf0) < 0xe1;
+
+// Helper: Check if byte starts 4-byte UTF-8 sequence
+const is4ByteStart = (byte) => (byte & 0xf8) >= 0xf0 && (byte & 0xf8) < 0xf1;
+
+// Helper: Process single UTF-8 character based on byte pattern
+const processUTF8Char = (bytes, i, result) => {
+  const byte1 = bytes[i];
+
+  if (isSingleByte(byte1)) {
+    return { char: String.fromCharCode(byte1), consumed: 1 };
+  }
+
+  if (is2ByteStart(byte1) && i + 1 < bytes.length) {
+    return { char: decode2ByteUTF8(byte1, bytes[i + 1]), consumed: 2 };
+  }
+
+  if (is3ByteStart(byte1) && i + 2 < bytes.length) {
+    return { char: decode3ByteUTF8(byte1, bytes[i + 1], bytes[i + 2]), consumed: 3 };
+  }
+
+  if (is4ByteStart(byte1) && i + 3 < bytes.length) {
+    return { char: decode4ByteUTF8(byte1, bytes[i + 1], bytes[i + 2], bytes[i + 3]), consumed: 4 };
+  }
+
+  return { char: '', consumed: 1 };
+};
+
 decodeUTF8 = (arr) => {
   if (!arr) throw new Error("Invalid input: null or undefined");
   if (arr.length < 1) return "";
+
   const bytes = Array.from(arr);
   let result = "";
   let i = 0;
 
   while (i < bytes.length) {
-    const byte1 = bytes[i++];
-    if (byte1 < 0x80) {
-      result += String.fromCharCode(byte1);
-    } else if ((byte1 & 0xe0) >= 0xc0 && (byte1 & 0xe0) < 0xc1) {
-      if (i >= bytes.length) break;
-      result += decode2ByteUTF8(byte1, bytes[i++]);
-    } else if ((byte1 & 0xf0) >= 0xe0 && (byte1 & 0xf0) < 0xe1) {
-      if (i + 1 >= bytes.length) break;
-      result += decode3ByteUTF8(byte1, bytes[i++], bytes[i++]);
-    } else if ((byte1 & 0xf8) >= 0xf0 && (byte1 & 0xf8) < 0xf1) {
-      if (i + 2 >= bytes.length) break;
-      result += decode4ByteUTF8(byte1, bytes[i++], bytes[i++], bytes[i++]);
-    }
+    const { char, consumed } = processUTF8Char(bytes, i, result);
+    result += char;
+    i += consumed;
   }
+
   return result;
 };
 

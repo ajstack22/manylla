@@ -199,103 +199,157 @@ export const PhotoUpload = ({
 
   const styles = getStyles(colors, size);
 
-  // Ensure we always render something
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Profile Photo</Text>
       <View style={styles.photoContainer}>
-        {isLoading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={colors.primary} />
-            {processingProgress > 0 && (
-              <View style={styles.progressContainer}>
-                <View
-                  style={[
-                    styles.progressBar,
-                    { width: `${processingProgress}%` },
-                  ]}
-                />
-              </View>
-            )}
-            <Text style={styles.loadingText}>
-              {processingProgress > 0 ? "Processing..." : "Loading..."}
-            </Text>
-          </View>
-        ) : photoPreview ? (
-          <TouchableOpacity
-            style={styles.photoPreview}
-            onPress={!disabled ? handlePhotoSelect : undefined}
-            disabled={disabled}
-          >
-            <Image
-              source={{
-                uri: platform.isIOS && photoPreview && photoPreview.startsWith("/")
-                  ? `https://manylla.com/qual${photoPreview}`
-                  : photoPreview
-              }}
-              style={styles.photoImage}
-              resizeMode="cover"
-            />
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={[styles.placeholder, disabled && styles.placeholderDisabled]}
-            onPress={!disabled ? handlePhotoSelect : undefined}
-            disabled={disabled}
-          >
-            <Icon
-              name="CameraAlt"
-              size={size / 3}
-              color={disabled ? colors.text.disabled : colors.text.secondary}
-            />
-            <Text
-              style={[
-                styles.placeholderText,
-                disabled && styles.placeholderTextDisabled,
-              ]}
-            >
-              {platform.isMobile ? "Add Photo" : "Upload Photo"}
-            </Text>
-          </TouchableOpacity>
-        )}
+        <PhotoDisplayArea
+          isLoading={isLoading}
+          photoPreview={photoPreview}
+          processingProgress={processingProgress}
+          disabled={disabled}
+          size={size}
+          colors={colors}
+          styles={styles}
+          onPhotoSelect={handlePhotoSelect}
+        />
 
-        {/* Edit button - top right */}
-        {photoPreview && !disabled && (
-          <TouchableOpacity
-            style={styles.editButton}
-            onPress={handlePhotoSelect}
-          >
-            <Icon name="Edit" size={18} color={colors.text.secondary} />
-          </TouchableOpacity>
-        )}
-
-        {/* Delete button - top left, only when photo exists */}
-        {photoPreview && !disabled && (
-          <TouchableOpacity
-            style={styles.deleteButton}
-            onPress={handlePhotoRemove}
-          >
-            <Icon name="Delete" size={18} color={colors.error || "#F44336"} />
-          </TouchableOpacity>
-        )}
+        <PhotoActionButtons
+          photoPreview={photoPreview}
+          disabled={disabled}
+          colors={colors}
+          styles={styles}
+          onPhotoSelect={handlePhotoSelect}
+          onPhotoRemove={handlePhotoRemove}
+        />
       </View>
 
-      {/* Error message */}
-      {error && (
-        <View style={styles.errorContainer}>
-          <Icon name="Warning" size={16} color={colors.error} />
-          <Text style={styles.errorText}>{error}</Text>
-        </View>
-      )}
-
-      {/* Help text */}
-      {!error && (
-        <Text style={styles.helpText}>
-          Supports JPG and PNG images. Photos are compressed and encrypted for
-          privacy.
-        </Text>
-      )}
+      <PhotoFeedback error={error} colors={colors} styles={styles} />
     </View>
+  );
+};
+
+/**
+ * Helper: Photo display area (loading/preview/placeholder)
+ */
+const PhotoDisplayArea = ({
+  isLoading,
+  photoPreview,
+  processingProgress,
+  disabled,
+  size,
+  colors,
+  styles,
+  onPhotoSelect,
+}) => {
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.primary} />
+        {processingProgress > 0 && (
+          <View style={styles.progressContainer}>
+            <View
+              style={[styles.progressBar, { width: `${processingProgress}%` }]}
+            />
+          </View>
+        )}
+        <Text style={styles.loadingText}>
+          {processingProgress > 0 ? "Processing..." : "Loading..."}
+        </Text>
+      </View>
+    );
+  }
+
+  if (photoPreview) {
+    return (
+      <TouchableOpacity
+        style={styles.photoPreview}
+        onPress={!disabled ? onPhotoSelect : undefined}
+        disabled={disabled}
+      >
+        <Image
+          source={{
+            uri:
+              platform.isIOS && photoPreview && photoPreview.startsWith("/")
+                ? `https://manylla.com/qual${photoPreview}`
+                : photoPreview,
+          }}
+          style={styles.photoImage}
+          resizeMode="cover"
+        />
+      </TouchableOpacity>
+    );
+  }
+
+  return (
+    <TouchableOpacity
+      style={[styles.placeholder, disabled && styles.placeholderDisabled]}
+      onPress={!disabled ? onPhotoSelect : undefined}
+      disabled={disabled}
+    >
+      <Icon
+        name="CameraAlt"
+        size={size / 3}
+        color={disabled ? colors.text.disabled : colors.text.secondary}
+      />
+      <Text
+        style={[
+          styles.placeholderText,
+          disabled && styles.placeholderTextDisabled,
+        ]}
+      >
+        {platform.isMobile ? "Add Photo" : "Upload Photo"}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
+/**
+ * Helper: Photo action buttons (edit/delete)
+ */
+const PhotoActionButtons = ({
+  photoPreview,
+  disabled,
+  colors,
+  styles,
+  onPhotoSelect,
+  onPhotoRemove,
+}) => {
+  if (!photoPreview || disabled) {
+    return null;
+  }
+
+  return (
+    <>
+      <TouchableOpacity style={styles.editButton} onPress={onPhotoSelect}>
+        <Icon name="Edit" size={18} color={colors.text.secondary} />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.deleteButton} onPress={onPhotoRemove}>
+        <Icon name="Delete" size={18} color={colors.error || "#F44336"} />
+      </TouchableOpacity>
+    </>
+  );
+};
+
+/**
+ * Helper: Photo feedback (error/help text)
+ */
+const PhotoFeedback = ({ error, colors, styles }) => {
+  if (error) {
+    return (
+      <View style={styles.errorContainer}>
+        <Icon name="Warning" size={16} color={colors.error} />
+        <Text style={styles.errorText}>{error}</Text>
+      </View>
+    );
+  }
+
+  return (
+    <Text style={styles.helpText}>
+      Supports JPG and PNG images. Photos are compressed and encrypted for
+      privacy.
+    </Text>
   );
 };
 
