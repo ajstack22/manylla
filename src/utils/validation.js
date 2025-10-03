@@ -282,6 +282,11 @@ export class ProfileValidator {
    * Basic HTML sanitization (removes script tags and dangerous attributes)
    */
   static sanitizeHtml(html) {
+    // Handle null/undefined input
+    if (!html) {
+      return "";
+    }
+
     // Limit input length to prevent DoS
     if (html.length > 100000) {
       html = html.substring(0, 100000);
@@ -294,12 +299,29 @@ export class ProfileValidator {
     cleaned = cleaned.replace(/\bon\w{1,20}\s*=\s*["'][^"']{0,1000}["']/gi, "");
 
     // Remove javascript and vbscript protocols (including obfuscated versions)
-    // Handles: javascript:, java script:, &#106;avascript:, vbscript:, etc.
-    cleaned = cleaned.replace(
-      // eslint-disable-next-line security/detect-unsafe-regex
-      /(?:javascript|java\s*script|vbscript|vb\s*script|&#x?(?:6A|106|74|4A);?\s*(?:&#x?(?:61|97|41);?)?\s*(?:&#x?(?:76|118|56);?)?\s*(?:&#x?(?:61|97|41);?)?\s*(?:&#x?(?:73|115|53);?)?\s*(?:&#x?(?:63|99|43);?)?\s*(?:&#x?(?:72|114|52);?)?\s*(?:&#x?(?:69|105|49);?)?\s*(?:&#x?(?:70|112|50);?)?\s*(?:&#x?(?:74|116|54);?)?)\s*:/gi,
-      "",
-    );
+    // SECURITY: Broken into multiple simple checks to prevent ReDoS and improve auditability
+    // Step 1: Remove basic protocol variants
+    cleaned = cleaned.replace(/javascript\s*:/gi, "");
+    cleaned = cleaned.replace(/vbscript\s*:/gi, "");
+
+    // Step 2: Remove spaced variants (e.g., "java script:")
+    cleaned = cleaned.replace(/java\s*script\s*:/gi, "");
+    cleaned = cleaned.replace(/vb\s*script\s*:/gi, "");
+
+    // Step 3: Remove HTML entity-encoded variants
+    // Handles &#106;avascript:, &#x6A;avascript:, etc.
+    cleaned = cleaned.replace(/&#x?(?:6A|106|74|4A);?a*v*a*s*c*r*i*p*t*\s*:/gi, "");
+    cleaned = cleaned.replace(/&#x?(?:76|118|56);?b*s*c*r*i*p*t*\s*:/gi, "");
+
+    // Step 4: Decode any remaining HTML entities and re-check
+    const entityDecoded = cleaned
+      .replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(dec))
+      .replace(/&#x([0-9A-F]+);/gi, (match, hex) => String.fromCharCode(parseInt(hex, 16)));
+
+    if (/(?:javascript|vbscript)\s*:/gi.test(entityDecoded)) {
+      // Found encoded dangerous protocol - remove entire suspicious segment
+      cleaned = cleaned.replace(/&#x?[0-9A-F]+;/gi, "");
+    }
 
     // Remove data: URIs that could contain scripts
     cleaned = cleaned.replace(

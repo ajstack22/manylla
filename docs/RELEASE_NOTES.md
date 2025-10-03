@@ -1,5 +1,61 @@
 # Manylla Release Notes
 
+## Version 2025.10.03.5 - 2025-10-03
+Security: SonarQube Hotspot Resolution
+
+### Summary
+Resolved all 6 SonarQube security hotspots identified in code quality scan. Fixed 2 real vulnerabilities (ReDoS, insecure PRNG) and documented 4 false positives with detailed security analysis.
+
+### Security Fixes
+1. **validation.js - ReDoS Prevention**
+   - Refactored complex regex with nested optional groups (line 300)
+   - Replaced 1 complex pattern with 8 simple, bounded checks
+   - Maintains XSS protection for: javascript:, vbscript:, entity-encoded variants
+   - Eliminates exponential backtracking vulnerability
+   - **Security Level**: Maintained (comprehensive test coverage added)
+
+2. **getRandomValues.js - Insecure Fallback Removal**
+   - Deleted unused polyfill file with Math.random() fallback
+   - Verified no imports/references in codebase
+   - Modern browsers natively support crypto.getRandomValues()
+   - **Security Level**: Improved (removes weak cryptography risk)
+
+### False Positives Documented
+Added SonarQube suppression comments with detailed security justification:
+- **HtmlRenderer.js:21** - Simple bounded check, no backtracking possible (display only)
+- **MarkdownField.js:242** - Lazy quantifiers prevent backtracking (user input only)
+- **SmartTextInput.js:82** - Lazy quantifiers with bounded alternatives (preview only)
+- **SmartTextInput.js:151** - Lazy quantifiers in markdown parsing (display only)
+
+### Testing
+- **New Test File**: validation.security.test.js with 30 comprehensive security tests
+- **Coverage Areas**: XSS protection, ReDoS prevention, entity encoding, performance
+- **Test Results**: ✅ All 30 tests passing
+- **Performance Verified**: Linear scaling confirmed (no exponential backtracking)
+
+### Quality Metrics
+- **Security Hotspots**: 6 → 0 ✅
+- **ReDoS Vulnerabilities**: 1 → 0 ✅
+- **Insecure Cryptography**: 1 → 0 ✅
+- **Test Coverage**: +30 security-focused tests
+- **Build**: Passes successfully
+- **Code Quality**: Improved maintainability and auditability
+
+### Technical Details
+- Followed Atlas Standard workflow (Research → Plan → Implement → Review → Deploy)
+- Peer review approved: "APPROVE FOR MERGE"
+- Risk assessment: LOW
+- No breaking changes
+- XSS protection fully maintained with better performance
+
+### Files Modified
+- src/utils/validation.js (security fix)
+- src/polyfills/getRandomValues.js (deleted)
+- src/components/Forms/HtmlRenderer.js (documented)
+- src/components/Forms/MarkdownField.js (documented)
+- src/components/Forms/SmartTextInput.js (documented)
+- src/utils/__tests__/validation.security.test.js (new)
+
 ## Version 2025.10.03.4 - 2025-10-03
 Additional Bug Fix and Complexity Reductions
 
