@@ -7,7 +7,7 @@ import {
 } from '../unifiedCategories';
 
 // P2 tech debt: Category data structure
-describe.skip('unifiedCategories', () => {
+describe('unifiedCategories', () => {
   describe('unifiedCategories array', () => {
     test('is an array', () => {
       expect(Array.isArray(unifiedCategories)).toBe(true);
