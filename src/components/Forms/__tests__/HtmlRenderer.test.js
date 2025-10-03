@@ -8,7 +8,7 @@ import { HtmlRenderer } from "../HtmlRenderer";
 
 // P2 TECH DEBT: Remove skip when working on HtmlRenderer
 // Issue: HTML parsing dependencies
-describe.skip("HtmlRenderer", () => {
+describe("HtmlRenderer", () => {
   describe("Plain text rendering", () => {
     test("should render plain text content", () => {
       const plainText = "This is plain text content";

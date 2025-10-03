@@ -11,7 +11,7 @@ jest.mock('react-native', () => ({
 }));
 
 // P2 TECH DEBT: Remove skip when working on markdown components
-describe.skip('MarkdownRenderer', () => {
+describe('MarkdownRenderer', () => {
   test('renders without crashing', () => {
     render(<MarkdownRenderer content="Hello world" />);
     expect(screen.getByText('Hello world')).toBeInTheDocument();
