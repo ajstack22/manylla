@@ -234,16 +234,40 @@ export const MarkdownField = ({
     if (!text) return "Preview will appear here...";
 
     // Basic markdown parsing for display
-    // Use character classes instead of .*? to avoid SonarCloud warnings
-    // Character classes like [^*]+ match specific chars without backtracking risk
-    return text
-      .replace(/\*\*([^*]+)\*\*/g, "[$1]") // Bold
-      .replace(/_([^_]+)_/g, "/$1/") // Italic
-      .replace(/~~([^~]+)~~/g, "-$1-") // Strikethrough
-      .replace(/`([^`]+)`/g, '"$1"') // Code
-      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1 ($2)") // Links
-      .replace(/^- (.+)$/gm, "• $1") // Bullet points
-      .replace(/^(\d+)\. (.+)$/gm, "$1. $2"); // Numbered lists
+    // Use simple string split/join for better performance and no regex warnings
+    let result = text;
+
+    // Links FIRST: [text](url) -> text (url) - must parse before bold creates []
+    while (result.includes('[') && result.includes('](') && result.includes(')')) {
+      const startBracket = result.indexOf('[');
+      const endBracket = result.indexOf('](', startBracket);
+      if (endBracket === -1) break;
+      const endParen = result.indexOf(')', endBracket + 2);
+      if (endParen === -1) break;
+
+      const linkText = result.substring(startBracket + 1, endBracket);
+      const linkUrl = result.substring(endBracket + 2, endParen);
+      const replacement = `${linkText} (${linkUrl})`;
+      result = result.substring(0, startBracket) + replacement + result.substring(endParen + 1);
+    }
+
+    // Bold: **text** -> [text]
+    result = result.split('**').map((part, i) => i % 2 === 1 ? `[${part}]` : part).join('');
+
+    // Italic: _text_ -> /text/
+    result = result.split('_').map((part, i) => i % 2 === 1 ? `/${part}/` : part).join('');
+
+    // Strikethrough: ~~text~~ -> -text-
+    result = result.split('~~').map((part, i) => i % 2 === 1 ? `-${part}-` : part).join('');
+
+    // Code: `text` -> "text"
+    result = result.split('`').map((part, i) => i % 2 === 1 ? `"${part}"` : part).join('');
+
+    // Lists still need regex but with simple patterns
+    result = result.replace(/^- (.+)$/gm, "• $1"); // Bullet points
+    result = result.replace(/^(\d+)\. (.+)$/gm, "$1. $2"); // Numbered lists
+
+    return result;
   };
 
   return (

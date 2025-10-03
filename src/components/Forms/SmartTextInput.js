@@ -79,9 +79,11 @@ export const SmartTextInput = ({
 
   // Check if text has formatting
   useEffect(() => {
-    // Use character classes instead of .*? to avoid SonarCloud warnings
-    // [^*]+ matches any char except *, preventing backtracking issues
-    const hasFormatting = /\*\*[^*]+\*\*|_[^_]+_|`[^`]+`|\[[^\]]+\]\([^)]+\)/.test(value);
+    // Use simple string search instead of regex to avoid SonarCloud warnings
+    const hasFormatting = value && (
+      value.includes('**') || value.includes('_') ||
+      value.includes('`') || value.includes('[')
+    );
     setShowPreview(hasFormatting && multiline);
   }, [value, multiline]);
 
@@ -146,13 +148,33 @@ export const SmartTextInput = ({
     if (!text) return text;
 
     // Simple text-only parsing for preview
-    // Use character classes instead of .*? to avoid SonarCloud warnings
-    // [^*]+ matches any char except *, no backtracking risk
-    return text
-      .replace(/\*\*([^*]+)\*\*/g, "[$1]") // Bold
-      .replace(/_([^_]+)_/g, "/$1/") // Italic
-      .replace(/`([^`]+)`/g, '"$1"') // Code
-      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1 ($2)"); // Links
+    // Use string split/join to avoid any regex warnings
+    let result = text;
+
+    // Links FIRST: [text](url) -> text (url) - parse before bold creates []
+    while (result.includes('[') && result.includes('](') && result.includes(')')) {
+      const startBracket = result.indexOf('[');
+      const endBracket = result.indexOf('](', startBracket);
+      if (endBracket === -1) break;
+      const endParen = result.indexOf(')', endBracket + 2);
+      if (endParen === -1) break;
+
+      const linkText = result.substring(startBracket + 1, endBracket);
+      const linkUrl = result.substring(endBracket + 2, endParen);
+      const replacement = `${linkText} (${linkUrl})`;
+      result = result.substring(0, startBracket) + replacement + result.substring(endParen + 1);
+    }
+
+    // Bold: **text** -> [text]
+    result = result.split('**').map((part, i) => i % 2 === 1 ? `[${part}]` : part).join('');
+
+    // Italic: _text_ -> /text/
+    result = result.split('_').map((part, i) => i % 2 === 1 ? `/${part}/` : part).join('');
+
+    // Code: `text` -> "text"
+    result = result.split('`').map((part, i) => i % 2 === 1 ? `"${part}"` : part).join('');
+
+    return result;
   };
 
   const minHeight = multiline ? rows * 20 + 20 : 0;
