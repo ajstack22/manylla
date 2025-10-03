@@ -1,69 +1,63 @@
 # Atlas Auto-Generated: Fix SonarCloud Critical & High Priority Issues
 
-**Generated:** 2025-10-03 10:03:12
+**Generated:** 2025-10-03 12:48:09
 **Workflow:** Atlas Standard (5 phases)
 **Auto-generated:** Yes (from SonarCloud API)
 
 ## 🎯 Issues to Address
 
-### Critical Issues (16)
+### Critical Issues (9)
 
 #### 1. CODE_SMELL: Refactor this function to reduce its Cognitive Complexity from 20 to the 15 allo
-- **File:** `src/services/sync/manyllaEncryptionService.js:49`
+- **File:** `src/services/sync/manyllaEncryptionService.js:73`
 - **Rule:** javascript:S3776
 - **Severity:** CRITICAL
 - **Type:** CODE_SMELL
 
-#### 2. CODE_SMELL: Refactor this function to reduce its Cognitive Complexity from 16 to the 15 allo
-- **File:** `src/services/sync/manyllaMinimalSyncServiceWeb.js:182`
-- **Rule:** javascript:S3776
-- **Severity:** CRITICAL
-- **Type:** CODE_SMELL
-
-#### 3. CODE_SMELL: Unexpected `await` of a non-Promise (non-"Thenable") value.
+#### 2. CODE_SMELL: Unexpected `await` of a non-Promise (non-"Thenable") value.
 - **File:** `src/services/sync/manyllaMinimalSyncServiceNative.js:371`
 - **Rule:** javascript:S4123
 - **Severity:** CRITICAL
 - **Type:** CODE_SMELL
 
-#### 4. CODE_SMELL: Refactor this code to not nest functions more than 4 levels deep.
+#### 3. CODE_SMELL: Refactor this code to not nest functions more than 4 levels deep.
 - **File:** `src/test/utils/component-test-utils.js:49`
 - **Rule:** javascript:S2004
 - **Severity:** CRITICAL
 - **Type:** CODE_SMELL
 
-#### 5. CODE_SMELL: Refactor this function to reduce its Cognitive Complexity from 17 to the 15 allo
-- **File:** `src/utils/validation.js:5`
-- **Rule:** javascript:S3776
-- **Severity:** CRITICAL
-- **Type:** CODE_SMELL
-
-#### 6. CODE_SMELL: Refactor this function to reduce its Cognitive Complexity from 17 to the 15 allo
-- **File:** `src/utils/validation.js:84`
-- **Rule:** javascript:S3776
-- **Severity:** CRITICAL
-- **Type:** CODE_SMELL
-
-#### 7. CODE_SMELL: Refactor this function to reduce its Cognitive Complexity from 23 to the 15 allo
+#### 4. CODE_SMELL: Refactor this function to reduce its Cognitive Complexity from 23 to the 15 allo
 - **File:** `src/components/Profile/PhotoUpload.js:36`
 - **Rule:** javascript:S3776
 - **Severity:** CRITICAL
 - **Type:** CODE_SMELL
 
-#### 8. CODE_SMELL: Refactor this function to reduce its Cognitive Complexity from 16 to the 15 allo
-- **File:** `src/utils/imageUtils.js:22`
+#### 5. CODE_SMELL: Refactor this function to reduce its Cognitive Complexity from 37 to the 15 allo
+- **File:** `src/screens/Onboarding/OnboardingScreen.js:58`
 - **Rule:** javascript:S3776
 - **Severity:** CRITICAL
 - **Type:** CODE_SMELL
 
-#### 9. CODE_SMELL: Refactor this function to not always return the same value.
-- **File:** `src/components/Common/ImagePicker.js:306`
+#### 6. CODE_SMELL: Refactor this function to reduce its Cognitive Complexity from 17 to the 15 allo
+- **File:** `src/services/sync/manyllaMinimalSyncServiceNative.js:509`
+- **Rule:** javascript:S3776
+- **Severity:** CRITICAL
+- **Type:** CODE_SMELL
+
+#### 7. CODE_SMELL: Refactor this function to reduce its Cognitive Complexity from 18 to the 15 allo
+- **File:** `src/services/sync/manyllaMinimalSyncServiceNative.js:430`
+- **Rule:** javascript:S3776
+- **Severity:** CRITICAL
+- **Type:** CODE_SMELL
+
+#### 8. CODE_SMELL: Refactor this function to not always return the same value.
+- **File:** `src/utils/platformStyles.js:5`
 - **Rule:** javascript:S3516
 - **Severity:** BLOCKER
 - **Type:** CODE_SMELL
 
-#### 10. CODE_SMELL: Refactor this function to reduce its Cognitive Complexity from 22 to the 15 allo
-- **File:** `src/components/Navigation/BottomToolbar.js:72`
+#### 9. CODE_SMELL: Refactor this function to reduce its Cognitive Complexity from 18 to the 15 allo
+- **File:** `src/services/sync/manyllaMinimalSyncServiceWeb.js:109`
 - **Rule:** javascript:S3776
 - **Severity:** CRITICAL
 - **Type:** CODE_SMELL
@@ -96,7 +90,7 @@
 - **Severity:** MEDIUM
 
 #### 6. SECURITY_HOTSPOT: Make sure the regex used here, which is vulnerable to super-linear runtime due t
-- **File:** `src/utils/validation.js:257`
+- **File:** `src/utils/validation.js:300`
 - **Rule:** unknown
 - **Severity:** MEDIUM
 
@@ -105,19 +99,19 @@
 - **Rule:** unknown
 - **Severity:** MEDIUM
 
-#### 8. CODE_SMELL: 'size' is missing in props validation
+#### 8. CODE_SMELL: Extract this nested ternary operation into an independent statement.
+- **File:** `src/components/Navigation/BottomToolbar.js:75`
+- **Rule:** javascript:S3358
+- **Severity:** MAJOR
+
+#### 9. CODE_SMELL: 'size' is missing in props validation
 - **File:** `src/components/Common/ManyllaLogo.js:6`
 - **Rule:** javascript:S6774
 - **Severity:** MAJOR
 
-#### 9. CODE_SMELL: Extract this nested ternary operation into an independent statement.
+#### 10. CODE_SMELL: Extract this nested ternary operation into an independent statement.
 - **File:** `src/context/ThemeContext.js:158`
 - **Rule:** javascript:S3358
-- **Severity:** MAJOR
-
-#### 10. CODE_SMELL: 'name' is missing in props validation
-- **File:** `src/components/Common/IconProvider.android.js:102`
-- **Rule:** javascript:S6774
 - **Severity:** MAJOR
 
 
