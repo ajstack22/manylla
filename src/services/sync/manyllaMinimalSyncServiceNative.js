@@ -368,7 +368,7 @@ class ManyllaMinimalSyncService {
    */
   async saveToStorage(key, data) {
     try {
-      const encrypted = await manyllaEncryptionService.encrypt(data);
+      const encrypted = manyllaEncryptionService.encrypt(data);
       await AsyncStorage.setItem(`manylla_${key}`, encrypted);
 
       // Also trigger push if sync is enabled
@@ -397,6 +397,58 @@ class ManyllaMinimalSyncService {
       }
       return null;
     }
+  }
+
+  // Helper: Validate push response
+  _validatePushResponse(response) {
+    if (response.status >= 401 && response.status < 402) {
+      throw new AuthError("Invalid sync credentials", "UNAUTHORIZED");
+    }
+    if (response.status >= 500) {
+      throw new NetworkError(`Server error: ${response.statusText}`);
+    }
+    throw new SyncError(`Push failed: ${response.statusText}`);
+  }
+
+  // Helper: Attempt single push request
+  async _attemptPush(payload, apiBaseUrl) {
+    const response = await fetch(`${apiBaseUrl}/sync_push.php`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      this._validatePushResponse(response);
+    }
+
+    const result = await response.json();
+    if (result.success) {
+      return result;
+    }
+
+    throw new SyncError(result.error || "Push failed");
+  }
+
+  // Helper: Push with retry logic
+  async _pushWithRetries(payload, apiBaseUrl) {
+    let lastError;
+
+    for (let i = 0; i < this.MAX_RETRIES; i++) {
+      try {
+        return await this._attemptPush(payload, apiBaseUrl);
+      } catch (error) {
+        lastError = error;
+        if (i < this.MAX_RETRIES - 1) {
+          await new Promise((r) => setTimeout(r, this.RETRY_DELAY));
+        }
+      }
+    }
+
+    throw ErrorHandler.normalize(lastError);
   }
 
   /**
@@ -429,10 +481,8 @@ class ManyllaMinimalSyncService {
     return new Promise((resolve, reject) => {
       this.pendingPush = setTimeout(async () => {
         try {
-          // Encrypt data
           const encrypted = manyllaEncryptionService.encrypt(data);
 
-          // Prepare payload
           const payload = {
             sync_id: this.syncId,
             data: encrypted,
@@ -440,55 +490,11 @@ class ManyllaMinimalSyncService {
             version: "2.0.0",
           };
 
-          // Get API base URL for mobile
           const apiBaseUrl = platform.apiBaseUrl();
+          const result = await this._pushWithRetries(payload, apiBaseUrl);
 
-          // Push with retries
-          let lastError;
-          for (let i = 0; i < this.MAX_RETRIES; i++) {
-            try {
-              const response = await fetch(`${apiBaseUrl}/sync_push.php`, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  Accept: "application/json",
-                },
-                body: JSON.stringify(payload),
-              });
-
-              if (!response.ok) {
-                if (response.status >= 401 && response.status < 402) {
-                  throw new AuthError(
-                    "Invalid sync credentials",
-                    "UNAUTHORIZED",
-                  );
-                }
-                if (response.status >= 500) {
-                  throw new NetworkError(
-                    `Server error: ${response.statusText}`,
-                  );
-                }
-                throw new SyncError(`Push failed: ${response.statusText}`);
-              }
-
-              const result = await response.json();
-              if (result.success) {
-                this.notifyListeners("pushed", data);
-                resolve(result);
-                return;
-              }
-
-              throw new SyncError(result.error || "Push failed");
-            } catch (error) {
-              lastError = error;
-              if (i < this.MAX_RETRIES - 1) {
-                await new Promise((r) => setTimeout(r, this.RETRY_DELAY));
-              }
-            }
-          }
-
-          const finalError = ErrorHandler.normalize(lastError);
-          throw finalError;
+          this.notifyListeners("pushed", data);
+          resolve(result);
         } catch (error) {
           const normalizedError = ErrorHandler.normalize(error);
           ErrorHandler.log(normalizedError, {
@@ -501,6 +507,37 @@ class ManyllaMinimalSyncService {
         }
       }, this.PUSH_DEBOUNCE);
     });
+  }
+
+  // Helper: Handle HTTP response errors for pull
+  _handlePullResponseError(response) {
+    if (response.status >= 401 && response.status < 402) {
+      throw new AuthError("Invalid sync credentials", "UNAUTHORIZED");
+    }
+    if (response.status >= 500) {
+      throw new NetworkError(`Server error: ${response.statusText}`);
+    }
+    throw new SyncError(`Pull failed: ${response.statusText}`);
+  }
+
+  // Helper: Validate pull result
+  _validatePullResult(result) {
+    if (!result.success) {
+      if (result.error === "No data found") {
+        return null;
+      }
+      throw new SyncError(result.error || "Pull failed");
+    }
+    return result.data || null;
+  }
+
+  // Helper: Notify and return data
+  _notifyAndReturn(data) {
+    this.notifyListeners("pulled", data);
+    if (this.dataCallback) {
+      this.dataCallback(data);
+    }
+    return data;
   }
 
   /**
@@ -537,53 +574,26 @@ class ManyllaMinimalSyncService {
       );
 
       if (!response.ok) {
-        if (response.status >= 401 && response.status < 402) {
-          throw new AuthError("Invalid sync credentials", "UNAUTHORIZED");
-        }
-        if (response.status >= 500) {
-          throw new NetworkError(`Server error: ${response.statusText}`);
-        }
-        throw new SyncError(`Pull failed: ${response.statusText}`);
+        this._handlePullResponseError(response);
       }
 
       const result = await response.json();
+      const encryptedData = this._validatePullResult(result);
 
-      if (!result.success) {
-        if (result.error === "No data found") {
-          // No sync data exists yet
-          return null;
-        }
-        throw new SyncError(result.error || "Pull failed");
-      }
-
-      if (!result.data) {
+      if (!encryptedData) {
         return null;
       }
 
-      // Decrypt data
-      const decrypted = manyllaEncryptionService.decrypt(result.data);
-
-      // Update last pull time
+      const decrypted = manyllaEncryptionService.decrypt(encryptedData);
       this.lastPullTime = Date.now();
 
-      // Handle conflicts if local data exists
       const localData = await this.getLocalData();
       if (localData) {
         const resolved = conflictResolver.mergeProfiles(localData, decrypted);
-        this.notifyListeners("pulled", resolved);
-        // Call data callback if set
-        if (this.dataCallback) {
-          this.dataCallback(resolved);
-        }
-        return resolved;
+        return this._notifyAndReturn(resolved);
       }
 
-      this.notifyListeners("pulled", decrypted);
-      // Call data callback if set
-      if (this.dataCallback) {
-        this.dataCallback(decrypted);
-      }
-      return decrypted;
+      return this._notifyAndReturn(decrypted);
     } catch (error) {
       const normalizedError = ErrorHandler.normalize(error);
       ErrorHandler.log(normalizedError, {

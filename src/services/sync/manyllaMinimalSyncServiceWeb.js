@@ -90,6 +90,57 @@ class ManyllaMinimalSyncService {
     }
   }
 
+  // Helper: Validate push response
+  _validatePushResponse(response) {
+    if (response.status >= 401 && response.status < 402) {
+      throw new AuthError("Invalid sync credentials", "UNAUTHORIZED");
+    }
+    if (response.status >= 500) {
+      throw new NetworkError(`Server error: ${response.statusText}`);
+    }
+    throw new SyncError(`Push failed: ${response.statusText}`);
+  }
+
+  // Helper: Attempt single push request
+  async _attemptPush(payload) {
+    const response = await fetch(API_ENDPOINTS.sync.push, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      this._validatePushResponse(response);
+    }
+
+    const result = await response.json();
+    if (result.success) {
+      return result;
+    }
+
+    throw new SyncError(result.error || "Push failed");
+  }
+
+  // Helper: Push with retry logic
+  async _pushWithRetries(payload) {
+    let lastError;
+
+    for (let i = 0; i < this.MAX_RETRIES; i++) {
+      try {
+        return await this._attemptPush(payload);
+      } catch (error) {
+        lastError = error;
+        if (i < this.MAX_RETRIES - 1) {
+          await new Promise((r) => setTimeout(r, this.RETRY_DELAY));
+        }
+      }
+    }
+
+    throw ErrorHandler.normalize(lastError);
+  }
+
   // Push data to sync endpoint
   async push(data) {
     if (!this.syncId || !manyllaEncryptionService.isInitialized()) {
@@ -108,10 +159,8 @@ class ManyllaMinimalSyncService {
     return new Promise((resolve, reject) => {
       this.pendingPush = setTimeout(async () => {
         try {
-          // Encrypt data
           const encrypted = manyllaEncryptionService.encrypt(data);
 
-          // Prepare payload
           const payload = {
             sync_id: this.syncId,
             data: encrypted,
@@ -119,51 +168,9 @@ class ManyllaMinimalSyncService {
             version: "2.0.0",
           };
 
-          // Push with retries
-          let lastError;
-          for (let i = 0; i < this.MAX_RETRIES; i++) {
-            try {
-              const response = await fetch(API_ENDPOINTS.sync.push, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
-              });
-
-              if (!response.ok) {
-                if (response.status >= 401 && response.status < 402) {
-                  throw new AuthError(
-                    "Invalid sync credentials",
-                    "UNAUTHORIZED",
-                  );
-                }
-                if (response.status >= 500) {
-                  throw new NetworkError(
-                    `Server error: ${response.statusText}`,
-                  );
-                }
-                throw new SyncError(`Push failed: ${response.statusText}`);
-              }
-
-              const result = await response.json();
-              if (result.success) {
-                this.notifyListeners("pushed", data);
-                resolve(result);
-                return;
-              }
-
-              throw new SyncError(result.error || "Push failed");
-            } catch (error) {
-              lastError = error;
-              if (i < this.MAX_RETRIES - 1) {
-                await new Promise((r) => setTimeout(r, this.RETRY_DELAY));
-              }
-            }
-          }
-
-          const finalError = ErrorHandler.normalize(lastError);
-          throw finalError;
+          const result = await this._pushWithRetries(payload);
+          this.notifyListeners("pushed", data);
+          resolve(result);
         } catch (error) {
           const normalizedError = ErrorHandler.normalize(error);
           ErrorHandler.log(normalizedError, {
