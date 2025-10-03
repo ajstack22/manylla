@@ -143,9 +143,10 @@ async function testiOS() {
     // iOS builds can fail for many reasons (certificates, etc.)
     // Don't fail the entire test suite
     console.log('  ⚠️  iOS build issues (this may be expected):', error.message.split('\n')[0]);
-    return true; // Return true to not fail the entire suite
+    // Return true for expected failures (non-blocking)
   }
-  
+
+  // iOS tests are non-blocking - always pass to not fail suite
   return true;
 }
 

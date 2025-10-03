@@ -14,7 +14,8 @@ async function captureScreenshots() {
   } catch (error) {
     console.log('⚠️  Puppeteer not installed, skipping visual regression');
     console.log('  Install with: npm install --save-dev puppeteer');
-    return true; // Don't fail validation if puppeteer isn't installed
+    // Don't fail validation if puppeteer isn't installed (optional dependency)
+    return true;
   }
   
   let browser;
@@ -111,6 +112,7 @@ async function compareScreenshots() {
   
   if (!fs.existsSync(screenshotDir)) {
     console.log('  ⚠️  No screenshots found');
+    // No screenshots to compare - non-blocking
     return true;
   }
   
@@ -127,9 +129,10 @@ async function compareScreenshots() {
     }
     
     console.log('  ✅ Baseline screenshots created');
+    // Baseline created successfully - no comparison needed yet
     return true;
   }
-  
+
   // Compare with baseline (basic file size comparison)
   const currentFiles = fs.readdirSync(screenshotDir).filter(f => f.endsWith('.png'));
   const baselineFiles = fs.readdirSync(baselineDir).filter(f => f.endsWith('.png'));
@@ -170,7 +173,8 @@ async function compareScreenshots() {
   } else {
     console.log(`  📊 ${changes} files show potential changes`);
   }
-  
+
+  // Visual regression comparison complete (always non-blocking)
   return true;
 }
 
