@@ -279,14 +279,6 @@ export class ImagePicker {
   }
 
   /**
-   * Check if gallery/file picker is available
-   * @returns {boolean} True if gallery is available
-   */
-  static isGalleryAvailable() {
-    return true; // Available on all platforms
-  }
-
-  /**
    * Request camera permissions (mobile only)
    * @returns {Promise<boolean>} Permission granted status
    */
@@ -306,7 +298,7 @@ export class ImagePicker {
   static getAvailableOptions() {
     return {
       platform: Platform.OS,
-      canSelectFromGallery: ImagePicker.isGalleryAvailable(),
+      canSelectFromGallery: true, // Gallery available on all platforms
       canTakePhoto: ImagePicker.isCameraAvailable(),
       supportsDragDrop: platform.isWeb,
       supportsMultipleSelection: platform.isWeb,

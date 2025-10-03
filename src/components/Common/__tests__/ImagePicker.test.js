@@ -437,12 +437,6 @@ describe("ImagePicker", () => {
       });
     });
 
-    describe("isGalleryAvailable", () => {
-      it("should return true on all platforms", () => {
-        expect(ImagePicker.isGalleryAvailable()).toBe(true);
-      });
-    });
-
     describe("requestCameraPermission", () => {
       it("should return false on web", async () => {
         platform.isMobile = false;
