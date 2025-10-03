@@ -178,6 +178,37 @@ class ManyllaMinimalSyncService {
     });
   }
 
+  // Helper: Handle HTTP response errors
+  _handlePullResponseError(response) {
+    if (response.status >= 401 && response.status < 402) {
+      throw new AuthError("Invalid sync credentials", "UNAUTHORIZED");
+    }
+    if (response.status >= 500) {
+      throw new NetworkError(`Server error: ${response.statusText}`);
+    }
+    throw new SyncError(`Pull failed: ${response.statusText}`);
+  }
+
+  // Helper: Handle pull result validation
+  _validatePullResult(result) {
+    if (!result.success) {
+      if (result.error === "No data found") {
+        return null;
+      }
+      throw new SyncError(result.error || "Pull failed");
+    }
+    return result.data || null;
+  }
+
+  // Helper: Notify and return data
+  _notifyAndReturn(data) {
+    this.notifyListeners("pulled", data);
+    if (this.dataCallback) {
+      this.dataCallback(data);
+    }
+    return data;
+  }
+
   // Pull data from sync endpoint
   async pull() {
     if (!this.syncId || !manyllaEncryptionService.isInitialized()) {
@@ -199,53 +230,26 @@ class ManyllaMinimalSyncService {
       );
 
       if (!response.ok) {
-        if (response.status >= 401 && response.status < 402) {
-          throw new AuthError("Invalid sync credentials", "UNAUTHORIZED");
-        }
-        if (response.status >= 500) {
-          throw new NetworkError(`Server error: ${response.statusText}`);
-        }
-        throw new SyncError(`Pull failed: ${response.statusText}`);
+        this._handlePullResponseError(response);
       }
 
       const result = await response.json();
+      const encryptedData = this._validatePullResult(result);
 
-      if (!result.success) {
-        if (result.error === "No data found") {
-          // No sync data exists yet
-          return null;
-        }
-        throw new SyncError(result.error || "Pull failed");
-      }
-
-      if (!result.data) {
+      if (!encryptedData) {
         return null;
       }
 
-      // Decrypt data
-      const decrypted = manyllaEncryptionService.decrypt(result.data);
-
-      // Update last pull time
+      const decrypted = manyllaEncryptionService.decrypt(encryptedData);
       this.lastPullTime = Date.now();
 
-      // Handle conflicts if local data exists
       const localData = this.getLocalData();
       if (localData) {
         const resolved = conflictResolver.mergeProfiles(localData, decrypted);
-        this.notifyListeners("pulled", resolved);
-        // Call data callback if set
-        if (this.dataCallback) {
-          this.dataCallback(resolved);
-        }
-        return resolved;
+        return this._notifyAndReturn(resolved);
       }
 
-      this.notifyListeners("pulled", decrypted);
-      // Call data callback if set
-      if (this.dataCallback) {
-        this.dataCallback(decrypted);
-      }
-      return decrypted;
+      return this._notifyAndReturn(decrypted);
     } catch (error) {
       const normalizedError = ErrorHandler.normalize(error);
       ErrorHandler.log(normalizedError, {

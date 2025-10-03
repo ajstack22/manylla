@@ -86,6 +86,32 @@ export const PhotoUpload = ({
   }, [loadCurrentPhoto]);
 
   /**
+   * Helper: Show processing progress indicator
+   */
+  const startProgressIndicator = () => {
+    setProcessingProgress(0);
+    return setInterval(() => {
+      setProcessingProgress((prev) => Math.min(prev + 10, 90));
+    }, 100);
+  };
+
+  /**
+   * Helper: Complete processing and update preview
+   */
+  const completePhotoProcessing = (result, processResult) => {
+    setProcessingProgress(100);
+    setPhotoPreview(result.dataUrl);
+
+    if (onPhotoChange) {
+      onPhotoChange(processResult.encrypted, processResult.metadata);
+    }
+
+    setTimeout(() => {
+      setProcessingProgress(0);
+    }, 500);
+  };
+
+  /**
    * Handle photo selection from picker
    */
   const handlePhotoSelect = async () => {
@@ -95,7 +121,6 @@ export const PhotoUpload = ({
       setError(null);
       setIsLoading(true);
 
-      // Show image picker
       const result = await ImagePicker.showImagePicker({
         quality: 0.9,
         maxWidth: 1600,
@@ -107,42 +132,24 @@ export const PhotoUpload = ({
         return;
       }
 
-      // Validate result
       const validation = ImagePicker.validateResult(result);
       if (!validation.isValid) {
         throw new Error(validation.error);
       }
 
-      // Show processing progress
-      setProcessingProgress(0);
-      const progressInterval = setInterval(() => {
-        setProcessingProgress((prev) => Math.min(prev + 10, 90));
-      }, 100);
+      const progressInterval = startProgressIndicator();
 
-      // Process and encrypt photo
       const processResult = await photoService.processAndEncryptPhoto(
         result.dataUrl || result,
       );
 
       clearInterval(progressInterval);
-      setProcessingProgress(100);
 
       if (!processResult.success) {
         throw new Error(processResult.error);
       }
 
-      // Update preview immediately with unencrypted version
-      setPhotoPreview(result.dataUrl);
-
-      // Notify parent component with encrypted data
-      if (onPhotoChange) {
-        onPhotoChange(processResult.encrypted, processResult.metadata);
-      }
-
-      // Reset progress after a brief delay
-      setTimeout(() => {
-        setProcessingProgress(0);
-      }, 500);
+      completePhotoProcessing(result, processResult);
     } catch (error) {
       setError(ImagePicker.getErrorMessage(error, "upload photo"));
       if (process.env.NODE_ENV === "development") {
@@ -154,22 +161,27 @@ export const PhotoUpload = ({
   };
 
   /**
+   * Helper: Execute photo removal
+   */
+  const executePhotoRemoval = () => {
+    setPhotoPreview(null);
+    setError(null);
+    if (onPhotoRemove) {
+      onPhotoRemove();
+    }
+  };
+
+  /**
    * Handle photo removal
    */
   const handlePhotoRemove = () => {
     if (disabled) return;
 
     if (platform.isWeb) {
-      // Use native browser confirm for web
       if (window.confirm("Are you sure you want to remove this photo?")) {
-        setPhotoPreview(null);
-        setError(null);
-        if (onPhotoRemove) {
-          onPhotoRemove();
-        }
+        executePhotoRemoval();
       }
     } else {
-      // Use React Native Alert for mobile
       Alert.alert(
         "Remove Photo",
         "Are you sure you want to remove this photo?",
@@ -178,13 +190,7 @@ export const PhotoUpload = ({
           {
             text: "Remove",
             style: "destructive",
-            onPress: () => {
-              setPhotoPreview(null);
-              setError(null);
-              if (onPhotoRemove) {
-                onPhotoRemove();
-              }
-            },
+            onPress: executePhotoRemoval,
           },
         ],
       );

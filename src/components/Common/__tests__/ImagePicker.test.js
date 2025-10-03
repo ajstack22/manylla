@@ -457,20 +457,6 @@ describe("ImagePicker", () => {
       });
     });
 
-    describe("requestGalleryPermission", () => {
-      it("should return true on web", async () => {
-        platform.isMobile = false;
-        const result = await ImagePicker.requestGalleryPermission();
-        expect(result).toBe(true);
-      });
-
-      it("should return true on mobile", async () => {
-        platform.isMobile = true;
-        const result = await ImagePicker.requestGalleryPermission();
-        expect(result).toBe(true);
-      });
-    });
-
     describe("getAvailableOptions", () => {
       it("should return correct options for web", () => {
         platform.isWeb = true;

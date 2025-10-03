@@ -68,77 +68,68 @@ const BottomToolbar = ({
     }
   };
 
-  // Handle theme selection
-  const handleThemeSelect = (selectedTheme) => {
-    setShowThemeMenu(false);
+  // Helper: Get display name for theme
+  const getThemeName = (themeKey) => {
+    return themeKey === "light"
+      ? "Light"
+      : themeKey === "dark"
+        ? "Dark"
+        : "manylla";
+  };
 
-    // If onThemeSelect is provided, use it for direct selection
-    if (onThemeSelect) {
-      onThemeSelect(selectedTheme);
-      if (showToast) {
-        const themeName =
-          selectedTheme === "light"
-            ? "Light"
-            : selectedTheme === "dark"
-              ? "Dark"
-              : "manylla";
-        showToast(`${themeName} theme activated`, "info");
-      }
-      return;
+  // Helper: Show theme toast notification
+  const showThemeToast = (selectedTheme, suffix = "activated") => {
+    if (showToast) {
+      const themeName = getThemeName(selectedTheme);
+      showToast(`${themeName} theme ${suffix}`, "info");
     }
+  };
 
-    // Fallback: cycle through themes if direct selection not available
-    // If already on selected theme, just show toast
-    if (theme === selectedTheme) {
-      if (showToast) {
-        const themeName =
-          selectedTheme === "light"
-            ? "Light"
-            : selectedTheme === "dark"
-              ? "Dark"
-              : "manylla";
-        showToast(`${themeName} theme already active`, "info");
-      }
-      return;
-    }
-
-    // Calculate how many times to toggle to reach target
+  // Helper: Calculate theme toggle steps
+  const calculateThemeSteps = (currentTheme, targetTheme) => {
     const themeOrder = ["light", "dark", "manylla"];
-    const currentIndex = themeOrder.indexOf(theme);
-    const targetIndex = themeOrder.indexOf(selectedTheme);
+    const currentIndex = themeOrder.indexOf(currentTheme);
+    const targetIndex = themeOrder.indexOf(targetTheme);
 
-    if (currentIndex === -1 || targetIndex === -1) return;
+    if (currentIndex === -1 || targetIndex === -1) return -1;
+    return (targetIndex - currentIndex + 3) % 3;
+  };
 
-    const steps = (targetIndex - currentIndex + 3) % 3;
-
-    // Use setTimeout to ensure proper state updates between toggles
+  // Helper: Execute theme toggle steps
+  const executeThemeToggles = (steps, selectedTheme) => {
     let remaining = steps;
     const toggleStep = () => {
       if (remaining > 0) {
         onThemeToggle();
         remaining--;
         if (remaining > 0) {
-          setTimeout(toggleStep, 50); // Small delay between updates
+          setTimeout(toggleStep, 50);
         } else {
-          // Show toast after final toggle
-          if (showToast) {
-            const themeName =
-              selectedTheme === "light"
-                ? "Light"
-                : selectedTheme === "dark"
-                  ? "Dark"
-                  : "manylla";
-            setTimeout(
-              () => showToast(`${themeName} theme activated`, "info"),
-              100,
-            );
-          }
+          setTimeout(() => showThemeToast(selectedTheme), 100);
         }
       }
     };
+    toggleStep();
+  };
 
+  // Handle theme selection
+  const handleThemeSelect = (selectedTheme) => {
+    setShowThemeMenu(false);
+
+    if (onThemeSelect) {
+      onThemeSelect(selectedTheme);
+      showThemeToast(selectedTheme);
+      return;
+    }
+
+    if (theme === selectedTheme) {
+      showThemeToast(selectedTheme, "already active");
+      return;
+    }
+
+    const steps = calculateThemeSteps(theme, selectedTheme);
     if (steps > 0) {
-      toggleStep();
+      executeThemeToggles(steps, selectedTheme);
     }
   };
 

@@ -46,6 +46,30 @@ encodeUTF8 = (str) => {
   return new Uint8Array(bytes);
 };
 
+// Helper: Decode 2-byte UTF-8 sequence
+const decode2ByteUTF8 = (byte1, byte2) => {
+  return String.fromCharCode(((byte1 & 0x1f) << 6) | (byte2 & 0x3f));
+};
+
+// Helper: Decode 3-byte UTF-8 sequence
+const decode3ByteUTF8 = (byte1, byte2, byte3) => {
+  return String.fromCharCode(
+    ((byte1 & 0x0f) << 12) | ((byte2 & 0x3f) << 6) | (byte3 & 0x3f),
+  );
+};
+
+// Helper: Decode 4-byte UTF-8 sequence
+const decode4ByteUTF8 = (byte1, byte2, byte3, byte4) => {
+  const codePoint =
+    ((byte1 & 0x07) << 18) |
+    ((byte2 & 0x3f) << 12) |
+    ((byte3 & 0x3f) << 6) |
+    (byte4 & 0x3f);
+  const high = Math.floor((codePoint - 0x10000) / 0x400) + 0xd800;
+  const low = ((codePoint - 0x10000) % 0x400) + 0xdc00;
+  return String.fromCharCode(high, low);
+};
+
 decodeUTF8 = (arr) => {
   if (!arr) throw new Error("Invalid input: null or undefined");
   if (arr.length < 1) return "";
@@ -58,29 +82,14 @@ decodeUTF8 = (arr) => {
     if (byte1 < 0x80) {
       result += String.fromCharCode(byte1);
     } else if ((byte1 & 0xe0) >= 0xc0 && (byte1 & 0xe0) < 0xc1) {
-      if (i >= bytes.length) break; // Bounds check
-      const byte2 = bytes[i++];
-      result += String.fromCharCode(((byte1 & 0x1f) << 6) | (byte2 & 0x3f));
+      if (i >= bytes.length) break;
+      result += decode2ByteUTF8(byte1, bytes[i++]);
     } else if ((byte1 & 0xf0) >= 0xe0 && (byte1 & 0xf0) < 0xe1) {
-      if (i + 1 >= bytes.length) break; // Bounds check
-      const byte2 = bytes[i++];
-      const byte3 = bytes[i++];
-      result += String.fromCharCode(
-        ((byte1 & 0x0f) << 12) | ((byte2 & 0x3f) << 6) | (byte3 & 0x3f),
-      );
+      if (i + 1 >= bytes.length) break;
+      result += decode3ByteUTF8(byte1, bytes[i++], bytes[i++]);
     } else if ((byte1 & 0xf8) >= 0xf0 && (byte1 & 0xf8) < 0xf1) {
-      if (i + 2 >= bytes.length) break; // Bounds check
-      const byte2 = bytes[i++];
-      const byte3 = bytes[i++];
-      const byte4 = bytes[i++];
-      const codePoint =
-        ((byte1 & 0x07) << 18) |
-        ((byte2 & 0x3f) << 12) |
-        ((byte3 & 0x3f) << 6) |
-        (byte4 & 0x3f);
-      const high = Math.floor((codePoint - 0x10000) / 0x400) + 0xd800;
-      const low = ((codePoint - 0x10000) % 0x400) + 0xdc00;
-      result += String.fromCharCode(high, low);
+      if (i + 2 >= bytes.length) break;
+      result += decode4ByteUTF8(byte1, bytes[i++], bytes[i++], bytes[i++]);
     }
   }
   return result;

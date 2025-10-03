@@ -1,38 +1,30 @@
 export class ProfileValidator {
   /**
-   * Validates a complete profile object
+   * Helper: Validate profile name field
    */
-  static validateProfile(data) {
-    const errors = [];
-
-    // Check required fields
-    if (!data || typeof data !== "object") {
-      return { valid: false, errors: ["Profile data is required"] };
-    }
-
-    // Validate basic fields
-    if (!data.id || typeof data.id !== "string") {
-      errors.push("Profile ID is required");
-    }
-
+  static _validateName(name, errors) {
     if (
-      !data.name ||
-      typeof data.name !== "string" ||
-      data.name.trim().length < 1
+      !name ||
+      typeof name !== "string" ||
+      name.trim().length < 1
     ) {
       errors.push("Profile name is required");
-    } else if (data.name.trim().length < 2) {
+    } else if (name.trim().length < 2) {
       errors.push("Profile name must be at least 2 characters");
-    } else if (data.name.length > 100) {
+    } else if (name.length > 100) {
       errors.push("Profile name is too long");
     }
+  }
 
-    // Validate date fields
+  /**
+   * Helper: Validate date of birth field
+   */
+  static _validateDateOfBirth(dateOfBirth, errors) {
     try {
-      if (!data.dateOfBirth) {
+      if (!dateOfBirth) {
         errors.push("Date of birth is required");
       } else {
-        const dob = new Date(data.dateOfBirth);
+        const dob = new Date(dateOfBirth);
         if (isNaN(dob.getTime())) {
           errors.push("Invalid date of birth");
         }
@@ -43,14 +35,18 @@ export class ProfileValidator {
     } catch {
       errors.push("Invalid date of birth format");
     }
+  }
 
-    // Validate entries array
-    if (data.entries === null) {
+  /**
+   * Helper: Validate entries array
+   */
+  static _validateEntries(entries, errors) {
+    if (entries === null) {
       errors.push("Entries must be an array");
-    } else if (!Array.isArray(data.entries)) {
+    } else if (!Array.isArray(entries)) {
       errors.push("Entries must be an array");
     } else {
-      data.entries.forEach((entry, index) => {
+      entries.forEach((entry) => {
         const entryResult = this.validateEntry(entry);
         if (!entryResult.valid) {
           entryResult.errors.forEach((error) => {
@@ -59,23 +55,111 @@ export class ProfileValidator {
         }
       });
     }
+  }
 
-    // Validate categories
-    if (!Array.isArray(data.categories)) {
+  /**
+   * Helper: Validate categories array
+   */
+  static _validateCategories(categories, errors) {
+    if (!Array.isArray(categories)) {
       errors.push("Categories must be an array");
     } else {
-      data.categories.forEach((cat, index) => {
+      categories.forEach((cat, index) => {
         const catResult = this.validateCategory(cat);
         if (!catResult.valid) {
           errors.push(`Category ${index + 1}: ${catResult.errors.join(", ")}`);
         }
       });
     }
+  }
+
+  /**
+   * Validates a complete profile object
+   */
+  static validateProfile(data) {
+    const errors = [];
+
+    if (!data || typeof data !== "object") {
+      return { valid: false, errors: ["Profile data is required"] };
+    }
+
+    if (!data.id || typeof data.id !== "string") {
+      errors.push("Profile ID is required");
+    }
+
+    this._validateName(data.name, errors);
+    this._validateDateOfBirth(data.dateOfBirth, errors);
+    this._validateEntries(data.entries, errors);
+    this._validateCategories(data.categories, errors);
 
     return {
       valid: errors.length < 1,
       errors,
     };
+  }
+
+  /**
+   * Helper: Validate entry title field
+   */
+  static _validateEntryTitle(title, errors) {
+    if (
+      !title ||
+      typeof title !== "string" ||
+      title.trim().length < 1
+    ) {
+      errors.push("Entry title is required");
+    } else if (title.length > 200) {
+      errors.push("Entry title is too long");
+    }
+  }
+
+  /**
+   * Helper: Validate entry description field
+   */
+  static _validateEntryDescription(description, errors) {
+    if (!description || typeof description !== "string") {
+      errors.push("Entry description is required");
+    } else if (description.length > 10000) {
+      errors.push("Entry description is too long");
+    }
+  }
+
+  /**
+   * Helper: Validate entry visibility field
+   */
+  static _validateEntryVisibility(visibility, errors) {
+    if (visibility !== undefined) {
+      if (!Array.isArray(visibility)) {
+        errors.push("Visibility must be an array");
+      } else {
+        const validVisibility = ["private", "family", "medical", "education"];
+        visibility.forEach((v) => {
+          if (!validVisibility.includes(v)) {
+            errors.push(`Invalid visibility: ${v}`);
+          }
+        });
+      }
+    }
+  }
+
+  /**
+   * Helper: Validate entry date field
+   */
+  static _validateEntryDate(date, errors) {
+    try {
+      if (!date) {
+        errors.push("Entry date is required");
+      } else {
+        const dateObj = new Date(date);
+        if (isNaN(dateObj.getTime())) {
+          errors.push("Invalid date format");
+        } else if (dateObj > new Date()) {
+          errors.push("Entry date cannot be in the future");
+        }
+      }
+    } catch {
+      errors.push("Invalid date format");
+    }
   }
 
   /**
@@ -96,51 +180,10 @@ export class ProfileValidator {
       errors.push("Entry category is required");
     }
 
-    if (
-      !entry.title ||
-      typeof entry.title !== "string" ||
-      entry.title.trim().length < 1
-    ) {
-      errors.push("Entry title is required");
-    } else if (entry.title.length > 200) {
-      errors.push("Entry title is too long");
-    }
-
-    if (!entry.description || typeof entry.description !== "string") {
-      errors.push("Entry description is required");
-    } else if (entry.description.length > 10000) {
-      errors.push("Entry description is too long");
-    }
-
-    // Validate visibility is an array (optional, defaults to ['private'])
-    if (entry.visibility !== undefined) {
-      if (!Array.isArray(entry.visibility)) {
-        errors.push("Visibility must be an array");
-      } else {
-        const validVisibility = ["private", "family", "medical", "education"];
-        entry.visibility.forEach((v) => {
-          if (!validVisibility.includes(v)) {
-            errors.push(`Invalid visibility: ${v}`);
-          }
-        });
-      }
-    }
-
-    // Validate date
-    try {
-      if (!entry.date) {
-        errors.push("Entry date is required");
-      } else {
-        const date = new Date(entry.date);
-        if (isNaN(date.getTime())) {
-          errors.push("Invalid date format");
-        } else if (date > new Date()) {
-          errors.push("Entry date cannot be in the future");
-        }
-      }
-    } catch {
-      errors.push("Invalid date format");
-    }
+    this._validateEntryTitle(entry.title, errors);
+    this._validateEntryDescription(entry.description, errors);
+    this._validateEntryVisibility(entry.visibility, errors);
+    this._validateEntryDate(entry.date, errors);
 
     return {
       valid: errors.length < 1,

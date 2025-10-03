@@ -15,6 +15,59 @@ export const IMAGE_CONFIG = {
 };
 
 /**
+ * Helper: Validate file type
+ */
+const validateFileType = (type) => {
+  if (!IMAGE_CONFIG.ALLOWED_TYPES.includes(type.toLowerCase())) {
+    return {
+      isValid: false,
+      error: "Invalid file type. Only JPG and PNG are allowed.",
+    };
+  }
+  return { isValid: true };
+};
+
+/**
+ * Helper: Validate file size
+ */
+const validateFileSize = (size) => {
+  if (size > IMAGE_CONFIG.MAX_FILE_SIZE) {
+    return {
+      isValid: false,
+      error: `File size too large. Maximum ${IMAGE_CONFIG.MAX_FILE_SIZE / 1024 / 1024}MB allowed.`,
+    };
+  }
+  return { isValid: true };
+};
+
+/**
+ * Helper: Validate mobile image picker result
+ */
+const validateMobileImage = (file) => {
+  const typeValidation = validateFileType(file.type);
+  if (!typeValidation.isValid) return typeValidation;
+  return validateFileSize(file.fileSize);
+};
+
+/**
+ * Helper: Validate web File object
+ */
+const validateWebFile = (file) => {
+  const typeValidation = validateFileType(file.type);
+  if (!typeValidation.isValid) return typeValidation;
+  return validateFileSize(file.size);
+};
+
+/**
+ * Helper: Validate base64 data URL
+ */
+const validateDataUrl = (file) => {
+  const base64Data = file.split(",")[1];
+  const sizeInBytes = (base64Data.length * 3) / 4;
+  return validateFileSize(sizeInBytes);
+};
+
+/**
  * Validate image file type and size
  * @param {File|Object} file - File object or mobile image result
  * @returns {Object} Validation result with isValid and error message
@@ -24,57 +77,16 @@ export const validateImage = (file) => {
     return { isValid: false, error: "No file provided" };
   }
 
-  // Handle mobile image picker result
   if (file.type && file.fileSize) {
-    if (!IMAGE_CONFIG.ALLOWED_TYPES.includes(file.type.toLowerCase())) {
-      return {
-        isValid: false,
-        error: "Invalid file type. Only JPG and PNG are allowed.",
-      };
-    }
-
-    if (file.fileSize > IMAGE_CONFIG.MAX_FILE_SIZE) {
-      return {
-        isValid: false,
-        error: `File size too large. Maximum ${IMAGE_CONFIG.MAX_FILE_SIZE / 1024 / 1024}MB allowed.`,
-      };
-    }
-
-    return { isValid: true };
+    return validateMobileImage(file);
   }
 
-  // Handle web File object
   if (file.type) {
-    if (!IMAGE_CONFIG.ALLOWED_TYPES.includes(file.type.toLowerCase())) {
-      return {
-        isValid: false,
-        error: "Invalid file type. Only JPG and PNG are allowed.",
-      };
-    }
-
-    if (file.size > IMAGE_CONFIG.MAX_FILE_SIZE) {
-      return {
-        isValid: false,
-        error: `File size too large. Maximum ${IMAGE_CONFIG.MAX_FILE_SIZE / 1024 / 1024}MB allowed.`,
-      };
-    }
-
-    return { isValid: true };
+    return validateWebFile(file);
   }
 
-  // Handle base64 data URLs
   if (typeof file === "string" && file.startsWith("data:image/")) {
-    const base64Data = file.split(",")[1];
-    const sizeInBytes = (base64Data.length * 3) / 4;
-
-    if (sizeInBytes > IMAGE_CONFIG.MAX_FILE_SIZE) {
-      return {
-        isValid: false,
-        error: `File size too large. Maximum ${IMAGE_CONFIG.MAX_FILE_SIZE / 1024 / 1024}MB allowed.`,
-      };
-    }
-
-    return { isValid: true };
+    return validateDataUrl(file);
   }
 
   return { isValid: false, error: "Invalid file format" };

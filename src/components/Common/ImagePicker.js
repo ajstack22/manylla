@@ -300,19 +300,6 @@ export class ImagePicker {
   }
 
   /**
-   * Request gallery permissions (mobile only)
-   * @returns {Promise<boolean>} Permission granted status
-   */
-  static async requestGalleryPermission() {
-    if (!platform.isMobile) {
-      return true; // Web doesn't need explicit permissions
-    }
-
-    // react-native-image-picker handles permissions automatically
-    return true;
-  }
-
-  /**
    * Get available picker options for current platform
    * @returns {Object} Available options
    */
