@@ -1,5 +1,55 @@
 # Manylla Release Notes
 
+## Version 2025.10.06.1 - 2025-10-06
+UX: Refactor Bottom Toolbar to Settings Menu
+
+### Summary
+Moved all menu bar functions from the bottom toolbar into a unified settings menu accessible from the header. On mobile, displays as a slide-up modal; on web, displays as a side panel sliding in from the right.
+
+### User Experience Improvements
+**Settings Menu Implementation:**
+- Added MoreVert (⋮) icon button in header next to profile
+- Menu items in intuitive order: Theme, Share, Sync, Print, Privacy, Support Us, Close
+- Mobile: Slide-up modal from bottom with touch-friendly spacing
+- Web: Right-side panel (320px width) with smooth transitions
+- Theme submenu preserved with Light/Dark/Manylla options
+- Sync status color indicator maintained
+
+**Interface Cleanup:**
+- Removed permanent bottom toolbar (freed up ~60px vertical space)
+- FAB repositioned from 80/88px to 24px bottom spacing
+- Cleaner, more modern interface with actions on-demand
+- Consistent with mobile design patterns (hamburger menu approach)
+
+### Technical Changes
+**New Components:**
+- `src/components/Navigation/SettingsMenu.js` - Unified menu for mobile & web
+- Added `MoreVertIcon` export to IconProvider
+
+**Modified Components:**
+- `src/components/Layout/Header.js` - Added settings button with `onOpenSettings` prop
+- `App.js` - Replaced BottomToolbar with SettingsMenu, updated FAB positioning
+- Updated state management for settings menu visibility
+
+**Removed Components:**
+- `src/components/Navigation/BottomToolbar.js` (745 lines removed)
+
+### Benefits
+- ✅ **More Screen Space**: Removed permanent 60-80px bottom bar
+- ✅ **Modern UX**: Settings menu matches standard mobile/web patterns
+- ✅ **Better Focus**: Actions hidden until needed, less UI clutter
+- ✅ **Consistent Behavior**: Same functionality, cleaner presentation
+- ✅ **Code Reduction**: 804 lines removed, 125 lines added (net -679 lines)
+
+### Testing
+- Web build compiles successfully
+- All menu items functional (Theme, Share, Sync, Print, Privacy, Support, Close)
+- Theme submenu with Light/Dark/Manylla options working
+- Sync status color indicator preserved
+- FAB positioning corrected
+
+---
+
 ## Version 2025.09.13.1 - 2025-09-13
 Privacy Policy Modal Implementation
 

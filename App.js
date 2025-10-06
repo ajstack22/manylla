@@ -43,7 +43,7 @@ import {
 import { ThemedToast } from "./src/components/Toast";
 import { LoadingOverlay } from "./src/components/Loading";
 import { Header, HEADER_HEIGHT } from "./src/components/Layout";
-import BottomToolbar from "./src/components/Navigation/BottomToolbar";
+import SettingsMenu from "./src/components/Navigation/SettingsMenu";
 import { ShareAccessView } from "./src/components/Sharing";
 import PrivacyModal from "./src/components/Modals/PrivacyModal";
 import SupportModal from "./src/components/Modals/SupportModal";
@@ -333,8 +333,14 @@ const ProfileOverview = ({
                 <View style={styles.avatarContainer}>
                   {profile.photo && profile.photo !== "default" ? (
                     <Image
-                      source={{ uri: profile.photo }}
+                      source={
+                        profile.photo === '__DEMO_ELLIE__'
+                          ? require('./public/assets/ellie.png')
+                          : { uri: profile.photo }
+                      }
                       style={styles.avatar}
+                      onLoad={() => console.log('[PHOTO-TEST] ✓ ProfileOverview photo loaded successfully')}
+                      onError={(e) => console.error('[PHOTO-TEST] ✗ ProfileOverview photo failed:', JSON.stringify(e.nativeEvent))}
                     />
                   ) : (
                     <View style={[styles.avatar, styles.avatarPlaceholder]}>
@@ -699,6 +705,8 @@ function AppContent() {
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   // Support modal state
   const [showSupportModal, setShowSupportModal] = useState(false);
+  // Settings menu state
+  const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
   const [shareAccessCode, setShareAccessCode] = useState(null);
   const [shareEncryptionKey, setShareEncryptionKey] = useState(null);
 
@@ -847,7 +855,7 @@ function AppContent() {
         preferredName: "Ellie",
         pronouns: "she/her",
         dateOfBirth: new Date("2018-06-15"),
-        photo: "/ellie.png",
+        photo: '__DEMO_ELLIE__',
         categories: unifiedCategories.map((cat) => ({
           ...cat,
           icon:
@@ -997,6 +1005,8 @@ function AppContent() {
         createdAt: new Date(),
         updatedAt: new Date(),
       };
+
+      console.log('[PHOTO-TEST] Demo profile photo value:', demoProfile.photo, 'Type:', typeof demoProfile.photo);
 
       await StorageService.saveProfile(demoProfile);
       await AsyncStorage.setItem("manylla_onboarding_completed", "true");
@@ -1360,6 +1370,7 @@ function AppContent() {
         theme={theme}
         profile={profile}
         onEditProfile={() => setProfileEditOpen(true)}
+        onOpenSettings={() => setSettingsMenuOpen(true)}
       />
       <ProfileOverview
         profile={profile}
@@ -1476,12 +1487,13 @@ function AppContent() {
         forceManyllaTheme={true}
       />
       
-      {/* Permanent Bottom Toolbar */}
-      <BottomToolbar
+      {/* Settings Menu */}
+      <SettingsMenu
+        visible={settingsMenuOpen}
+        onClose={() => setSettingsMenuOpen(false)}
         onShare={() => setShareDialogOpen(true)}
         onPrintClick={() => setPrintPreviewOpen(true)}
         onSyncClick={() => setSyncDialogOpen(true)}
-        onThemeToggle={toggleTheme}
         onThemeSelect={setThemeMode}
         onPrivacyClick={() => setShowPrivacyModal(true)}
         onSupportClick={() => setShowSupportModal(true)}
@@ -1809,7 +1821,7 @@ const createStyles = (colors, theme) => {
     },
     fab: {
       position: isWeb() ? "fixed" : "absolute",
-      bottom: isWeb() ? 80 : 88, // Position above bottom toolbar (56px desktop / 64px mobile + spacing)
+      bottom: 24, // No toolbar, just standard spacing
       right: 24,
       width: 56,
       height: 56,

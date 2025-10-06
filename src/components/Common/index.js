@@ -26,6 +26,7 @@ export {
   ChevronUpIcon,
   ChevronDownIcon,
   MoreHorizIcon,
+  MoreVertIcon,
   CheckCircleIcon,
   ContentCopyIcon,
   DoneIcon,

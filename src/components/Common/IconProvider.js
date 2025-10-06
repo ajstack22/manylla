@@ -336,6 +336,7 @@ export const SupportIcon = (props) => <Icon name="Favorite" {...props} />;
 export const ChevronUpIcon = (props) => <Icon name="ExpandLess" {...props} />;
 export const ChevronDownIcon = (props) => <Icon name="ExpandMore" {...props} />;
 export const MoreHorizIcon = (props) => <Icon name="MoreHoriz" {...props} />;
+export const MoreVertIcon = (props) => <Icon name="MoreVert" {...props} />;
 export const DescriptionIcon = (props) => (
   <Icon name="Description" {...props} />
 );

@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { getStatusBarHeight } from "../../utils/platformStyles";
 import platform from "../../utils/platform";
 import ManyllaLogo from "../Common/ManyllaLogo";
+import { MoreVertIcon } from "../Common";
 
 // Define consistent header height
 const statusBarHeight = getStatusBarHeight();
@@ -13,7 +14,7 @@ export const HEADER_HEIGHT = platform.select({
   default: 56,
 });
 
-const Header = ({ colors, theme, profile, onEditProfile }) => {
+const Header = ({ colors, theme, profile, onEditProfile, onOpenSettings }) => {
   const styles = createStyles(colors, theme);
 
   // Platform-specific container styles
@@ -46,41 +47,59 @@ const Header = ({ colors, theme, profile, onEditProfile }) => {
           </View>
         </View>
 
-        {/* Profile on the right */}
+        {/* Profile and Settings on the right */}
         <View style={styles.right}>
           {profile && (
-            <TouchableOpacity
-              onPress={onEditProfile}
-              style={styles.profileButton}
-            >
-              <View style={styles.profileContent}>
-                <Text style={styles.profileName} numberOfLines={1}>
-                  {profile.preferredName || profile.name}
-                </Text>
-                {profile.photo && profile.photo !== "default" ? (
-                  <Image
-                    source={{
-                      uri:
-                        platform.isIOS && profile.photo.startsWith("/")
-                          ? `https://manylla.com/qual${profile.photo}`
-                          : profile.photo,
-                    }}
-                    style={styles.profileAvatar}
+            <>
+              <TouchableOpacity
+                onPress={onEditProfile}
+                style={styles.profileButton}
+              >
+                <View style={styles.profileContent}>
+                  <Text style={styles.profileName} numberOfLines={1}>
+                    {profile.preferredName || profile.name}
+                  </Text>
+                  {profile.photo && profile.photo !== "default" ? (
+                    <Image
+                      source={
+                        profile.photo === '__DEMO_ELLIE__'
+                          ? require('../../../public/assets/ellie.png')
+                          : typeof profile.photo === "number"
+                            ? profile.photo
+                            : { uri: profile.photo }
+                      }
+                      style={styles.profileAvatar}
+                      onLoad={() => console.log('[PHOTO-TEST] ✓ Header photo loaded successfully')}
+                      onError={(e) => console.error('[PHOTO-TEST] ✗ Header photo failed:', JSON.stringify(e.nativeEvent))}
+                    />
+                  ) : (
+                    <View
+                      style={[
+                        styles.profileAvatar,
+                        styles.profileAvatarPlaceholder,
+                      ]}
+                    >
+                      <Text style={styles.profileAvatarText}>
+                        {profile.name?.charAt(0)?.toUpperCase()}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              </TouchableOpacity>
+              {onOpenSettings && (
+                <TouchableOpacity
+                  onPress={onOpenSettings}
+                  style={styles.settingsButton}
+                  accessibilityLabel="Open settings"
+                  accessibilityRole="button"
+                >
+                  <MoreVertIcon
+                    size={24}
+                    color={colors.text?.primary || colors.primary || "#A08670"}
                   />
-                ) : (
-                  <View
-                    style={[
-                      styles.profileAvatar,
-                      styles.profileAvatarPlaceholder,
-                    ]}
-                  >
-                    <Text style={styles.profileAvatarText}>
-                      {profile.name?.charAt(0)?.toUpperCase()}
-                    </Text>
-                  </View>
-                )}
-              </View>
-            </TouchableOpacity>
+                </TouchableOpacity>
+              )}
+            </>
           )}
         </View>
       </View>
@@ -147,6 +166,21 @@ const createStyles = (colors, theme) =>
       alignItems: "center",
       padding: 4,
       borderRadius: 8,
+      ...platform.select({
+        web: {
+          cursor: "pointer",
+          ":hover": {
+            backgroundColor: colors.action?.hover || "rgba(0,0,0,0.04)",
+          },
+        },
+      }),
+    },
+    settingsButton: {
+      marginLeft: 8,
+      padding: 8,
+      borderRadius: 20,
+      alignItems: "center",
+      justifyContent: "center",
       ...platform.select({
         web: {
           cursor: "pointer",
