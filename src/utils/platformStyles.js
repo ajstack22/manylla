@@ -10,7 +10,7 @@ export const getFontFamily = (weight) => {
   return "System";
 };
 
-export const getTextStyle = (variant, weight) => {
+export const getTextStyle = (variant, weight, textColor) => {
   const baseStyle = {
     fontFamily: getFontFamily(weight),
   };
@@ -20,9 +20,9 @@ export const getTextStyle = (variant, weight) => {
     baseStyle.fontWeight = weight;
   }
 
-  // Force black text on Android TextInputs
-  if (platform.isAndroid && variant === "input") {
-    baseStyle.color = "#000000";
+  // Use theme-aware text color for inputs if provided
+  if (platform.isAndroid && variant === "input" && textColor) {
+    baseStyle.color = textColor;
   }
 
   return baseStyle;

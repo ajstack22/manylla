@@ -69,7 +69,10 @@ export const SmartTextInput = ({
   rows = 3,
   maxRows = 10,
   autoFocus = false,
+  themeColors,
 }) => {
+  // Use theme colors if provided, otherwise fall back to default
+  const activeColors = themeColors || colors;
   const textInputRef = useRef(null);
   const [showFormatting, setShowFormatting] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
@@ -204,7 +207,7 @@ export const SmartTextInput = ({
       <View
         style={[
           styles.inputContainer,
-          { borderColor: isFocused ? colors.primary : colors.border },
+          { borderColor: isFocused ? activeColors.primary : activeColors.border },
         ]}
       >
         <TextInput
@@ -216,8 +219,7 @@ export const SmartTextInput = ({
               maxHeight: multiline ? maxHeight : minHeight,
               textAlignVertical: multiline ? "top" : "center",
             },
-            getTextStyle("input"), // Force black text on Android
-            isAndroid && { color: "#000000" }, // Extra insurance
+            getTextStyle("input", undefined, activeColors.text || activeColors.textPrimary || colors.text),
           ]}
           value={value}
           onChangeText={handleChange}
@@ -225,11 +227,11 @@ export const SmartTextInput = ({
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
-          placeholderTextColor={isAndroid ? "#999" : colors.textSecondary}
+          placeholderTextColor={activeColors.textSecondary || colors.textSecondary}
           multiline={multiline}
           numberOfLines={multiline ? rows : 1}
           autoFocus={autoFocus}
-          selectionColor={colors.primary}
+          selectionColor={activeColors.primary}
         />
 
         {/* Format button for selected text */}

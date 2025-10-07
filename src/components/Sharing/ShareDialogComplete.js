@@ -51,8 +51,7 @@ export const ShareDialogComplete = ({
           <TextInput
             style={[
               styles.linkInput,
-              getTextStyle("input"),
-              platform.isAndroid && { color: "#000000" },
+              getTextStyle("input", undefined, colors.text?.primary || "#333333"),
             ]}
             value={generatedLink}
             editable={false}

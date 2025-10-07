@@ -134,13 +134,10 @@ const OnboardingStep2 = ({
         <TextInput
           style={[
             styles.input,
-            getTextStyle('input'),
-            platform.isAndroid && { color: '#000000' },
+            getTextStyle('input', undefined, colors.text.primary),
           ]}
           placeholder="Enter name"
-          placeholderTextColor={
-            platform.isAndroid ? '#999' : colors.text.disabled
-          }
+          placeholderTextColor={colors.text.disabled}
           value={childName}
           onChangeText={onChildNameChange}
           autoFocus={platform.isWeb}

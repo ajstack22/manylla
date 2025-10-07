@@ -62,11 +62,10 @@ const DateInput = ({ value, onChange, colors }) => {
       <TextInput
         style={[
           styles.input,
-          getTextStyle('input'),
-          platform.isAndroid && { color: '#000000' },
+          getTextStyle('input', undefined, colors.text.primary),
         ]}
         placeholder="MM/DD/YYYY"
-        placeholderTextColor={platform.isAndroid ? '#999' : colors.text.disabled}
+        placeholderTextColor={colors.text.disabled}
         value={value}
         onChangeText={onChange}
         keyboardType="numeric"

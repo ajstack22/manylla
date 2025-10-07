@@ -26,8 +26,11 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
   const manyllaColors = {
     background: "#C4A66B", // Actual manila envelope color
     paper: "#D4B896", // Lighter manila for cards
-    text: "#3D2F1F", // Dark brown text
-    textSecondary: "#5D4A37", // Medium brown for secondary text
+    text: {
+      primary: "#3D2F1F", // Dark brown text
+      secondary: "#5D4A37", // Medium brown for secondary text
+      disabled: "#8A7862", // Lighter brown for placeholders
+    },
     border: "#A68B5B", // Darker manila for borders
     primary: "#A08670", // Medium brown for primary actions
     primaryDark: "#6B5745", // Darker brown for hover states
@@ -164,7 +167,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
     },
     progressText: {
       fontSize: 12,
-      color: manyllaColors.textSecondary,
+      color: manyllaColors.text.secondary,
     },
     backButton: {
       width: 32,
@@ -175,7 +178,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
     },
     backIcon: {
       fontSize: 18,
-      color: manyllaColors.text,
+      color: manyllaColors.text.primary,
     },
     progressBar: {
       width: "100%",
@@ -212,12 +215,12 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
     title: {
       fontSize: 24,
       fontWeight: "600",
-      color: manyllaColors.text,
+      color: manyllaColors.text.primary,
       marginBottom: 8,
     },
     subtitle: {
       fontSize: 16,
-      color: manyllaColors.textSecondary,
+      color: manyllaColors.text.secondary,
       marginBottom: 16,
     },
     featureContainer: {
@@ -248,12 +251,12 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
     featureTitle: {
       fontSize: 16,
       fontWeight: "600",
-      color: manyllaColors.text,
+      color: manyllaColors.text.primary,
       marginBottom: 4,
     },
     featureDescription: {
       fontSize: 14,
-      color: manyllaColors.textSecondary,
+      color: manyllaColors.text.secondary,
     },
     button: {
       backgroundColor: manyllaColors.primary,
@@ -292,12 +295,12 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
     optionTitle: {
       fontSize: 16,
       fontWeight: "600",
-      color: manyllaColors.text,
+      color: manyllaColors.text.primary,
       marginBottom: 4,
     },
     optionDescription: {
       fontSize: 14,
-      color: manyllaColors.textSecondary,
+      color: manyllaColors.text.secondary,
     },
     codeInput: {
       flexDirection: "row",
@@ -311,7 +314,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
       paddingVertical: 12,
       marginRight: 8,
       fontSize: 16,
-      color: manyllaColors.text,
+      color: manyllaColors.text.primary,
     },
     codeButton: {
       backgroundColor: manyllaColors.primary,
@@ -330,7 +333,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
     },
     infoText: {
       fontSize: 14,
-      color: manyllaColors.text,
+      color: manyllaColors.text.primary,
     },
   });
 
@@ -494,7 +497,7 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
                   <Text
                     style={[
                       styles.optionIcon,
-                      { color: manyllaColors.textSecondary },
+                      { color: manyllaColors.text.secondary },
                     ]}
                   >
                     📤
@@ -512,13 +515,12 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
                     <TextInput
                       style={[
                         styles.textInput,
-                        getTextStyle("input"),
-                        isAndroid && { color: "#000000" },
+                        getTextStyle("input", undefined, manyllaColors.text.primary),
                       ]}
                       value={accessCode}
                       onChangeText={(text) => setAccessCode(text.toUpperCase())}
                       placeholder="Enter 6-digit code"
-                      placeholderTextColor={isAndroid ? "#999" : undefined}
+                      placeholderTextColor={manyllaColors.text.disabled}
                       maxLength={6}
                       autoCapitalize="characters"
                     />
@@ -561,13 +563,12 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
                 <TextInput
                   style={[
                     styles.textInput,
-                    getTextStyle("input"),
-                    isAndroid && { color: "#000000" },
+                    getTextStyle("input", undefined, manyllaColors.text.primary),
                   ]}
                   value={childName}
                   onChangeText={setChildName}
                   placeholder="Enter your child's name"
-                  placeholderTextColor={isAndroid ? "#999" : undefined}
+                  placeholderTextColor={manyllaColors.text.disabled}
                 />
               </View>
 
@@ -578,13 +579,12 @@ export const ProgressiveOnboarding = ({ onComplete }) => {
                 <TextInput
                   style={[
                     styles.textInput,
-                    getTextStyle("input"),
-                    isAndroid && { color: "#000000" },
+                    getTextStyle("input", undefined, manyllaColors.text.primary),
                   ]}
                   value={dateOfBirth || ""}
                   onChangeText={setDateOfBirth}
                   placeholder="YYYY-MM-DD"
-                  placeholderTextColor={isAndroid ? "#999" : undefined}
+                  placeholderTextColor={manyllaColors.text.disabled}
                 />
               </View>
 

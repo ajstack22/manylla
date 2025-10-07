@@ -54,15 +54,12 @@ export const SyncDialogRestore = ({ onModeChange, onClose }) => {
           style={[
             styles.input,
             styles.codeInput,
-            getTextStyle("input"), // Force black text on Android
-            platform.isAndroid && { color: "#000000" }, // Extra insurance
+            getTextStyle("input", undefined, colors.text.primary),
           ]}
           value={joinPhrase}
           onChangeText={handleJoinPhraseChange}
           placeholder="XXXX-XXXX or 32-character code"
-          placeholderTextColor={
-            platform.isAndroid ? "#999" : colors.text.secondary
-          }
+          placeholderTextColor={colors.text.secondary}
           autoCapitalize="characters"
         />
         <Text style={styles.helperText}>

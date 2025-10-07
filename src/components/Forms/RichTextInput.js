@@ -37,7 +37,10 @@ export const RichTextInput = ({
   multiline = true,
   rows = 3,
   autoFocus = false,
+  themeColors,
 }) => {
+  // Use theme colors if provided, otherwise fall back to default
+  const activeColors = themeColors || colors;
   const textInputRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
   const [activeFormats, setActiveFormats] = useState({
@@ -140,7 +143,7 @@ export const RichTextInput = ({
       <View
         style={[
           styles.editorContainer,
-          { borderColor: isFocused ? colors.primary : colors.border },
+          { borderColor: isFocused ? activeColors.primary : activeColors.border },
         ]}
       >
         {/* Placeholder is handled by TextInput */}
@@ -154,8 +157,7 @@ export const RichTextInput = ({
               maxHeight: multiline ? 300 : minHeight,
               textAlignVertical: multiline ? "top" : "center",
             },
-            getTextStyle("input"), // Force black text on Android
-            platform.isAndroid && { color: "#000000" }, // Extra insurance
+            getTextStyle("input", undefined, activeColors.text || activeColors.textPrimary || colors.text),
           ]}
           value={value}
           onChangeText={handleInput}
@@ -165,13 +167,11 @@ export const RichTextInput = ({
           }}
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
-          placeholderTextColor={
-            platform.isAndroid ? "#999" : colors.textSecondary
-          }
+          placeholderTextColor={activeColors.textSecondary || colors.textSecondary}
           multiline={multiline}
           numberOfLines={multiline ? rows : 1}
           autoFocus={autoFocus}
-          selectionColor={colors.primary}
+          selectionColor={activeColors.primary}
         />
       </View>
 

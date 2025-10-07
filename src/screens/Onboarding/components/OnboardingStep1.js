@@ -194,13 +194,10 @@ const OnboardingStep1 = ({
         <TextInput
           style={[
             styles.input,
-            getTextStyle('input'),
-            platform.isAndroid && { color: '#000000' },
+            getTextStyle('input', undefined, colors.text.primary),
           ]}
           placeholder="Enter access code"
-          placeholderTextColor={
-            platform.isAndroid ? '#999' : colors.text.disabled
-          }
+          placeholderTextColor={colors.text.disabled}
           value={accessCode}
           onChangeText={onAccessCodeChange}
           autoCapitalize="characters"

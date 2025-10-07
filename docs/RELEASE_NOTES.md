@@ -1,5 +1,70 @@
 # Manylla Release Notes
 
+## Version 2025.10.06.2 - 2025-10-06
+Fix: TextInput Visibility in Dark Mode on Android
+
+### Summary
+Fixed black text on dark backgrounds in modal TextInputs on Android mobile devices, making text visible in dark mode.
+
+### Issue Resolved
+Users reported invisible typed text in dark mode on mobile Android:
+- **Add Entry** modal - title and description fields
+- **Edit Entry** modal - all input fields
+- **Edit Profile** modal - name and preferred name fields
+- **Backup & Sync** modal - recovery code input
+- **Onboarding** screens - all text inputs
+
+### Root Cause
+`src/utils/platformStyles.js` getTextStyle() function forced black (#000000) text on all Android TextInput components, regardless of theme. This hardcoded workaround broke dark mode where backgrounds are dark (#1A1A1A, #2A2A2A).
+
+### Solution
+- Made `getTextStyle()` theme-aware by adding optional `textColor` parameter
+- Updated all 13 affected components to pass theme colors from context
+- Removed hardcoded `platform.isAndroid && { color: "#000000" }` overrides
+- Updated placeholderTextColor to use theme colors instead of hardcoded "#999"
+
+### Components Fixed (13 total)
+**Core Forms:**
+- EntryForm (Add/Edit Entry) - [UnifiedApp.js:157,173](src/components/UnifiedApp.js#L157)
+- ProfileEditForm (Edit Profile) - [UnifiedApp.js:315,329](src/components/UnifiedApp.js#L315)
+
+**Sync/Backup:**
+- SyncDialogRestore - [SyncDialogRestore.js:57](src/components/Sync/SyncDialogRestore.js#L57)
+
+**Reusable Components:**
+- SmartTextInput - [SmartTextInput.js:222](src/components/Forms/SmartTextInput.js#L222)
+- RichTextInput - [RichTextInput.js:160](src/components/Forms/RichTextInput.js#L160)
+- DatePicker - [DatePicker.js:55](src/components/DatePicker/DatePicker.js#L55)
+
+**Sharing:**
+- ShareDialogComplete - [ShareDialogComplete.js:54](src/components/Sharing/ShareDialogComplete.js#L54)
+- SharedProfileView - [SharedProfileView.js:108](src/components/Sharing/SharedProfileView.js#L108)
+
+**Onboarding:**
+- ProgressiveOnboarding - [ProgressiveOnboarding.js:518,566,582](src/components/Onboarding/ProgressiveOnboarding.js#L518)
+- OnboardingStep1 - [OnboardingStep1.js:197](src/screens/Onboarding/components/OnboardingStep1.js#L197)
+- OnboardingStep2 - [OnboardingStep2.js:137](src/screens/Onboarding/components/OnboardingStep2.js#L137)
+- DateInput - [DateInput.js:65](src/screens/Onboarding/components/DateInput.js#L65)
+
+### Dark Mode Text Colors (from ThemeContext.js)
+- **Primary text**: #FFFFFF (white) on dark backgrounds
+- **Placeholder text**: #AAAAAA (light gray)
+- **Background**: #1A1A1A (default), #2A2A2A (paper/surface)
+- **Border**: #404040
+
+### Testing
+- Build completed successfully with no errors
+- All TextInput components now theme-aware
+- Backward compatible (defaults to light mode if theme not provided)
+
+### Benefits
+- ✅ **Fixes P1 Bug**: Text now visible in all dark mode TextInputs on Android
+- ✅ **Consistent Theming**: All inputs respect theme colors across the app
+- ✅ **Better UX**: Readable text in both light and dark modes
+- ✅ **Maintainable**: Single source of truth for input text colors
+
+---
+
 ## Version 2025.10.06.1 - 2025-10-06
 UX: Refactor Bottom Toolbar to Settings Menu
 

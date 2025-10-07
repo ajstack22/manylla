@@ -154,15 +154,12 @@ export const EntryForm = ({
           <TextInput
             style={[
               dynamicStyles.input,
-              getTextStyle("input"),
-              platform.isAndroid && { color: "#000000" },
+              getTextStyle("input", undefined, activeColors.text.primary),
             ]}
             value={title}
             onChangeText={setTitle}
             placeholder="Enter a title..."
-            placeholderTextColor={
-              platform.isAndroid ? "#999" : activeColors.text.disabled
-            }
+            placeholderTextColor={activeColors.text.disabled}
           />
         </View>
 
@@ -173,15 +170,12 @@ export const EntryForm = ({
             style={[
               dynamicStyles.input,
               dynamicStyles.textArea,
-              getTextStyle("input"),
-              platform.isAndroid && { color: "#000000" },
+              getTextStyle("input", undefined, activeColors.text.primary),
             ]}
             value={description}
             onChangeText={setDescription}
             placeholder="Add details..."
-            placeholderTextColor={
-              platform.isAndroid ? "#999" : activeColors.text.disabled
-            }
+            placeholderTextColor={activeColors.text.disabled}
             multiline
             numberOfLines={5}
             textAlignVertical="top"
@@ -318,15 +312,12 @@ export const ProfileEditForm = ({
         <TextInput
           style={[
             dynamicStyles.input,
-            getTextStyle("input"),
-            platform.isAndroid && { color: "#000000" },
+            getTextStyle("input", undefined, activeColors.text.primary),
           ]}
           value={name}
           onChangeText={setName}
           placeholder="Full name"
-          placeholderTextColor={
-            platform.isAndroid ? "#999" : activeColors.text.disabled
-          }
+          placeholderTextColor={activeColors.text.disabled}
         />
       </View>
 
@@ -335,15 +326,12 @@ export const ProfileEditForm = ({
         <TextInput
           style={[
             dynamicStyles.input,
-            getTextStyle("input"),
-            platform.isAndroid && { color: "#000000" },
+            getTextStyle("input", undefined, activeColors.text.primary),
           ]}
           value={preferredName}
           onChangeText={setPreferredName}
           placeholder="What they like to be called"
-          placeholderTextColor={
-            platform.isAndroid ? "#999" : activeColors.text.disabled
-          }
+          placeholderTextColor={activeColors.text.disabled}
         />
       </View>
 
