@@ -1,6 +1,6 @@
 {
   "name": "manylla",
-  "version": "2025.10.06.1",
+  "version": "2025.10.15.1",
   "private": true,
   "homepage": "/qual",
   "scripts": {
@@ -10,6 +10,9 @@
     "start:reset": "react-native start --reset-cache",
     "web": "echo '🌐 Starting WEB dev server on http://localhost:3000 (webpack)' && webpack serve --mode development",
     "build:web": "NODE_ENV=production webpack --mode production",
+    "build:web:qual": "cp .env.qual .env && npm run build:web",
+    "build:web:stage": "cp .env.stage .env && npm run build:web",
+    "build:web:prod": "cp .env.prod .env && npm run build:web",
     "test": "jest",
     "test:ci": "jest --ci --coverage --watchAll=false",
     "test:watch": "jest --watch",

@@ -150,6 +150,18 @@ module.exports = {
       "process.env.NODE_ENV": JSON.stringify(
         process.env.NODE_ENV || "development",
       ),
+      "process.env.REACT_APP_BUILD_TYPE": JSON.stringify(
+        process.env.REACT_APP_BUILD_TYPE || "qual",
+      ),
+      "process.env.REACT_APP_API_ENDPOINT": JSON.stringify(
+        process.env.REACT_APP_API_ENDPOINT || "https://manylla.com/qual/api",
+      ),
+      "process.env.REACT_APP_ENV_NAME": JSON.stringify(
+        process.env.REACT_APP_ENV_NAME || "QUAL",
+      ),
+      "process.env.PUBLIC_URL": JSON.stringify(
+        process.env.PUBLIC_URL || "/manylla/qual",
+      ),
       __DEV__: JSON.stringify(!isProduction),
     }),
     new CopyWebpackPlugin({

@@ -75,8 +75,14 @@ export const useShareActions = () => {
 
       // Generate link with key in fragment
       const getShareDomain = () => {
-        // In React Native, we'll use a configured domain
-        return "https://manylla.com/qual";
+        // Use buildConfig to get correct tier URL
+        const { PUBLIC_URL } = require("../../config/buildConfig");
+        // In web, use window.location.origin
+        if (typeof window !== "undefined" && window.location) {
+          return window.location.origin + PUBLIC_URL;
+        }
+        // In React Native, construct from PUBLIC_URL
+        return `https://manylla.com${PUBLIC_URL}`;
       };
 
       const shareDomain = getShareDomain();

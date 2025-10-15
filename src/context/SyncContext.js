@@ -421,9 +421,11 @@ export const SyncProvider = ({ children, onProfileReceived }) => {
         );
 
         // Return the share URL with encryption key in fragment
+        // Import at function level to avoid circular dependencies
+        const { PUBLIC_URL } = require('../config/buildConfig');
         const baseUrl = platform.isWeb() && typeof window !== "undefined" && window.location
-          ? window.location.origin
-          : "https://manylla.com/qual";
+          ? window.location.origin + PUBLIC_URL
+          : `https://manylla.com${PUBLIC_URL}`;
 
         return `${baseUrl}/share/${shareId}#${shareData.key}`;
       } catch (error) {

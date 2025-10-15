@@ -1,5 +1,101 @@
 # Manylla Release Notes
 
+## Version 2025.10.15.1 - 2025-10-15
+Infrastructure: Wave 2 - STAGE Tier Deployment Setup
+
+### Summary
+Implemented STAGE tier as part of the 4-tier deployment system (QUAL → STAGE → PROD → DR). STAGE provides an internal team validation environment with production-like configuration before releasing to production.
+
+### Implementation Details
+**4-Tier Deployment Architecture:**
+- **QUAL**: Development/testing environment (https://manylla.com/qual/)
+- **STAGE**: Team validation environment (https://manylla.com/stage/) - NEW
+- **PROD**: Production environment (planned)
+- **DR**: Disaster recovery environment (planned)
+
+**StackMap Pattern - Database Sharing:**
+- QUAL + STAGE share database: `stachblx_manylla_sync_qual`
+- BETA + PROD share database: `stachblx_manylla_sync_prod` (future)
+- Allows realistic testing with actual qual data before production
+
+**Configuration:**
+- Production-like behavior: API_DEBUG=false, display_errors=0
+- Moderate rate limiting: 60 requests/minute (vs QUAL's 100)
+- Restricted CORS: No localhost origins (production-like)
+- Comprehensive security headers: HSTS, X-Frame-Options, CSP, Referrer-Policy
+- HTTPS enforcement with Apache mod_rewrite
+
+### Files Created
+**1. public/.htaccess.manylla-stage**
+- Apache configuration for STAGE tier
+- RewriteBase: /manylla/stage/
+- SPA routing for share and sync routes
+- Security headers and HTTPS enforcement
+
+**2. api/config/config.stage.php**
+- STAGE environment configuration
+- Shares QUAL database for realistic testing
+- Production-like settings (no debug display)
+- CORS restricted to manylla.com domains only
+
+**3. scripts/deploy-stage.sh**
+- Deployment orchestrator for STAGE tier
+- 12-step validation: lint, TypeScript, security scans, tests
+- Automatic version updates in .env
+- Git workflow: validate first, commit only if tests pass
+
+### Critical Fix: Deployment Script Git Logic
+**Problem:** Original deploy scripts checked git status BEFORE validation, creating a paradox:
+- Can't validate uncommitted changes if git must be clean first
+- Forces committing untested code or skipping security checks
+
+**Solution:** Restructured deployment flow in deploy-stage.sh:
+1. Phase 1: Run all validation on uncommitted changes (safe)
+2. Phase 2: After validation passes, check git status
+3. Stage all changes with `git add -A`
+4. Commit everything together with version update
+5. Phase 3: Deploy to server
+
+**Benefits:**
+- Natural development workflow: validate → commit → deploy
+- No more "working directory must be clean" paradox
+- Safer: never commit code that hasn't passed validation
+- Prevents accidental skip of git checks
+
+### Testing Performed
+- Tested deployment script validation flow with uncommitted changes
+- Verified release notes requirement blocks deployment correctly
+- Manual setup completed: server directories, permissions, build testing
+- STAGE build: Successfully generated 15MB output in web/build/
+
+### Deployment Architecture
+**Server Structure:**
+```
+~/public_html/manylla/stage/
+├── index.html (React app entry point)
+├── static/ (bundled assets)
+├── .htaccess (Apache config)
+└── api/
+    ├── config/
+    │   └── config.stage.php
+    ├── sync/ (5 endpoints)
+    ├── share/ (2 endpoints)
+    └── logs/
+```
+
+### Next Steps
+- Complete STAGE deployment to https://manylla.com/stage/
+- Apply git logic fix to deploy-qual.sh (same issue exists)
+- Update TEAM_AGREEMENTS.md with deployment best practices
+- Plan Wave 3: PROD tier implementation
+
+### References
+- Atlas Standard Workflow: Used 5-phase implementation (Research, Plan, Implement, Review, Deploy)
+- DEPLOYMENT_ROADMAP.md: Wave 2 specifications (lines 280-629)
+- TEAM_AGREEMENTS.md: Deployment validation requirements
+
+---
+
 ## Version 2025.10.06.2 - 2025-10-06
 Fix: TextInput Visibility in Dark Mode on Android
 

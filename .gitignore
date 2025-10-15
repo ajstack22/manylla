@@ -83,6 +83,10 @@ yarn-error.log
 .env.staging
 .env.development
 .env.production
+# Tier-specific environment files (Wave 1 deployment system)
+.env.qual
+.env.stage
+.env.prod
 
 # Logs
 *.log

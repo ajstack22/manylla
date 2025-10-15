@@ -53,7 +53,14 @@ export const PhotoUpload = ({
       setIsLoading(true);
       setError(null);
 
-      // Check if photo is encrypted or legacy format
+      // Check for demo photo marker
+      if (currentPhoto === '__DEMO_ELLIE__') {
+        setPhotoPreview(require('../../../public/assets/ellie.png'));
+        setIsLoading(false);
+        return;
+      }
+
+      // Check if photo is encrypted
       if (
         photoService &&
         typeof photoService.isPhotoEncrypted === "function" &&
@@ -62,7 +69,7 @@ export const PhotoUpload = ({
         const decryptedDataUrl = await photoService.decryptPhoto(currentPhoto);
         setPhotoPreview(decryptedDataUrl);
       } else {
-        // Legacy format - display as-is (for backward compatibility only)
+        // Direct image reference (require() result) or URI - display as-is
         setPhotoPreview(currentPhoto);
       }
     } catch (error) {
@@ -268,12 +275,11 @@ const PhotoDisplayArea = ({
         disabled={disabled}
       >
         <Image
-          source={{
-            uri:
-              platform.isIOS && photoPreview && photoPreview.startsWith("/")
-                ? `https://manylla.com/qual${photoPreview}`
-                : photoPreview,
-          }}
+          source={
+            typeof photoPreview === "number"
+              ? photoPreview
+              : { uri: photoPreview }
+          }
           style={styles.photoImage}
           resizeMode="cover"
         />

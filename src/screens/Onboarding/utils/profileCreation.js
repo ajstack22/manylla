@@ -44,7 +44,8 @@ export const createInitialProfile = (formData) => {
  * Creates demo profile with sample data
  */
 export const createDemoProfile = () => {
-  const Image = require('react-native').Image;
+  // Use a special marker that survives JSON stringification
+  const DEMO_PHOTO_MARKER = '__DEMO_ELLIE__';
 
   return {
     id: 'demo-' + Date.now(),
@@ -52,9 +53,7 @@ export const createDemoProfile = () => {
     preferredName: 'Ellie',
     pronouns: 'she/her',
     dateOfBirth: new Date('2018-06-15'),
-    photo: platform.isWeb
-      ? '/ellie.png'
-      : Image.resolveAssetSource(EllieImage).uri,
+    photo: DEMO_PHOTO_MARKER,
     categories: unifiedCategories.map((cat) => ({
       ...cat,
       icon: getIconForCategory(cat.id),

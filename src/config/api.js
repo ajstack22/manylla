@@ -3,35 +3,18 @@
  * Phase 3 Cloud Storage Implementation
  */
 
+import { API_ENDPOINT } from './buildConfig';
+
 // Determine the API base URL based on environment
 const getApiBaseUrl = () => {
-  // Check if we're running in a browser environment
-  if (typeof window === "undefined" || !window.location) {
-    // For React Native, always use qual API
-    return "https://manylla.com/qual/api";
+  // Use BUILD_TYPE_ENV from buildConfig (compiled at build time)
+  // This is more reliable than runtime detection
+  if (process.env.REACT_APP_API_ENDPOINT) {
+    return process.env.REACT_APP_API_ENDPOINT;
   }
 
-  // Production/staging detection based on hostname
-  const hostname = window.location.hostname;
-
-  // For local development, use the dev API environment we set up for testing
-  if (hostname === "localhost" || hostname === "127.0.0.1") {
-    // Point to dev API for local development and testing
-    return "https://manylla.com/dev/api";
-  } else if (hostname.includes("manylla.com")) {
-    // Check if we're on qual/staging
-    if (window.location.pathname.startsWith("/qual")) {
-      return "/qual/api";
-    }
-    // Production
-    return "/api";
-  } else if (hostname.includes("stackmap.app")) {
-    // Deployed to StackMap domain
-    return "/manylla/api";
-  }
-
-  // Default fallback
-  return "/api";
+  // Fallback to buildConfig module
+  return API_ENDPOINT;
 };
 
 export const API_BASE_URL = getApiBaseUrl();

@@ -13,9 +13,6 @@ let MaterialIcons = null;
 if (platform.isMobile) {
   try {
     MaterialIcons = require("react-native-vector-icons/MaterialIcons").default;
-    if (process.env.NODE_ENV === "development") {
-      console.log("IconProvider: MaterialIcons loaded successfully");
-    }
   } catch (e) {
     // Expected failure on platforms where react-native-vector-icons is not available
     // App will gracefully fall back to text-based icons

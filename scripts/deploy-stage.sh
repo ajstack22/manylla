@@ -93,22 +93,8 @@ echo -e "${CYAN}    PHASE 1: PRE-COMMIT VALIDATION CHECKS              ${NC}"
 echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
 echo
 
-# Step 1: Check for uncommitted changes
-echo -e "${BLUE}Step 1: Checking for uncommitted changes${NC}"
-echo "─────────────────────────────────────────"
-if [[ -z "$SKIP_GIT_CHECK" ]]; then
-    if [[ -n $(git status --porcelain) ]]; then
-        handle_error "Uncommitted changes detected" \
-            "Commit or stash all changes before deployment. Run: git status"
-    fi
-    echo -e "${GREEN}✅ Working directory clean${NC}"
-else
-    echo -e "${YELLOW}⚠️  Git check skipped (SKIP_GIT_CHECK set)${NC}"
-fi
-echo
-
-# Step 2: Validate Release Notes
-echo -e "${BLUE}Step 2: Validating Release Notes${NC}"
+# Step 1: Validate Release Notes
+echo -e "${BLUE}Step 1: Validating Release Notes${NC}"
 echo "─────────────────────────────────"
 
 # Function to increment version
@@ -537,8 +523,35 @@ echo -e "${CYAN}    PHASE 2: VERSION UPDATE & COMMIT                   ${NC}"
 echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
 echo
 
+# Git Status Check - After validation passes, before commit
+echo -e "${BLUE}Verifying Repository State${NC}"
+echo "───────────────────────────────"
+
+# Check if there are uncommitted changes
+GIT_STATUS=$(git status --porcelain)
+if [[ -n "$GIT_STATUS" ]]; then
+    echo -e "${YELLOW}📝 Uncommitted changes detected - will be included in deployment commit:${NC}"
+    echo "$GIT_STATUS" | head -10
+    if [[ $(echo "$GIT_STATUS" | wc -l) -gt 10 ]]; then
+        echo "   ... and $(($(echo "$GIT_STATUS" | wc -l) - 10)) more files"
+    fi
+    echo
+    echo -e "${GREEN}✅ All validation passed - safe to commit${NC}"
+else
+    echo -e "${YELLOW}⚠️  No uncommitted changes detected${NC}"
+    echo -e "${YELLOW}   Only version update will be committed${NC}"
+fi
+echo
+
 echo -e "${BLUE}Updating Version & Committing${NC}"
 echo "──────────────────────────────"
+
+# Stage all changes (if any) along with version update
+if [[ -n "$GIT_STATUS" ]]; then
+    echo -e "${YELLOW}📦 Staging all changes...${NC}"
+    git add -A
+    echo -e "${GREEN}✅ All changes staged${NC}"
+fi
 
 # Update version in package.json
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -549,11 +562,20 @@ else
     sed -i "s/\"version\": \"$CURRENT_VERSION\"/\"version\": \"$NEW_VERSION\"/" package.json
 fi
 
-# Commit the version change
+# Commit all changes + version update
 git add package.json
 git add docs/RELEASE_NOTES.md 2>/dev/null || git add RELEASE_NOTES.md 2>/dev/null || true
-git commit -m "v$NEW_VERSION: $RELEASE_TITLE" || handle_error "Git commit failed" \
-    "Resolve git issues and try again"
+
+# Create commit message
+if [[ -n "$GIT_STATUS" ]]; then
+    # Commit includes code changes + version update
+    git commit -m "v$NEW_VERSION: $RELEASE_TITLE" || handle_error "Git commit failed" \
+        "Resolve git issues and try again"
+else
+    # Only version update
+    git commit -m "v$NEW_VERSION: $RELEASE_TITLE" || handle_error "Git commit failed" \
+        "Resolve git issues and try again"
+fi
 
 echo -e "${GREEN}✅ Version updated to $NEW_VERSION${NC}"
 echo -e "${GREEN}✅ Changes committed${NC}"

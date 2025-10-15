@@ -166,6 +166,7 @@ const ProfileOverview = ({
   onShare,
   onEditProfile,
   onManageCategories,
+  onOpenSettings,
   styles,
   colors,
   onScrollChange,
@@ -658,13 +659,23 @@ const ProfileOverview = ({
         </View>
       </ScrollView>
 
-      {/* Floating Action Button */}
+      {/* Floating Action Buttons - Dual FAB System */}
+      {/* Left FAB: Add Entry */}
       <TouchableOpacity
-        style={styles.fab}
+        style={styles.fabLeft}
         onPress={() => onAddEntry("")}
         activeOpacity={0.8}
       >
         <Text style={styles.fabText}>+</Text>
+      </TouchableOpacity>
+
+      {/* Right FAB: Settings Menu */}
+      <TouchableOpacity
+        style={styles.fabRight}
+        onPress={onOpenSettings}
+        activeOpacity={0.8}
+      >
+        <Text style={styles.fabText}>⋮</Text>
       </TouchableOpacity>
     </View>
   );
@@ -1370,7 +1381,6 @@ function AppContent() {
         theme={theme}
         profile={profile}
         onEditProfile={() => setProfileEditOpen(true)}
-        onOpenSettings={() => setSettingsMenuOpen(true)}
       />
       <ProfileOverview
         profile={profile}
@@ -1380,6 +1390,7 @@ function AppContent() {
         onUpdateProfile={handleUpdateProfile}
         onShare={() => setShareDialogOpen(true)}
         onEditProfile={() => setProfileEditOpen(true)}
+        onOpenSettings={() => setSettingsMenuOpen(true)}
         styles={styles}
         colors={colors}
       />
@@ -1819,10 +1830,10 @@ const createStyles = (colors, theme) => {
       color: colors.text.primary,
       lineHeight: 20,
     },
-    fab: {
+    // Base FAB styles shared by both FABs
+    fabBase: {
       position: isWeb() ? "fixed" : "absolute",
-      bottom: 24, // No toolbar, just standard spacing
-      right: 24,
+      bottom: 24,
       width: 56,
       height: 56,
       borderRadius: 28,
@@ -1835,7 +1846,61 @@ const createStyles = (colors, theme) => {
           boxShadow:
             "0 3px 5px -1px rgba(0,0,0,0.2), 0 6px 10px 0 rgba(0,0,0,0.14), 0 1px 18px 0 rgba(0,0,0,0.12)",
           cursor: "pointer",
-          position: "fixed", // Ensure fixed positioning on web
+          position: "fixed",
+        },
+        default: {
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 6 },
+          shadowOpacity: 0.37,
+          shadowRadius: 7.49,
+          elevation: 12,
+        },
+      }),
+    },
+    fabLeft: {
+      position: isWeb() ? "fixed" : "absolute",
+      bottom: 24,
+      left: 24, // LEFT side for Add Entry
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      backgroundColor: colors.primary,
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 1000,
+      ...Platform.select({
+        web: {
+          boxShadow:
+            "0 3px 5px -1px rgba(0,0,0,0.2), 0 6px 10px 0 rgba(0,0,0,0.14), 0 1px 18px 0 rgba(0,0,0,0.12)",
+          cursor: "pointer",
+          position: "fixed",
+        },
+        default: {
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 6 },
+          shadowOpacity: 0.37,
+          shadowRadius: 7.49,
+          elevation: 12,
+        },
+      }),
+    },
+    fabRight: {
+      position: isWeb() ? "fixed" : "absolute",
+      bottom: 24,
+      right: 24, // RIGHT side for Settings Menu
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      backgroundColor: colors.primary,
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 1000,
+      ...Platform.select({
+        web: {
+          boxShadow:
+            "0 3px 5px -1px rgba(0,0,0,0.2), 0 6px 10px 0 rgba(0,0,0,0.14), 0 1px 18px 0 rgba(0,0,0,0.12)",
+          cursor: "pointer",
+          position: "fixed",
         },
         default: {
           shadowColor: "#000",
