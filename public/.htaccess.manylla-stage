@@ -1,0 +1,46 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /manylla/stage/
+
+  # Handle share routes explicitly - always send to React app
+  RewriteRule ^share/.*$ /manylla/stage/index.html [L]
+
+  # Handle sync routes explicitly - always send to React app
+  RewriteRule ^sync/.*$ /manylla/stage/index.html [L]
+
+  # Don't rewrite files or directories (except share and sync)
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Rewrite everything else to /manylla/stage/index.html
+  RewriteRule ^ /manylla/stage/index.html [L]
+</IfModule>
+
+# Security Headers
+<IfModule mod_headers.c>
+  # Clickjacking protection
+  Header set X-Frame-Options "DENY"
+  # MIME sniffing protection
+  Header set X-Content-Type-Options "nosniff"
+  # XSS protection
+  Header set X-XSS-Protection "1; mode=block"
+  # HSTS - Force HTTPS
+  Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  # Referrer policy
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Cache control for client-side routing
+  Header set Cache-Control "no-cache, no-store, must-revalidate"
+  Header set Pragma "no-cache"
+  Header set Expires 0
+</IfModule>
+
+# Force HTTPS
+<IfModule mod_rewrite.c>
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Fallback for servers without mod_rewrite
+FallbackResource /manylla/stage/index.html
