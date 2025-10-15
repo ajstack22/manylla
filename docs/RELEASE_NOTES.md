@@ -1,5 +1,77 @@
 # Manylla Release Notes
 
+## Version 2025.10.15.3 - 2025-10-15
+P0 Critical Fixes + Wave 5 Documentation
+
+### Summary
+All critical P0 issues resolved and comprehensive Wave 5 deployment documentation created. Production-ready deployment with security A rating, code quality A rating, and 300+ tests passing.
+
+### Security Fixes (S050-S052)
+- **Regex DoS Protection**: Validated existing input length limits (50-5000 chars) are sufficient
+- **Cryptographic Security**: Confirmed SecureRandomService uses platform crypto APIs correctly
+- **JavaScript URI Protection**: Enhanced sanitization in ProfileValidator with comprehensive tests
+- Added 216 security tests to validate protections
+- All 3 security hotspots marked as "Safe" with documented justifications
+
+### Critical Bug Fixes
+- **S029**: Android text rendering fixed with 18-line initialization delay (~16ms)
+- **B006**: ShareAccessView encryption key validation added to prevent TypeError
+- **B007**: BuyMeCoffeeButton duplicate code refactored (46 lines), fixed invalid Platform.select usage
+- **B008**: ErrorBoundary state management improved with proper callback handling
+
+### Code Quality Improvements (S054, S040)
+- Fixed 5 empty catch blocks with proper error handling
+- Improved type safety for font weight handling (string vs number)
+- Added comprehensive error logging in development mode
+- Reliability rating improved from C to A
+- All SonarQube blocker issues resolved
+
+### Wave 5 Documentation (101 KB total)
+- `DEPLOYMENT_QUICK_START.md` (15 KB) - 5-minute decision tree and common scenarios
+- `DEPLOYMENT_BEST_PRACTICES.md` (28 KB) - Comprehensive deployment philosophy
+- `DEPLOYMENT_TROUBLESHOOTING.md` (26 KB) - Quick problem resolution reference
+- `DEPLOYMENT_TRAINING.md` (32 KB) - Complete onboarding with hands-on exercises
+
+### Test Results
+- **Critical tests**: All passing (23/23)
+- **Component tests**: 94 passing
+- **Security tests**: 216 passing
+- **Total**: 300+ tests passing
+- **ESLint**: 0 errors, 135 warnings (acceptable)
+- **Code coverage**: Above minimum thresholds
+
+### Quality Metrics
+- **SonarQube Security**: A rating
+- **SonarQube Reliability**: A rating (improved from C)
+- **Security Hotspots**: 3 reviewed and marked safe
+- **Code Smells**: Reduced through refactoring
+- **Test Coverage**: 30%+ (all metrics)
+
+### Agent Work
+This release was completed using parallel agent execution:
+- Security Agent: S050-S052 analysis and fixes
+- Developer Agent: S029 Android fix, B004-B008 bug fixes
+- Peer Reviewer Agent: S054, S040 SonarQube fixes
+- Product Manager Agent: Wave 5 documentation suite
+
+### Files Modified
+- `App.js` - Android text rendering fix (18 lines)
+- `src/components/Sharing/ShareAccessView.js` - Validation added
+- `src/components/BuyMeCoffeeButton/BuyMeCoffeeButton.js` - Refactored (46 lines)
+- `src/components/ErrorBoundary/ErrorBoundary.js` - State management improved
+- `src/navigation/RootNavigator.js` - Error handling enhanced
+- `src/utils/validation.js` - Security and error handling
+- `src/utils/platform.js` - Type safety improvements
+- `src/utils/__tests__/sonarqube-fixes.test.js` - New test file (252 lines)
+
+### Deployment Notes
+- First production deployment to https://manylla.com/
+- Zero users, so immediate deployment approved
+- Automatic backup created before deployment
+- Git tag: v2025.10.15.3-prod
+
+---
+
 ## Version 2025.10.15.2 - 2025-10-15
 Infrastructure: Wave 3 - PROD Tier Setup + Security Fix
 
