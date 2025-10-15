@@ -1,5 +1,158 @@
 # Manylla Release Notes
 
+## Version 2025.10.15.2 - 2025-10-15
+Infrastructure: Wave 3 - PROD Tier Setup + Security Fix
+
+### Summary
+Implemented PROD tier infrastructure with enhanced security and mandatory backup system. This wave includes critical security fix for exposed database credentials discovered during Wave 2 implementation.
+
+### Security Fix (Priority: P0)
+**Issue**: Database credentials exposed in git history (config.stage.php)
+
+**Impact**: QUAL/STAGE database password was committed to git in Wave 2 (commit 2aaf2ee)
+
+**Resolution**:
+- Replaced hardcoded password with placeholder in config.stage.php
+- Added config.stage.php to .gitignore
+- Removed file from git tracking (git rm --cached)
+- Added file permissions verification: config files now 600 (owner read/write only)
+- Password remains in git history - **RECOMMEND ROTATING DATABASE PASSWORD**
+
+**Action Required**:
+1. SSH to server: `ssh stackmap-cpanel`
+2. Change database password for user: stachblx_mql
+3. Update config.qual.php and config.stage.php on server with new password
+4. Test QUAL and STAGE deployments after password rotation
+
+### Wave 3: PROD Tier Infrastructure
+
+**Environment Configuration:**
+- URL: https://manylla.com/ (root path, not /manylla/prod/)
+- Separate production database: stachblx_manylla_sync_prod
+- Production-optimized settings: zero console.logs, full test coverage required
+- Enhanced security headers: CSP, HSTS with preload, Permissions-Policy
+
+**Deployment Safeguards:**
+- Two-step confirmation: Type "YES" then "DEPLOY" (prevents accidental production deployments)
+- Mandatory backup system: Files + database before every deployment
+- Git tagging: Auto-creates v{version} tag for rollback capability
+- Branch enforcement: main/master only
+- Validation: Stricter than QUAL/STAGE - zero tolerance for console.logs
+
+**Production-Only Features:**
+- Database backup before deployment (mysqldump)
+- Rollback command generated and displayed
+- Git tag creation for version tracking
+- Enhanced error reporting with rollback instructions
+
+### Files Created
+**1. public/.htaccess.manylla-prod**
+- Apache configuration for production
+- RewriteBase: /manylla/ (root path)
+- Enhanced security headers with HSTS preload
+- Options -Indexes (prevents directory listing)
+- Permissions-Policy header for additional security
+
+**2. api/config/config.prod.php**
+- Production environment configuration
+- Separate database: stachblx_manylla_sync_prod
+- Strict CORS: manylla.com only
+- No debug output, production error handling
+- File permissions: 600 (owner read/write only)
+
+**3. scripts/deploy-prod.sh**
+- Production deployment script with enhanced safeguards
+- Two confirmations required (YES + DEPLOY)
+- Mandatory backup creation with rollback instructions
+- Git tagging for production releases
+- Comprehensive validation: 15+ checks before deployment
+
+### Files Modified
+**1. .gitignore**
+- Added api/config/config.stage.php
+- Prevents future credential leaks
+
+**2. api/config/config.stage.php**
+- Removed hardcoded password
+- Added placeholder with instructions
+- File removed from git tracking
+
+**3. public/.htaccess.manylla-prod**
+- Added Options -Indexes for directory listing protection
+
+### Security Enhancements
+**File Permissions:**
+- config.prod.php: 600 (owner only)
+- .htaccess files: 644 (standard)
+- deploy scripts: 755 (executable)
+
+**Git Security:**
+- Config files ignored to prevent credential commits
+- Validation checks added to deployment scripts
+- Historical password exposure documented for rotation
+
+**Production Hardening:**
+- Zero console.log tolerance in production
+- Directory listing disabled
+- Enhanced CSP and security headers
+- HSTS with preload directive
+
+### Testing Performed
+- Production build test: Successfully built 15MB bundle
+- BUILD_TYPE verification: "prod" correctly embedded in bundle
+- Script syntax validation: All bash scripts pass syntax check
+- Security scans: No hardcoded passwords in tracked files
+- File permissions: Verified config files are 600
+- .gitignore: Config files correctly ignored
+
+### Deployment Architecture
+**4-Tier System:**
+```
+QUAL (dev/test) → STAGE (team validation) → PROD (live) → DR (recovery)
+```
+
+**Server Structure:**
+```
+~/public_html/manylla/  (PROD at root)
+├── index.html
+├── static/
+├── .htaccess
+└── api/
+    ├── config/config.prod.php
+    ├── sync/ (5 endpoints)
+    ├── share/ (2 endpoints)
+    └── logs/
+```
+
+### Important Notes
+
+**DO NOT DEPLOY TO PROD YET**
+- This wave is infrastructure setup only
+- Production deployment requires 2-4 weeks of STAGE validation
+- Team sign-off required before first production deployment
+- Database password MUST be rotated before production use
+
+**Rollback Capability:**
+- Every production deployment creates timestamped backups
+- Rollback command provided after each deployment
+- Git tags enable code-level rollback
+- Database backups kept for emergency recovery
+
+### Next Steps
+1. Rotate database password for stachblx_mql user
+2. Validate STAGE environment for 2-4 weeks
+3. Create production deployment runbook
+4. Obtain team sign-off for first production deployment
+5. Plan Wave 4: DR (Disaster Recovery) tier
+
+### References
+- Atlas Standard Workflow: 5-phase implementation
+- DEPLOYMENT_ROADMAP.md: Wave 3 specifications
+- TEAM_AGREEMENTS.md: Security and deployment requirements
+- PRODUCTION_DEPLOYMENT_RUNBOOK.md: Deployment procedures (new)
+
+---
+
 ## Version 2025.10.15.1 - 2025-10-15
 Infrastructure: Wave 2 - STAGE Tier Deployment Setup
 

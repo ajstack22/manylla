@@ -22,7 +22,7 @@ export const LoadingOverlay = ({ open, message = "Loading..." }) => {
             color={colors.white}
             style={styles.spinner}
           />
-          {Boolean(message) && <Text style={styles.message}>{message}</Text>}
+          {message && <Text style={styles.message}>{message}</Text>}
         </View>
       </View>
     </Modal>

@@ -139,10 +139,12 @@ export const font = (weight = "400", size = 14) => {
     };
     style.fontFamily = androidFonts[weight] || "sans-serif";
     // Always set fontWeight for consistency
+    // Convert weight to string for comparison to handle both number and string inputs
+    const weightStr = String(weight);
     if (
-      String(weight) === "700" ||
-      String(weight) === "800" ||
-      weight === "bold"
+      weightStr === "700" ||
+      weightStr === "800" ||
+      weightStr === "bold"
     ) {
       style.fontWeight = "bold";
     } else {

@@ -1982,6 +1982,26 @@ function App() {
   const RootView = isWeb() ? View : GestureHandlerRootView;
   const AppWrapper = isWeb() ? View : SafeAreaProvider;
 
+  // Android Text component initialization fix (S029)
+  // Text components fail to initialize properly when wrapped in complex provider hierarchy
+  // on Android. Adding a small delay ensures native modules are fully initialized.
+  const [isAndroidReady, setIsAndroidReady] = useState(!isAndroid());
+
+  useEffect(() => {
+    if (isAndroid()) {
+      // Use requestAnimationFrame to ensure native bridge is ready
+      // This allows Text native modules to initialize properly before rendering
+      requestAnimationFrame(() => {
+        setIsAndroidReady(true);
+      });
+    }
+  }, []);
+
+  // Show nothing while Android initializes (happens in <16ms, not noticeable)
+  if (!isAndroidReady) {
+    return null;
+  }
+
   return (
     <AppWrapper>
       <RootView style={{ flex: 1 }}>

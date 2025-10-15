@@ -28,6 +28,11 @@ export const ShareAccessView = ({ accessCode, encryptionKey }) => {
       setLoading(true);
       setError(null);
 
+      // Validate required parameters
+      if (!encryptionKey) {
+        throw new Error("Encryption key is required");
+      }
+
       // Fetch encrypted share from API
       const response = await fetch(API_ENDPOINTS.share.access, {
         method: "POST",

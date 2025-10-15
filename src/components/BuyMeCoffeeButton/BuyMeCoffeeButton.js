@@ -27,39 +27,40 @@ const BuyMeCoffeeButton = ({ onPress, style, disabled = false }) => {
 };
 
 const createStyles = () => {
-  return StyleSheet.create({
-    button: {
-      backgroundColor: "#FFDD00",
-      paddingHorizontal: 24,
-      paddingVertical: 12,
-      borderRadius: 8,
-      borderWidth: 2,
-      borderColor: "#F7DF1E",
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 3,
-      ...Platform.select({
-        web: {
-          cursor: "pointer",
-          transition: "all 0.2s ease",
-          ":hover": {
-            backgroundColor: "#FFE135",
-            transform: "translateY(-1px)",
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.15,
-          },
-          ":active": {
-            transform: "translateY(0px)",
-            shadowOffset: { width: 0, height: 1 },
-          },
-        },
-      }),
+  const baseButton = {
+    backgroundColor: "#FFDD00",
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: "#F7DF1E",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
     },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  };
+
+  const baseText = {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+    textAlign: "center",
+  };
+
+  // Add web-specific styles
+  if (Platform.OS === "web") {
+    baseButton.cursor = "pointer";
+    baseText.fontFamily =
+      '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif';
+    baseText.userSelect = "none";
+  }
+
+  return StyleSheet.create({
+    button: baseButton,
     content: {
       flexDirection: "row",
       alignItems: "center",
@@ -69,19 +70,7 @@ const createStyles = () => {
     emoji: {
       fontSize: 20,
     },
-    text: {
-      fontSize: 16,
-      fontWeight: "600",
-      color: "#333",
-      textAlign: "center",
-      ...Platform.select({
-        web: {
-          fontFamily:
-            '"Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
-          userSelect: "none",
-        },
-      }),
-    },
+    text: baseText,
   });
 };
 

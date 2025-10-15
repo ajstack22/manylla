@@ -29,6 +29,10 @@ const RootNavigator = () => {
       // const authRequired = await checkAuthRequired();
       // setNeedsAuth(authRequired);
     } catch (error) {
+      // Log error but don't block app initialization
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Failed to check initial state:', error);
+      }
     } finally {
       setIsLoading(false);
     }

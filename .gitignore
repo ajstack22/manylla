@@ -148,6 +148,7 @@ api/config.local.php
 api/.env
 api/sync/.env
 api/config/config.qual.php
+api/config/config.stage.php
 api/config/config.prod.php
 api/config/config.local.php
 # Allow example files

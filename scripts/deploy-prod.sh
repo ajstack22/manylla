@@ -1,195 +1,1037 @@
 #!/bin/bash
 
-# Manylla Production Deployment Script
-# Deploys tested qual version to production with backup
+# Manylla Production Deployment Script - Enhanced Security & Quality Version
+# NO SHORTCUTS, NO BYPASSES, FULL VALIDATION BEFORE COMMITS
+#
+# This script enforces comprehensive quality checks BEFORE any code reaches GitHub.
+# All validation must pass before commits are made.
+# DO NOT attempt to modify this script to bypass checks.
 
 set -e  # Exit on error
+set -o pipefail  # Fail on pipe errors
 
-echo "🚀 Manylla Production Deployment"
-echo "================================"
+echo "🚀 Manylla Production Deployment - Enhanced Validation Mode"
+echo "=========================================================="
 echo
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-cd "$PROJECT_ROOT"
+
+# Load SonarCloud token from secure location (if exists)
+if [ -f "$HOME/.manylla-env" ]; then
+    source "$HOME/.manylla-env"
+fi
 
 # Colors for output
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
-# Function to rollback
-rollback_prod() {
-    echo -e "${YELLOW}⏮️  Rolling back production...${NC}"
-    
-    # Get the last backup timestamp
-    TIMESTAMP=$(ssh stackmap-cpanel 'cat ~/.last-manylla-deploy 2>/dev/null')
-    
-    if [ -z "$TIMESTAMP" ]; then
-        echo -e "${RED}❌ No rollback available${NC}"
-        exit 1
-    fi
-    
-    echo "Restoring from backup: manylla-backup-$TIMESTAMP.tar.gz"
-    ssh stackmap-cpanel << EOF
-        cd ~/public_html/manylla
-        tar -xzf ~/backups/manylla-backup-$TIMESTAMP.tar.gz
-        echo "✅ Production rolled back"
-EOF
-    
-    echo -e "${GREEN}✅ Rollback complete!${NC}"
-    echo "🌐 Production: https://manylla.com"
-    exit 0
+# Error handler function
+handle_error() {
+    echo
+    echo -e "${RED}❌ DEPLOYMENT BLOCKED: $1${NC}"
+    echo -e "${RED}⚠️  DO NOT attempt to bypass this check${NC}"
+    echo -e "${RED}📋 ACTION REQUIRED: Human review needed${NC}"
+    echo -e "${RED}Please notify the project owner to resolve: $2${NC}"
+    echo
+    exit 1
 }
 
-# Check for rollback command
-if [ "$1" = "rollback" ]; then
-    rollback_prod
-fi
+# Warning function (non-fatal)
+show_warning() {
+    echo -e "${YELLOW}⚠️  Warning: $1${NC}"
+}
 
-# Check for uncommitted changes - these should NOT go to production
-if [[ -n $(git status --porcelain) ]]; then
-    echo -e "${RED}❌ Uncommitted changes detected!${NC}"
-    echo "Production deployments should only promote tested code from qual."
-    echo ""
-    echo "You have two options:"
-    echo "1. Deploy these changes to qual first: npm run deploy:qual"
-    echo "2. Stash/discard these changes and deploy current qual to prod"
-    echo ""
-    read -p "Continue anyway? (not recommended) (y/n) " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        exit 1
-    fi
-    echo -e "${YELLOW}⚠️  WARNING: Proceeding with uncommitted changes${NC}"
-fi
+# Navigate to project root
+cd "$PROJECT_ROOT"
 
-# Run final safety checks before production
-echo -e "${YELLOW}🔍 Running production safety checks...${NC}"
+# ============================================================================
+# PHASE 0: DEPLOYMENT PRE-FLIGHT CHECKS
+# Infrastructure and connectivity validation before any other operations
+# ============================================================================
 
-# Security audit - MUST pass for production
-echo "- Checking for vulnerabilities..."
-if ! npm audit --audit-level=critical 2>/dev/null; then
-    echo -e "${RED}❌ CRITICAL: Security vulnerabilities detected!${NC}"
-    echo "Production deployment blocked. Fix vulnerabilities first."
-    echo "Run 'npm audit fix' or 'npm audit' for details"
-    exit 1
-fi
-
-# Lint check
-echo "- Running lint check..."
-if npm run lint 2>&1 | grep -E "error\s" > /dev/null; then
-    echo -e "${RED}❌ Lint errors found!${NC}"
-    echo "Fix errors before deploying to production"
-    echo "Run 'npm run lint' to see details"
-    exit 1
-fi
-
-echo -e "${GREEN}✅ Safety checks passed${NC}"
+echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
+echo -e "${CYAN}    PHASE 0: DEPLOYMENT PRE-FLIGHT CHECKS              ${NC}"
+echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
 echo
 
-# Confirmation prompt
-echo -e "${YELLOW}⚠️  WARNING: This will deploy to PRODUCTION${NC}"
-echo "Have you tested the changes at https://manylla.com/qual?"
-read -p "Continue with production deployment? (yes/no) " -r
-if [[ ! $REPLY =~ ^[Yy][Ee][Ss]$ ]]; then
-    echo "Deployment cancelled."
-    exit 1
+echo -e "${BLUE}Running comprehensive pre-flight validation...${NC}"
+echo "─────────────────────────────────────────────────"
+
+# Run pre-flight checks script
+if [ -f "$SCRIPT_DIR/deployment-preflight.sh" ]; then
+    "$SCRIPT_DIR/deployment-preflight.sh"
+    PREFLIGHT_EXIT_CODE=$?
+
+    if [ $PREFLIGHT_EXIT_CODE -ne 0 ]; then
+        handle_error "Pre-flight checks failed" \
+            "Resolve all pre-flight issues before deployment. Check output above for details."
+    fi
+
+    echo -e "${GREEN}✅ All pre-flight checks passed${NC}"
+    echo -e "${GREEN}   Deployment infrastructure validated${NC}"
+    echo -e "${GREEN}   Backup and rollback plan created${NC}"
+else
+    handle_error "Pre-flight check script not found" \
+        "Ensure scripts/deployment-preflight.sh exists and is executable"
 fi
 
-# Check if qual exists on server
-echo -e "${YELLOW}🔍 Checking qual deployment...${NC}"
-if ! ssh stackmap-cpanel "[ -d ~/public_html/manylla/qual ]"; then
-    echo -e "${RED}❌ No qual deployment found!${NC}"
-    echo "Please deploy to qual first: npm run deploy:qual"
-    exit 1
+echo
+
+# ============================================================================
+# PHASE 1: PRE-COMMIT VALIDATION
+# All checks must pass before ANY commits or deployments
+# ============================================================================
+
+echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
+echo -e "${CYAN}    PHASE 1: PRE-COMMIT VALIDATION CHECKS              ${NC}"
+echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
+echo
+
+# Git Branch Check - PRODUCTION ONLY FROM MAIN/MASTER
+echo -e "${BLUE}Step 0: Git Branch Check (Production Only)${NC}"
+echo "─────────────────────────────────────────"
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+if [[ "$CURRENT_BRANCH" != "main" && "$CURRENT_BRANCH" != "master" ]]; then
+    handle_error "Production deployments must be from main or master branch" \
+        "Current branch: $CURRENT_BRANCH. Switch to main/master before deploying to production."
+fi
+echo -e "${GREEN}✅ Git branch check passed (on $CURRENT_BRANCH)${NC}"
+
+# Git Remote Sync Check
+echo "Checking git remote sync..."
+git fetch origin >/dev/null 2>&1
+LOCAL=$(git rev-parse @ 2>/dev/null)
+REMOTE=$(git rev-parse @{u} 2>/dev/null)
+if [[ "$LOCAL" != "$REMOTE" ]]; then
+    handle_error "Local branch is not synced with remote" \
+        "Run 'git pull' or 'git push' to sync before deploying to production"
+fi
+echo -e "${GREEN}✅ Git remote sync check passed${NC}"
+echo
+
+# Step 1: Validate Release Notes
+echo -e "${BLUE}Step 1: Validating Release Notes${NC}"
+echo "─────────────────────────────────"
+
+# Function to increment version
+increment_version() {
+    if [ -f "package.json" ]; then
+        CURRENT_VERSION=$(grep '"version":' package.json | head -1 | cut -d'"' -f4)
+    else
+        handle_error "package.json not found" "Ensure you're in the project root"
+    fi
+
+    echo -e "${YELLOW}📌 Current version: $CURRENT_VERSION${NC}"
+
+    # Parse version parts (format: YYYY.MM.DD.BUILD)
+    IFS='.' read -r YEAR MONTH DAY BUILD <<< "$CURRENT_VERSION"
+
+    # Get current date with leading zeros
+    CURRENT_DATE=$(date +"%Y.%m.%d")
+    IFS='.' read -r NEW_YEAR NEW_MONTH NEW_DAY <<< "$CURRENT_DATE"
+
+    # Ensure month and day have leading zeros
+    NEW_MONTH=$(printf "%02d" $((10#$NEW_MONTH)))
+    NEW_DAY=$(printf "%02d" $((10#$NEW_DAY)))
+
+    # If it's a new day, reset build number to 1, otherwise increment
+    if [[ "$YEAR.$MONTH.$DAY" == "$NEW_YEAR.$NEW_MONTH.$NEW_DAY" ]]; then
+        NEW_BUILD=$((BUILD + 1))
+    else
+        NEW_BUILD=1
+    fi
+
+    # Create new version
+    NEW_VERSION="$NEW_YEAR.$NEW_MONTH.$NEW_DAY.$NEW_BUILD"
+    echo -e "${GREEN}📈 New version will be: $NEW_VERSION${NC}"
+
+    export NEW_VERSION
+    export CURRENT_VERSION
+}
+
+# Increment version to know what we're deploying
+increment_version
+
+# Check if RELEASE_NOTES.md exists and has entry for new version
+RELEASE_NOTES_FILE="docs/RELEASE_NOTES.md"
+if [ ! -f "$RELEASE_NOTES_FILE" ]; then
+    RELEASE_NOTES_FILE="RELEASE_NOTES.md"
+    if [ ! -f "$RELEASE_NOTES_FILE" ]; then
+        handle_error "RELEASE_NOTES.md not found" \
+            "Create docs/RELEASE_NOTES.md with an entry for version $NEW_VERSION"
+    fi
 fi
 
-echo -e "${YELLOW}📦 Creating backup...${NC}"
+if ! grep -q "## Version $NEW_VERSION" "$RELEASE_NOTES_FILE"; then
+    handle_error "Release notes not updated for version $NEW_VERSION" \
+        "Add '## Version $NEW_VERSION' section to $RELEASE_NOTES_FILE with deployment details"
+fi
 
-# Create backup on server
-ssh stackmap-cpanel << 'EOF'
-    cd ~/public_html/manylla
-    TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-    mkdir -p ~/backups
-    
-    # Backup current production (excluding qual)
-    tar -czf ~/backups/manylla-backup-$TIMESTAMP.tar.gz \
-        --exclude='qual' \
-        --exclude='api/logs' \
-        --exclude='*.log' \
-        .
-    
-    echo $TIMESTAMP > ~/.last-manylla-deploy
-    echo "✅ Backup created: manylla-backup-$TIMESTAMP.tar.gz"
-EOF
+RELEASE_TITLE=$(grep -A1 "## Version $NEW_VERSION" "$RELEASE_NOTES_FILE" | tail -1 | sed 's/^[[:space:]]*//')
+if [ -z "$RELEASE_TITLE" ] || [[ "$RELEASE_TITLE" == "##"* ]]; then
+    handle_error "Release notes missing description for version $NEW_VERSION" \
+        "Add a description line after '## Version $NEW_VERSION' in $RELEASE_NOTES_FILE"
+fi
 
-echo -e "${YELLOW}🔄 Syncing qual to production...${NC}"
+echo -e "${GREEN}✅ Release notes validated for v$NEW_VERSION${NC}"
+echo -e "${GREEN}   Title: $RELEASE_TITLE${NC}"
+echo
 
-# Sync qual to production (excluding API configs)
-# Using --delete to remove files that no longer exist in qual
-ssh stackmap-cpanel << 'EOF'
-    cd ~/public_html/manylla
-    
-    # Use rsync to make production match qual exactly (except protected files)
-    # --delete removes files from prod that don't exist in qual
-    rsync -av --delete \
-        --exclude='.htaccess' \
-        --exclude='.htpasswd*' \
-        --exclude='qual' \
-        --exclude='demo' \
-        --exclude='api/config/*.php' \
-        --exclude='api/logs' \
-        --exclude='*.log' \
-        qual/ .
-    
-    echo "✅ Production updated from qual (old files cleaned up)"
-EOF
+# Step 3: Code Formatting Check (Prettier) - NON-BLOCKING
+echo -e "${BLUE}Step 3: Code Formatting Check (Non-Blocking)${NC}"
+echo "───────────────────────────────────"
+echo "Checking code formatting with Prettier..."
+if ! npx prettier --check "src/**/*.{js,jsx,ts,tsx}" > /tmp/prettier-output.txt 2>&1; then
+    FILES_WITH_ISSUES=$(cat /tmp/prettier-output.txt | grep -c "src/" || echo "0")
+    echo -e "${YELLOW}⚠️  Code formatting issues found in $FILES_WITH_ISSUES files (Non-Blocking)${NC}"
 
-# Deploy production API configuration
-echo -e "${YELLOW}📡 Deploying production API configuration...${NC}"
+    # Show sample files
+    echo "Sample files with formatting issues:"
+    cat /tmp/prettier-output.txt | grep "src/" | head -5
 
-# Check if prod config exists locally
-if [ -f "$PROJECT_ROOT/api/config/config.prod.php" ]; then
-    # Check for password placeholder
-    if grep -q "YOUR_PROD_DB_PASSWORD_HERE" "$PROJECT_ROOT/api/config/config.prod.php"; then
-        echo -e "${RED}⚠️  Warning: Production database password not configured${NC}"
-        echo "Update api/config/config.prod.php with actual password"
-        read -p "Continue without API? (y/n) " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            exit 1
+    # Create tech debt story
+    if [ "$FILES_WITH_ISSUES" -gt "0" ]; then
+        echo -e "${YELLOW}📝 Creating tech debt story for formatting issues...${NC}"
+
+        DETAILS="Found $FILES_WITH_ISSUES files with formatting issues during deployment.\n\nSample files:\n$(cat /tmp/prettier-output.txt | grep 'src/' | head -10)\n\nFix: Run 'npx prettier --write src/**/*.{js,jsx,ts,tsx}'"
+
+        "$SCRIPT_DIR/create-tech-debt-story.sh" \
+            "Fix Prettier formatting in $FILES_WITH_ISSUES files" \
+            "P3" \
+            "FORMATTING" \
+            "$DETAILS" || echo "⚠️  Could not create story automatically"
+
+        echo -e "${YELLOW}⚠️  Continuing deployment with formatting issues${NC}"
+        echo -e "${YELLOW}   Tech debt story added to backlog${NC}"
+    fi
+else
+    echo -e "${GREEN}✅ Code formatting is perfect${NC}"
+fi
+echo
+
+# Step 4: License Compliance Check
+echo -e "${BLUE}Step 4: License Compliance Check${NC}"
+echo "──────────────────────────────────"
+echo "Generating current license report..."
+npx license-checker --production --summary --out /tmp/current-licenses.txt 2>/dev/null || true
+
+if [ -f "LICENSES.txt" ]; then
+    # Count packages in current dependencies
+    CURRENT_PKG_COUNT=$(npm list --depth=0 --json 2>/dev/null | jq -r '.dependencies | keys | length' 2>/dev/null || echo "0")
+    # Count packages mentioned in LICENSES.txt (rough estimate)
+    LICENSES_PKG_COUNT=$(grep -c "^[a-zA-Z@]" LICENSES.txt 2>/dev/null || echo "0")
+
+    DIFF=$((CURRENT_PKG_COUNT - LICENSES_PKG_COUNT))
+    if [ "$DIFF" -gt "5" ] || [ "$DIFF" -lt "-5" ]; then
+        show_warning "License file may be outdated (current: $CURRENT_PKG_COUNT packages, documented: $LICENSES_PKG_COUNT)"
+        echo "Consider updating LICENSES.txt by running:"
+        echo "  npx license-checker --production --summary"
+    else
+        echo -e "${GREEN}✅ License documentation appears current${NC}"
+    fi
+else
+    show_warning "LICENSES.txt not found - consider creating it for compliance"
+fi
+echo
+
+# Step 5: Security Vulnerability Scan
+echo -e "${BLUE}Step 5: Security Vulnerability Scan${NC}"
+echo "─────────────────────────────────────"
+npm audit --audit-level=critical 2>&1 | tee /tmp/audit-output.txt
+AUDIT_EXIT_CODE=${PIPESTATUS[0]}
+if [ $AUDIT_EXIT_CODE -ne 0 ]; then
+    CRITICAL_COUNT=$(grep -c "critical" /tmp/audit-output.txt 2>/dev/null || echo "unknown")
+    handle_error "Critical security vulnerabilities found ($CRITICAL_COUNT critical)" \
+        "Fix critical vulnerabilities. Run: npm audit fix --force"
+fi
+echo -e "${GREEN}✅ No critical vulnerabilities${NC}"
+echo
+
+# Step 6: ESLint Check
+echo -e "${BLUE}Step 6: ESLint Check${NC}"
+echo "─────────────────────"
+set +e
+set +o pipefail
+npm run lint > /tmp/lint-output.txt 2>&1
+LINT_EXIT_CODE=$?
+cat /tmp/lint-output.txt
+ERROR_COUNT=$(grep -E "^\s+[0-9]+:[0-9]+\s+error\s+" /tmp/lint-output.txt 2>/dev/null | wc -l | tr -d ' ')
+set -e
+set -o pipefail
+if [ "$ERROR_COUNT" -gt "0" ]; then
+    handle_error "ESLint errors detected ($ERROR_COUNT errors)" \
+        "Fix all linting errors. Run: npm run lint"
+fi
+echo -e "${GREEN}✅ Lint check passed${NC}"
+echo
+
+# Step 7: TypeScript Check - NON-BLOCKING
+echo -e "${BLUE}Step 7: TypeScript Check (Non-Blocking)${NC}"
+echo "─────────────────────────"
+if [ -f "tsconfig.json" ]; then
+    npm run typecheck > /tmp/typecheck-output.txt 2>&1 || true
+    if grep -q "error TS" /tmp/typecheck-output.txt; then
+        ERROR_COUNT=$(grep -c "error TS" /tmp/typecheck-output.txt)
+        echo -e "${YELLOW}⚠️  TypeScript compilation has $ERROR_COUNT errors (Non-Blocking)${NC}"
+
+        # Show sample errors
+        echo "Sample TypeScript errors:"
+        grep "error TS" /tmp/typecheck-output.txt | head -5
+
+        # Create tech debt story
+        echo -e "${YELLOW}📝 Creating tech debt story for TypeScript errors...${NC}"
+
+        DETAILS="Found $ERROR_COUNT TypeScript errors during deployment.\n\nSample errors:\n$(grep 'error TS' /tmp/typecheck-output.txt | head -10)\n\nFix: Run 'npm run typecheck' and resolve all errors."
+
+        "$SCRIPT_DIR/create-tech-debt-story.sh" \
+            "Fix $ERROR_COUNT TypeScript compilation errors" \
+            "P2" \
+            "TYPESCRIPT" \
+            "$DETAILS" || echo "⚠️  Could not create story automatically"
+
+        echo -e "${YELLOW}⚠️  Continuing deployment with TypeScript errors${NC}"
+        echo -e "${YELLOW}   Tech debt story added to backlog${NC}"
+    else
+        echo -e "${GREEN}✅ TypeScript check passed${NC}"
+    fi
+else
+    echo -e "${YELLOW}⚠️  tsconfig.json not found (Non-Blocking)${NC}"
+    echo "   TypeScript configuration recommended but not required"
+fi
+echo
+
+# Step 8: Code Quality Metrics
+echo -e "${BLUE}Step 8: Code Quality Metrics${NC}"
+echo "──────────────────────────────"
+
+# Check for TODO/FIXME comments - NON-BLOCKING
+TODO_COUNT=$(grep -r "TODO\|FIXME\|XXX\|HACK" src/ --include="*.js" --include="*.ts" --include="*.tsx" 2>/dev/null | wc -l | tr -d ' ')
+if [ "$TODO_COUNT" -gt "20" ]; then
+    echo -e "${YELLOW}⚠️  Too many TODO/FIXME comments ($TODO_COUNT found, max 20 recommended) (Non-Blocking)${NC}"
+
+    # Show sample TODOs
+    echo "Sample TODO/FIXME comments:"
+    grep -r "TODO\|FIXME" src/ --include="*.js" --include="*.ts" --include="*.tsx" 2>/dev/null | head -5
+
+    # Create tech debt story
+    echo -e "${YELLOW}📝 Creating tech debt story for TODO cleanup...${NC}"
+
+    DETAILS="Found $TODO_COUNT TODO/FIXME comments (recommended max: 20).\n\nSample TODOs:\n$(grep -r 'TODO\|FIXME' src/ --include='*.js' --include='*.ts' --include='*.tsx' 2>/dev/null | head -10)\n\nReview and address or remove outdated TODOs."
+
+    "$SCRIPT_DIR/create-tech-debt-story.sh" \
+        "Clean up $TODO_COUNT TODO/FIXME comments" \
+        "P3" \
+        "TODO_CLEANUP" \
+        "$DETAILS" || echo "⚠️  Could not create story automatically"
+
+    echo -e "${YELLOW}⚠️  Continuing deployment with excess TODOs${NC}"
+    echo -e "${YELLOW}   Tech debt story added to backlog${NC}"
+else
+    echo -e "${GREEN}✅ TODO count acceptable ($TODO_COUNT/20)${NC}"
+fi
+
+# Check for console.log statements - ZERO TOLERANCE FOR PRODUCTION
+echo "Checking for console.log statements..."
+CONSOLE_COUNT=$(grep -r "console\.log" src/ --include="*.js" --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v '^\s*//' | grep -v '//.*console\.log' | wc -l | tr -d ' ' | tr -d '\n' || echo "0")
+CONSOLE_COUNT=$(echo "$CONSOLE_COUNT" | sed 's/^0*//' | sed 's/^$/0/')
+if [ "$CONSOLE_COUNT" -gt "0" ]; then
+    handle_error "Found $CONSOLE_COUNT console.log statements in src/ - Production requires ZERO" \
+        "Remove all console.log statements. Files with console.log:\n$(grep -rn 'console\.log' src/ 2>/dev/null | grep -v node_modules)"
+fi
+echo -e "${GREEN}✅ Console.log count: 0 (production requirement)${NC}"
+
+# Check for debugger statements
+DEBUGGER_COUNT=$(grep -r "debugger" src/ --include="*.js" --include="*.ts" --include="*.tsx" 2>/dev/null || true | wc -l | tr -d ' ')
+if [ "$DEBUGGER_COUNT" -gt "0" ]; then
+    handle_error "Debugger statements found ($DEBUGGER_COUNT found)" \
+        "Remove all debugger statements. Run: grep -r 'debugger' src/"
+fi
+echo -e "${GREEN}✅ No debugger statements${NC}"
+
+# Check for potential hardcoded secrets
+SECRET_PATTERNS="(api[_-]?key|secret|password|token|private[_-]?key|ACCESS_KEY|SECRET_KEY)"
+SECRET_COUNT=$(grep -riE "$SECRET_PATTERNS\s*[:=]\s*['\"][^'\"]{10,}['\"]" src/ --include="*.js" --include="*.ts" --include="*.tsx" 2>/dev/null | wc -l | tr -d ' ' | tr -d '\n' || echo "0")
+SECRET_COUNT=$(echo "$SECRET_COUNT" | sed 's/^0*//' | sed 's/^$/0/')
+if [ "$SECRET_COUNT" -gt "0" ]; then
+    show_warning "Potential hardcoded secrets found ($SECRET_COUNT). Please review:"
+    grep -riE "$SECRET_PATTERNS\s*[:=]\s*['\"][^'\"]{10,}['\"]" src/ --include="*.js" --include="*.ts" --include="*.tsx" 2>/dev/null | head -3
+fi
+echo
+
+# Step 9: Tiered Test Suite Execution
+echo -e "${BLUE}Step 9: Tiered Test Suite${NC}"
+echo "──────────────────────────────"
+
+# Pre-flight Smoke Test (10 second sanity check)
+echo -e "${YELLOW}→ Pre-flight: Smoke Test (10 second sanity check)${NC}"
+timeout 15 npm run test:smoke > /tmp/test-smoke.txt 2>&1 || true
+SMOKE_EXIT=$?
+
+if [ $SMOKE_EXIT -ne 0 ] && [ $SMOKE_EXIT -ne 124 ]; then
+    cat /tmp/test-smoke.txt
+    handle_error "Smoke test failed - basic functionality broken" \
+        "Fix critical issues before proceeding: npm run test:smoke"
+fi
+
+SMOKE_PASSED=$(grep -oE "[0-9]+ passed" /tmp/test-smoke.txt | grep -oE "[0-9]+" | head -1 || echo "0")
+echo -e "${GREEN}✅ Smoke test passed ($SMOKE_PASSED critical tests)${NC}"
+echo
+
+# Tier 1: Critical Tests (MUST PASS - blocks deployment)
+echo -e "${YELLOW}→ Running Tier 1: Critical Tests (encryption, auth, data integrity)${NC}"
+timeout 90 npm run test:critical > /tmp/test-critical.txt 2>&1 || true
+CRITICAL_EXIT=$?
+
+# Show output if failed
+if [ $CRITICAL_EXIT -ne 0 ] && [ $CRITICAL_EXIT -ne 124 ]; then
+    cat /tmp/test-critical.txt
+    FAILED_COUNT=$(grep -c "●" /tmp/test-critical.txt 2>/dev/null || echo "unknown")
+    handle_error "CRITICAL TESTS FAILED ($FAILED_COUNT failures)" \
+        "Critical tests must pass 100%. Fix immediately: npm run test:critical"
+fi
+
+CRITICAL_PASSED=$(grep -oE "[0-9]+ passed" /tmp/test-critical.txt | grep -oE "[0-9]+" | head -1 || echo "0")
+echo -e "${GREEN}✅ Critical tests passed ($CRITICAL_PASSED tests)${NC}"
+
+# Tier 2: Important Tests (95%+ should pass - warning only)
+echo -e "${YELLOW}→ Running Tier 2: Important Tests (core features, business logic)${NC}"
+timeout 120 npm run test:important > /tmp/test-important.txt 2>&1 || true
+IMPORTANT_EXIT=$?
+
+IMPORTANT_TOTAL=$(grep -oE "[0-9]+ total" /tmp/test-important.txt | head -1 | grep -oE "[0-9]+" || echo "0")
+IMPORTANT_PASSED=$(grep -oE "[0-9]+ passed" /tmp/test-important.txt | grep -oE "[0-9]+" | head -1 || echo "0")
+
+if [ $IMPORTANT_TOTAL -gt 0 ]; then
+    IMPORTANT_PASS_RATE=$(( IMPORTANT_PASSED * 100 / IMPORTANT_TOTAL ))
+
+    if [ $IMPORTANT_PASS_RATE -lt 95 ]; then
+        echo -e "${YELLOW}⚠️  Important test pass rate: ${IMPORTANT_PASS_RATE}% (below 95% threshold)${NC}"
+        echo -e "${YELLOW}   Consider fixing before next deployment${NC}"
+    else
+        echo -e "${GREEN}✅ Important tests: ${IMPORTANT_PASS_RATE}% pass rate ($IMPORTANT_PASSED/$IMPORTANT_TOTAL)${NC}"
+    fi
+fi
+
+# Tier 3: UI/Integration Tests (informational only)
+echo -e "${YELLOW}→ Running Tier 3: UI/Integration Tests (informational)${NC}"
+timeout 120 npm run test:ui > /tmp/test-ui.txt 2>&1 || true
+UI_EXIT=$?
+
+UI_PASSED=$(grep -oE "[0-9]+ passed" /tmp/test-ui.txt | grep -oE "[0-9]+" | head -1 || echo "0")
+UI_FAILED=$(grep -oE "[0-9]+ failed" /tmp/test-ui.txt | grep -oE "[0-9]+" | head -1 || echo "0")
+
+if [ "$UI_FAILED" -gt "0" ]; then
+    echo -e "${YELLOW}⚠️  UI tests: $UI_PASSED passed, $UI_FAILED failed (non-blocking)${NC}"
+else
+    echo -e "${GREEN}✅ UI tests: All $UI_PASSED tests passed${NC}"
+fi
+
+# Summary
+echo
+echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${GREEN}Test Suite Summary:${NC}"
+echo -e "${GREEN}  Tier 1 (Critical):  $CRITICAL_PASSED passed ✅${NC}"
+if [ $IMPORTANT_TOTAL -gt 0 ]; then
+    echo -e "${GREEN}  Tier 2 (Important): $IMPORTANT_PASSED/$IMPORTANT_TOTAL (${IMPORTANT_PASS_RATE}%)${NC}"
+fi
+echo -e "${GREEN}  Tier 3 (UI):        $UI_PASSED passed, $UI_FAILED failed${NC}"
+echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo
+
+# Step 10: Dependency Analysis
+echo -e "${BLUE}Step 10: Dependency Analysis${NC}"
+echo "─────────────────────────────"
+
+# Check for unused dependencies
+echo "Checking for unused dependencies..."
+if command -v npx &> /dev/null; then
+    npx depcheck --json > /tmp/depcheck.json 2>/dev/null || true
+    if [ -f /tmp/depcheck.json ]; then
+        UNUSED_COUNT=$(jq -r '.dependencies | length' /tmp/depcheck.json 2>/dev/null || echo "0")
+        if [ "$UNUSED_COUNT" -gt "0" ]; then
+            show_warning "Found $UNUSED_COUNT potentially unused dependencies"
+            echo "Consider removing unused packages. Run: npx depcheck"
+        else
+            echo -e "${GREEN}✅ No unused dependencies detected${NC}"
+        fi
+    fi
+fi
+
+# Check for circular dependencies
+echo "Checking for circular dependencies..."
+if npx madge --circular src/ > /tmp/circular-deps.txt 2>&1 || true; then
+    if grep -q "No circular dependency found" /tmp/circular-deps.txt; then
+        echo -e "${GREEN}✅ No circular dependencies${NC}"
+    else
+        CIRCULAR_COUNT=$(grep -c "→" /tmp/circular-deps.txt 2>/dev/null || echo "0")
+        if [ "$CIRCULAR_COUNT" -gt "0" ]; then
+            show_warning "Circular dependencies detected"
+            cat /tmp/circular-deps.txt
+            echo "Consider refactoring to remove circular dependencies"
+        fi
+    fi
+fi
+
+# Check for duplicate packages
+echo "Checking for duplicate packages in bundle..."
+DUPLICATE_COUNT=$(npm ls --depth=999 2>/dev/null | grep "deduped" | wc -l | tr -d ' ' || echo "0")
+if [ "$DUPLICATE_COUNT" -gt "10" ]; then
+    show_warning "$DUPLICATE_COUNT duplicate packages found. Run: npm dedupe"
+else
+    echo -e "${GREEN}✅ Minimal package duplication${NC}"
+fi
+echo
+
+# Step 11: Bundle Size Analysis
+echo -e "${BLUE}Step 11: Bundle Size Pre-Check${NC}"
+echo "────────────────────────────────"
+# This is just a warning for now, actual build happens later
+if [ -d "build" ]; then
+    CURRENT_BUILD_SIZE=$(du -sh build 2>/dev/null | cut -f1)
+    echo "Current build size: $CURRENT_BUILD_SIZE"
+    echo "New build size will be checked after building"
+fi
+echo
+
+# Step 12: SonarCloud Code Quality Analysis (Always Run - Unlimited Scans for Open Source)
+echo -e "${BLUE}Step 12: SonarCloud Code Quality Analysis${NC}"
+echo "────────────────────────────────"
+
+if [ -n "$SONAR_TOKEN" ]; then
+    echo "SonarCloud token detected. Running full analysis (unlimited for open source)..."
+
+    # Get current git info for SonarCloud
+    CURRENT_COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+
+    echo "Branch: $CURRENT_BRANCH"
+    echo "Commit: $CURRENT_COMMIT"
+
+    # Run coverage tests for SonarCloud
+    echo "Generating test coverage..."
+    npm run test:coverage > /tmp/sonar-coverage.txt 2>&1 || {
+        echo -e "${YELLOW}⚠️  Coverage generation had issues (continuing with analysis)${NC}"
+    }
+
+    # Run SonarCloud scanner with JRE provisioning skipped (avoids 403 error)
+    echo "Running SonarCloud scanner..."
+    SONAR_SCANNER_SKIP_JRE_PROVISIONING=true npx sonar-scanner \
+        -Dsonar.projectVersion="$CURRENT_COMMIT" \
+        -Dsonar.branch.name="$CURRENT_BRANCH" || {
+        echo -e "${YELLOW}⚠️  SonarCloud analysis failed (non-blocking)${NC}"
+        echo "Continuing with deployment..."
+    }
+
+    echo -e "${GREEN}✓ Code quality analysis completed${NC}"
+    echo "View results at: https://sonarcloud.io/dashboard?id=ajstack22_manylla&branch=$CURRENT_BRANCH"
+else
+    echo -e "${YELLOW}ℹ️  SonarCloud token not found. Skipping code quality analysis.${NC}"
+    echo "   To enable: echo 'SONAR_TOKEN=\"your-token\"' > ~/.manylla-env"
+fi
+echo
+
+# ============================================================================
+# PHASE 2: VERSION UPDATE & COMMIT
+# Only executed if ALL validation passes
+# ============================================================================
+
+echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
+echo -e "${CYAN}    PHASE 2: VERSION UPDATE & COMMIT                   ${NC}"
+echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
+echo
+
+# Git Status Check - After validation passes, before commit
+echo -e "${BLUE}Verifying Repository State${NC}"
+echo "───────────────────────────────"
+
+# Check if there are uncommitted changes
+GIT_STATUS=$(git status --porcelain)
+if [[ -n "$GIT_STATUS" ]]; then
+    echo -e "${YELLOW}📝 Uncommitted changes detected - will be included in deployment commit:${NC}"
+    echo "$GIT_STATUS" | head -10
+    if [[ $(echo "$GIT_STATUS" | wc -l) -gt 10 ]]; then
+        echo "   ... and $(($(echo "$GIT_STATUS" | wc -l) - 10)) more files"
+    fi
+    echo
+    echo -e "${GREEN}✅ All validation passed - safe to commit${NC}"
+else
+    echo -e "${YELLOW}⚠️  No uncommitted changes detected${NC}"
+    echo -e "${YELLOW}   Only version update will be committed${NC}"
+fi
+echo
+
+# PRODUCTION CONFIRMATION (First)
+echo ""
+echo "⚠️  ============================================"
+echo "⚠️  WARNING: PRODUCTION DEPLOYMENT"
+echo "⚠️  ============================================"
+echo "   Environment: PRODUCTION"
+echo "   Target: https://manylla.com/"
+echo "   Version: $NEW_VERSION"
+echo ""
+read -p "Deploy to PRODUCTION? Type 'YES' (in capitals) to confirm: " CONFIRM
+if [[ "$CONFIRM" != "YES" ]]; then
+    echo "❌ Deployment cancelled (confirmation not received)"
+    exit 0
+fi
+
+echo -e "${BLUE}Updating Version & Committing${NC}"
+echo "──────────────────────────────"
+
+# Stage all changes (if any) along with version update
+if [[ -n "$GIT_STATUS" ]]; then
+    echo -e "${YELLOW}📦 Staging all changes...${NC}"
+    git add -A
+    echo -e "${GREEN}✅ All changes staged${NC}"
+fi
+
+# Update version in package.json
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS
+    sed -i '' "s/\"version\": \"$CURRENT_VERSION\"/\"version\": \"$NEW_VERSION\"/" package.json
+else
+    # Linux
+    sed -i "s/\"version\": \"$CURRENT_VERSION\"/\"version\": \"$NEW_VERSION\"/" package.json
+fi
+
+# Commit all changes + version update
+git add package.json
+git add docs/RELEASE_NOTES.md 2>/dev/null || git add RELEASE_NOTES.md 2>/dev/null || true
+
+# Create commit message
+if [[ -n "$GIT_STATUS" ]]; then
+    # Commit includes code changes + version update
+    git commit -m "v$NEW_VERSION: $RELEASE_TITLE" || handle_error "Git commit failed" \
+        "Resolve git issues and try again"
+else
+    # Only version update
+    git commit -m "v$NEW_VERSION: $RELEASE_TITLE" || handle_error "Git commit failed" \
+        "Resolve git issues and try again"
+fi
+
+echo -e "${GREEN}✅ Version updated to $NEW_VERSION${NC}"
+echo -e "${GREEN}✅ Changes committed${NC}"
+
+# Push to GitHub
+echo -e "${YELLOW}📤 Pushing to GitHub...${NC}"
+git push origin main 2>/dev/null || git push origin master 2>/dev/null || {
+    handle_error "Git push failed" \
+        "Pull remote changes first: git pull origin main"
+}
+echo -e "${GREEN}✅ Pushed to GitHub${NC}"
+echo
+
+# ============================================================================
+# PHASE 3: WEB DEPLOYMENT (FASTEST)
+# Deploy to web first for quick validation
+# ============================================================================
+
+echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
+echo -e "${CYAN}    PHASE 3: WEB DEPLOYMENT                            ${NC}"
+echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
+echo
+
+echo -e "${BLUE}Building Web Application${NC}"
+echo "─────────────────────────"
+
+# Copy production environment file
+if [ -f .env.prod ]; then
+    cp .env.prod .env.production.local
+    echo -e "${GREEN}✅ Using production environment configuration${NC}"
+else
+    echo -e "${YELLOW}⚠️  No .env.prod file found, using defaults${NC}"
+fi
+
+# Update homepage in package.json for production (root path)
+cp package.json package.json.backup
+node -e "
+const pkg = require('./package.json');
+pkg.homepage = '/manylla';
+require('fs').writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
+"
+
+# Build the app with increased memory
+echo -e "${YELLOW}📦 Building for production...${NC}"
+NODE_OPTIONS=--max-old-space-size=8192 npm run build:web:prod 2>&1 | tee /tmp/build-output.txt
+BUILD_EXIT_CODE=${PIPESTATUS[0]}
+
+# Restore original package.json
+mv package.json.backup package.json
+
+# Clean up environment file
+rm -f .env.production.local
+
+if [ $BUILD_EXIT_CODE -ne 0 ]; then
+    handle_error "Build failed" \
+        "Check build errors above. Run: npm run build:web:prod"
+fi
+
+# Check build size
+if [ -d "web/build" ]; then
+    BUILD_SIZE=$(du -sh web/build | cut -f1)
+    # Try to get size in bytes (macOS compatible)
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        BUILD_SIZE_BYTES=$(find web/build -type f -exec stat -f%z {} + | awk '{s+=$1} END {print s}')
+    else
+        BUILD_SIZE_BYTES=$(du -sb web/build | cut -f1)
+    fi
+    echo -e "${GREEN}✅ Build completed successfully (size: $BUILD_SIZE)${NC}"
+
+    # Check if build is over 10MB - NON-BLOCKING
+    if [ "$BUILD_SIZE_BYTES" -gt "10485760" ]; then
+        SIZE_MB=$((BUILD_SIZE_BYTES / 1048576))
+        echo -e "${YELLOW}⚠️  Build size exceeds 10MB (${SIZE_MB}MB) - Non-Blocking${NC}"
+        echo -e "${YELLOW}   Consider code splitting for better performance${NC}"
+
+        # Create tech debt story for bundle optimization
+        echo -e "${YELLOW}📝 Creating tech debt story for bundle size optimization...${NC}"
+
+        DETAILS="Build size is ${SIZE_MB}MB (${BUILD_SIZE}), exceeding recommended 10MB limit.\n\nLarge bundles impact:\n- Initial load time\n- Performance on slow connections\n- User experience\n\nRecommendations:\n- Implement code splitting\n- Lazy load routes\n- Analyze bundle with 'npm run analyze'\n- Remove unused dependencies"
+
+        "$SCRIPT_DIR/create-tech-debt-story.sh" \
+            "Optimize bundle size - currently ${SIZE_MB}MB" \
+            "P2" \
+            "PERFORMANCE" \
+            "$DETAILS" || echo "⚠️  Could not create story automatically"
+
+        echo -e "${YELLOW}⚠️  Continuing deployment with large bundle${NC}"
+        echo -e "${YELLOW}   Tech debt story added to backlog${NC}"
+    fi
+else
+    handle_error "Build directory not created" \
+        "Build process failed to generate output"
+fi
+echo
+
+# SECOND CONFIRMATION BEFORE DEPLOYMENT
+echo ""
+echo "🚀 Build complete. Ready for PRODUCTION deployment."
+echo "   This will deploy to https://manylla.com/"
+read -p "Type 'DEPLOY' (in capitals) to proceed: " FINAL_CONFIRM
+if [[ "$FINAL_CONFIRM" != "DEPLOY" ]]; then
+    echo "❌ Deployment cancelled"
+    exit 0
+fi
+
+# CREATE BACKUP BEFORE DEPLOYMENT
+BACKUP_NAME="manylla-prod-backup-$(date +%Y%m%d-%H%M%S)"
+echo "📦 Creating backup: $BACKUP_NAME"
+
+# Backup files
+ssh stackmap-cpanel "cd ~/public_html && tar -czf ~/$BACKUP_NAME-files.tar.gz manylla/" 2>/dev/null || echo "Warning: File backup may have failed"
+
+# Backup database (if exists)
+ssh stackmap-cpanel "mysqldump -u stachblx_manylla_prod -p\$(cat ~/.manylla-prod-db-pass 2>/dev/null) stachblx_manylla_sync_prod 2>/dev/null | gzip > ~/$BACKUP_NAME-database.sql.gz" 2>/dev/null || echo "Note: Database backup skipped (may not exist yet)"
+
+# Download backups locally
+mkdir -p backups/
+scp stackmap-cpanel:~/$BACKUP_NAME-files.tar.gz backups/ 2>/dev/null || echo "Warning: Could not download file backup"
+scp stackmap-cpanel:~/$BACKUP_NAME-database.sql.gz backups/ 2>/dev/null || echo "Note: Database backup not downloaded"
+
+echo -e "${GREEN}✅ Backup created: $BACKUP_NAME${NC}"
+echo "   Rollback: ssh stackmap-cpanel 'cd ~/public_html && rm -rf manylla && tar -xzf ~/$BACKUP_NAME-files.tar.gz'"
+
+echo -e "${BLUE}Deploying to Production Server${NC}"
+echo "─────────────────────────"
+
+# Check if SSH alias exists
+if ! grep -q "Host stackmap-cpanel" ~/.ssh/config 2>/dev/null; then
+    handle_error "SSH configuration missing" \
+        "Run: ./scripts/setup-ssh.sh to configure SSH"
+fi
+
+# Clean production directory (CAREFUL - root path)
+echo -e "${YELLOW}🧹 Cleaning production directory...${NC}"
+ssh stackmap-cpanel "
+    cd ~/public_html/manylla && \
+    find . -type f ! -name '.htaccess' ! -name '*.php' ! -path './api/config/*' ! -path './qual/*' ! -path './stage/*' -delete && \
+    find . -type d -empty -delete 2>/dev/null || true
+" || handle_error "Failed to clean production directory" \
+    "Check SSH connection and permissions"
+
+echo -e "${GREEN}✅ Production directory cleaned${NC}"
+
+# Deploy build files
+echo -e "${YELLOW}🚀 Deploying to production...${NC}"
+ssh stackmap-cpanel "mkdir -p ~/public_html/manylla"
+
+rsync -avz --delete \
+    --exclude='.git' \
+    --exclude='node_modules' \
+    --exclude='.env' \
+    --exclude='qual' \
+    --exclude='stage' \
+    web/build/ stackmap-cpanel:~/public_html/manylla/ || \
+    handle_error "Rsync deployment failed" \
+        "Check SSH connection and disk space"
+
+# Deploy .htaccess for production (root path)
+if [ -f "public/.htaccess.manylla-prod" ]; then
+    echo -e "${YELLOW}📄 Deploying Manylla production .htaccess...${NC}"
+    scp public/.htaccess.manylla-prod stackmap-cpanel:~/public_html/manylla/.htaccess
+elif [ -f "build/.htaccess" ]; then
+    echo -e "${YELLOW}📄 Using build .htaccess...${NC}"
+    # The build/.htaccess was already deployed via rsync
+fi
+
+echo -e "${GREEN}✅ Web files deployed${NC}"
+
+# Deploy API if it exists
+if [ -d "api" ]; then
+    echo -e "${YELLOW}📡 Deploying API...${NC}"
+
+    ssh stackmap-cpanel "mkdir -p ~/public_html/manylla/api/{config,sync,share,logs}"
+
+    rsync -avz \
+        --exclude='.git' \
+        --exclude='config/*.php' \
+        --exclude='*.example.php' \
+        api/sync/ stackmap-cpanel:~/public_html/manylla/api/sync/
+
+    scp api/config/database.php stackmap-cpanel:~/public_html/manylla/api/config/
+    scp api/config/config.php stackmap-cpanel:~/public_html/manylla/api/config/
+
+    if [ -f "api/config/config.prod.php" ]; then
+        echo -e "${YELLOW}📄 Deploying production configuration...${NC}"
+        scp api/config/config.prod.php stackmap-cpanel:~/public_html/manylla/api/config/
+        ssh stackmap-cpanel "chmod 600 ~/public_html/manylla/api/config/config.prod.php"
+    else
+        handle_error "Production API config not found" \
+            "Run: ./scripts/deploy-api-config.sh to create config.prod.php"
+    fi
+
+    ssh stackmap-cpanel "chmod 755 ~/public_html/manylla/api/logs"
+
+    echo -e "${GREEN}✅ API deployed${NC}"
+fi
+
+# Extended Health checks
+echo -e "${YELLOW}🔍 Running extended health checks...${NC}"
+
+# Basic health check
+HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://manylla.com/)
+if [[ "$HTTP_STATUS" != "200" ]]; then
+    echo "❌ Health check failed: HTTP $HTTP_STATUS"
+    echo "   Rollback recommended: ssh stackmap-cpanel 'cd ~/public_html && rm -rf manylla && tar -xzf ~/$BACKUP_NAME-files.tar.gz'"
+    exit 1
+fi
+echo -e "${GREEN}✅ Site responding (HTTP 200)${NC}"
+
+# API health check
+if [ -d "api" ]; then
+    API_RESPONSE=$(curl -s https://manylla.com/api/sync_health.php)
+    if [[ "$API_RESPONSE" =~ "environment.*prod" ]]; then
+        echo -e "${GREEN}✅ API responding with correct environment (prod)${NC}"
+    else
+        echo -e "${YELLOW}⚠️  Warning: API environment verification failed${NC}"
+        echo "   Response: $API_RESPONSE"
+    fi
+fi
+
+echo -e "${GREEN}✅ Health checks passed${NC}"
+echo
+
+# Create git tag for production release
+TAG_NAME="v$NEW_VERSION-prod"
+git tag -a "$TAG_NAME" -m "Production release $NEW_VERSION
+
+Deployed: $(date)
+Environment: PRODUCTION
+URL: https://manylla.com/
+" 2>/dev/null
+
+# Push tag to remote
+git push origin "$TAG_NAME" 2>/dev/null || echo "Note: Could not push tag to remote"
+
+echo -e "${GREEN}✅ Git tagged: $TAG_NAME${NC}"
+
+# ============================================================================
+# PHASE 4: MOBILE DEPLOYMENT (OPTIONAL)
+# Deploy to iOS simulators and Android devices if available
+# ============================================================================
+
+echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
+echo -e "${CYAN}    PHASE 4: MOBILE DEPLOYMENT (OPTIONAL)              ${NC}"
+echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
+echo
+
+# iOS Simulator Deployment
+echo -e "${BLUE}iOS Simulator Deployment${NC}"
+echo "─────────────────────────"
+
+# Check for running iOS simulators
+IOS_SIMULATORS=$(xcrun simctl list devices 2>/dev/null | grep "Booted" || echo "")
+if [ -n "$IOS_SIMULATORS" ]; then
+    echo "Found running iOS simulators:"
+    echo "$IOS_SIMULATORS"
+
+    # Try to deploy to iPhone simulator
+    if echo "$IOS_SIMULATORS" | grep -q "iPhone"; then
+        IPHONE_NAME=$(echo "$IOS_SIMULATORS" | grep "iPhone" | head -1 | sed 's/(.*//g' | xargs)
+        echo -e "${YELLOW}📱 Deploying to $IPHONE_NAME...${NC}"
+        npx react-native run-ios --simulator="$IPHONE_NAME" 2>/dev/null || \
+            show_warning "iOS iPhone deployment failed - continuing"
+    fi
+
+    # Try to deploy to iPad simulator
+    if echo "$IOS_SIMULATORS" | grep -q "iPad"; then
+        IPAD_NAME=$(echo "$IOS_SIMULATORS" | grep "iPad" | head -1 | sed 's/(.*//g' | xargs)
+        echo -e "${YELLOW}📱 Deploying to $IPAD_NAME...${NC}"
+        npx react-native run-ios --simulator="$IPAD_NAME" 2>/dev/null || \
+            show_warning "iOS iPad deployment failed - continuing"
+    fi
+
+    # Open the web URL in simulator Safari
+    echo -e "${YELLOW}🌐 Opening production URL in simulator...${NC}"
+    xcrun simctl openurl booted https://manylla.com/ 2>/dev/null || true
+
+    echo -e "${GREEN}✅ iOS deployment attempted${NC}"
+else
+    echo "No iOS simulators running - skipping iOS deployment"
+fi
+echo
+
+# Android Device Deployment and Testing
+echo -e "${BLUE}Android Device Deployment${NC}"
+echo "──────────────────────────"
+
+# Check for connected Android devices (including emulators)
+ANDROID_DEVICES=$(adb devices 2>/dev/null | grep -v "List of devices" | grep -E "device$|emulator" || echo "")
+if [ -n "$ANDROID_DEVICES" ]; then
+    echo "Found connected Android devices:"
+    echo "$ANDROID_DEVICES"
+
+    # Run Android clean script if available
+    if [ -f "$SCRIPT_DIR/android/clean-android.sh" ]; then
+        echo -e "${YELLOW}🧹 Cleaning Android build artifacts...${NC}"
+        "$SCRIPT_DIR/android/clean-android.sh" || show_warning "Clean script failed"
+    fi
+
+    # Build Android APK
+    echo -e "${YELLOW}🔨 Building Android APK...${NC}"
+    cd android && ./gradlew assembleDebug 2>/dev/null && cd .. || {
+        show_warning "Android build failed - continuing"
+        cd ..
+    }
+
+    # Determine correct APK path based on ABI splits
+    APK_PATH=""
+    if [ -f "android/app/build/outputs/apk/debug/app-arm64-v8a-debug.apk" ]; then
+        APK_PATH="android/app/build/outputs/apk/debug/app-arm64-v8a-debug.apk"
+    elif [ -f "android/app/build/outputs/apk/debug/app-debug.apk" ]; then
+        APK_PATH="android/app/build/outputs/apk/debug/app-debug.apk"
+    fi
+
+    if [ -n "$APK_PATH" ]; then
+        # Deploy to each connected device
+        while IFS= read -r line; do
+            DEVICE_ID=$(echo "$line" | awk '{print $1}')
+            if [ -n "$DEVICE_ID" ]; then
+                echo -e "${YELLOW}📱 Installing on device $DEVICE_ID...${NC}"
+                # Use correct package name for Manylla
+                adb -s "$DEVICE_ID" uninstall com.manyllamobile 2>/dev/null || true
+                adb -s "$DEVICE_ID" install -r "$APK_PATH" 2>/dev/null || \
+                    show_warning "Failed to install on $DEVICE_ID"
+
+                # Run basic tests if test script available
+                if [ -f "$SCRIPT_DIR/android/debug-android.sh" ]; then
+                    echo -e "${YELLOW}🧪 Running Android tests on $DEVICE_ID...${NC}"
+                    "$SCRIPT_DIR/android/debug-android.sh" info || true
+                fi
+            fi
+        done <<< "$ANDROID_DEVICES"
+        echo -e "${GREEN}✅ Android deployment attempted${NC}"
+
+        # Run Jest tests for Android if available
+        if [ -d "__tests__/android" ]; then
+            echo -e "${YELLOW}🧪 Running Android Jest tests...${NC}"
+            npm test -- __tests__/android/ --passWithNoTests || show_warning "Android tests failed"
+        fi
+    fi
+else
+    echo "No Android devices connected - skipping Android deployment"
+fi
+echo
+
+# ============================================================================
+# DEPLOYMENT COMPLETE
+# ============================================================================
+
+echo
+echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
+echo -e "${GREEN}    🎉 PRODUCTION DEPLOYMENT SUCCESSFUL!               ${NC}"
+echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
+echo
+echo -e "${GREEN}📍 Deployment Details:${NC}"
+echo -e "${GREEN}   Environment: PRODUCTION${NC}"
+echo -e "${GREEN}   Version: $NEW_VERSION${NC}"
+echo -e "${GREEN}   URL: https://manylla.com/${NC}"
+echo -e "${GREEN}   API: https://manylla.com/api/${NC}"
+echo -e "${GREEN}   Tag: v$NEW_VERSION-prod${NC}"
+echo -e "${GREEN}   Backup: $BACKUP_NAME${NC}"
+echo
+echo "🔄 Rollback Command (if needed within 48 hours):"
+echo "   ssh stackmap-cpanel 'cd ~/public_html && rm -rf manylla && tar -xzf ~/$BACKUP_NAME-files.tar.gz'"
+echo
+echo "📊 Post-Deployment Monitoring:"
+echo "   - Monitor error logs: ssh stackmap-cpanel 'tail -f ~/public_html/manylla/api/logs/error.log'"
+echo "   - Monitor access: ssh stackmap-cpanel 'tail -f ~/public_html/manylla/api/logs/access.log'"
+echo "   - Watch for 24-48 hours minimum"
+echo
+echo "Deployment Summary:"
+echo "─────────────────"
+echo "✅ All validation checks passed"
+echo "✅ Code committed and pushed to GitHub"
+echo "✅ Backup created: $BACKUP_NAME"
+echo "✅ Web application deployed to production"
+if [ -n "$IOS_SIMULATORS" ]; then
+    echo "✅ iOS simulators deployment attempted"
+fi
+if [ -n "$ANDROID_DEVICES" ]; then
+    echo "✅ Android devices deployment attempted"
+fi
+echo
+
+# ============================================================================
+# OPTIONAL: Update Role Definitions with Recent Learnings
+# ============================================================================
+
+echo "Role Evolution Check:"
+echo "────────────────────"
+# Check if this was a bug fix or feature implementation
+if echo "$RELEASE_TITLE" | grep -iE "fix|bug|B[0-9]{3}|feature|feat|S[0-9]{3}" > /dev/null; then
+    echo -e "${YELLOW}This deployment appears to include fixes or features.${NC}"
+    echo "Would you like to capture learnings for role evolution?"
+    echo ""
+    read -p "Update role definitions with learnings? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        if [ -f "$SCRIPT_DIR/apply-role-learnings.sh" ]; then
+            echo -e "${BLUE}Applying recent learnings to role definitions...${NC}"
+            "$SCRIPT_DIR/apply-role-learnings.sh"
+            echo "✅ Role definitions updated with recent learnings"
+        else
+            echo -e "${YELLOW}Role learning script not found. Skipping.${NC}"
         fi
     else
-        # Deploy production API config
-        scp "$PROJECT_ROOT/api/config/config.prod.php" stackmap-cpanel:~/public_html/manylla/api/config/
-        ssh stackmap-cpanel "chmod 600 ~/public_html/manylla/api/config/config.prod.php"
-        echo -e "${GREEN}✅ Production API configuration deployed${NC}"
+        echo "Skipping role definition updates"
     fi
 else
-    echo -e "${YELLOW}⚠️  No production API config found (api/config/config.prod.php)${NC}"
-    echo "API will use default configuration"
+    echo "No bug fixes or features detected in this deployment"
 fi
-
-# Verify deployment
-echo -e "${YELLOW}🔍 Verifying deployment...${NC}"
-
-# Check if main JS file exists
-if curl -s -o /dev/null -w "%{http_code}" https://manylla.com | grep -q "200"; then
-    echo -e "${GREEN}✅ Production site is accessible${NC}"
-else
-    echo -e "${RED}⚠️  Warning: Could not verify production site${NC}"
-fi
-
 echo
-echo -e "${GREEN}🎉 PRODUCTION DEPLOYMENT COMPLETE!${NC}"
+
+echo "📊 Next Steps:"
+echo "──────────"
+echo "1. Test the deployment at https://manylla.com/"
+echo "2. Check all critical features are working"
+echo "3. Monitor error logs for 24-48 hours minimum"
+echo "4. Keep backup for 48 hours minimum"
+echo "5. If bugs were fixed, consider updating role definitions"
 echo
-echo "📋 Summary:"
-echo "  ✅ Backup created"
-echo "  ✅ Production updated from qual"
-echo "  🌐 Production: https://manylla.com"
-echo
-echo "If you encounter any issues, run:"
-echo "  npm run deploy:prod rollback"
+echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"

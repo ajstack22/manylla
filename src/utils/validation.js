@@ -32,8 +32,12 @@ export class ProfileValidator {
           errors.push("Date of birth cannot be in the future");
         }
       }
-    } catch {
+    } catch (error) {
+      // Handle date parsing errors
       errors.push("Invalid date of birth format");
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Date validation failed:', error);
+      }
     }
   }
 
@@ -157,8 +161,12 @@ export class ProfileValidator {
           errors.push("Entry date cannot be in the future");
         }
       }
-    } catch {
+    } catch (error) {
+      // Handle entry date parsing errors
       errors.push("Invalid date format");
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Entry date validation failed:', error);
+      }
     }
   }
 
@@ -312,8 +320,9 @@ export class ProfileValidator {
     // Handles &#106;avascript:, &#x6A;avascript:, etc.
     // SECURITY: Use simple bounded pattern to prevent ReDoS (limit length to prevent backtracking)
     // Pattern matches entity codes followed by up to 20 chars, then colon
-    cleaned = cleaned.replaceAll(/&#x?(?:6A|106|74|4A);?.{0,20}:/gi, "");
-    cleaned = cleaned.replaceAll(/&#x?(?:76|118|56);?.{0,20}:/gi, "");
+    // Using replace with global flag for compatibility (replaceAll not supported in all environments)
+    cleaned = cleaned.replace(/&#x?(?:6A|106|74|4A);?.{0,20}:/gi, "");
+    cleaned = cleaned.replace(/&#x?(?:76|118|56);?.{0,20}:/gi, "");
 
     // Step 4: Decode any remaining HTML entities and re-check
     const entityDecoded = cleaned
@@ -382,6 +391,7 @@ export class ProfileValidator {
     if (!phone || typeof phone !== "string") return false;
 
     // Check for obvious non-phone patterns first
+    // Using explicit string comparisons for clarity
     if (
       phone === "123" ||
       phone === "not-a-phone" ||
@@ -397,7 +407,7 @@ export class ProfileValidator {
     // Must have exactly 10-15 digits (international format)
     if (digits.length < 10 || digits.length > 15) return false;
 
-    // Additional invalid patterns
+    // Additional invalid patterns - using string comparison since digits is a string
     if (digits === "123" || digits === "555123") return false;
 
     return true;
@@ -565,6 +575,10 @@ export class ProfileValidator {
 
       return data;
     } catch (error) {
+      // Handle profile repair errors
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Failed to repair profile:', error);
+      }
       return null;
     }
   }

@@ -38,10 +38,12 @@ class ErrorBoundaryClass extends Component {
     this.props.onError?.(normalizedError, errorInfo);
 
     // Update state with error info
+    // Using callback form to safely increment based on previous state
     this.setState((prevState) => ({
       error: normalizedError,
       errorInfo,
       errorCount: (prevState.errorCount || 0) + 1,
+      lastErrorTime: new Date().toISOString(),
     }));
   }
 
@@ -51,7 +53,9 @@ class ErrorBoundaryClass extends Component {
       hasError: false,
       error: null,
       errorInfo: null,
-      lastErrorTime: prevState.error ? new Date().toISOString() : null,
+      lastErrorTime: prevState.hasError ? new Date().toISOString() : prevState.lastErrorTime,
+      // Preserve errorCount across resets for tracking repeated errors
+      errorCount: prevState.errorCount,
     }));
   };
 
