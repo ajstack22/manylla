@@ -69,8 +69,8 @@ export const isWebPlatform = !isMobile;
 export const isIOS = isMobile && Platform && Platform.OS === 'ios';
 export const isAndroid = isMobile && Platform && Platform.OS === 'android';
 
-// Log build configuration on app start (only in non-prod environments)
-if (!isProd) {
+// Log build configuration on app start (development only)
+if (process.env.NODE_ENV === 'development') {
   const platformName = isMobile ? (isIOS ? 'iOS' : 'Android') : 'Web';
   console.log('=== Manylla Build Configuration ===');
   console.log('Platform:', platformName);
