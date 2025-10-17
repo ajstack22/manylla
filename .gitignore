@@ -196,3 +196,4 @@ stackmap_sync/
 .scannerwork/
 .build_number
 ios/fastlane/README.md
+scripts/deployment-rollback.sh
