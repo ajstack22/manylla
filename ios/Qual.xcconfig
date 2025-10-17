@@ -1,0 +1,19 @@
+// Define Pods root directory
+PODS_ROOT = ${SRCROOT}/Pods
+
+// Include CocoaPods configuration
+#include? "Pods/Target Support Files/Pods-ManyllaMobile/Pods-ManyllaMobile.debug.xcconfig"
+
+// Qual Environment Configuration
+BUILD_TYPE = qual
+PRODUCT_BUNDLE_IDENTIFIER = com.manylla.qual
+PRODUCT_NAME = Manylla QUAL
+API_ENDPOINT = https://manylla.com/qual/api
+
+// Code Signing
+DEVELOPMENT_TEAM = 84W9WSYQQB
+CODE_SIGN_STYLE = Automatic
+
+// Marketing Version
+MARKETING_VERSION = 1.0.0
+CURRENT_PROJECT_VERSION = 1

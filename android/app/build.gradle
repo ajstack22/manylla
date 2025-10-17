@@ -77,27 +77,87 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.manyllamobile"
-    
+    namespace "com.manylla"
+
     // Workaround for CMake clean issue with React Native libraries
     // This allows clean to succeed even when codegen directories don't exist yet
     packagingOptions {
         pickFirst '**/libc++_shared.so'
         pickFirst '**/libjsc.so'
     }
-    
+
+    flavorDimensions "tier"
+
     defaultConfig {
-        applicationId "com.manyllamobile"
+        applicationId "com.manylla"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 20250914
-        versionName "2025.09.14.2"
+        versionCode 20251016
+        versionName "2025.10.16.1"
 
         // Enable multi-dex for methods count optimization
         multiDexEnabled true
 
-        // Set application name for better visibility
+        // Set application name for better visibility (overridden by flavors)
         resValue "string", "app_name", "Manylla"
+    }
+
+    productFlavors {
+        qual {
+            dimension "tier"
+            applicationId "com.manylla.qual"
+            manifestPlaceholders = [
+                appName: "Manylla QUAL",
+                buildType: "qual",
+                apiEndpoint: "https://manylla.com/qual/api"
+            ]
+            buildConfigField "String", "BUILD_TYPE_ENV", '"qual"'
+            buildConfigField "String", "API_ENDPOINT", '"https://manylla.com/qual/api"'
+            resValue "string", "app_name", "Manylla QUAL"
+            versionNameSuffix "-qual"
+        }
+
+        stage {
+            dimension "tier"
+            applicationId "com.manylla"
+            manifestPlaceholders = [
+                appName: "Manylla STAGE",
+                buildType: "stage",
+                apiEndpoint: "https://manylla.com/stage/api"
+            ]
+            buildConfigField "String", "BUILD_TYPE_ENV", '"stage"'
+            buildConfigField "String", "API_ENDPOINT", '"https://manylla.com/stage/api"'
+            resValue "string", "app_name", "Manylla STAGE"
+            versionNameSuffix "-stage"
+        }
+
+        beta {
+            dimension "tier"
+            applicationId "com.manylla"
+            manifestPlaceholders = [
+                appName: "Manylla BETA",
+                buildType: "beta",
+                apiEndpoint: "https://manylla.com/api"
+            ]
+            buildConfigField "String", "BUILD_TYPE_ENV", '"beta"'
+            buildConfigField "String", "API_ENDPOINT", '"https://manylla.com/api"'
+            resValue "string", "app_name", "Manylla BETA"
+            versionNameSuffix "-beta"
+        }
+
+        prod {
+            dimension "tier"
+            applicationId "com.manylla"
+            manifestPlaceholders = [
+                appName: "Manylla",
+                buildType: "prod",
+                apiEndpoint: "https://manylla.com/api"
+            ]
+            buildConfigField "String", "BUILD_TYPE_ENV", '"prod"'
+            buildConfigField "String", "API_ENDPOINT", '"https://manylla.com/api"'
+            resValue "string", "app_name", "Manylla"
+            // No suffix for prod
+        }
     }
     signingConfigs {
         debug {

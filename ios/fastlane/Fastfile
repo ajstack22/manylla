@@ -1,0 +1,181 @@
+# ios/fastlane/Fastfile
+# Manylla iOS Fastlane Configuration
+# Adapted from SmilePile's proven configuration
+
+default_platform(:ios)
+
+platform :ios do
+
+  # LANE 1: QUAL - Simulator builds for local testing
+  desc "Build QUAL for simulator testing"
+  lane :qual do
+    gym(
+      scheme: "ManyllaMobile QUAL",
+      configuration: "Debug",
+      skip_package_ipa: true,
+      skip_codesigning: false,  # Use development signing
+      sdk: "iphonesimulator",
+      destination: "generic/platform=iOS Simulator",
+      derived_data_path: "./DerivedData",
+      output_directory: "./build/qual",
+      clean: true,
+      buildlog_path: "./build/logs"
+    )
+
+    puts ""
+    puts "✅ QUAL build complete!"
+    puts "📱 App location: DerivedData/Build/Products/Debug-iphonesimulator/ManyllaMobile.app"
+    puts "📲 To install: xcrun simctl install booted '<path-to-app>'"
+    puts ""
+  end
+
+  # LANE 2: STAGE - TestFlight Internal Testing
+  desc "Build and upload STAGE to TestFlight Internal Testing"
+  lane :stage do
+    # Ensure clean build
+    clear_derived_data
+
+    # Build IPA
+    gym(
+      scheme: "ManyllaMobile STAGE",
+      configuration: "Stage",  # Stage scheme uses Stage configuration
+      export_method: "app-store",
+      export_options: {
+        method: "app-store",
+        provisioningProfiles: {
+          "com.manylla" => "Manylla Distribution"
+        }
+      },
+      derived_data_path: "./build/stage",
+      output_directory: "./build/stage",
+      output_name: "Manylla-Stage",
+      clean: true,
+      buildlog_path: "./build/logs"
+    )
+
+    # Upload to TestFlight using App Store Connect API
+    api_key = app_store_connect_api_key(
+      key_id: "BJAC3957M4",
+      issuer_id: "a608e0f8-9834-49e6-8f6e-623d726ba970",
+      key_filepath: File.expand_path("~/.fastlane/AuthKey_BJAC3957M4.p8"),
+      in_house: false
+    )
+
+    pilot(
+      api_key: api_key,
+      skip_waiting_for_build_processing: true,
+      distribute_external: false,
+      groups: ["Internal Testers"],
+      changelog: "Stage build for internal testing",
+      notify_external_testers: false,
+      app_identifier: "com.manylla",
+      team_id: "84W9WSYQQB"
+    )
+
+    puts ""
+    puts "✅ STAGE uploaded to TestFlight Internal Testing!"
+    puts "🔗 View: https://appstoreconnect.apple.com"
+    puts ""
+  end
+
+  # LANE 3: BETA - TestFlight External Testing
+  desc "Build and upload BETA to TestFlight External Testing"
+  lane :beta do
+    clear_derived_data
+
+    gym(
+      scheme: "ManyllaMobile BETA",
+      configuration: "Beta",
+      export_method: "app-store",
+      export_options: {
+        method: "app-store",
+        provisioningProfiles: {
+          "com.manylla" => "Manylla Distribution"
+        }
+      },
+      derived_data_path: "./build/beta",
+      output_directory: "./build/beta",
+      output_name: "Manylla-Beta",
+      clean: true,
+      buildlog_path: "./build/logs"
+    )
+
+    api_key = app_store_connect_api_key(
+      key_id: "BJAC3957M4",
+      issuer_id: "a608e0f8-9834-49e6-8f6e-623d726ba970",
+      key_filepath: File.expand_path("~/.fastlane/AuthKey_BJAC3957M4.p8"),
+      in_house: false
+    )
+
+    pilot(
+      api_key: api_key,
+      skip_waiting_for_build_processing: false,  # Wait for processing before external distribution
+      distribute_external: true,
+      groups: ["Beta Testers"],
+      changelog: "Beta build for external testing",
+      notify_external_testers: true,
+      app_identifier: "com.manylla",
+      team_id: "84W9WSYQQB"
+    )
+
+    puts ""
+    puts "✅ BETA uploaded to TestFlight External Testing!"
+    puts "🔗 View: https://appstoreconnect.apple.com"
+    puts ""
+  end
+
+  # LANE 4: PROD - App Store
+  desc "Build and upload PROD to App Store Connect"
+  lane :prod do
+    clear_derived_data
+
+    gym(
+      scheme: "ManyllaMobile PROD",
+      configuration: "Release",
+      export_method: "app-store",
+      export_options: {
+        method: "app-store",
+        provisioningProfiles: {
+          "com.manylla" => "Manylla Distribution"
+        }
+      },
+      derived_data_path: "./build/prod",
+      output_directory: "./build/prod",
+      output_name: "Manylla-Prod",
+      clean: true,
+      buildlog_path: "./build/logs"
+    )
+
+    api_key = app_store_connect_api_key(
+      key_id: "BJAC3957M4",
+      issuer_id: "a608e0f8-9834-49e6-8f6e-623d726ba970",
+      key_filepath: File.expand_path("~/.fastlane/AuthKey_BJAC3957M4.p8"),
+      in_house: false
+    )
+
+    # Upload but don't auto-submit
+    deliver(
+      api_key: api_key,
+      skip_metadata: true,
+      skip_screenshots: true,
+      submit_for_review: false,  # Manual submission required
+      force: true,
+      app_identifier: "com.manylla",
+      team_id: "84W9WSYQQB"
+    )
+
+    puts ""
+    puts "✅ PROD uploaded to App Store Connect!"
+    puts "⚠️  Manual submission required in App Store Connect"
+    puts "🔗 https://appstoreconnect.apple.com"
+    puts ""
+  end
+
+  # Error handling
+  error do |lane, exception|
+    puts ""
+    puts "❌ Lane #{lane} failed: #{exception.message}"
+    puts ""
+  end
+
+end

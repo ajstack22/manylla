@@ -1,0 +1,9 @@
+# android/fastlane/Appfile
+# Manylla Android App Configuration
+
+json_key_file("#{Dir.home}/.fastlane/play-store-credentials.json")  # Service account JSON (shared with SmilePile)
+package_name("com.manylla")  # Base package name
+
+# Tier-specific package names are handled automatically by flavors:
+# - qual: com.manylla.qual (from qualDebug/qualRelease flavors)
+# - stage/beta/prod: com.manylla (from respective flavors)

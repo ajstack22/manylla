@@ -1,5 +1,40 @@
 # Manylla Release Notes
 
+## Version 2025.10.15.4 - 2025-10-15
+Production Deployment (P0 Fixes + Wave 5)
+
+### Summary
+First production deployment of Manylla web application to https://manylla.com/ with all P0 critical fixes and Wave 5 deployment documentation. This deployment includes the complete feature set from version 2025.10.15.3.
+
+### Production Deployment
+- **Environment**: https://manylla.com/ (PROD)
+- **Code Version**: 2025.10.15.3 (all P0 fixes included)
+- **Database**: stachblx_manylla_sync_prod (configured Wave 3)
+- **Backup Created**: Automatic pre-deployment backup
+- **Rollback Available**: Yes, via /Users/adamstack/manylla/scripts/deployment-rollback.sh
+
+### Included Fixes (from 2025.10.15.3)
+- Security fixes (S050-S052): Regex DoS, Crypto, JS URI
+- Android text rendering fix (S029)
+- Critical bug fixes (B004-B008)
+- SonarQube issues (S054, S040)
+- Wave 5 documentation (101 KB)
+
+### Quality Metrics
+- SonarQube Security: A rating
+- SonarQube Reliability: A rating
+- ESLint: 0 errors
+- Tests: 300+ passing
+- Security Hotspots: 3 reviewed and safe
+
+### Deployment Notes
+- Zero users at deployment time
+- No mobile app store deployment yet (requires Wave 6)
+- QUAL and STAGE validated successfully
+- Production database tested and operational
+
+---
+
 ## Version 2025.10.15.3 - 2025-10-15
 P0 Critical Fixes + Wave 5 Documentation
 

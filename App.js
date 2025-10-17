@@ -1531,7 +1531,7 @@ const createStyles = (colors, theme) => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.background.default,
+      backgroundColor: colors.background.paper,
       ...baseTextStyle,
       // Add padding for fixed header on web
       ...Platform.select({
@@ -1545,7 +1545,7 @@ const createStyles = (colors, theme) => {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: colors.background.default,
+      backgroundColor: colors.background.paper,
     },
     loadingText: {
       marginTop: 16,
