@@ -1,5 +1,28 @@
 # Manylla Release Notes
 
+## Version 2025.10.15.5 - 2025-10-16
+iOS Safe Area Color Fix
+
+### Summary
+Fixed iOS safe area color around Dynamic Island to match header background color. The safe area now uses the lighter manila color (paper) instead of the darker default background, providing visual consistency with the header across all themes.
+
+### Changes
+- **iOS Safe Area Fix**: SafeAreaView background now uses `colors.background.paper` to match header
+- **Consistency Update**: Loading container background updated to match for visual consistency
+- **All Themes**: Fix applies to Manylla, Light, and Dark themes
+
+### Color Impact
+- Manylla theme: `#EBD9C3` → `#F7F0E6` (darker to lighter manila)
+- Light theme: `#F5F5F5` → `#FFFFFF` (gray to white)
+- Dark theme: `#1A1A1A` → `#2A2A2A` (darker to lighter)
+
+### Technical Details
+- Changed `App.js` container style backgroundColor from `colors.background.default` to `colors.background.paper`
+- Updated loadingContainer for consistency
+- Follows existing header color pattern across all platforms
+
+---
+
 ## Version 2025.10.15.4 - 2025-10-15
 Production Deployment (P0 Fixes + Wave 5)
 
