@@ -69,20 +69,21 @@ export const isWebPlatform = !isMobile;
 export const isIOS = isMobile && Platform && Platform.OS === 'ios';
 export const isAndroid = isMobile && Platform && Platform.OS === 'android';
 
-// Log build configuration on app start (development only)
-if (process.env.NODE_ENV === 'development') {
-  const platformName = isMobile ? (isIOS ? 'iOS' : 'Android') : 'Web';
-  console.log('=== Manylla Build Configuration ===');
-  console.log('Platform:', platformName);
-  console.log('BUILD_TYPE:', BUILD_TYPE);
-  console.log('API_ENDPOINT:', API_ENDPOINT);
-  console.log('BUNDLE_ID:', BUNDLE_ID);
-  console.log('ENV_NAME:', ENV_NAME);
-  if (!isMobile) {
-    console.log('PUBLIC_URL:', PUBLIC_URL);
-  }
-  console.log('===================================');
-}
+// Build configuration logging disabled for deployment
+// Can be re-enabled for debugging by uncommenting below
+// if (process.env.NODE_ENV === 'development') {
+//   const platformName = isMobile ? (isIOS ? 'iOS' : 'Android') : 'Web';
+//   console.log('=== Manylla Build Configuration ===');
+//   console.log('Platform:', platformName);
+//   console.log('BUILD_TYPE:', BUILD_TYPE);
+//   console.log('API_ENDPOINT:', API_ENDPOINT);
+//   console.log('BUNDLE_ID:', BUNDLE_ID);
+//   console.log('ENV_NAME:', ENV_NAME);
+//   if (!isMobile) {
+//     console.log('PUBLIC_URL:', PUBLIC_URL);
+//   }
+//   console.log('===================================');
+// }
 
 // Export all as default for convenience
 export default {
