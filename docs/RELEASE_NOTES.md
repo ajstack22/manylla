@@ -1,6 +1,6 @@
 # Manylla Release Notes
 
-## Version 2025.10.15.5 - 2025-10-16
+## Version 2025.10.16.1 - 2025-10-16
 iOS Safe Area Color Fix
 
 ### Summary
