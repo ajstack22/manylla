@@ -194,3 +194,5 @@ stackmap_sync/
 /manylla-app.last-sonar-analysis
 .claude/
 .scannerwork/
+.build_number
+ios/fastlane/README.md
