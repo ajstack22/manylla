@@ -1,7 +1,0 @@
-{
-  "bug_id": "B010",
-  "phase": 1,
-  "status": "started",
-  "timestamp": "2025-09-17T10:37:48.388117",
-  "bug_file": "processes/bugs/B010-react-native-text-components-not-rendering-content-on-android.md"
-}

@@ -580,12 +580,12 @@ echo
 echo -e "${BLUE}Building Web Application${NC}"
 echo "─────────────────────────"
 
-# Copy staging environment file
-if [ -f .env.staging ]; then
-    cp .env.staging .env.production.local
-    echo -e "${GREEN}✅ Using staging environment configuration${NC}"
+# Copy qual environment file
+if [ -f .env.qual ]; then
+    cp .env.qual .env.production.local
+    echo -e "${GREEN}✅ Using qual environment configuration${NC}"
 else
-    echo -e "${YELLOW}⚠️  No .env.staging file found, using defaults${NC}"
+    echo -e "${YELLOW}⚠️  No .env.qual file found, using defaults${NC}"
 fi
 
 # Update homepage in package.json for qual subdirectory
