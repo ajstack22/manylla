@@ -1,0 +1,13 @@
+# Manylla User Files - Deny Direct Access
+# Files should only be accessed through file_download.php API endpoint
+
+# Deny all direct access
+Require all denied
+
+# Prevent directory listing
+Options -Indexes
+
+# Additional security
+<FilesMatch ".*">
+    Require all denied
+</FilesMatch>
