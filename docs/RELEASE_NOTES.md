@@ -1,5 +1,36 @@
 # Manylla Release Notes
 
+## Version 2025.11.07.6 - 2025-11-07
+File Attachment Button UX Enhancement (Phase 3)
+
+### Summary
+Improved user experience for the "Add File" button by disabling it when sync is not enabled and showing a helpful tooltip message. Previously, clicking the button without sync would show a popup alert; now the button is visually disabled with clear guidance.
+
+### Features
+- **FileAttachmentButton.js**: Enhanced UX when sync is not enabled
+  - Button now disabled when `syncId` is not available
+  - Shows "💡 Enable Sync to Attach Files" message below button
+  - Removed popup Alert.alert that interrupted workflow
+  - Provides immediate visual feedback about why button is disabled
+
+### User Experience Impact
+- Clearer visual communication about sync requirement
+- No unexpected popup alerts
+- Users can see at a glance why file attachments aren't available
+- Better accessibility with disabled state
+
+### Technical Changes
+- Added `syncRequired` check based on `syncId` availability
+- Updated `buttonDisabled` logic to include sync requirement
+- Added conditional rendering for sync requirement message
+- Removed Alert.alert from `handlePress` function
+
+### Status
+- ✅ Feature implemented
+- ⏳ Deploying to QUAL
+
+---
+
 ## Version 2025.11.07.5 - 2025-11-07
 Complete Theme Destructuring Fix - All File Attachment Components (Phase 3 Critical Hotfix)
 
