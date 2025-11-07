@@ -35,7 +35,7 @@ const FileAttachmentList = ({
   showHeader = true,
   style
 }) => {
-  const { theme } = useTheme();
+  const { colors } = useTheme();
 
   const canAddMore = editable && attachments.length < maxFiles;
 
@@ -83,10 +83,10 @@ const FileAttachmentList = ({
     <View style={[styles.container, style]}>
       {showHeader && (
         <View style={styles.header}>
-          <Text style={[styles.headerText, { color: theme.colors.text.primary }]}>
+          <Text style={[styles.headerText, { color: colors.text.primary }]}>
             Attachments
           </Text>
-          <Text style={[styles.countText, { color: theme.colors.text.secondary }]}>
+          <Text style={[styles.countText, { color: colors.text.secondary }]}>
             {attachments.length}/{maxFiles}
           </Text>
         </View>
@@ -118,13 +118,13 @@ const FileAttachmentList = ({
       )}
 
       {editable && !canAddMore && attachments.length >= maxFiles && (
-        <Text style={[styles.limitText, { color: theme.colors.text.secondary }]}>
+        <Text style={[styles.limitText, { color: colors.text.secondary }]}>
           Maximum {maxFiles} files per entry
         </Text>
       )}
 
       {attachments.length === 0 && editable && (
-        <Text style={[styles.emptyText, { color: theme.colors.text.secondary }]}>
+        <Text style={[styles.emptyText, { color: colors.text.secondary }]}>
           No files attached. Tap "Add File" to attach documents or images.
         </Text>
       )}

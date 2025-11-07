@@ -82,7 +82,7 @@ const FileAttachmentChip = ({
   deletable = true,
   style
 }) => {
-  const { theme } = useTheme();
+  const { colors } = useTheme();
 
   // Extract file info from attachment
   const fileName = attachment?.originalFilename || attachment?.filename || 'Unknown file';
@@ -96,8 +96,8 @@ const FileAttachmentChip = ({
       style={[
         styles.chip,
         {
-          backgroundColor: theme.colors.surface,
-          borderColor: theme.colors.outline,
+          backgroundColor: colors.surface,
+          borderColor: colors.border,
           opacity: loading ? 0.6 : 1
         },
         style
@@ -105,19 +105,19 @@ const FileAttachmentChip = ({
       activeOpacity={onPress ? 0.7 : 1}
     >
       <View style={styles.content}>
-        <Text style={[styles.icon, { color: theme.colors.onSurface }]}>
+        <Text style={[styles.icon, { color: colors.text.primary }]}>
           {getFileIcon(mimeType)}
         </Text>
 
         <View style={styles.textContainer}>
           <Text
-            style={[styles.fileName, { color: theme.colors.onSurface }]}
+            style={[styles.fileName, { color: colors.text.primary }]}
             numberOfLines={1}
             ellipsizeMode="middle"
           >
             {truncateFilename(fileName)}
           </Text>
-          <Text style={[styles.fileSize, { color: theme.colors.onSurfaceVariant }]}>
+          <Text style={[styles.fileSize, { color: colors.text.secondary }]}>
             {formatFileSize(fileSize)}
           </Text>
         </View>
@@ -131,7 +131,7 @@ const FileAttachmentChip = ({
             style={styles.deleteButton}
             hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
           >
-            <Text style={[styles.deleteIcon, { color: theme.colors.error }]}>
+            <Text style={[styles.deleteIcon, { color: colors.error }]}>
               ✕
             </Text>
           </TouchableOpacity>
