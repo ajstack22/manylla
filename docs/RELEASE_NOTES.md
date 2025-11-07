@@ -1,5 +1,43 @@
 # Manylla Release Notes
 
+## Version 2025.11.07.5 - 2025-11-07
+Complete Theme Destructuring Fix - All File Attachment Components (Phase 3 Critical Hotfix)
+
+### Summary
+Fixed remaining theme destructuring bugs in FileAttachmentButton and EntryAttachments components. These were missed in v2025.11.07.4 and were causing the "Cannot read properties of undefined (reading 'primary')" error when opening EntryDialog.
+
+### Bug Fixes
+- **FileAttachmentButton.js**: Fixed theme destructuring (Line 37 + 8 usages)
+  - Changed `const { theme } = useTheme()` → `const { colors } = useTheme()`
+  - Updated all color references: `theme.colors.primary` → `colors.primary`
+  - Fixed lines: 37, 136, 137, 147, 151, 161, 171, 172, 180
+
+- **EntryAttachments.js**: Fixed theme destructuring (Line 43 + 3 usages)
+  - Changed `const { theme } = useTheme()` → `const { colors } = useTheme()`
+  - Updated all color references: `theme.colors.*` → `colors.*`
+  - Fixed lines: 43, 195, 198, 231
+
+### Root Cause
+FileAttachmentList renders FileAttachmentButton, which was still using the old destructuring pattern. The error occurred when the button tried to access `theme.colors.primary` where `theme` was undefined.
+
+### Verification
+- ✅ All 5 file attachment components now use correct destructuring
+- ✅ No remaining `const { theme } = useTheme()` in src/components/
+- ✅ No remaining `theme.colors.*` accesses in src/components/
+- ✅ Build successful with no theme-related errors
+
+### Impact
+- EntryDialog opens without crashing
+- File attachment buttons render correctly
+- All file attachment UI components fixed
+- Resolves production error in QUAL
+
+### Status
+- ✅ Fix implemented and verified
+- ⏳ Deploying to QUAL
+
+---
+
 ## Version 2025.11.07.4 - 2025-11-07
 Theme Context Destructuring Fix (Phase 3 Critical Hotfix)
 
