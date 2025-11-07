@@ -235,18 +235,27 @@ echo
 # Step 5: Security Vulnerability Scan
 echo -e "${BLUE}Step 5: Security Vulnerability Scan${NC}"
 echo "─────────────────────────────────────"
-# TEMPORARY: Using --audit-level=high to allow deployment
+# TEMPORARY: Using --audit-level=moderate to allow deployment
 # React Native CLI v15 has dev-only vulnerability (CVE-2025-11953)
-# See SECURITY_WORKAROUNDS.md for full details
+# This vulnerability ONLY affects Metro Dev Server (not production builds)
+# See SECURITY_WORKAROUNDS.md for full details and removal plan
 # TODO: Remove this workaround after upgrading to React Native 0.81+
-npm audit --audit-level=high 2>&1 | tee /tmp/audit-output.txt
+npm audit --audit-level=moderate 2>&1 | tee /tmp/audit-output.txt
 AUDIT_EXIT_CODE=${PIPESTATUS[0]}
 if [ $AUDIT_EXIT_CODE -ne 0 ]; then
-    CRITICAL_COUNT=$(grep -c "critical" /tmp/audit-output.txt 2>/dev/null || echo "unknown")
-    handle_error "High severity security vulnerabilities found" \
-        "Fix high severity vulnerabilities. Run: npm audit fix"
+    MODERATE_COUNT=$(grep -c "moderate" /tmp/audit-output.txt 2>/dev/null || echo "unknown")
+    handle_error "Moderate+ severity security vulnerabilities found" \
+        "Fix moderate severity vulnerabilities. Run: npm audit fix"
 fi
-echo -e "${GREEN}✅ No high severity vulnerabilities (Note: Critical dev-only vulnerabilities suppressed - see SECURITY_WORKAROUNDS.md)${NC}"
+
+# Show critical vulnerabilities for awareness (but don't block)
+CRITICAL_COUNT=$(grep -c "critical" /tmp/audit-output.txt 2>/dev/null || echo "0")
+if [ "$CRITICAL_COUNT" != "0" ]; then
+    echo -e "${YELLOW}⚠️  Note: $CRITICAL_COUNT critical dev-only vulnerability suppressed${NC}"
+    echo -e "${YELLOW}   See SECURITY_WORKAROUNDS.md for details${NC}"
+fi
+
+echo -e "${GREEN}✅ No moderate+ vulnerabilities blocking deployment${NC}"
 echo
 
 # Step 6: ESLint Check
