@@ -71,6 +71,97 @@ export const ProfileProvider = ({ children }) => {
     }
   };
 
+  // Entry management functions
+  const addEntry = async (profileId, entryData) => {
+    const profile = profiles.find(p => p.id === profileId);
+    if (!profile) return;
+
+    // Validate attachments if present
+    if (entryData.attachments) {
+      for (const att of entryData.attachments) {
+        if (!att.id || !att.fileHash || !att.encryptedMeta) {
+          throw new Error('Invalid attachment metadata');
+        }
+      }
+    }
+
+    const newEntry = {
+      id: `entry-${Date.now()}`,
+      ...entryData,
+      date: entryData.date || new Date().toISOString(),
+      attachments: entryData.attachments || []
+    };
+
+    const updatedProfile = {
+      ...profile,
+      entries: [...(profile.entries || []), newEntry]
+    };
+
+    await updateProfile(updatedProfile);
+    return newEntry;
+  };
+
+  const updateEntry = async (profileId, entryId, entryData) => {
+    const profile = profiles.find(p => p.id === profileId);
+    if (!profile) return;
+
+    const updatedProfile = {
+      ...profile,
+      entries: (profile.entries || []).map(entry =>
+        entry.id === entryId
+          ? { ...entry, ...entryData, updatedAt: new Date().toISOString() }
+          : entry
+      )
+    };
+
+    await updateProfile(updatedProfile);
+  };
+
+  const deleteEntry = async (profileId, entryId) => {
+    const profile = profiles.find(p => p.id === profileId);
+    if (!profile) return;
+
+    const updatedProfile = {
+      ...profile,
+      entries: (profile.entries || []).filter(entry => entry.id !== entryId)
+    };
+
+    await updateProfile(updatedProfile);
+  };
+
+  // Attachment management
+  const addAttachmentToEntry = async (profileId, entryId, attachment) => {
+    const profile = profiles.find(p => p.id === profileId);
+    if (!profile) return;
+
+    const entry = (profile.entries || []).find(e => e.id === entryId);
+    if (!entry) return;
+
+    const updatedEntry = {
+      ...entry,
+      attachments: [...(entry.attachments || []), attachment],
+      updatedAt: new Date().toISOString()
+    };
+
+    await updateEntry(profileId, entryId, updatedEntry);
+  };
+
+  const removeAttachmentFromEntry = async (profileId, entryId, attachmentId) => {
+    const profile = profiles.find(p => p.id === profileId);
+    if (!profile) return;
+
+    const entry = (profile.entries || []).find(e => e.id === entryId);
+    if (!entry) return;
+
+    const updatedEntry = {
+      ...entry,
+      attachments: (entry.attachments || []).filter(a => a.id !== attachmentId),
+      updatedAt: new Date().toISOString()
+    };
+
+    await updateEntry(profileId, entryId, updatedEntry);
+  };
+
   return (
     <ProfileContext.Provider
       value={{
@@ -83,6 +174,13 @@ export const ProfileProvider = ({ children }) => {
         updateProfile,
         deleteProfile,
         loadProfiles,
+        // Entry management
+        addEntry,
+        updateEntry,
+        deleteEntry,
+        // Attachment management
+        addAttachmentToEntry,
+        removeAttachmentFromEntry,
       }}
     >
       {children}

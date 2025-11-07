@@ -292,6 +292,144 @@ class ConflictResolver {
 
     return true;
   }
+
+  /**
+   * Merge entries with attachment deduplication
+   * @param {Array} localEntries - Local entries array
+   * @param {Array} remoteEntries - Remote entries array
+   * @returns {Array} Merged entries without duplicate attachments
+   */
+  mergeEntries(localEntries = [], remoteEntries = []) {
+    const mergedMap = new Map();
+
+    // Add all local entries
+    localEntries.forEach((entry) => {
+      mergedMap.set(entry.id, entry);
+    });
+
+    // Merge remote entries
+    remoteEntries.forEach((remoteEntry) => {
+      const localEntry = mergedMap.get(remoteEntry.id);
+
+      if (!localEntry) {
+        // New entry from remote
+        mergedMap.set(remoteEntry.id, remoteEntry);
+      } else {
+        // Merge the entry, especially attachments
+        const merged = this.mergeEntry(localEntry, remoteEntry);
+        mergedMap.set(remoteEntry.id, merged);
+      }
+    });
+
+    return Array.from(mergedMap.values());
+  }
+
+  /**
+   * Merge a single entry with attachment conflict resolution
+   * @param {Object} localEntry - Local entry
+   * @param {Object} remoteEntry - Remote entry
+   * @returns {Object} Merged entry
+   */
+  mergeEntry(localEntry, remoteEntry) {
+    // Use last-write-wins for basic fields
+    const localTime = new Date(localEntry.updatedAt || localEntry.date || 0).getTime();
+    const remoteTime = new Date(remoteEntry.updatedAt || remoteEntry.date || 0).getTime();
+
+    const baseEntry = localTime >= remoteTime ? localEntry : remoteEntry;
+
+    // Merge attachments to prevent duplicates
+    const mergedAttachments = this.mergeAttachments(
+      localEntry.attachments || [],
+      remoteEntry.attachments || []
+    );
+
+    return {
+      ...baseEntry,
+      attachments: mergedAttachments,
+      updatedAt: new Date().toISOString()
+    };
+  }
+
+  /**
+   * Merge attachments arrays preventing duplicates
+   * Uses UUID-based deduplication to prevent exponential growth
+   * @param {Array} localAttachments - Local attachments
+   * @param {Array} remoteAttachments - Remote attachments
+   * @returns {Array} Merged attachments without duplicates
+   */
+  mergeAttachments(localAttachments = [], remoteAttachments = []) {
+    const merged = new Map();
+
+    // Add local attachments
+    for (const att of localAttachments) {
+      if (att && att.id) {
+        merged.set(att.id, att);
+      }
+    }
+
+    // Merge remote attachments
+    for (const att of remoteAttachments) {
+      if (!att || !att.id) continue;
+
+      const existing = merged.get(att.id);
+
+      if (!existing) {
+        // New attachment from remote
+        merged.set(att.id, att);
+      } else {
+        // Same ID exists - check if it's the same file
+        if (existing.fileHash === att.fileHash) {
+          // Same file, keep newer version
+          const existingVersion = existing.version || 1;
+          const remoteVersion = att.version || 1;
+          if (remoteVersion > existingVersion) {
+            merged.set(att.id, att);
+          }
+        } else if (existing.fileHash !== att.fileHash) {
+          // Different files with same ID (shouldn't happen with UUIDs)
+          // Keep local version - ID collision tracked silently
+        }
+      }
+    }
+
+    return Array.from(merged.values());
+  }
+
+  /**
+   * Calculate total size of attachments
+   * @param {Array} attachments - Array of attachments
+   * @returns {number} Total size in bytes
+   */
+  calculateAttachmentsSize(attachments) {
+    if (!attachments || !Array.isArray(attachments)) return 0;
+
+    return attachments.reduce((total, att) => {
+      return total + (att?.size || 0);
+    }, 0);
+  }
+
+  /**
+   * Check if adding attachments would exceed quota
+   * @param {Object} profile - Profile object
+   * @param {Array} newAttachments - New attachments to add
+   * @param {number} quotaBytes - Quota in bytes (default 500MB)
+   * @returns {boolean} True if within quota
+   */
+  checkAttachmentQuota(profile, newAttachments, quotaBytes = 500 * 1024 * 1024) {
+    let totalSize = 0;
+
+    // Calculate size of all existing attachments in profile
+    if (profile.entries) {
+      for (const entry of profile.entries) {
+        totalSize += this.calculateAttachmentsSize(entry.attachments);
+      }
+    }
+
+    // Add size of new attachments
+    totalSize += this.calculateAttachmentsSize(newAttachments);
+
+    return totalSize <= quotaBytes;
+  }
 }
 
 // Export singleton instance
