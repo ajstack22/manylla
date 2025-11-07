@@ -811,16 +811,14 @@ if [ -n "$IOS_SIMULATORS" ]; then
     echo -e "${YELLOW}🔨 Building iOS app with QUAL scheme...${NC}"
     echo "Note: This may take 2-3 minutes on first build..."
 
-    # Clean previous builds to avoid stale artifacts
-    rm -rf ios/build 2>/dev/null || true
-
     cd ios
     # Build with more verbose output to track progress
+    # NOTE: DO NOT use -derivedDataPath as it breaks ReactCodegen file paths
+    # React Native expects codegen files in default DerivedData location
     xcodebuild -workspace ManyllaMobile.xcworkspace \
                -scheme "ManyllaMobile QUAL" \
                -configuration Debug \
                -sdk iphonesimulator \
-               -derivedDataPath build \
                CODE_SIGN_IDENTITY="" \
                CODE_SIGNING_REQUIRED=NO \
                -quiet 2>&1 | tee /tmp/ios-build.log | grep -E "BUILD SUCCEEDED|BUILD FAILED|Compiling|Linking" || {
@@ -848,10 +846,11 @@ if [ -n "$IOS_SIMULATORS" ]; then
             --simulator="$IPHONE_NAME" \
             --scheme="ManyllaMobile QUAL" \
             --no-packager 2>&1 | tee /tmp/ios-deploy.log | grep -E "Succeeded|Failed|error" || {
-            # Fallback: Install pre-built app if available
-            if [ -d "ios/build/Build/Products/Debug-iphonesimulator/ManyllaMobile.app" ]; then
-                echo -e "${YELLOW}📦 Installing pre-built app...${NC}"
-                xcrun simctl install "$IPHONE_ID" "ios/build/Build/Products/Debug-iphonesimulator/ManyllaMobile.app" 2>/dev/null && \
+            # Fallback: Install pre-built app if available in DerivedData
+            DERIVED_APP=$(find ~/Library/Developer/Xcode/DerivedData/ManyllaMobile-*/Build/Products/Debug-iphonesimulator -name "ManyllaMobile.app" -type d 2>/dev/null | head -1)
+            if [ -n "$DERIVED_APP" ]; then
+                echo -e "${YELLOW}📦 Installing pre-built app from DerivedData...${NC}"
+                xcrun simctl install "$IPHONE_ID" "$DERIVED_APP" 2>/dev/null && \
                     xcrun simctl launch "$IPHONE_ID" com.manylla 2>/dev/null && \
                     echo -e "${GREEN}✅ App installed and launched on iPhone${NC}" || \
                     show_warning "Failed to install pre-built app on iPhone"
@@ -872,10 +871,11 @@ if [ -n "$IOS_SIMULATORS" ]; then
             --simulator="$IPAD_NAME" \
             --scheme="ManyllaMobile QUAL" \
             --no-packager 2>&1 | tee /tmp/ios-deploy-ipad.log | grep -E "Succeeded|Failed|error" || {
-            # Fallback: Install pre-built app if available
-            if [ -d "ios/build/Build/Products/Debug-iphonesimulator/ManyllaMobile.app" ]; then
-                echo -e "${YELLOW}📦 Installing pre-built app...${NC}"
-                xcrun simctl install "$IPAD_ID" "ios/build/Build/Products/Debug-iphonesimulator/ManyllaMobile.app" 2>/dev/null && \
+            # Fallback: Install pre-built app if available in DerivedData
+            DERIVED_APP=$(find ~/Library/Developer/Xcode/DerivedData/ManyllaMobile-*/Build/Products/Debug-iphonesimulator -name "ManyllaMobile.app" -type d 2>/dev/null | head -1)
+            if [ -n "$DERIVED_APP" ]; then
+                echo -e "${YELLOW}📦 Installing pre-built app from DerivedData...${NC}"
+                xcrun simctl install "$IPAD_ID" "$DERIVED_APP" 2>/dev/null && \
                     xcrun simctl launch "$IPAD_ID" com.manylla 2>/dev/null && \
                     echo -e "${GREEN}✅ App installed and launched on iPad${NC}" || \
                     show_warning "Failed to install pre-built app on iPad"

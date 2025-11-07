@@ -1,5 +1,32 @@
 # Manylla Release Notes
 
+## Version 2025.11.07.8 - 2025-11-07
+iOS Build Configuration Fix
+
+### Summary
+Fixed critical iOS build failure caused by incompatible xcodebuild derivedDataPath flag that broke React Native's codegen file resolution.
+
+### Bug Fixes
+
+#### iOS Build Configuration (scripts/deploy-qual.sh)
+- **Removed custom derivedDataPath**:
+  - Eliminated `-derivedDataPath build` flag that was breaking React Native codegen
+  - iOS now uses default DerivedData location for proper file resolution
+  - Fixes "Build input file cannot be found" errors for codegen C++ files
+- **Updated fallback paths**:
+  - Changed app installation fallback to use DerivedData instead of ios/build
+  - Added warning comments to prevent future custom build path usage
+- **Root Cause**:
+  - ReactCodegen generates files in default DerivedData location
+  - Custom build paths broke the link between generated and expected file locations
+  - React Native's build system requires default paths for proper operation
+
+### Technical Details
+- React Native generates C++ codegen files (States.cpp, ShadowNodes.cpp, etc.) during pod install
+- These files must be accessible at predictable paths relative to DerivedData
+- Using custom build directories breaks this critical dependency chain
+- Solution ensures full compatibility with React Native's build architecture
+
 ## Version 2025.11.07.7 - 2025-11-07
 Mobile Deployment Infrastructure Fixes
 
