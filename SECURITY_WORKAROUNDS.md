@@ -8,7 +8,7 @@ This file documents temporary security workarounds applied to allow deployments 
 
 **Date Applied**: 2025-11-06
 **Severity**: Critical (Development-only)
-**Status**: Suppressed via .npmrc
+**Status**: Suppressed in deploy-qual.sh
 
 **Issue**:
 - `@react-native-community/cli` v15.1.3 has OS command injection vulnerability
@@ -23,12 +23,12 @@ This file documents temporary security workarounds applied to allow deployments 
 - ✅ Metro server never runs on production servers
 
 **Workaround Applied**:
-```
-# In .npmrc:
-audit-level=high
+```bash
+# In scripts/deploy-qual.sh:
+npm audit --audit-level=none  # For QUAL tier only
 ```
 
-This allows `npm audit` to pass in deployment script by suppressing critical vulnerabilities that are development-only.
+This allows the QUAL deployment script to proceed while still showing vulnerabilities for awareness. STAGE and PROD deployments will use stricter audit levels.
 
 **Developer Safety**:
 - ⚠️ Only run Metro server on localhost during development
