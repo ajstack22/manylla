@@ -98,10 +98,16 @@ echo -e "${BLUE}Step 1: Checking for uncommitted changes${NC}"
 echo "─────────────────────────────────────────"
 if [[ -z "$SKIP_GIT_CHECK" ]]; then
     if [[ -n $(git status --porcelain) ]]; then
-        handle_error "Uncommitted changes detected" \
-            "Commit or stash all changes before deployment. Run: git status"
+        echo -e "${YELLOW}⚠️  Uncommitted changes detected${NC}"
+        echo "QUAL deployment allows uncommitted changes (development testing only)"
+        echo "Consider committing before deploying to STAGE/PROD."
+        echo ""
+        git status --short
+        echo ""
+        echo -e "${YELLOW}Continuing with QUAL deployment...${NC}"
+    else
+        echo -e "${GREEN}✅ Working directory clean${NC}"
     fi
-    echo -e "${GREEN}✅ Working directory clean${NC}"
 else
     echo -e "${YELLOW}⚠️  Git check skipped (SKIP_GIT_CHECK set)${NC}"
 fi
