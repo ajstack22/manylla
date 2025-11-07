@@ -1,5 +1,21 @@
 # Manylla Release Notes
 
+## Version 2025.11.07.3 - 2025-11-07
+Debug Check Update (Phase 3 Hotfix)
+
+### Summary
+Fixed debug console error by updating component existence check from deprecated EntryForm to EntryDialog.
+
+### Bug Fixes
+- **App.js**: Updated debug check to reference EntryDialog instead of removed EntryForm component
+  - Resolves "EntryForm is undefined" console error
+
+### Status
+- ✅ Fix implemented
+- ⏳ Deploying to QUAL
+
+---
+
 ## Version 2025.11.07.2 - 2025-11-07
 Theme Color Reference Hotfix (Phase 3)
 
