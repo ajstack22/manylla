@@ -35,9 +35,9 @@ import { unifiedCategories } from "./src/utils/unifiedCategories";
 
 // Import unified components
 import {
-  EntryForm,
   ProfileEditForm,
 } from "./src/components/UnifiedApp";
+import { EntryDialog } from "./src/components/Dialogs";
 
 // Import additional components
 import { ThemedToast } from "./src/components/Toast";
@@ -1396,9 +1396,9 @@ function AppContent() {
           colors={colors}
         />
 
-      {/* Entry Form Modal */}
-      <EntryForm
-        visible={entryFormOpen}
+      {/* Entry Dialog */}
+      <EntryDialog
+        open={entryFormOpen}
         onClose={() => {
           setEntryFormOpen(false);
           setEditingEntry(null);
@@ -1408,7 +1408,6 @@ function AppContent() {
         category={selectedCategory}
         entry={editingEntry}
         categories={unifiedCategories.filter((cat) => cat.isVisible)}
-        themeColors={colors}
       />
 
       {/* Profile Edit Modal */}
