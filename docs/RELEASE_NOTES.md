@@ -1,5 +1,104 @@
 # Manylla Release Notes
 
+## Version 2025.11.07.7 - 2025-11-07
+Mobile Deployment Infrastructure Fixes
+
+### Summary
+Fixed critical infrastructure issues preventing mobile apps from deploying to iOS simulators and Android emulators. The deployment script was using incorrect scheme names and package identifiers, and the Android build was broken due to an incompatible dependency version.
+
+### Bug Fixes
+
+#### Deploy Script Fixes (scripts/deploy-qual.sh)
+- **iOS Deployment**:
+  - Fixed scheme name from "ManyllaMobile" to "ManyllaMobile QUAL"
+  - Added fallback to install pre-built .app files
+  - Added verification to confirm app installation
+  - Better device ID extraction for iPhone and iPad
+
+- **Android Deployment**:
+  - Fixed package names (now tries: com.manylla, com.manylla.qual)
+  - Added QUAL flavor build with fallback to regular debug
+  - Added app launch verification using monkey command
+  - Better uninstall handling with multiple package attempts
+
+- **Metro Bundler Handling**:
+  - Now detects and reuses existing Metro on port 8082
+  - Uses --no-packager flag to avoid conflicts
+  - Starts Metro if not already running
+
+- **General Improvements**:
+  - Non-blocking mobile deployment (doesn't fail web deployment)
+  - Better error handling and status messages
+  - Added deployment logging to /tmp/ for debugging
+
+#### Android Build Fix (package.json)
+- **Updated react-native-document-picker**: 9.1.1 → 9.3.1
+  - Fixes GuardedResultAsyncTask error (class removed in React Native 0.76+)
+  - Resolves compilation failure in Android builds
+  - Note: Package is deprecated and renamed (future migration needed)
+
+### New Tools
+- **scripts/deploy-mobile-manual.sh**: Standalone script for testing mobile deployment without full web deployment
+
+### Manual Deployment Commands
+
+If automated deployment doesn't work, use these commands:
+
+#### iOS Deployment
+```bash
+# Start Metro if not running
+npm start &
+
+# Deploy to iPhone (in new terminal)
+npx react-native run-ios --simulator="iPhone 15 Pro Max" --scheme="ManyllaMobile QUAL" --no-packager
+
+# Deploy to iPad
+npx react-native run-ios --simulator="iPad Pro 12.9-inch" --scheme="ManyllaMobile QUAL" --no-packager
+```
+
+#### Android Deployment
+```bash
+# Start Metro if not running
+npm start &
+
+# Deploy to all connected devices/emulators (in new terminal)
+npx react-native run-android --no-packager
+
+# Or deploy to specific device
+npx react-native run-android --deviceId=emulator-5554 --no-packager
+```
+
+#### Verification Commands
+```bash
+# Check if iOS app is installed
+xcrun simctl listapps D75B9303-8837-4E5A-B58D-1830F535C953 | grep -i manylla
+
+# Check if Android app is installed
+adb shell pm list packages | grep manylla
+
+# Check running simulators/emulators
+xcrun simctl list devices | grep Booted
+adb devices
+```
+
+### Known Issues
+- iOS builds take 5+ minutes (first build or after clean)
+- react-native-document-picker is deprecated (will need migration in future)
+- Mobile deployment in deploy-qual.sh is still being refined
+
+### Impact
+- Mobile apps can now be deployed to emulators/simulators
+- Android builds no longer fail with GuardedResultAsyncTask error
+- Deployment script handles Metro bundler conflicts correctly
+- Better visibility into mobile deployment status
+
+### Status
+- ✅ Fixes committed
+- ⏳ Manual deployment may be needed until script is fully stable
+- ⏳ Pushing to GitHub
+
+---
+
 ## Version 2025.11.07.6 - 2025-11-07
 File Attachment Button UX Enhancement (Phase 3)
 
