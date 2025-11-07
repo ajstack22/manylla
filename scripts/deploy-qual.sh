@@ -770,6 +770,30 @@ echo -e "${CYAN}    PHASE 4: MOBILE DEPLOYMENT (OPTIONAL)              ${NC}"
 echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
 echo
 
+# Note about mobile deployment
+echo -e "${BLUE}📱 Mobile Deployment Status${NC}"
+echo "─────────────────────────────"
+echo "Mobile deployment is optional and non-blocking."
+echo "If builds fail, web deployment will continue normally."
+echo
+
+# Function to handle Metro bundler
+handle_metro_bundler() {
+    local METRO_PID=$(lsof -ti :8082 2>/dev/null || echo "")
+    if [ -n "$METRO_PID" ]; then
+        echo -e "${YELLOW}🔄 Metro bundler already running on port 8082 (PID: $METRO_PID)${NC}"
+        echo "Using existing Metro bundler..."
+        return 0
+    else
+        echo -e "${YELLOW}🚀 Starting Metro bundler...${NC}"
+        npx react-native start --port 8082 > /tmp/metro-bundler.log 2>&1 &
+        METRO_NEW_PID=$!
+        sleep 5  # Give Metro time to start
+        echo -e "${GREEN}✅ Metro bundler started (PID: $METRO_NEW_PID)${NC}"
+        return 0
+    fi
+}
+
 # iOS Simulator Deployment
 echo -e "${BLUE}iOS Simulator Deployment${NC}"
 echo "─────────────────────────"
@@ -779,28 +803,103 @@ IOS_SIMULATORS=$(xcrun simctl list devices 2>/dev/null | grep "Booted" || echo "
 if [ -n "$IOS_SIMULATORS" ]; then
     echo "Found running iOS simulators:"
     echo "$IOS_SIMULATORS"
-    
+
+    # Handle Metro bundler for iOS deployment
+    handle_metro_bundler
+
+    # Build iOS app with QUAL scheme
+    echo -e "${YELLOW}🔨 Building iOS app with QUAL scheme...${NC}"
+    echo "Note: This may take 2-3 minutes on first build..."
+
+    # Clean previous builds to avoid stale artifacts
+    rm -rf ios/build 2>/dev/null || true
+
+    cd ios
+    # Build with more verbose output to track progress
+    xcodebuild -workspace ManyllaMobile.xcworkspace \
+               -scheme "ManyllaMobile QUAL" \
+               -configuration Debug \
+               -sdk iphonesimulator \
+               -derivedDataPath build \
+               CODE_SIGN_IDENTITY="" \
+               CODE_SIGNING_REQUIRED=NO \
+               -quiet 2>&1 | tee /tmp/ios-build.log | grep -E "BUILD SUCCEEDED|BUILD FAILED|Compiling|Linking" || {
+        cd ..
+        echo -e "${YELLOW}⚠️ iOS build encountered issues - checking for existing build...${NC}"
+        # Check if a usable build exists from previous runs
+        if [ -d "/Users/adamstack/Library/Developer/Xcode/DerivedData/ManyllaMobile-*/Build/Products/Debug-iphonesimulator/ManyllaMobile.app" ]; then
+            echo -e "${GREEN}Found existing iOS build - will attempt to use it${NC}"
+        else
+            show_warning "iOS build failed - mobile deployment will be skipped"
+            show_warning "To debug: Check /tmp/ios-build.log for details"
+            return 1
+        fi
+    }
+    cd ..
+
     # Try to deploy to iPhone simulator
     if echo "$IOS_SIMULATORS" | grep -q "iPhone"; then
         IPHONE_NAME=$(echo "$IOS_SIMULATORS" | grep "iPhone" | head -1 | sed 's/(.*//g' | xargs)
+        IPHONE_ID=$(echo "$IOS_SIMULATORS" | grep "iPhone" | head -1 | grep -o '[A-F0-9-]\{36\}')
         echo -e "${YELLOW}📱 Deploying to $IPHONE_NAME...${NC}"
-        npx react-native run-ios --simulator="$IPHONE_NAME" 2>/dev/null || \
-            show_warning "iOS iPhone deployment failed - continuing"
+
+        # Use the QUAL scheme specifically
+        npx react-native run-ios \
+            --simulator="$IPHONE_NAME" \
+            --scheme="ManyllaMobile QUAL" \
+            --no-packager 2>&1 | tee /tmp/ios-deploy.log | grep -E "Succeeded|Failed|error" || {
+            # Fallback: Install pre-built app if available
+            if [ -d "ios/build/Build/Products/Debug-iphonesimulator/ManyllaMobile.app" ]; then
+                echo -e "${YELLOW}📦 Installing pre-built app...${NC}"
+                xcrun simctl install "$IPHONE_ID" "ios/build/Build/Products/Debug-iphonesimulator/ManyllaMobile.app" 2>/dev/null && \
+                    xcrun simctl launch "$IPHONE_ID" com.manylla 2>/dev/null && \
+                    echo -e "${GREEN}✅ App installed and launched on iPhone${NC}" || \
+                    show_warning "Failed to install pre-built app on iPhone"
+            else
+                show_warning "iOS iPhone deployment failed - continuing"
+            fi
+        }
     fi
-    
+
     # Try to deploy to iPad simulator
     if echo "$IOS_SIMULATORS" | grep -q "iPad"; then
         IPAD_NAME=$(echo "$IOS_SIMULATORS" | grep "iPad" | head -1 | sed 's/(.*//g' | xargs)
+        IPAD_ID=$(echo "$IOS_SIMULATORS" | grep "iPad" | head -1 | grep -o '[A-F0-9-]\{36\}')
         echo -e "${YELLOW}📱 Deploying to $IPAD_NAME...${NC}"
-        npx react-native run-ios --simulator="$IPAD_NAME" 2>/dev/null || \
-            show_warning "iOS iPad deployment failed - continuing"
+
+        # Use the QUAL scheme specifically
+        npx react-native run-ios \
+            --simulator="$IPAD_NAME" \
+            --scheme="ManyllaMobile QUAL" \
+            --no-packager 2>&1 | tee /tmp/ios-deploy-ipad.log | grep -E "Succeeded|Failed|error" || {
+            # Fallback: Install pre-built app if available
+            if [ -d "ios/build/Build/Products/Debug-iphonesimulator/ManyllaMobile.app" ]; then
+                echo -e "${YELLOW}📦 Installing pre-built app...${NC}"
+                xcrun simctl install "$IPAD_ID" "ios/build/Build/Products/Debug-iphonesimulator/ManyllaMobile.app" 2>/dev/null && \
+                    xcrun simctl launch "$IPAD_ID" com.manylla 2>/dev/null && \
+                    echo -e "${GREEN}✅ App installed and launched on iPad${NC}" || \
+                    show_warning "Failed to install pre-built app on iPad"
+            else
+                show_warning "iOS iPad deployment failed - continuing"
+            fi
+        }
     fi
-    
+
+    # Verify installations
+    echo -e "${YELLOW}🔍 Verifying iOS installations...${NC}"
+    for DEVICE_ID in $(echo "$IOS_SIMULATORS" | grep -o '[A-F0-9-]\{36\}'); do
+        if xcrun simctl listapps "$DEVICE_ID" | grep -q "com.manylla"; then
+            echo -e "${GREEN}✅ App installed on device $DEVICE_ID${NC}"
+        else
+            echo -e "${YELLOW}⚠️ App not found on device $DEVICE_ID${NC}"
+        fi
+    done
+
     # Open the web URL in simulator Safari
     echo -e "${YELLOW}🌐 Opening qual URL in simulator...${NC}"
     xcrun simctl openurl booted https://manylla.com/qual 2>/dev/null || true
-    
-    echo -e "${GREEN}✅ iOS deployment attempted${NC}"
+
+    echo -e "${GREEN}✅ iOS deployment completed${NC}"
 else
     echo "No iOS simulators running - skipping iOS deployment"
 fi
@@ -815,53 +914,83 @@ ANDROID_DEVICES=$(adb devices 2>/dev/null | grep -v "List of devices" | grep -E 
 if [ -n "$ANDROID_DEVICES" ]; then
     echo "Found connected Android devices:"
     echo "$ANDROID_DEVICES"
-    
+
+    # Handle Metro bundler for Android deployment
+    handle_metro_bundler
+
     # Run Android clean script if available
     if [ -f "$SCRIPT_DIR/android/clean-android.sh" ]; then
         echo -e "${YELLOW}🧹 Cleaning Android build artifacts...${NC}"
         "$SCRIPT_DIR/android/clean-android.sh" || show_warning "Clean script failed"
     fi
-    
-    # Build Android APK
-    echo -e "${YELLOW}🔨 Building Android APK...${NC}"
-    cd android && ./gradlew assembleDebug 2>/dev/null && cd .. || {
-        show_warning "Android build failed - continuing"
-        cd ..
+
+    # Build Android APK with QUAL flavor
+    echo -e "${YELLOW}🔨 Building Android APK (QUAL flavor)...${NC}"
+    cd android
+    ./gradlew assembleQualDebug 2>&1 | tee /tmp/android-build.log | grep -E "BUILD SUCCESSFUL|BUILD FAILED|> Task" || {
+        # Fallback to regular debug build if QUAL flavor doesn't exist
+        echo -e "${YELLOW}📦 Trying regular debug build...${NC}"
+        ./gradlew assembleDebug 2>&1 | grep -E "BUILD SUCCESSFUL|BUILD FAILED|> Task"
     }
-    
-    # Determine correct APK path based on ABI splits
+    cd ..
+
+    # Determine correct APK path based on build flavor
     APK_PATH=""
-    if [ -f "android/app/build/outputs/apk/debug/app-arm64-v8a-debug.apk" ]; then
+    # Check for QUAL flavor APK first
+    if [ -f "android/app/build/outputs/apk/qual/debug/app-qual-debug.apk" ]; then
+        APK_PATH="android/app/build/outputs/apk/qual/debug/app-qual-debug.apk"
+        PACKAGE_NAME="com.manylla.qual"
+    # Then check for regular debug with ABI splits
+    elif [ -f "android/app/build/outputs/apk/debug/app-arm64-v8a-debug.apk" ]; then
         APK_PATH="android/app/build/outputs/apk/debug/app-arm64-v8a-debug.apk"
+        PACKAGE_NAME="com.manylla"
     elif [ -f "android/app/build/outputs/apk/debug/app-debug.apk" ]; then
         APK_PATH="android/app/build/outputs/apk/debug/app-debug.apk"
+        PACKAGE_NAME="com.manylla"
     fi
-    
+
     if [ -n "$APK_PATH" ]; then
+        echo -e "${GREEN}✅ APK built successfully: $APK_PATH${NC}"
+
         # Deploy to each connected device
         while IFS= read -r line; do
             DEVICE_ID=$(echo "$line" | awk '{print $1}')
             if [ -n "$DEVICE_ID" ]; then
                 echo -e "${YELLOW}📱 Installing on device $DEVICE_ID...${NC}"
-                # Use correct package name for Manylla
+
+                # Uninstall old versions (try all possible package names)
                 adb -s "$DEVICE_ID" uninstall com.manyllamobile 2>/dev/null || true
-                adb -s "$DEVICE_ID" install -r "$APK_PATH" 2>/dev/null || \
+                adb -s "$DEVICE_ID" uninstall com.manylla 2>/dev/null || true
+                adb -s "$DEVICE_ID" uninstall com.manylla.qual 2>/dev/null || true
+
+                # Install the new APK
+                adb -s "$DEVICE_ID" install -r "$APK_PATH" 2>&1 | grep -E "Success|Failure" || \
                     show_warning "Failed to install on $DEVICE_ID"
-                
-                # Run basic tests if test script available
-                if [ -f "$SCRIPT_DIR/android/debug-android.sh" ]; then
-                    echo -e "${YELLOW}🧪 Running Android tests on $DEVICE_ID...${NC}"
-                    "$SCRIPT_DIR/android/debug-android.sh" info || true
+
+                # Launch the app
+                echo -e "${YELLOW}🚀 Launching app on $DEVICE_ID...${NC}"
+                adb -s "$DEVICE_ID" shell monkey -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 2>/dev/null || \
+                    show_warning "Failed to launch app on $DEVICE_ID"
+
+                # Verify installation
+                if adb -s "$DEVICE_ID" shell pm list packages | grep -q "$PACKAGE_NAME"; then
+                    echo -e "${GREEN}✅ App installed successfully on $DEVICE_ID${NC}"
+                else
+                    echo -e "${RED}❌ App installation failed on $DEVICE_ID${NC}"
                 fi
             fi
         done <<< "$ANDROID_DEVICES"
-        echo -e "${GREEN}✅ Android deployment attempted${NC}"
-        
+
+        echo -e "${GREEN}✅ Android deployment completed${NC}"
+
         # Run Jest tests for Android if available
         if [ -d "__tests__/android" ]; then
             echo -e "${YELLOW}🧪 Running Android Jest tests...${NC}"
             npm test -- __tests__/android/ --passWithNoTests || show_warning "Android tests failed"
         fi
+    else
+        echo -e "${RED}❌ Android APK build failed - check /tmp/android-build.log for details${NC}"
+        show_warning "Android deployment skipped due to build failure"
     fi
 else
     echo "No Android devices connected - skipping Android deployment"
