@@ -1,5 +1,36 @@
 # Manylla Release Notes
 
+## Version 2025.11.07.4 - 2025-11-07
+Theme Context Destructuring Fix (Phase 3 Critical Hotfix)
+
+### Summary
+Fixed critical bug causing EntryDialog to crash due to incorrect theme context destructuring. The ThemeContext returns `{ theme: string, colors: object }` but components were incorrectly destructuring `{ theme }` and trying to access `theme.colors.*`.
+
+### Bug Fixes
+- **FileAttachmentList.js**: Fixed theme destructuring
+  - Changed `const { theme } = useTheme()` → `const { colors } = useTheme()`
+  - Updated all color references from `theme.colors.*` to `colors.*`
+- **FileAttachmentChip.js**: Fixed theme destructuring and Material-UI color mapping
+  - Changed `const { theme } = useTheme()` → `const { colors } = useTheme()`
+  - Mapped Material-UI colors to Manylla colors:
+    - `theme.colors.outline` → `colors.border`
+    - `theme.colors.onSurface` → `colors.text.primary`
+    - `theme.colors.onSurfaceVariant` → `colors.text.secondary`
+
+### Root Cause
+The `useTheme()` hook returns an object with two properties: `theme` (a string like "manylla") and `colors` (an object with theme colors). Components were destructuring the wrong property and attempting to access nested properties on a string.
+
+### Impact
+- EntryDialog now opens without crashing
+- File attachment components render correctly with proper theme colors
+- Resolves all theme-related crashes in Phase 3
+
+### Status
+- ✅ Fix implemented
+- ⏳ Deploying to QUAL
+
+---
+
 ## Version 2025.11.07.3 - 2025-11-07
 Debug Check Update (Phase 3 Hotfix)
 
