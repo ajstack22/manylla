@@ -37,20 +37,13 @@ const FileAttachmentButton = ({
   const { colors } = useTheme();
   const { syncId } = useSync();
 
+  // Check if sync is required
+  const syncRequired = !syncId;
+
   const handlePress = async () => {
-    if (disabled || loading || isUploading) return;
+    if (disabled || loading || isUploading || syncRequired) return;
 
     try {
-      // Check if sync is set up
-      if (!syncId) {
-        Alert.alert(
-          'Sync Required',
-          'Please set up sync in Settings before attaching files.',
-          [{ text: 'OK', style: 'default' }]
-        );
-        return;
-      }
-
       // Select file using platform-specific picker
       setUploadMessage('Selecting file...');
       const file = await fileAttachmentService.selectFile();
@@ -122,7 +115,7 @@ const FileAttachmentButton = ({
     }
   };
 
-  const buttonDisabled = disabled || loading || isUploading;
+  const buttonDisabled = disabled || loading || isUploading || syncRequired;
 
   return (
     <View style={[styles.container, style]}>
@@ -179,6 +172,12 @@ const FileAttachmentButton = ({
       {uploadMessage && !isUploading && (
         <Text style={[styles.statusText, { color: colors.success }]}>
           {uploadMessage}
+        </Text>
+      )}
+
+      {syncRequired && (
+        <Text style={[styles.statusText, { color: colors.text.secondary }]}>
+          💡 Enable Sync to Attach Files
         </Text>
       )}
     </View>
