@@ -1,5 +1,38 @@
 # Manylla Release Notes
 
+## Version 2025.11.07.1 - 2025-11-07
+EntryDialog Implementation with File Attachment Support (Phase 3)
+
+### Summary
+Integrated file attachment functionality into the main entry creation and editing flow. Users can now attach files directly when creating or editing profile entries through the new EntryDialog component, providing a unified and consistent user experience.
+
+### New Features
+- **EntryDialog Component**: New unified dialog for creating and editing entries with integrated file attachment support
+- **Seamless File Management**: Add, remove, and view file attachments directly within entry dialogs
+- **Feature Flag Protection**: File attachment UI only appears when feature is enabled
+- **Consistent UX**: Follows the same pattern as other dialogs (UnifiedAddDialog, CategorySettingsDialog)
+
+### Components Added
+- **EntryDialog.js**: Main dialog component replacing EntryForm in App.js
+- **UUID Dependency**: Added for unique identifier generation
+
+### Technical Details
+- Integrates FileAttachmentList component for attachment management
+- Supports both create and edit modes with proper state handling
+- Maintains backward compatibility with existing entry management
+- No TypeScript files added (per project standards)
+
+### Status
+- ✅ Dialog implementation complete
+- ✅ Integration into App.js complete
+- ⏳ Pending QUAL deployment for testing
+- ⏳ Awaiting manual UI/UX validation
+
+### Next Steps
+- Manual testing on QUAL environment
+- Cross-platform validation (web, iOS, Android)
+- Gather user feedback on new dialog flow
+
 ## Version 2025.11.06.2 - 2025-11-06
 Zero-Knowledge File Attachments - Client Implementation (Phase 2)
 
