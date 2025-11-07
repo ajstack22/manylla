@@ -819,6 +819,7 @@ if [ -n "$IOS_SIMULATORS" ]; then
                -scheme "ManyllaMobile QUAL" \
                -configuration Debug \
                -sdk iphonesimulator \
+               PRODUCT_BUNDLE_IDENTIFIER="com.manylla.qual" \
                CODE_SIGN_IDENTITY="" \
                CODE_SIGNING_REQUIRED=NO \
                -quiet 2>&1 | tee /tmp/ios-build.log | grep -E "BUILD SUCCEEDED|BUILD FAILED|Compiling|Linking" || {

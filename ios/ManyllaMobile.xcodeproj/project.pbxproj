@@ -337,7 +337,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.manylla;
 				PRODUCT_NAME = ManyllaMobile;
 				SWIFT_OBJC_BRIDGING_HEADER = "ManyllaMobile-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -365,7 +365,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.manylla;
 				PRODUCT_NAME = ManyllaMobile;
 				SWIFT_OBJC_BRIDGING_HEADER = "ManyllaMobile-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -466,7 +466,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.manylla;
 				PRODUCT_NAME = ManyllaMobile;
 				SWIFT_OBJC_BRIDGING_HEADER = "ManyllaMobile-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -567,7 +567,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.manylla;
 				PRODUCT_NAME = ManyllaMobile;
 				SWIFT_OBJC_BRIDGING_HEADER = "ManyllaMobile-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
