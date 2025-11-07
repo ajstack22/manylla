@@ -40,7 +40,7 @@ const EntryAttachments = ({
   const [expanded, setExpanded] = useState(showExpanded);
   const [downloading, setDownloading] = useState(null);
   const [downloadProgress, setDownloadProgress] = useState({});
-  const { theme } = useTheme();
+  const { colors } = useTheme();
   const { syncId } = useSync();
 
   // Check if feature is enabled
@@ -192,10 +192,10 @@ const EntryAttachments = ({
         activeOpacity={0.7}
       >
         <View style={styles.headerContent}>
-          <Text style={[styles.headerText, { color: theme.colors.onBackground }]}>
+          <Text style={[styles.headerText, { color: colors.onBackground }]}>
             📎 {attachments.length} {attachments.length === 1 ? 'attachment' : 'attachments'}
           </Text>
-          <Text style={[styles.expandIcon, { color: theme.colors.onSurfaceVariant }]}>
+          <Text style={[styles.expandIcon, { color: colors.onSurfaceVariant }]}>
             {expanded ? '▲' : '▼'}
           </Text>
         </View>
@@ -228,7 +228,7 @@ const EntryAttachments = ({
                         styles.progressBar,
                         {
                           width: `${progress}%`,
-                          backgroundColor: theme.colors.primary
+                          backgroundColor: colors.primary
                         }
                       ]}
                     />

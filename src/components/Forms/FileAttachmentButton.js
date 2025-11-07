@@ -34,7 +34,7 @@ const FileAttachmentButton = ({
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadMessage, setUploadMessage] = useState('');
-  const { theme } = useTheme();
+  const { colors } = useTheme();
   const { syncId } = useSync();
 
   const handlePress = async () => {
@@ -133,8 +133,8 @@ const FileAttachmentButton = ({
           styles.button,
           {
             backgroundColor: buttonDisabled
-              ? theme.colors.disabled
-              : theme.colors.primary,
+              ? colors.disabled
+              : colors.primary,
             opacity: buttonDisabled ? 0.6 : 1
           }
         ]}
@@ -144,11 +144,11 @@ const FileAttachmentButton = ({
           <View style={styles.uploadingContainer}>
             <ActivityIndicator
               size="small"
-              color={theme.colors.onPrimary}
+              color={colors.onPrimary}
               style={styles.spinner}
             />
             <View style={styles.progressContainer}>
-              <Text style={[styles.uploadingText, { color: theme.colors.onPrimary }]}>
+              <Text style={[styles.uploadingText, { color: colors.onPrimary }]}>
                 {uploadMessage}
               </Text>
               {uploadProgress > 0 && (
@@ -158,7 +158,7 @@ const FileAttachmentButton = ({
                       styles.progressBar,
                       {
                         width: `${uploadProgress}%`,
-                        backgroundColor: theme.colors.onPrimary
+                        backgroundColor: colors.onPrimary
                       }
                     ]}
                   />
@@ -168,8 +168,8 @@ const FileAttachmentButton = ({
           </View>
         ) : (
           <View style={styles.buttonContent}>
-            <Text style={[styles.icon, { color: theme.colors.onPrimary }]}>📎</Text>
-            <Text style={[styles.buttonText, { color: theme.colors.onPrimary }]}>
+            <Text style={[styles.icon, { color: colors.onPrimary }]}>📎</Text>
+            <Text style={[styles.buttonText, { color: colors.onPrimary }]}>
               Add File
             </Text>
           </View>
@@ -177,7 +177,7 @@ const FileAttachmentButton = ({
       </TouchableOpacity>
 
       {uploadMessage && !isUploading && (
-        <Text style={[styles.statusText, { color: theme.colors.success }]}>
+        <Text style={[styles.statusText, { color: colors.success }]}>
           {uploadMessage}
         </Text>
       )}
