@@ -450,9 +450,9 @@ class FileAttachmentService {
    * @private
    */
   async selectFileIOS() {
-    try {
-      const DocumentPicker = require('react-native-document-picker').default;
+    const DocumentPicker = require('react-native-document-picker').default;
 
+    try {
       const result = await DocumentPicker.pick({
         type: [
           DocumentPicker.types.pdf,
