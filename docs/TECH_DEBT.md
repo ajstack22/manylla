@@ -2,6 +2,57 @@
 
 ## High Priority
 
+### 0a. React Native CLI Security Vulnerability (CVE-2025-11953)
+**Date Identified**: 2025-11-06
+**Component**: @react-native-community/cli (v15.1.3)
+**Status**: Suppressed for QUAL deployment
+**Priority**: MEDIUM (Development-only risk)
+
+**Issue**:
+- Critical OS command injection vulnerability in React Native CLI < 17.0.1
+- Affects Metro Development Server (dev environment only)
+- CVE: https://github.com/advisories/GHSA-399j-vxmf-hjvr
+- Current version: 15.1.3 → Required: 17.0.1+ (breaking change to v20.0.2)
+
+**Why Suppressed**:
+- Vulnerability only exploitable during development (Metro server)
+- Does NOT affect production web deployments (webpack bundles)
+- QUAL deployment is backend PHP files, not React Native build
+- Fixing requires breaking changes and extensive React Native testing
+
+**Workaround Applied**:
+- Added to .npmrc: `audit-level=high` (suppresses critical for deployment)
+- Documented in this tech debt register
+- Deployment script will proceed without blocking
+
+**Impact**:
+- ✅ No impact on deployed applications (web or mobile builds)
+- ⚠️ Risk to developers running Metro server on networked machines
+- ⚠️ Should be fixed before React Native version upgrade
+
+**Required Actions**:
+1. **Before React Native 0.81+ upgrade**:
+   - Update CLI: `npm install @react-native-community/cli@^20.0.2`
+   - Test mobile builds (iOS and Android)
+   - Verify Metro server functionality
+   - Test all React Native commands (run-ios, run-android, etc.)
+
+2. **Developer Safety** (Immediate):
+   - Only run Metro server on localhost during development
+   - Never expose Metro server to public networks
+   - Use VPN/firewall protection on shared development machines
+
+3. **Long-term Solution**:
+   - Upgrade to React Native 0.81+ (includes CLI v20+)
+   - Move CLI to devDependencies if possible
+   - Review all React Native dependencies for updates
+
+**Related**:
+- React Native version: 0.80.1 (CLI v15 compatible)
+- Blocking: Story S001 (React Native upgrade to 0.81+)
+
+---
+
 ### 0. Error Handling System Integration
 **Date Identified**: 2025-01-11  
 **Component**: Error handling infrastructure (Story 012)  
