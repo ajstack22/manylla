@@ -1,25 +1,97 @@
 # Manylla Release Notes
 
-## Version 2025.10.16.1 - 2025-10-16
-iOS Safe Area Color Fix
+## Version 2025.11.06.1 - 2025-11-06
+File Attachments Backend API (Phase 1)
 
 ### Summary
-Fixed iOS safe area color around Dynamic Island to match header background color. The safe area now uses the lighter manila color (paper) instead of the darker default background, providing visual consistency with the header across all themes.
+Added backend infrastructure for zero-knowledge encrypted file attachments. Users will soon be able to attach documents and images to profile entries while maintaining complete privacy through client-side encryption.
 
 ### Changes
-- **iOS Safe Area Fix**: SafeAreaView background now uses `colors.background.paper` to match header
-- **Consistency Update**: Loading container background updated to match for visual consistency
-- **All Themes**: Fix applies to Manylla, Light, and Dark themes
-
-### Color Impact
-- Manylla theme: `#EBD9C3` → `#F7F0E6` (darker to lighter manila)
-- Light theme: `#F5F5F5` → `#FFFFFF` (gray to white)
-- Dark theme: `#1A1A1A` → `#2A2A2A` (darker to lighter)
+- **API Endpoints**: Added chunked upload, streaming download, and pre-upload validation endpoints
+- **Secure Storage**: Files stored encrypted on server filesystem with .htaccess protection
+- **Database Schema**: New file_metadata table for tracking encrypted file metadata
+- **Quota Management**: 500MB per user with pre-upload validation
+- **Cleanup System**: Automated maintenance script for orphaned files
+- **Testing Infrastructure**: Comprehensive test suite for all endpoints
 
 ### Technical Details
-- Changed `App.js` container style backgroundColor from `colors.background.default` to `colors.background.paper`
-- Updated loadingContainer for consistency
-- Follows existing header color pattern across all platforms
+**New API Endpoints:**
+- `api/file_upload.php` - Chunked uploads (1MB chunks, 50MB max)
+- `api/file_download.php` - Streaming downloads with resume capability
+- `api/file_validate.php` - Pre-upload validation and quota checking
+
+**Security:**
+- Client-side encryption before upload (zero-knowledge)
+- SHA-256 hash verification
+- Direct web access blocked via .htaccess
+- Secure file paths prevent directory traversal
+
+**Storage:**
+- Files: `/user-files/{hashed_sync_id}/{file_id}.enc`
+- Database: `file_metadata` table with encrypted filenames
+- 30-day soft delete grace period
+
+**Status:**
+- Backend infrastructure complete and deployed
+- Client-side implementation in progress (Phase 2)
+- Feature not yet available to users
+
+---
+
+## Version 2025.10.16.1 - 2025-10-16
+Safe Area & Visual Hierarchy Improvements (iOS & Android)
+
+### Summary
+Fixed safe area handling across the app to properly respect Dynamic Island (iOS) and camera cutouts (Android). Implemented a two-tier background system for the main app (lighter header/safe area, darker working area) and a unified background for onboarding screens.
+
+### Changes
+- **Safe Area Fix**: Added SafeAreaView to properly handle Dynamic Island and camera cutouts
+- **Main App - Two-Tier System**: Header and safe area insets use lighter background, working area uses darker background for visual hierarchy
+- **Onboarding - Unified Background**: Onboarding screens use single darker background color for cohesive presentation
+- **Header Size Reduction**: Reduced header height by ~12-14% across all platforms for more compact design
+- **FAB Icon Positioning**: Fixed vertical alignment of + and ⋮ icons on iOS FAB buttons
+- **All Themes**: Fixes apply to Manylla, Light, and Dark themes
+- **Cross-Platform**: Works on iOS (Dynamic Island/notch) and Android (camera cutouts)
+
+### Color Structure (Two-Tier System)
+**Header & Safe Area Insets (Lighter):**
+- Manylla theme: `#F7F0E6` (light cream)
+- Light theme: `#FFFFFF` (white)
+- Dark theme: `#2A2A2A` (dark gray)
+
+**Working Area Background (Darker):**
+- Manylla theme: `#EBD9C3` (manila envelope)
+- Light theme: `#F5F5F5` (light gray)
+- Dark theme: `#1A1A1A` (darker gray)
+
+### Technical Details
+**Header.js:**
+- Lines 8-13: Reduced header heights (~12-14%): iOS 88→76px, Web 64→56px, Android 56→52px
+- Line 98: Header uses `colors.background.paper` (lighter) to match safe area
+- Lines 136-200: Reduced logo (28→24px), avatar (36→32px), name text sizes
+
+**App.js (Main App):**
+- Lines 1378-1379: Nested structure - SafeAreaView wraps inner View
+- Line 1535: SafeAreaView uses `colors.background.paper` (lighter for safe area insets)
+- Line 1540: Inner container uses `colors.background.default` (darker for working area)
+- Line 1549: Loading container uses `colors.background.default` (darker)
+- Lines 1937-1986: Split FAB text styles with platform-specific paddingTop for iOS icon centering
+
+**OnboardingScreen.js (Onboarding):**
+- Line 2: Added SafeAreaView import
+- Lines 109-136, 141-160: Nested SafeAreaView + View structure for both onboarding steps
+- Line 89: SafeAreaView uses `colors.background.default` (unified darker background)
+- Line 93: Inner container uses `colors.background.default` (unified darker background)
+- Lines 99-103: Added `minHeight: '100vh'` for web to fill entire viewport (fixes iPad white space issue)
+
+### Impact
+- ✅ Content no longer renders underneath system UI elements (Dynamic Island, notch, camera cutouts)
+- ✅ Main app: Header and safe area share lighter background, working area uses darker background for visual hierarchy
+- ✅ Onboarding: Unified darker background creates cohesive single-surface presentation
+- ✅ More compact header design provides more vertical space for content
+- ✅ FAB icons properly centered on iOS devices
+- ✅ Cards and content elements stand out better against darker background
+- ✅ Better first-time user experience with properly formatted onboarding
 
 ---
 

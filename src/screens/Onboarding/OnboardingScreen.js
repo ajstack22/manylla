@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
 import platform from '../../utils/platform';
 import { useTheme } from '../../context/ThemeContext';
 import { getScrollViewProps } from '../../utils/platformStyles';
@@ -84,14 +84,23 @@ const OnboardingScreen = ({ onComplete, onShowPrivacy }) => {
   };
 
   const styles = StyleSheet.create({
+    safeArea: {
+      flex: 1,
+      backgroundColor: colors.background.default,
+    },
     container: {
       flex: 1,
-      backgroundColor: colors.background.primary,
+      backgroundColor: colors.background.default,
     },
     scrollContent: {
       padding: 20,
       alignItems: 'center',
       paddingTop: platform.isWeb ? 60 : 40,
+      ...platform.select({
+        web: {
+          minHeight: '100vh',
+        },
+      }),
     },
   });
 
@@ -99,50 +108,58 @@ const OnboardingScreen = ({ onComplete, onShowPrivacy }) => {
 
   if (form.step >= 1) {
     return (
-      <ScrollComponent
-        {...(!platform.isWeb ? getScrollViewProps() : {})}
-        style={styles.container}
-      >
-        <View style={styles.scrollContent}>
-          <OnboardingStep2
-            childName={form.childName}
-            dateOfBirth={form.dateOfBirth}
-            photo={photo.photo}
-            isProcessingPhoto={photo.isProcessingPhoto}
-            photoError={photo.photoError}
-            errorMessage={form.errorMessage}
-            onChildNameChange={form.setChildName}
-            onDateChange={(value) =>
-              dateFormatter.handleDateChange(value, form.setDateOfBirth)
-            }
-            onPhotoPicker={photo.handlePhotoPicker}
-            onClearPhoto={photo.clearPhoto}
-            onBack={() => form.goToStep(0)}
-            onSubmit={handleChildInfoSubmit}
-            colors={colors}
-          />
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.container}>
+          <ScrollComponent
+            {...(!platform.isWeb ? getScrollViewProps() : {})}
+            style={{ flex: 1 }}
+          >
+            <View style={styles.scrollContent}>
+              <OnboardingStep2
+                childName={form.childName}
+                dateOfBirth={form.dateOfBirth}
+                photo={photo.photo}
+                isProcessingPhoto={photo.isProcessingPhoto}
+                photoError={photo.photoError}
+                errorMessage={form.errorMessage}
+                onChildNameChange={form.setChildName}
+                onDateChange={(value) =>
+                  dateFormatter.handleDateChange(value, form.setDateOfBirth)
+                }
+                onPhotoPicker={photo.handlePhotoPicker}
+                onClearPhoto={photo.clearPhoto}
+                onBack={() => form.goToStep(0)}
+                onSubmit={handleChildInfoSubmit}
+                colors={colors}
+              />
+            </View>
+          </ScrollComponent>
         </View>
-      </ScrollComponent>
+      </SafeAreaView>
     );
   }
 
   return (
-    <ScrollComponent
-      {...(!platform.isWeb ? getScrollViewProps() : {})}
-      style={styles.container}
-    >
-      <View style={styles.scrollContent}>
-        <OnboardingStep1
-          accessCode={form.accessCode}
-          onAccessCodeChange={form.setAccessCode}
-          onStartFresh={handleStartFresh}
-          onDemoMode={handleDemoMode}
-          onJoinWithCode={handleJoinWithCode}
-          onShowPrivacy={onShowPrivacy}
-          colors={colors}
-        />
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <ScrollComponent
+          {...(!platform.isWeb ? getScrollViewProps() : {})}
+          style={{ flex: 1 }}
+        >
+          <View style={styles.scrollContent}>
+            <OnboardingStep1
+              accessCode={form.accessCode}
+              onAccessCodeChange={form.setAccessCode}
+              onStartFresh={handleStartFresh}
+              onDemoMode={handleDemoMode}
+              onJoinWithCode={handleJoinWithCode}
+              onShowPrivacy={onShowPrivacy}
+              colors={colors}
+            />
+          </View>
+        </ScrollComponent>
       </View>
-    </ScrollComponent>
+    </SafeAreaView>
   );
 };
 

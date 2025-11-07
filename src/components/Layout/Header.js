@@ -6,10 +6,10 @@ import ManyllaLogo from "../Common/ManyllaLogo";
 // Define consistent header height
 const statusBarHeight = getStatusBarHeight();
 export const HEADER_HEIGHT = platform.select({
-  web: 64,
-  ios: 88, // Account for status bar
-  android: 56 + statusBarHeight, // Add status bar height
-  default: 56,
+  web: 56,
+  ios: 76, // Account for status bar (reduced from 88)
+  android: 52 + statusBarHeight, // Add status bar height (reduced from 56)
+  default: 52,
 });
 
 const Header = ({ colors, theme, profile, onEditProfile }) => {
@@ -40,7 +40,7 @@ const Header = ({ colors, theme, profile, onEditProfile }) => {
         {/* Logo on the left */}
         <View style={styles.left}>
           <View style={styles.logoContainer}>
-            <ManyllaLogo size={32} />
+            <ManyllaLogo size={28} />
             <Text style={styles.logo}>manylla</Text>
           </View>
         </View>
@@ -115,7 +115,7 @@ const createStyles = (colors, theme) =>
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      paddingHorizontal: 24,
+      paddingHorizontal: 16,
       height: "100%",
     },
     left: {
@@ -129,15 +129,15 @@ const createStyles = (colors, theme) =>
     logoContainer: {
       flexDirection: "row",
       alignItems: "center",
-      gap: 8,
-      height: 32, // Match icon height for perfect alignment
+      gap: 6,
+      height: 28, // Match icon height for perfect alignment
     },
     logo: {
-      fontSize: 28,
+      fontSize: 24,
       fontWeight: "600",
       color: colors.primary || "#A08670",
       letterSpacing: 0.3,
-      lineHeight: 28,
+      lineHeight: 24,
       ...platform.select({
         web: {
           fontFamily:
@@ -165,9 +165,9 @@ const createStyles = (colors, theme) =>
       gap: 8,
     },
     profileAvatar: {
-      width: 36,
-      height: 36,
-      borderRadius: 18,
+      width: 32,
+      height: 32,
+      borderRadius: 16,
     },
     profileAvatarPlaceholder: {
       backgroundColor: colors.primary.light || "#A08670",
@@ -182,15 +182,15 @@ const createStyles = (colors, theme) =>
     },
     profileAvatarText: {
       color: colors.background.paper,
-      fontSize: 20, // Match logo avatar text size
+      fontSize: 18, // Match logo avatar text size
       fontWeight: "600",
     },
     profileName: {
-      fontSize: 28, // Match logo font size (unified at 28px)
+      fontSize: 24, // Match logo font size (unified at 24px)
       fontWeight: "600",
       color: colors.primary || "#A08670",
       maxWidth: 200,
-      lineHeight: 28,
+      lineHeight: 24,
       ...platform.select({
         web: {
           fontFamily:

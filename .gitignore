@@ -197,3 +197,16 @@ stackmap_sync/
 .build_number
 ios/fastlane/README.md
 scripts/deployment-rollback.sh
+
+# Local archive folder (not committed)
+.archive-local/
+
+# Atlas workflow docs (using centralized symlinks instead)
+atlas/
+atlasold/
+
+# Claude backup files (temporary)
+.claude-backup-*/
+
+# Custom deployment scripts (use standard deployment only)
+scripts/deploy-file-backend.sh

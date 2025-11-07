@@ -666,7 +666,7 @@ const ProfileOverview = ({
         onPress={() => onAddEntry("")}
         activeOpacity={0.8}
       >
-        <Text style={styles.fabText}>+</Text>
+        <Text style={styles.fabTextLeft}>+</Text>
       </TouchableOpacity>
 
       {/* Right FAB: Settings Menu */}
@@ -675,7 +675,7 @@ const ProfileOverview = ({
         onPress={onOpenSettings}
         activeOpacity={0.8}
       >
-        <Text style={styles.fabText}>⋮</Text>
+        <Text style={styles.fabTextRight}>⋮</Text>
       </TouchableOpacity>
     </View>
   );
@@ -1375,25 +1375,26 @@ function AppContent() {
 
   // Main app view
   return (
-    <SafeAreaView style={styles.container}>
-      <Header
-        colors={colors}
-        theme={theme}
-        profile={profile}
-        onEditProfile={() => setProfileEditOpen(true)}
-      />
-      <ProfileOverview
-        profile={profile}
-        onAddEntry={handleAddEntry}
-        onEditEntry={handleEditEntry}
-        onDeleteEntry={handleDeleteEntry}
-        onUpdateProfile={handleUpdateProfile}
-        onShare={() => setShareDialogOpen(true)}
-        onEditProfile={() => setProfileEditOpen(true)}
-        onOpenSettings={() => setSettingsMenuOpen(true)}
-        styles={styles}
-        colors={colors}
-      />
+    <SafeAreaView style={styles.safeAreaContainer}>
+      <View style={styles.container}>
+        <Header
+          colors={colors}
+          theme={theme}
+          profile={profile}
+          onEditProfile={() => setProfileEditOpen(true)}
+        />
+        <ProfileOverview
+          profile={profile}
+          onAddEntry={handleAddEntry}
+          onEditEntry={handleEditEntry}
+          onDeleteEntry={handleDeleteEntry}
+          onUpdateProfile={handleUpdateProfile}
+          onShare={() => setShareDialogOpen(true)}
+          onEditProfile={() => setProfileEditOpen(true)}
+          onOpenSettings={() => setSettingsMenuOpen(true)}
+          styles={styles}
+          colors={colors}
+        />
 
       {/* Entry Form Modal */}
       <EntryForm
@@ -1514,6 +1515,7 @@ function AppContent() {
         syncStatus={syncStatus}
         showToast={showToast}
       />
+      </View>
     </SafeAreaView>
   );
 }
@@ -1529,10 +1531,14 @@ const createStyles = (colors, theme) => {
     : {};
 
   return StyleSheet.create({
-    container: {
+    safeAreaContainer: {
       flex: 1,
       backgroundColor: colors.background.paper,
       ...baseTextStyle,
+    },
+    container: {
+      flex: 1,
+      backgroundColor: colors.background.default,
       // Add padding for fixed header on web
       ...Platform.select({
         web: {
@@ -1545,7 +1551,7 @@ const createStyles = (colors, theme) => {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: colors.background.paper,
+      backgroundColor: colors.background.default,
     },
     loadingText: {
       marginTop: 16,
@@ -1928,11 +1934,55 @@ const createStyles = (colors, theme) => {
       color: "#FFFFFF",
       fontSize: 24,
     },
-    fabText: {
+    // Left FAB text (+ icon) - requires upward adjustment on iOS
+    fabTextLeft: {
       color: "#FFFFFF",
       fontSize: 28,
       fontWeight: "300",
-      lineHeight: 28,
+      ...Platform.select({
+        ios: {
+          lineHeight: 56, // Match FAB height for perfect vertical centering on iOS
+          textAlignVertical: "center",
+          paddingTop: -2, // Negative padding to push + icon up (different glyph metrics than ⋮)
+        },
+        android: {
+          lineHeight: 28,
+        },
+        web: {
+          lineHeight: 56, // Match FAB height for perfect vertical centering on web
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        },
+        default: {
+          lineHeight: 28,
+        },
+      }),
+    },
+    // Right FAB text (⋮ icon) - works correctly with slight downward adjustment
+    fabTextRight: {
+      color: "#FFFFFF",
+      fontSize: 28,
+      fontWeight: "300",
+      ...Platform.select({
+        ios: {
+          lineHeight: 56, // Match FAB height for perfect vertical centering on iOS
+          textAlignVertical: "center",
+          paddingTop: 2, // Fine-tune vertical positioning for iOS (⋮ character centers well)
+        },
+        android: {
+          lineHeight: 28,
+        },
+        web: {
+          lineHeight: 56, // Match FAB height for perfect vertical centering on web
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        },
+        default: {
+          lineHeight: 28,
+        },
+      }),
     },
     modalOverlay: {
       position: "absolute",

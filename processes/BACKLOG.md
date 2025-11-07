@@ -1,7 +1,7 @@
 # Development Backlog
 
 *Last Updated: 2025-09-15*
-*Next ID: S000, B015*
+*Next ID: S001, B015*
 
 ## Quick Start for Claude
 Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything needed to start immediately.
@@ -25,6 +25,7 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟠 P1 - High (Do Next)
 ### Stories
+- [S002](backlog/S002-zero-knowledge-file-attachments.md) - Zero-Knowledge File Attachments ✅ **READY**
 - [S057](backlog/S057-test-coverage-for-profile-components.md) - Test Coverage for Profile Components ✅ **READY**
 - [S054](backlog/S054-security-hotspot-review-and-resolution.md) - Security Hotspot Review and Resolution ✅ **READY**
 - [S042](backlog/S042-test-coverage-sync-services.md) - Test Coverage for Sync Services ✅ **READY** (80%+ Coverage Target)
@@ -65,6 +66,7 @@ Just say: "Implement [Story ID] from BACKLOG.md" - Each story now has everything
 
 ## 🟢 P3 - Low (Nice to Have)
 ### Stories
+- [S000](backlog/S000-fixprettierformattingin121files.md) - Fix Prettier formatting in 121 files ✅ **READY** (Auto-Generated)
 - [S000](backlog/S000-fixprettierformattingin121files.md) - Fix Prettier formatting in 121 files ✅ **READY** (Auto-Generated)
 - [S007](backlog/S007-fixprettierformattingin121files.md) - Fix Prettier formatting in 121 files ✅ **READY** (Auto-Generated)
 - [S006](backlog/S006-fixprettierformattingin121files.md) - Fix Prettier formatting in 121 files ✅ **READY** (Auto-Generated)
