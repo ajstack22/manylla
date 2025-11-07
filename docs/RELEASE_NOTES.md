@@ -1,5 +1,27 @@
 # Manylla Release Notes
 
+## Version 2025.11.07.2 - 2025-11-07
+Theme Color Reference Hotfix (Phase 3)
+
+### Summary
+Fixed critical bug in FileAttachmentList component that caused EntryDialog to crash when opened. Corrected theme color property references to match Manylla's ThemeContext structure.
+
+### Bug Fixes
+- **FileAttachmentList.js**: Fixed theme color references causing "Cannot read properties of undefined (reading 'onBackground')" error
+  - Changed `theme.colors.onBackground` → `theme.colors.text.primary`
+  - Changed `theme.colors.onSurfaceVariant` → `theme.colors.text.secondary`
+
+### Impact
+- EntryDialog now opens without crashing
+- File attachment UI displays correctly with proper theme colors
+- Resolves Phase 3 deployment blocker
+
+### Status
+- ✅ Fix implemented
+- ⏳ Deploying to QUAL
+
+---
+
 ## Version 2025.11.07.1 - 2025-11-07
 EntryDialog Implementation with File Attachment Support (Phase 3)
 
