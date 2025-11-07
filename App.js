@@ -116,7 +116,7 @@ if (isMobile()) {
 }
 
 // Debug check for undefined components
-if (typeof EntryForm === "undefined") console.error("EntryForm is undefined");
+if (typeof EntryDialog === "undefined") console.error("EntryDialog is undefined");
 if (typeof ProfileEditForm === "undefined")
   console.error("ProfileEditForm is undefined");
 
