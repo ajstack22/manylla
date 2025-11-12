@@ -136,6 +136,16 @@ module.exports = {
       /react-native-gesture-handler/,
       path.resolve(__dirname, "src/stubs/gestureHandlerRoot.js")
     ),
+    // Replace @react-native-documents/picker with web stub
+    new webpack.NormalModuleReplacementPlugin(
+      /@react-native-documents\/picker/,
+      path.resolve(__dirname, "src/stubs/documentPicker.web.js")
+    ),
+    // Replace react-native-fs with web stub
+    new webpack.NormalModuleReplacementPlugin(
+      /react-native-fs/,
+      path.resolve(__dirname, "src/stubs/reactNativeFs.web.js")
+    ),
     new HtmlWebpackPlugin({
       template: "./public/index.html",
       filename: "index.html",
