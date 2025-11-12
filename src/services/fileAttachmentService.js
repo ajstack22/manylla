@@ -450,16 +450,16 @@ class FileAttachmentService {
    * @private
    */
   async selectFileIOS() {
-    const DocumentPicker = require('react-native-document-picker').default;
+    const { pick, types } = require('@react-native-documents/picker');
 
     try {
-      const result = await DocumentPicker.pick({
+      const result = await pick({
         type: [
-          DocumentPicker.types.pdf,
-          DocumentPicker.types.images,
-          DocumentPicker.types.plainText,
-          DocumentPicker.types.doc,
-          DocumentPicker.types.docx
+          types.pdf,
+          types.images,
+          types.plainText,
+          types.doc,
+          types.docx
         ],
         copyTo: 'documentDirectory', // Copy to app storage for access
         mode: 'import'
@@ -475,7 +475,7 @@ class FileAttachmentService {
         type: file.type
       };
     } catch (error) {
-      if (DocumentPicker.isCancel(error)) {
+      if (error.code === 'DOCUMENT_PICKER_CANCELED') {
         throw new Error('File selection cancelled');
       }
       throw error;
@@ -488,7 +488,7 @@ class FileAttachmentService {
    */
   async selectFileAndroid() {
     try {
-      const DocumentPicker = require('react-native-document-picker').default;
+      const { pick, types } = require('@react-native-documents/picker');
       const { PermissionsAndroid } = require('react-native');
 
       // Request storage permission for Android
@@ -508,8 +508,8 @@ class FileAttachmentService {
         }
       }
 
-      const result = await DocumentPicker.pick({
-        type: [DocumentPicker.types.allFiles],
+      const result = await pick({
+        type: [types.allFiles],
         copyTo: 'cachesDirectory' // Copy to cache for access
       });
 
@@ -522,8 +522,7 @@ class FileAttachmentService {
         type: file.type
       };
     } catch (error) {
-      const DocumentPicker = require('react-native-document-picker').default;
-      if (DocumentPicker.isCancel(error)) {
+      if (error.code === 'DOCUMENT_PICKER_CANCELED') {
         throw new Error('File selection cancelled');
       }
       throw error;

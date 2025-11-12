@@ -228,6 +228,31 @@ Format: <type>(<scope>): <subject>
 Rules:  Imperative mood, lowercase, no period, <50 chars
 ```
 
+## Release Notes Requirements
+
+### MANDATORY: Proactive Release Notes Updates
+**Every feature, fix, or change MUST have corresponding release notes:**
+
+1. **Update IMMEDIATELY**: Don't wait to be asked - update docs/RELEASE_NOTES.md as you work
+2. **Always Ready**: Release notes should be ready to commit alongside your code changes
+3. **No Deployment Without Notes**: Deployment script will reject if release notes are missing
+4. **Format Required**:
+   - Summary of what changed
+   - Why the change was made
+   - Any breaking changes or migration steps
+   - Technical details if relevant
+
+### Example Workflow
+```bash
+# 1. Make your code changes
+# 2. IMMEDIATELY update release notes
+echo "## Version PENDING - $(date +%Y-%m-%d)" >> docs/RELEASE_NOTES.md
+# 3. Add your changes to the pending version
+# 4. Commit both code AND release notes together
+git add src/ docs/RELEASE_NOTES.md
+git commit -m "feat(component): Add new feature with release notes"
+```
+
 ## Integration with Development Process
 
 This convention integrates with:
@@ -235,6 +260,6 @@ This convention integrates with:
 - Bug tracking (B### references)
 - Deployment process (version commits)
 - Code review process (clear intentions)
-- Release notes generation (from commit history)
+- **Release notes generation (MUST be updated proactively)**
 
-Remember: Good commit messages are a gift to your future self and your teammates!
+Remember: Good commit messages and up-to-date release notes are a gift to your future self and your teammates!

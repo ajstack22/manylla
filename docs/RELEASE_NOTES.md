@@ -1,5 +1,16 @@
 # Manylla Release Notes
 
+## Version 2025.11.11.4 - 2025-11-11
+Clean deployment with all pending changes
+
+### Summary
+Clean deployment to qual with all pending changes committed, including iPad orientation support.
+
+### Changes
+- All uncommitted changes from previous attempts
+- iPad orientation support fully integrated
+- Clean deployment state
+
 ## Version 2025.11.11.3 - 2025-11-11
 Synchronizing package-lock.json and Final iPad Deployment
 

@@ -54,6 +54,16 @@ grep -r "<ComponentName" src/ --include="*.js"
 
 ### 2. During Development
 
+#### Release Notes Requirement
+**MANDATORY**: Update release notes PROACTIVELY as you work
+```bash
+# For EVERY feature/fix/change:
+1. Open docs/RELEASE_NOTES.md
+2. Add entry under pending version IMMEDIATELY after implementation
+3. Don't wait to be asked - this should be ready to commit
+4. Include: Summary, what changed, why it matters, any breaking changes
+```
+
 #### Component Discovery Pattern
 **CRITICAL LESSON**: Always verify which component is actually being used
 ```bash
@@ -100,6 +110,7 @@ console.error('Error:', error);
 - **Test after each change** - Catch issues early
 - **Complete current task before starting new** - No partial work
 - **Fix as you go** - Don't accumulate technical debt
+- **Update release notes immediately** - Don't wait to be asked, always ready to commit
 
 ### 4. Testing & Validation
 
@@ -144,6 +155,7 @@ git status                                      # Must be clean
 5. Material-UI imports in new code
 6. Console.error without NODE_ENV check
 7. Direct Modal imports (use ThemedModal)
+8. Missing or outdated release notes for changes
 
 #### Review Commands
 ```bash
@@ -182,7 +194,8 @@ grep -n "PATTERN_OF_FIX" affected_files
 - **Correct .htaccess**: `.htaccess.manylla-qual` (NOT `.htaccess.qual`)
 - **Server path**: `~/public_html/manylla/qual/` (NOT `~/public_html/qual/`)
 - **RewriteBase**: `/manylla/qual/` in .htaccess
-- **Release notes**: Add for version+1 (script auto-increments)
+- **Release notes**: MUST be updated BEFORE deployment request (not during)
+- **Version notes**: Add for version+1 (script auto-increments)
 
 ## 🎨 UI/UX Standards
 
