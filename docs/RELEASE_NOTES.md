@@ -1,5 +1,21 @@
 # Manylla Release Notes
 
+## Version 2025.11.12.2 - 2025-11-12
+iPad Orientation Support + Webpack Build Fix
+
+### Summary
+Deployment with iPad orientation support and fixed webpack build errors for web platform.
+
+### Bug Fixes
+- **iPad Orientation**: Added `UISupportedInterfaceOrientations~ipad` configuration
+- **Webpack Build**: Fixed TurboModuleRegistry error by adding web stubs for native packages
+- **Web Compatibility**: Created stubs for @react-native-documents/picker and react-native-fs
+
+### Technical Details
+- iPad now supports all 4 orientations (portrait, portrait upside-down, landscape left/right)
+- Web build no longer requires native-only dependencies
+- Uses NormalModuleReplacementPlugin for platform-specific module resolution
+
 ## Version 2025.11.12.1 - 2025-11-12
 iPad Orientation Support Deployment to Qual
 
