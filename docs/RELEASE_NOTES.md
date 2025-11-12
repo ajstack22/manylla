@@ -1,5 +1,34 @@
 # Manylla Release Notes
 
+## Version 2025.11.11.1 - 2025-11-11
+iPad Orientation Support
+
+### Summary
+Fixed iPad devices forcing landscape perspective by adding proper orientation configuration, ensuring consistent behavior across iOS, Android, and web platforms.
+
+### Bug Fixes
+
+#### iPad Orientation Configuration (ios/ManyllaMobile/Info.plist)
+- **Added iPad-specific orientation support**:
+  - Added `UISupportedInterfaceOrientations~ipad` key for iPad devices
+  - Now supports all 4 orientations: portrait, portrait upside-down, landscape left, landscape right
+  - Matches Android tablet behavior (dynamic orientation via `android:configChanges`)
+  - Matches web responsive behavior (CSS media queries)
+- **Root Cause**:
+  - iOS requires separate orientation settings for iPhone and iPad
+  - Missing iPad-specific configuration caused forced landscape perspective
+  - iPhone settings (`UISupportedInterfaceOrientations`) don't apply to iPad
+- **Platform Consistency**:
+  - iPad now behaves like Android tablets and web browsers
+  - All platforms support natural orientation changes
+  - Responsive design logic (`isLandscape()`, `isPortrait()`) works correctly
+
+### Technical Details
+- iOS uses device-specific plist keys with `~ipad` suffix for iPad configuration
+- No code changes required - configuration-only fix
+- Existing responsive utilities in `src/utils/platform.js` handle orientation detection
+- Fix follows iOS best practices for universal app orientation support
+
 ## Version 2025.11.07.8 - 2025-11-07
 iOS Build Configuration Fix
 
