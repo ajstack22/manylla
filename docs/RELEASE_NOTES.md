@@ -1,5 +1,21 @@
 # Manylla Release Notes
 
+## Version 2025.11.12.1 - 2025-11-12
+iPad Orientation Support Deployment to Qual
+
+### Summary
+Deployment to qual environment with full iPad orientation support, fixing the forced landscape perspective issue.
+
+### Bug Fixes
+- **iPad Orientation**: Added `UISupportedInterfaceOrientations~ipad` configuration
+- **Supported Orientations**: All 4 orientations (portrait, portrait upside-down, landscape left/right)
+- **Platform Consistency**: iPad now behaves like Android and web platforms
+
+### Technical Details
+- Configuration-only fix in `ios/ManyllaMobile/Info.plist`
+- No code changes required
+- Follows iOS best practices for universal app support
+
 ## Version 2025.11.11.5 - 2025-11-11
 Final deployment with iPad orientation support to qual
 
