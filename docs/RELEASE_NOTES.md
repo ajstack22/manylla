@@ -1,5 +1,16 @@
 # Manylla Release Notes
 
+## Version 2025.11.11.5 - 2025-11-11
+Final deployment with iPad orientation support to qual
+
+### Summary
+Final deployment to qual environment with iPad orientation support and all recent changes.
+
+### Changes
+- iPad orientation configuration (UISupportedInterfaceOrientations~ipad)
+- All 4 orientations now supported on iPad
+- Consistent behavior across iOS, Android, and web platforms
+
 ## Version 2025.11.11.4 - 2025-11-11
 Clean deployment with all pending changes
 
