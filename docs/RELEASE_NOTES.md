@@ -1,5 +1,29 @@
 # Manylla Release Notes
 
+## Version 2025.11.12.3 - 2025-11-12
+iPad Full-Screen Landscape Fix for iOS 26
+
+### Summary
+Fixed iPad not maximizing to full screen in landscape mode on iOS 26 by removing UIRequiresFullScreen compatibility mode restriction.
+
+### Bug Fixes
+- **iPad Full-Screen Support**: Removed `UIRequiresFullScreen` key from Info.plist
+- **iOS 26 Compatibility**: Eliminates forced compatibility mode that restricted window sizing
+- **Landscape Behavior**: iPad now properly maximizes to full screen in landscape orientation
+- **StackMap Parity**: Matches StackMap's configuration which works correctly on iOS 26
+
+### Technical Details
+- Root cause: `UIRequiresFullScreen=true` forced iOS 26 into compatibility mode
+- This restricted iPad multitasking and prevented proper window sizing
+- Removing the key enables native iOS 26 windowed apps behavior
+- Allows full-screen maximization while maintaining orientation support
+- Configuration matches StackMap's working implementation
+
+### Testing
+- Verified on iPad Pro 12.9-inch simulator with iOS 26.1
+- All 4 orientations still supported (from v2025.11.12.2)
+- Full-screen maximization now works in landscape mode
+
 ## Version 2025.11.12.2 - 2025-11-12
 iPad Orientation Support + Webpack Build Fix
 
