@@ -1,5 +1,16 @@
 # Manylla Release Notes
 
+## Version 2025.11.11.3 - 2025-11-11
+Synchronizing package-lock.json and Final iPad Deployment
+
+### Summary
+Final deployment with synchronized package-lock.json version and iPad orientation support to qual environment.
+
+### Changes
+- Synchronized package-lock.json version with package.json
+- Includes all iPad orientation fixes from previous versions
+- Ensures consistent deployment state
+
 ## Version 2025.11.11.2 - 2025-11-11
 Re-deployment with iPad Orientation Support
 
