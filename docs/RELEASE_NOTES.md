@@ -1,5 +1,15 @@
 # Manylla Release Notes
 
+## Version 2025.11.11.2 - 2025-11-11
+Re-deployment with iPad Orientation Support
+
+### Summary
+Re-deploying version with iPad orientation fix to ensure qual environment is up-to-date with all recent changes.
+
+### Changes Included
+- All changes from version 2025.11.11.1 (iPad orientation support)
+- Ensuring proper deployment to qual environment
+
 ## Version 2025.11.11.1 - 2025-11-11
 iPad Orientation Support
 
